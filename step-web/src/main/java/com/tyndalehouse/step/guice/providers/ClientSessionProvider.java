@@ -39,6 +39,7 @@ import java.util.Locale;
 import javax.inject.Provider;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.inject.Inject;
@@ -58,6 +59,7 @@ import com.tyndalehouse.step.models.WebSessionImpl;
 public class ClientSessionProvider implements Provider<ClientSession> {
     private static final String COOKIE_REQUEST_PARAM = "lang";
     private final HttpSession session;
+    private HttpServletResponse response;
     private final HttpServletRequest request;
 
     /**
@@ -67,9 +69,10 @@ public class ClientSessionProvider implements Provider<ClientSession> {
      * @param session the http session containing the jSessionId
      */
     @Inject
-    public ClientSessionProvider(final HttpServletRequest request, final HttpSession session) {
+    public ClientSessionProvider(final HttpServletRequest request, final HttpSession session, final HttpServletResponse response) {
         this.request = request;
         this.session = session;
+        this.response = response;
     }
 
     @Override
@@ -78,6 +81,13 @@ public class ClientSessionProvider implements Provider<ClientSession> {
                 this.request.getRemoteAddr(), getLocale(), this.request);
     }
 
+    /**
+     * @return Gets the request
+     */
+    private HttpServletResponse getResponse() {
+        return this.response;
+    }
+    
     /**
      * Gets the locale.
      * 

@@ -4,7 +4,7 @@ import static com.tyndalehouse.step.core.data.common.PartialDate.parseDate;
 
 import com.tyndalehouse.step.core.data.common.PartialDate;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
@@ -23,7 +23,7 @@ public class TimelineStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
      * @param resourcePath the path to the resource
      * @param jsword access to jsword for populating references
      */
-    public TimelineStreamingCsvModuleLoader(final EntityIndexWriterImpl writer, final String resourcePath,
+    public TimelineStreamingCsvModuleLoader(final TrackingEntityIndexWriterImpl writer, final String resourcePath,
             final JSwordPassageService jsword) {
         super(writer, resourcePath);
         this.jsword = jsword;

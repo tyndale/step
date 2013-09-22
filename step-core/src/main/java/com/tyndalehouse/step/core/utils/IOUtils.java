@@ -32,11 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.Properties;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,13 +68,78 @@ public final class IOUtils {
         }
     }
 
+    public static void writeFile(File sourceFile, String content) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(sourceFile));
+            writer.write(content);
+        } catch (IOException e) {
+            throw new StepInternalException("An error occurred while trying to write the file with name: " + sourceFile.getAbsoluteFile());
+        } finally {
+            closeQuietly(writer);
+        }
+    }
+    /**
+     * @param sourceFile the file to write to
+     */
+    public static void writeFile(final File sourceFile, final Properties properties) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(sourceFile));
+            properties.store(writer, null);
+        } catch (IOException e) {
+            throw new StepInternalException("Unable to write properties", e);
+        } finally {
+            closeQuietly(writer);
+        }
+    }
+
+    /**
+     * Reads a sourceFile to set of properties
+     * @param sourceFile the sourceFile in question
+     */
+    public static Properties readProperties(final File sourceFile) {
+        Properties details = new Properties();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(sourceFile));
+            details.load(reader);
+        } catch (IOException e) {
+            throw new StepInternalException("Unable to read details", e);
+        } finally {
+            closeQuietly(reader);
+        }
+        return details;
+    }
+
+    /**
+     * Reads a file to set of properties
+     * @param sourceFile the file in question
+     */
+    public static String readFile(final File sourceFile) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(sourceFile));
+            StringBuilder sb = new StringBuilder(1024);
+            String line = null;
+            while((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new StepInternalException("Unable to read details", e);
+        } finally {
+            closeQuietly(reader);
+        }
+    }
+    
     /**
      * Read a classpath resource into a String
      * 
      * @param classpathResource the classpath resource
      * @return the string
      */
-    public static String readEntireClasspathResource(final String classpathResource) {
+    public static String readEntireClasspathResourceBigBuffer(final String classpathResource) {
         InputStream s = null;
         InputStreamReader in = null;
         BufferedReader reader = null;

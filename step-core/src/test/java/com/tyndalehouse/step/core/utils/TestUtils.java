@@ -36,10 +36,10 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -67,7 +67,7 @@ public final class TestUtils {
      */
     public static void createEntities(final String entityName, final String... fields) {
         final TestEntityManager manager = new TestEntityManager();
-        final EntityIndexWriterImpl newWriter = manager.getNewWriter(entityName);
+        final TrackingEntityIndexWriterImpl newWriter = manager.getBatchWriter(entityName);
 
         for (int ii = 0; ii < fields.length; ii = ii + 2) {
             newWriter.addFieldToCurrentDocument(fields[ii], fields[ii + 1]);

@@ -278,6 +278,7 @@ function initApp() {
     createModelsIfRequired(SimpleTextModels, SimpleTextSearchModel, "text");
     createModelsIfRequired(WordSearchModels, WordSearchModel, "original");
     createModelsIfRequired(AdvancedSearchModels, AdvancedSearchModel, "advanced");
+    createModelsIfRequired(NotesModels, NotesModel, "notes");
 
     //create new router
     stepRouter = new StepRouter();

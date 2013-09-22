@@ -32,6 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.framework;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tyndalehouse.step.core.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +67,7 @@ public class StepRequest {
     private final String methodName;
 
     /** The args. */
-    private final String[] args;
+    private final Object[] args;
 
     /** The external. */
     private final boolean external;
@@ -81,12 +85,12 @@ public class StepRequest {
      * @param args the arguments that should be passed to the method
      */
     public StepRequest(final String requestURI, final String controllerName, final String methodName,
-            final String[] args) {
+            final Object[] args) {
         this.requestURI = requestURI;
         this.controllerName = controllerName;
         this.methodName = methodName;
         this.external = false;
-        this.args = args == null ? new String[] {} : args;
+        this.args = args == null ? new Object[] {} : args;
     }
 
     /**
@@ -112,9 +116,8 @@ public class StepRequest {
 
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", this.controllerName, this.methodName);
         final int endOfMethodName = startOfMethodName + this.methodName.length();
-        final String[] calculatedArguments = parseArguments(endOfMethodName + 1, encoding);
-
-        this.args = calculatedArguments == null ? new String[] {} : calculatedArguments;
+        final Object[] calculatedArguments = parseArguments(request, endOfMethodName + 1, encoding);
+        this.args = calculatedArguments == null ? new Object[] {} : calculatedArguments;
     }
 
     /**
@@ -124,7 +127,7 @@ public class StepRequest {
      * @param encoding the encoding with which to decode the arguments
      * @return a list of arguments
      */
-    private String[] parseArguments(final int parameterStart, final String encoding) {
+    private Object[] parseArguments(HttpServletRequest request, final int parameterStart, final String encoding) {
         final List<String> arguments = new ArrayList<String>();
         int argStart = parameterStart;
         int nextArgStop = this.requestURI.indexOf('/', argStart);
@@ -146,7 +149,29 @@ public class StepRequest {
                 throw new StepInternalException("Unable to decode last argument", e);
             }
         }
-        return arguments.toArray(new String[arguments.size()]);
+
+        appendPutBody(request, arguments);
+        return arguments.toArray(new Object[arguments.size()]);
+    }
+
+    private void appendPutBody(final HttpServletRequest request, final List<String> arguments) {
+        if("PUT".equals(request.getMethod())) {
+             //read the body
+            BufferedReader reader = null;
+            try {
+                StringBuilder putBody = new StringBuilder(256);
+                reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+                String line;
+                while((line = reader.readLine()) != null) {
+                    putBody.append(line);
+                }
+                arguments.add(putBody.toString());
+            } catch(IOException ex) {
+                throw new StepInternalException("Unable to read body for PUT request", ex);
+            } finally {
+                IOUtils.closeQuietly(reader);
+            }
+        }
     }
 
     /**
@@ -202,7 +227,7 @@ public class StepRequest {
      * 
      * @return the args
      */
-    public String[] getArgs() {
+    public Object[] getArgs() {
         return this.args;
     }
 

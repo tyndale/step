@@ -38,10 +38,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -57,7 +57,7 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
 
     // state used during processing
     private int count;
-    private final EntityIndexWriterImpl writer;
+    private final TrackingEntityIndexWriterImpl writer;
 
     /**
      * Loads up dictionary items
@@ -65,7 +65,7 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
      * @param writer the lucene index writer
      * @param resourcePath the classpath to the data
      */
-    public HeadwordLineBasedLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
+    public HeadwordLineBasedLoader(final TrackingEntityIndexWriterImpl writer, final String resourcePath) {
         super(resourcePath);
         this.writer = writer;
     }

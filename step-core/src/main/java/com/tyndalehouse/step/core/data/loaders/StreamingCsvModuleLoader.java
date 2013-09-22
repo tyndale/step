@@ -34,17 +34,15 @@ package com.tyndalehouse.step.core.data.loaders;
 
 import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
@@ -55,13 +53,13 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOG = LoggerFactory.getLogger(StreamingCsvModuleLoader.class);
     private char separator = ',';
-    private final EntityIndexWriterImpl writer;
+    private final TrackingEntityIndexWriterImpl writer;
 
     /**
      * @param writer       the writer to the index
      * @param resourcePath the resource path to load
      */
-    public StreamingCsvModuleLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
+    public StreamingCsvModuleLoader(final TrackingEntityIndexWriterImpl writer, final String resourcePath) {
         super(resourcePath);
         this.writer = writer;
     }
@@ -111,7 +109,7 @@ public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader
     /**
      * @return the writer
      */
-    public EntityIndexWriterImpl getWriter() {
+    public TrackingEntityIndexWriterImpl getWriter() {
         return this.writer;
     }
 

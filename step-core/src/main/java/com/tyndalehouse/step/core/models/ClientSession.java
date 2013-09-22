@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models;
 
+import org.apache.http.HttpResponse;
+
 import java.util.Locale;
 
 /**

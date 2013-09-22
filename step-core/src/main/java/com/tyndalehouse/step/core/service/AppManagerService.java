@@ -1,5 +1,8 @@
 package com.tyndalehouse.step.core.service;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author chrisburrell
  */
@@ -20,6 +23,10 @@ public interface AppManagerService {
      * @param newVersion the new version of STEP, set during an upgrade
      */
     void setAndSaveAppVersion(String newVersion);
+    /**
+     * @return the home directory for step, containing indexes and the like
+     */
+    File getHomeDirectory();
 
     /**
      * @return true to indicate this is hosted by the Step-Server app

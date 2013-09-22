@@ -57,9 +57,15 @@ public class AppManagerImpl implements AppManagerService {
      * @return the location of the file storing relevant app info
      */
     private File getStepInstallFile() {
+        File stepHome = getHomeDirectory();
+        return new File(stepHome, STEP_INSTALL_PROPERTIES);
+
+    }
+
+    @Override
+    public File getHomeDirectory() {
         try {
-            File stepHome = new File(CWProject.instance().getWriteableProjectSubdir(appHome, true));
-            return new File(stepHome, STEP_INSTALL_PROPERTIES);
+            return new File(CWProject.instance().getWriteableProjectSubdir(appHome, true));
         } catch (IOException e) {
             throw new StepInternalException("Unable to create home directory");
         }

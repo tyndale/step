@@ -84,7 +84,7 @@ public class PrefaceStepRequest {
     public String getPreface() {
         final String fileName = "/com/tyndalehouse/step/core/data/create/versions/" + this.book.getInitials()
                 + ".txt";
-        return IOUtils.readEntireClasspathResource(fileName);
+        return IOUtils.readEntireClasspathResourceBigBuffer(fileName);
     }
 
     /**

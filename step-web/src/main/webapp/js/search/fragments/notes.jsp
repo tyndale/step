@@ -17,15 +17,11 @@
 		<tr>
 			<td><fmt:message key="search_for_personal_notes" /></td>
 			<td class="fullSearchWidth"><input type="text" class="personalNotesSearch drop" /></td>
-			<td><a class="personalNotesNew"><fmt:message key="new_personal_notes" /></a></td>
-		</tr>
-		<tr>
-			<td><fmt:message key="current_personal_notes" /></td>
-			<td class="fullSearchWidth"><input type="text" class="personalNotesCurrent" /></td>
 			<td>
-				<a class="personalNotesSave"><fmt:message key="save_personal_notes" /></a>
-				<a class="personalNotesDelete"><fmt:message key="delete_personal_notes" /></a>
-			</td>
+                <a class="personalNotesNew"><fmt:message key="new_personal_notes" /></a>
+                <a class="personalNotesSave"><fmt:message key="save_personal_notes" /></a>
+                <a class="personalNotesDelete"><fmt:message key="delete_personal_notes" /></a>
+            </td>
 		</tr>
 	</table>
 </fieldset>

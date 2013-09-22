@@ -14,7 +14,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author chrisburrell
  * 
  */
-public class TestEntityIndexWriterImpl extends EntityIndexWriterImpl {
+public class TestEntityIndexWriterImpl extends TrackingEntityIndexWriterImpl {
 
     /**
      * @param entityManager the manager

@@ -3,10 +3,10 @@ package com.tyndalehouse.step.core.data.loaders;
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
@@ -33,7 +33,7 @@ public class GeoStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
      * @param resourcePath the path to the resource
      * @param jsword access to jsword for populating references
      */
-    public GeoStreamingCsvModuleLoader(final EntityIndexWriterImpl writer, final String resourcePath,
+    public GeoStreamingCsvModuleLoader(final TrackingEntityIndexWriterImpl writer, final String resourcePath,
             final JSwordPassageService jsword) {
         super(writer, resourcePath);
         this.jsword = jsword;

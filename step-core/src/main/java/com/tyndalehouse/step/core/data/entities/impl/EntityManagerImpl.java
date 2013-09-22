@@ -44,6 +44,7 @@ import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.entities.EntityIndexWriter;
 
 /**
  * @author chrisburrell
@@ -102,7 +103,12 @@ public class EntityManagerImpl implements Closeable, EntityManager {
     }
 
     @Override
-    public EntityIndexWriterImpl getNewWriter(final String entity) {
+    public TrackingEntityIndexWriterImpl getBatchWriter(final String entity) {
+        return new TrackingEntityIndexWriterImpl(this, entity);
+    }
+    
+    @Override
+    public EntityIndexWriter getEntityWriter(final String entity) {
         return new EntityIndexWriterImpl(this, entity);
     }
 

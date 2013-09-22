@@ -11,7 +11,7 @@ import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
- * 
+ * Provides encapsulation for most operations.
  * @author chrisburrell
  * 
  */
@@ -51,5 +51,13 @@ public class EntityDoc implements Serializable {
 
         }
         return allFields;
+    }
+
+    /**
+     * @return the document from which are driven all the fields
+     */
+    @JsonIgnore
+    public Document getInternalDocument() {
+        return this.doc;
     }
 }

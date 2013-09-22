@@ -6,10 +6,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
 
 /**
@@ -20,13 +20,13 @@ import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoade
  */
 public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoader.class);
-    private final EntityIndexWriterImpl writer;
+    private final TrackingEntityIndexWriterImpl writer;
 
     /**
      * @param writer to the index file
      * @param resourcePath the file
      */
-    public SpecificFormsLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
+    public SpecificFormsLoader(final TrackingEntityIndexWriterImpl writer, final String resourcePath) {
         super(resourcePath);
         this.writer = writer;
     }

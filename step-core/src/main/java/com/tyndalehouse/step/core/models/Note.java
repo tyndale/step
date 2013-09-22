@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,12 +32,56 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /**
  * A Note describes all metadata and data associated with personal notes
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Note {
-    private int docId;
-    private String content;
-    private String email;
+    private String id;
+    private String noteContent;
+    private String title;
 
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id
+     */
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the note content
+     */
+    public String getNoteContent() {
+        return noteContent;
+    }
+
+    /**
+     * @param noteContent the note content
+     */
+    public void setNoteContent(final String noteContent) {
+        this.noteContent = noteContent;
+    }
+
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title title
+     */
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 }

@@ -48,7 +48,7 @@ public class TestEntityManager extends EntityManagerImpl {
      * @return entity writer
      */
     @Override
-    public EntityIndexWriterImpl getNewWriter(final String entity) {
+    public TrackingEntityIndexWriterImpl getBatchWriter(final String entity) {
         return new TestEntityIndexWriterImpl(this, entity);
     }
 }

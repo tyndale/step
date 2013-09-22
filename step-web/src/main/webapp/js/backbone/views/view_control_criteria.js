@@ -145,8 +145,8 @@ CriteriaControlView = Backbone.View.extend({
      */
     _fetch: function (searchType, fieldsets, models, modelClass, criteriaClass, displayClass, paged) {
         for (var i = 0; i < PASSAGE_IDS; i++) {
-            new criteriaClass({ model: models.at(i), searchType: searchType, el: fieldsets[i] });
-            new displayClass({ model: models.at(i), searchType: searchType, paged: paged});
+            new criteriaClass({ model: models.at(i), searchType: searchType, el: fieldsets[i], passageId : i });
+            new displayClass({ model: models.at(i), searchType: searchType, paged: paged, passageId : i});
         }
     },
 

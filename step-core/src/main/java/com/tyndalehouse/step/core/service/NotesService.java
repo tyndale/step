@@ -43,20 +43,21 @@ public interface NotesService {
 
     /**
      * Saves notes.
-     * 
-     * @param id the id
-     * @param email the email
-     * @param content the content, in HTML form
-     * @return the doc id
-     */
-    int saveNote(int id, String email, String content);
+     * @param note
+*/
+    int saveNote(Note note);
 
     /**
      * Gets the all notes. The content will not be returned.
      * 
-     * @param email the email
      * @return the all notes
      */
-    List<Note> getAllNotes(String email);
+    List<Note> getAllNotes();
 
+    /**
+     * Reads a single note, with its content
+     * @param noteId the note id
+     * @return the note with all its details
+     */
+    Note getFullNote(String noteId);
 }

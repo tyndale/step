@@ -30,4 +30,9 @@ public interface UserService {
      * refreshes the user list
      */
     void refresh();
+
+    /**
+     * @return get the identified for the current user.
+     */
+    String currentUser();
 }

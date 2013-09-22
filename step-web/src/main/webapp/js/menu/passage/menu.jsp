@@ -42,7 +42,7 @@
 		<li><a href="javascript:void(0)" name="subject"><fmt:message key="search_subject" /></a></li>
 		<li><a href="javascript:void(0)" name="original"><fmt:message key="search_word" /></a></li>
 		<li class="menuSectionStart"><a href="javascript:void(0)" name="advanced"><fmt:message key="search_advanced_text" /></a></li>
- 		<%--<li class="menuSectionStart"><a href="javascript:void(0)" name="notes"><fmt:message key="personal_notes" /></a></li> --%>
+ 		<li class="menuSectionStart"><a href="javascript:void(0)" name="notes"><fmt:message key="personal_notes" /></a></li> 
 <%-- 		<li><a href="javascript:void(0)" name="SEARCH_LEXICON_DEFINITION">Lexicon definition search</a></li> -->
 <%-- 		<li><a href="javascript:void(0)" name="SEARCH_TIMELINE">Timeline search</a></li> -->
  --%>

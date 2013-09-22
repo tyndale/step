@@ -63,6 +63,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String currentUser() {
+        return "local-user";
+    }
+
+
+    @Override
     public boolean checkUserIdentity(final String email, final String name) {
         validateEmail(email);
 

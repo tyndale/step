@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.data;
 
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.EntityIndexWriter;
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 
 /**
  * Interface for entity managers
@@ -27,6 +28,8 @@ public interface EntityManager {
      */
     EntityIndexReader getReader(String entity);
 
+    EntityIndexWriter getEntityWriter(String entity);
+
     /**
      * closes everything held by the manager
      */
@@ -36,6 +39,7 @@ public interface EntityManager {
      * @param entity the entity name
      * @return entity writer
      */
-    EntityIndexWriterImpl getNewWriter(String entity);
+    TrackingEntityIndexWriterImpl getBatchWriter(String entity);
 
+    
 }

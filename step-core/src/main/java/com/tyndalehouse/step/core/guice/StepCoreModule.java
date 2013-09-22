@@ -104,7 +104,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(LexiconDefinitionService.class).to(LexiconDefinitionServiceImpl.class);
         bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class);
         bind(SubjectEntrySearchService.class).to(SubjectEntryServiceImpl.class);
-
+        bind(NotesService.class).to(NotesServiceImpl.class);
         bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class)
                 .asEagerSingleton();
 

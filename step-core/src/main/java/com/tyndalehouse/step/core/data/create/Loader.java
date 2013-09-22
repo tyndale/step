@@ -40,6 +40,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.data.entities.impl.TrackingEntityIndexWriterImpl;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -53,7 +54,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.ProvisionException;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
@@ -262,7 +262,7 @@ public class Loader {
         LOGGER.debug("Indexing Alternative versions");
         this.addUpdate("install_alternative_meanings");
 
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("alternativeTranslations");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("alternativeTranslations");
 
         final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
                 this.coreProperties.getProperty("test.data.path.alternatives.translations"));
@@ -285,7 +285,7 @@ public class Loader {
         LOGGER.debug("Indexing nave subjects");
         this.addUpdate("install_subject_search");
 
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("nave");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("nave");
 
         final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
                 this.coreProperties.getProperty("test.data.path.subjects.nave"));
@@ -309,7 +309,7 @@ public class Loader {
 
         LOGGER.debug("Loading hotspots");
 
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("hotspot");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("hotspot");
         new StreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init(this);
         return writer.close();
@@ -324,7 +324,7 @@ public class Loader {
         this.addUpdate("install_grammar");
 
         LOGGER.debug("Loading robinson morphology");
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("morphology");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("morphology");
         new StreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.morphology.robinson")).init(this);
 
@@ -345,7 +345,7 @@ public class Loader {
         this.addUpdate("install_descriptions");
 
         LOGGER.debug("Loading version information");
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("versionInfo");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("versionInfo");
         new StreamingCsvModuleLoader(writer, this.coreProperties.getProperty("test.data.path.versions.info"))
                 .init(this);
         final int close = writer.close();
@@ -364,7 +364,7 @@ public class Loader {
         this.addUpdate("install_timeline");
 
         LOGGER.debug("Loading timeline");
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("timelineEvent");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("timelineEvent");
 
         new TimelineStreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.timeline.events.directory"), this.jsword)
@@ -386,7 +386,7 @@ public class Loader {
 
         LOGGER.debug("Loading Open Bible geography");
 
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("obplace");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("obplace");
         new GeoStreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword)
                 .init(this);
@@ -406,7 +406,7 @@ public class Loader {
         this.addUpdate("install_hebrew_definitions");
 
         LOGGER.debug("Indexing lexicon");
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("definition");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("definition");
 
         LOGGER.debug("-Indexing greek");
         this.addUpdate("install_greek_definitions");
@@ -442,7 +442,7 @@ public class Loader {
         LOGGER.debug("Loading lexical forms");
         this.addUpdate("install_original_word_forms");
 
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("specificForm");
+        final TrackingEntityIndexWriterImpl writer = this.entityManager.getBatchWriter("specificForm");
         new SpecificFormsLoader(writer, this.coreProperties.getProperty("test.data.path.lexicon.forms"))
                 .init(this);
         final int close = writer.close();

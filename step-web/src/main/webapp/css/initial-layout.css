@@ -519,3 +519,7 @@ body {
     overflow-x: hidden;
     height: 300px;
 }
+
+.mce-panel {
+    height: 90%;
+}

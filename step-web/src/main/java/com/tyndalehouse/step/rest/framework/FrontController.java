@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -43,6 +43,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
@@ -61,15 +63,16 @@ import static java.lang.String.format;
 
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
- * 
+ * <p/>
  * /step-web/rest/controllerName/methodName/arg1/arg2/arg3
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class FrontController extends HttpServlet {
-    /** The Constant UTF_8_ENCODING. */
+    /**
+     * The Constant UTF_8_ENCODING.
+     */
     public static final String UTF_8_ENCODING = "UTF-8";
     private static final String EXTERNAL_CONTROLLER_SUB_PACKAGE = "external";
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
@@ -87,20 +90,25 @@ public class FrontController extends HttpServlet {
 
     /**
      * creates the front controller which will dispatch all the requests
-     * <p />
+     * <p/>
      *
-     * @param guiceInjector the injector used to call the relevant controllers
-     * @param errorResolver the error resolver is the object that helps us translate errors for the client
+     * @param guiceInjector         the injector used to call the relevant controllers
+     * @param errorResolver         the error resolver is the object that helps us translate errors for the client
      * @param clientSessionProvider the client session provider
      */
     @Inject
     public FrontController(final Injector guiceInjector,
-            final ClientErrorResolver errorResolver,
-            final Provider<ClientSession> clientSessionProvider) {
+                           final ClientErrorResolver errorResolver,
+                           final Provider<ClientSession> clientSessionProvider) {
         this.guiceInjector = guiceInjector;
-
         this.errorResolver = errorResolver;
         this.clientSessionProvider = clientSessionProvider;
+        jsonMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+    }
+
+    @Override
+    protected void doPut(final HttpServletRequest request, final HttpServletResponse response) {
+        doGet(request, response);
     }
 
     @Override
@@ -109,9 +117,9 @@ public class FrontController extends HttpServlet {
 
         StepRequest sr = null;
         try {
-                sr = new StepRequest(request, UTF_8_ENCODING);
-                    LOGGER.debug("The cache was missed so invoking method now...");
-                    jsonEncoded = invokeMethod(sr);
+            sr = new StepRequest(request, UTF_8_ENCODING);
+            LOGGER.debug("The cache was missed so invoking method now...");
+            jsonEncoded = invokeMethod(sr);
 
             setupHeaders(response, jsonEncoded.length);
             response.getOutputStream().write(jsonEncoded);
@@ -124,7 +132,7 @@ public class FrontController extends HttpServlet {
 
     /**
      * Invokes the method on the controller instance and returns JSON-ed results
-     * 
+     *
      * @param sr the STEP Request containing all pertinent information
      * @return byte array representation of the return value
      */
@@ -134,13 +142,14 @@ public class FrontController extends HttpServlet {
         final Object controllerInstance = getController(sr.getControllerName(), sr.isExternal());
 
         // resolve method
+        final Object[] args = sr.getArgs();
         final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance,
-                sr.getArgs(), sr.getCacheKey().getMethodKey());
+                args, sr.getCacheKey().getMethodKey());
 
         // invoke the three together
         Object returnVal;
         try {
-            returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
+            returnVal = invokeControllerMethod(controllerInstance, args, controllerMethod);
 
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
@@ -151,24 +160,32 @@ public class FrontController extends HttpServlet {
         // CHECKSTYLE:ON
     }
 
+    private Object invokeControllerMethod(final Object controllerInstance, final Object[] args, final Method controllerMethod) throws IllegalAccessException, InvocationTargetException {
+        Object[] castArgs = args;
+        final Class<?>[] parameterTypes = controllerMethod.getParameterTypes();
+        for (int ii = 0; ii < args.length; ii++) {
+            castArgs[ii] = castArgument((String) args[ii], parameterTypes[ii]);
+        }
+        return controllerMethod.invoke(controllerInstance, castArgs);
+    }
+
     /**
      * We attempt here to rethrow the exception that caused the invocation target exception, so that we can
      * handle it nicely for the user
-     * 
+     *
      * @param e the wrapped exception that happened during the reflective call
      * @return a client handled issue which wraps the exception that was raised
      */
     private ClientHandledIssue convertExceptionToJson(final Exception e) {
         // first we check to see if it's a step exception, or an illegal argument exception
-
         final Throwable cause = e.getCause();
-        return new ClientHandledIssue(getExceptionMessageAndLog(cause), this.errorResolver.resolve(cause
+        return new ClientHandledIssue(getExceptionMessageAndLog(cause != null ? cause : null), this.errorResolver.resolve(cause
                 .getClass()));
     }
 
     /**
      * Returns a json response that is encoded
-     * 
+     *
      * @param responseValue the value that should be encoded
      * @return the encoded form of the JSON response
      */
@@ -196,26 +213,27 @@ public class FrontController extends HttpServlet {
 
     /**
      * sets up the headers and the length of the message
-     * 
+     *
      * @param response the response
-     * @param length the length of the message
+     * @param length   the length of the message
      */
     void setupHeaders(final HttpServletResponse response, final int length) {
-        // we ensure that headers are set up appropriately
-        response.addDateHeader("Date", System.currentTimeMillis());
-        response.setCharacterEncoding(UTF_8_ENCODING);
-        response.setContentType("application/json");
-        response.setContentLength(length);
-        response.setHeader("step-language", this.clientSessionProvider.get().getLocale().getLanguage());
+        if (!response.isCommitted()) {
+            // we ensure that headers are set up appropriately
+            response.addDateHeader("Date", System.currentTimeMillis());
+            response.setCharacterEncoding(UTF_8_ENCODING);
+            response.setContentType("application/json");
+            response.setContentLength(length);
+            response.setHeader("step-language", this.clientSessionProvider.get().getLocale().getLanguage());
+        }
     }
 
     /**
      * deals with an error whilst executing the request
-     * 
+     *
      * @param response the response
-     * 
-     * @param e the exception
-     * @param sr the step request
+     * @param e        the exception
+     * @param sr       the step request
      */
     void handleError(final HttpServletResponse response, final Throwable e, final StepRequest sr) {
         String requestId = null;
@@ -238,7 +256,7 @@ public class FrontController extends HttpServlet {
 
     /**
      * Gets the exception message.
-     * 
+     *
      * @param e the e
      * @return the exception message
      */
@@ -283,8 +301,8 @@ public class FrontController extends HttpServlet {
 
     /**
      * Return internal error.
-     * 
-     * @param e the e
+     *
+     * @param e      the e
      * @param bundle the bundle
      * @return the string
      */
@@ -295,9 +313,9 @@ public class FrontController extends HttpServlet {
 
     /**
      * Retrieves a controller, either from the cache, or from Guice.
-     * 
+     *
      * @param controllerName the name of the controller (used as the key for the cache)
-     * @param isExternal indicates whether the request should be found in the external controllers
+     * @param isExternal     indicates whether the request should be found in the external controllers
      * @return the controller object
      */
     Object getController(final String controllerName, final boolean isExternal) {
@@ -336,15 +354,15 @@ public class FrontController extends HttpServlet {
 
     /**
      * Returns the method to be invoked upon the controller
-     * 
-     * @param methodName the method name
+     *
+     * @param methodName         the method name
      * @param controllerInstance the instance of the controller
-     * @param args the list of arguments, required to resolve the correct method if they have arguments
-     * @param cacheKey the key to retrieve in the cache
+     * @param args               the list of arguments, required to resolve the correct method if they have arguments
+     * @param cacheKey           the key to retrieve in the cache
      * @return the method to be invoked
      */
     Method getControllerMethod(final String methodName, final Object controllerInstance, final Object[] args,
-            final String cacheKey) {
+                               final String cacheKey) {
         final Class<?> controllerClass = controllerInstance.getClass();
 
         // retrieve method from cache, or put in cache if not there
@@ -358,11 +376,75 @@ public class FrontController extends HttpServlet {
                 // put method in cache
                 this.methodNames.put(cacheKey, controllerMethod);
             } catch (final NoSuchMethodException e) {
-                throw new StepInternalException("Unable to find matching method for " + methodName, e);
+                //attempt to find a good method and cast the arguments correctly
+                controllerMethod = resolveStronglyTypedMethod(controllerClass, methodName, args);
+                this.methodNames.put(cacheKey, controllerMethod);
             }
         }
 
         return controllerMethod;
+    }
+
+    /**
+     * Attempts to resolve a method from the controller class, that matches the number of arguments.
+     * In addition, then parses the arguments to be the correct type.
+     *
+     * @param controllerClass the controller class
+     * @param methodName      the method name
+     * @param args            the list of arguments to send through
+     */
+    private Method resolveStronglyTypedMethod(final Class<?> controllerClass, final String methodName, final Object[] args) {
+        final Method[] methods = controllerClass.getMethods();
+        Object[] castArgs = new Object[args.length];
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                //then we're in business...
+                //check the number of arguments match
+                final Class<?>[] parameterTypes = method.getParameterTypes();
+                if (parameterTypes.length == args.length) {
+                    return method;
+                }
+            }
+        }
+        throw new StepInternalException("Can't resolve method " + methodName);
+    }
+
+    /**
+     * Attempts to cast the argument passed in into the type of interest
+     *
+     * @param arg           the argument
+     * @param parameterType the parameter type of interest
+     */
+    private Object castArgument(final String arg, final Class<?> parameterType) {
+        if (String.class.equals(parameterType)) {
+            return arg;
+        }
+
+        if (parameterType.isPrimitive()) {
+            return parameterType.cast(arg);
+        }
+
+        if (Integer.class.equals(parameterType)) {
+            return Integer.parseInt(arg);
+        }
+        if (Double.class.equals(parameterType)) {
+            return Double.parseDouble(arg);
+        }
+        if (Float.class.equals(parameterType)) {
+            return Float.parseFloat(arg);
+        }
+        if (Long.class.equals(parameterType)) {
+            return Long.parseLong(arg);
+        }
+        if (Short.class.equals(parameterType)) {
+            return Short.parseShort(arg);
+        }
+
+        try {
+            return new ObjectMapper().readValue((String) arg, parameterType);
+        } catch (IOException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
     }
 
     /**
