@@ -49,11 +49,11 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final TextSuggestionServiceImpl textSuggestionService
     ) {
         queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
+        queryProviders.put(SearchToken.MEANINGS, meaningSuggestionService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
         queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
         queryProviders.put(SearchToken.GREEK, greekAncientLanguageService);
         queryProviders.put(SearchToken.HEBREW, hebrewAncientLanguageService);
-        queryProviders.put(SearchToken.MEANINGS, meaningSuggestionService);
         queryProviders.put(SearchToken.SUBJECT_SEARCH, subjectSuggestionService);
         queryProviders.put(SearchToken.TEXT_SEARCH, textSuggestionService);
 

@@ -10,6 +10,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -132,6 +133,8 @@ public interface EntityIndexReader extends Closeable {
      * @return the expected results
      */
     EntityDoc[] search(String[] fields, String query, boolean useOrOperator, Sort sort);
+
+    EntityDoc[] search(String[] fields, String value, Collector collector);
 
     /**
      * Searches for a particular value across multiple fields
@@ -325,4 +328,13 @@ public interface EntityIndexReader extends Closeable {
      * @return the query parser
      */
     QueryParser getQueryParser(boolean analyzePrefix, boolean useOrOperatorBetweenValues, String... defaultFields);
+
+    /**
+     * @param fieldNames the names of all fields to be searched
+     * @param value the value
+     * @param sort the sort field
+     * @param n the number of items to return
+     * @return the item to be returned
+     */
+    EntityDoc[] search(String[] fieldNames, String value, Sort sort, int n);
 }

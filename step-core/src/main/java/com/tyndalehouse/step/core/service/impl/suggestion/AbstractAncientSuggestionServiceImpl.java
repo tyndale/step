@@ -28,17 +28,14 @@ import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.conve
 /**
  * @author chrisburrell
  */
-public abstract class AbstractAncientSuggestionServiceImpl implements SingleTypeSuggestionService<EntityDoc, TopFieldCollector> {
+public abstract class AbstractAncientSuggestionServiceImpl extends AbstractDefinitionSuggestionServiceImpl<EntityDoc> {
     private final EntityIndexReader reader;
-    private Sort popularSort;
-    private Sort sort;
     private Filter filter;
 
     protected AbstractAncientSuggestionServiceImpl(EntityIndexReader reader, final Filter filter, final Sort sort, final Sort popularSort) {
+        super(sort, popularSort);
         this.reader = reader;
         this.filter = filter;
-        this.sort = sort;
-        this.popularSort = popularSort;
     }
 
     @Override
@@ -111,18 +108,6 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
 
     protected abstract BooleanQuery getQuery(String form, boolean exact);
 
-    protected Sort getSort(boolean popular) {
-        return popular ? this.popularSort : this.sort;
-    }
-
-    @Override
-    public TopFieldCollector getNewCollector(final int leftToCollect, final boolean popularSort) {
-        try {
-            return TopFieldCollector.create(getSort(popularSort), leftToCollect > 0 ? leftToCollect : 1, false, false, false, false);
-        } catch (IOException ex) {
-            throw new StepInternalException(ex.getMessage(), ex);
-        }
-    }
 
     /**
      * @return the reader associated with this suggestion service

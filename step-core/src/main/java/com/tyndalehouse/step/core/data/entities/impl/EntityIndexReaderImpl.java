@@ -182,6 +182,16 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     public EntityDoc[] search(String[] fields, String query, boolean useOrOperator, Sort sort) {
         return search(fields, query, null, sort, false, null, null, useOrOperator);
     }
+    @Override
+    public EntityDoc[] search(String[] fields, String value, Sort sort, int n) {
+        return search(fields, value, null, sort, false, null, n, true);
+    }
+
+    @Override
+    public EntityDoc[] search(String[] fields, String value, Collector collector) {
+        return search(fields, value, null, null, false, null, null, true, collector);
+    }
+
 
     // CHECKSTYLE:OFF
     @Override
@@ -189,7 +199,17 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
                               final Sort sort, final boolean analyzePrefix, final String queryRemainder,
                               final Integer maxResults, final boolean useOrOperatorBetweenValues) {
         // CHECKSTYLE:ON
-        final AllResultsCollector collector = new AllResultsCollector();
+        return search(fieldNames, value, filter, sort, analyzePrefix, queryRemainder, maxResults, useOrOperatorBetweenValues, null);
+    }
+
+    private EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter, final Sort sort, final boolean analyzePrefix,
+                               final String queryRemainder, final Integer maxResults, final boolean useOrOperatorBetweenValues,
+                               final Collector collect) {
+        Collector collector = collect;
+        if(collector == null) {
+            collector = new AllResultsCollector();
+        }
+
         Query parsed = null;
         QueryParser parser;
         if (analyzePrefix) {
@@ -222,7 +242,13 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
             } else {
                 this.searcher.search(parsed, filter, collector);
-                return extractDocIds(collector);
+                if(collector instanceof AllResultsCollector) {
+                    return extractDocIds((AllResultsCollector) collector);
+                } else if(collector instanceof TopDocsCollector) {
+                    return extractDocIds(((TopDocsCollector) collector).topDocs());
+                }
+
+                return null;
             }
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query", e);
@@ -478,6 +504,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         parser.setDefaultOperator(useOrOperatorBetweenValues ? Operator.OR : Operator.AND);
         return parser;
     }
+
+
 
     /**
      * @param searcher the searcher to set
