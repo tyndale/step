@@ -22,19 +22,44 @@ var PassageDisplayView = DisplayView.extend({
             this.model.set("startRange", this.model.get("startRange"), {silent: true });
             this.model.set("endRange", this.model.get("endRange"), {silent: true });
             this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
-
-            var passageHtml;
+            var options = this.model.get("selectedOptions") || [];
+            var availableOptions = this.model.get("options") || [];
+            colorCodeGrammarAvailableAndSelected = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
+            if ((colorCodeGrammarAvailableAndSelected) && ((c4 == undefined) || (c4 == null))) initCanvasAndCssForColorCodeGrammar(); //c4 is currentColorCodeConfig.  It is changed to c4 to save space
+            var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch;
             if (this.partRendered) {
+                if (colorCodeGrammarAvailableAndSelected) {
+                  if ((this.model.attributes.masterVersion == 'THOT') || (this.model.attributes.extraVersions.indexOf('THOT') > -1)) {
+                    if (otMorph == null) jQuery.ajax({dataType: "script", cache: true, url: "js/tos_morph.js"});
+                    pch = document.getElementsByClassName('passageContentHolder');
+                    var r = addClassForTHOT(pch[0].outerHTML);
+                    pch[0].outerHTML = r[0];
+                    otCSSOnThisPage = r[1];
+                  }
+                  if (((this.model.attributes.masterVersion == 'KJV') || (this.model.attributes.extraVersions.indexOf('KJV') > -1)) ||
+                      ((this.model.attributes.masterVersion == 'SBLG') || (this.model.attributes.extraVersions.indexOf('SBLG') > -1)) ) {
+                    if (pch == null) pch = document.getElementsByClassName('passageContentHolder');
+                    ntCSSOnThisPage = getClassesForNT(pch[0].outerHTML);
+                  }
+                }
                 passageHtml = this.$el.find(".passageContentHolder");
             } else {
-                passageHtml = $(this.model.get("value"));
+              if ((colorCodeGrammarAvailableAndSelected) && ((this.model.attributes.masterVersion == 'THOT') || (this.model.attributes.extraVersions.indexOf('THOT') > -1))) {
+                if (otMorph == null) jQuery.ajax({dataType: "script", cache: true, url: "js/tos_morph.js"});
+                var r = addClassForTHOT(this.model.attributes.value);
+                this.model.attributes.value = r[0];
+                otCSSOnThisPage =  r[1];
+              }
+              if (((this.model.attributes.masterVersion == 'KJV') || (this.model.attributes.extraVersions.indexOf('KJV') > -1)) ||
+                  ((this.model.attributes.masterVersion == 'SBLG') || (this.model.attributes.extraVersions.indexOf('SBLG') > -1)) ) {
+                ntCSSOnThisPage = getClassesForNT(this.model.attributes.value);
+              }
+              passageHtml = $(this.model.get("value"));
             }
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
             var extraVersions = this.model.get("extraVersions");
             var reference = this.model.get("osisId");
-            var options = this.model.get("selectedOptions") || [];
-            var availableOptions = this.model.get("options") || [];
             var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
             var passageContainer = this.$el.closest(".passageContainer");
@@ -72,17 +97,16 @@ var PassageDisplayView = DisplayView.extend({
                 //give focus:
                 $(".passageContentHolder", step.util.getPassageContainer(step.util.activePassageId())).focus();
             }
-            // following 11 lines were added to enhance the Colour Code Grammar  PT
+            // following 8 lines were added to enhance the Colour Code Grammar  PT
             if ((colorCodeGrammarAvailableAndSelected !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== undefined) &&
                 (handleOfRequestedAnimation !== undefined) ) {
-                colorCodeGrammarAvailableAndSelected = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
                 if (colorCodeGrammarAvailableAndSelected) {
                     numOfAnimationsAlreadyPerformedOnSamePage = 0;
-                    if ((currentColorCodeSettings !== undefined) && (currentColorCodeSettings !== null)) {
-                        refreshForAllInstancesOfTense();
-                        if (handleOfRequestedAnimation == -1) goAnimate();
-                    }
-                    else initCanvasAndCssForColorCodeGrammar();
+                //    var a = performance.now();
+                    refreshForAllInstancesOfTense(ntCSSOnThisPage, otCSSOnThisPage);
+                //    var b = performance.now();
+                //    console.log('refresh took ' + (b - a) + ' ms.');
+                    if (handleOfRequestedAnimation == -1) goAnimate();
                 }
             }
         },

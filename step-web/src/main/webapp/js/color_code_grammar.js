@@ -11,10 +11,9 @@ function ULOBJ(nameOfUlObj) {
 var uLBASEIMGS = [new ULOBJ('ulArrow'), new ULOBJ('ulDash'), new ULOBJ('ulSolid'),
                   new ULOBJ('ulDoubleSolid'), new ULOBJ('ulDot'), new ULOBJ('ulWave'),
                   new ULOBJ('ulDashDot'), new ULOBJ('ulDashDotDot'), new ULOBJ('ulShortArrow'),
-                  new ULOBJ('ulReverseArrow'), new ULOBJ('ulShortReverseArrow')
+                  new ULOBJ('ulReverseArrow'), new ULOBJ('ulShortReverseArrow'), new ULOBJ('ulNone')
 ];
 
-/* each value is an index to ulBaseImg */
 var ulVerbCSS = [
   new ULOBJ('pai'), /* 0 */  new ULOBJ('pmi'), /* 1 */  new ULOBJ('ppi'), // 2
   new ULOBJ('pas'), /* 3 */  new ULOBJ('pms'), /* 4 */  new ULOBJ('pps'), // 5
@@ -51,6 +50,8 @@ var ulVerbCSS = [
   new ULOBJ('fam'), // 70 
   new ULOBJ('fap'), /* 71 */ new ULOBJ('fmp'), /* 72 */ new ULOBJ('fpp')  // 73
 ];
+
+var ulOTVbCSS = [];
 
 function NAMEANDARRAY(argName, argArray) {
   this.name = argName;
@@ -91,9 +92,46 @@ var displayQuickTryoutAccordion2 = false;
 var displayQuickTryoutAccordion3 = false;
 var axisUserSelectedToSort = '';
 var userProvidedSortOrder = [];
-var updatedNounCSS = false;
+var updatedGenderNumberCSS = false;
+var userTurnGenderNumberFromOffToOn = false;
+var otMorph = null;
+/*
+var colorConfigHTML1 = '<div id="theGrammarColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +	
+  '<div class="modal-dialog">' +
+  '<div class="modal-content">'+ 
+  '<link href="css/color_code_grammar.css" rel="stylesheet"/>' +
+  '<link rel="stylesheet" href="css/spectrum.css"/>' +
+  '<script src="js/color_code_config';
+var colorConfigHTML2 = '.js"></script>' +
+  '<script src="libs/spectrum.js"></script>' +
+  '<div class="modal-header">' +
+      '<button type="button" class="close" data-dismiss="modal" onclick=closeColorConfig()>X</button>' +
+  '</div>' +
+  '<div class="modal-body">' +
+  '<div id="colortabs">' +
+    '<ul class="nav nav-tabs">' +
+      '<li class="active"><a href="#nounColors" data-toggle="tab">Number & Gender</a></li>' +
+      '<li><a href="#verbColors" data-toggle="tab">Greek Verbs</a></li>' +
+      '<li><a href="#hVerbColors" data-toggle="tab">OT Verbs</a></li>' +
+    '</ul>' +
+  '<div class="tab-content">' +
+  '<div class="tab-pane fade in active" id="nounColors"></div>' +
+  '<div class="tab-pane fade" id="verbColors"></div>' +
+  '<div class="tab-pane fade" id="hVerbColors"></div>' +
+  '<div class="footer">' +
+  '<button id="openButton" class="btn btn-default btn-xs" onclick=openColorConfig()><label>Open</label></button>' +
+  '<button id="saveButton" class="btn btn-default btn-xs" onclick=saveColorConfig()><label>Save</label></button>' +
+  '<button id="cancelButton" class="btn btn-default btn-xs" onclick=cancelColorChanges()><label>Cancel</label></button>' +
+  '<button id="resetButton" class="btn btn-default btn-xs" onclick=resetColorConfig()><label>Reset</label></button>' +
+  '<button class="btn btn-default btn-xs" data-dismiss="modal" onclick=closeColorConfig()><label>Exit</label></button>' +
+  '</div></div></div></div>' +
+  '<script>' +
+    '$( document ).ready(function() {' +
+      'initializeColorCodeHtmlModalPage();' +
+    '});' +
+  '</script>'; */
 
-var robinsonCodeOfTense = {
+const robinsonCodeOfTense = {
   p: 'present',
   i: 'imperfect',
   r: 'perfect',
@@ -102,7 +140,7 @@ var robinsonCodeOfTense = {
   f: 'future'
 };
 
-var robinsonNameOfTense = {
+const robinsonNameOfTense = {
   present: 'p',
   imperfect: 'i',
   perfect: 'r',
@@ -111,10 +149,10 @@ var robinsonNameOfTense = {
   future: 'f'
 };
 
-var defaultOrderOfTense = ['r', 'l', 'i', 'a', 'p', 'f'];
-var defaultTenseToCombineWithPrevious = [false, false, false, false, false, false];
+const defaultOrderOfTense = ['r', 'l', 'i', 'a', 'p', 'f'];
+const defaultTenseToCombineWithPrevious = [false, false, false, false, false, false];
 
-var robinsonCodeOfMood = {
+const robinsonCodeOfMood = {
   i: 'indicative',
   s: 'subjunctive',
   o: 'optative',
@@ -123,7 +161,7 @@ var robinsonCodeOfMood = {
   p: 'participle'
 };
 
-var robinsonNameOfMood = {
+const robinsonNameOfMood = {
   indicative: 'i',
   subjunctive: 's',
   optative: 'o',
@@ -132,8 +170,111 @@ var robinsonNameOfMood = {
   participle: 'p'
 };
 
-var defaultOrderOfMood = ['i', 's', 'o', 'm', 'n', 'p'];
-var defaultMoodToCombineWithPrevious = [false, false, false, false, false, false];
+const defaultOrderOfMood = ['i', 's', 'o', 'm', 'n', 'p'];
+const defaultMoodToCombineWithPrevious = [false, false, false, false, false, false];
+
+var defaultCodeOfForm = {
+  p: ['perfect', 'Perfect', true],
+  w: ['va_imperfect', 'va+Imperfect', true],
+  f: ['infinitive', 'Infinitive', true],
+  r: ['participle', 'Participle', true],
+  s: ['participle_passive', 'Participle-Passive', false],
+  v: ['imperative', 'Imperative', true],
+  n: ['imperfect_not_jussive', 'Imperfect-not-jussive', false],
+  q: ['ve_perfect', 've+Perfect', true],
+  i: ['imperfect', 'Imperfect', true],
+  u: ['ve_imperfect', 've+Imperfect', false],
+  j: ['jussive', 'Jussive', true],
+  c: ['cohortative', 'Cohortative', true]
+};
+
+const otNameOfVerbForm = {
+  perfect: 'p',
+  va_imperfect: 'w',
+  infinitive: 'f',
+  participle: 'r',
+  participle_passive: 's',
+  imperative: 'v',
+  imperfect_not_jussive: 'n',
+  ve_perfect: 'q',
+  imperfect: 'i',
+  ve_imperfect: 'u',
+  jussive: 'j',
+  cohortative: 'c'
+};
+const defaultOrderOfOTVerbForm = [              'p',   'w',  'f',   'r',   's',  'v',   'i',   'q',  'n',  'u',  'j',   'c'];
+const defaultOTVerbFormToCombineWithPrevious = [false, true, false, false, true, false, false, true, true, true, false, true];
+
+var defaultHebrewCodeOfStem = {
+  // Action: Simple
+  q: ['qal', 'a', true],      // Voice: Active
+  N: ['niphal', 'p', true],   // Voice: Passive
+  t: ['hithpael', 'm', true], // Voice: Middle
+  // Action: Intensive / Resultative
+  p: ['piel', 'a', true],    // Voice: Active
+  P: ['pual', 'p', true], u: ['hothpaal', 'p', false], D: ['nithpael', 'p', false], O: ['polal', 'p', false], // Voice: Passive
+  // Action: Causative / Declarative
+  h: ['hiphil', 'a', true], c: ['tiphil', 'a', false], // Voice: Active
+  H: ['hophal', 'p', true],              // Voice: Passive
+  v: ['hishtaphel', 'm', true]           // Voice: Middle
+};
+
+var hebrewNameOfStem = {
+  // Action: Simple
+  qal: 'q',      // Voice: Active
+  niphal: 'N',   // Voice: Passive
+  hithpael: 't', // Voice: Middle
+  // Action: Intensive / Resultative
+  piel: 'p',    // Voice: Active
+  pual: 'P', hothpaal: 'u', nithpael: 'D', polal: 'O', // Voice: Passive
+  // Action: Causative / Declarative
+  hiphil: 'h', tiphil: 'c', // Voice: Active
+  hophal: 'H',              // Voice: Passive
+  hishtaphel: 'v'           // Voice: Middle
+};
+
+var defaultOrderOfHebrewStem = ['q', 'N', 't', 'p', 'P', 'u', 'D', 'O', 'h', 'c', 'H', 'v'];
+var defaultHebriewStemToCombineWithPrevious = [false, true, true, 
+  false, true, true, true, true, 
+  false, true, true, true];
+  
+var defaultAramaicCodeOfStem = {
+  // Action: Simple
+  q: ['peal', 'a', false],   // Voice: Active
+  Q: ['peil', 'p', false],   // Voice: Passive
+  i: ['itpeel', 'm', false], t: ['hishtaphel', 'm', false], // Voice: Middle
+  // Action: Intensive / Resultative
+  p: ['pael', 'a', false],     // Voice: Active
+  u: ['hithpeel', 'p', false], // Voice: Passive
+  P: ['ithpaal', 'm', false], M: ['hithpaal', 'm', true], // Voice: Middle
+  // Action: Causative / Declarative
+  a: ['aphel', 'a', false], h: ['haphel', 'a', false], e: ['shaphel', 'a', false], // Voice: Active
+  H: ['hophal', 'p', false],              // Voice: Passive
+  v: ['ishtaphel', 'm', false]           // Voice: Middle
+};
+  
+var aramaicNameOfStem = {
+  // Action: Simple
+  peal: 'q',   // Voice: Active
+  peil: 'Q',   // Voice: Passive
+  itpeel: 'i', hishtaphel: 't', // Voice: Middle
+  // Action: Intensive / Resultative
+  pael: 'p',     // Voice: Active
+  hithpeel: 'u', // Voice: Passive
+  ithpaal: 'P', hithpaal: 'M', // Voice: Middle
+  // Action: Causative / Declarative
+  aphel: 'a', haphel: 'h', shaphel: 'e', // Voice: Active
+  hophal: 'H',             // Voice: Passive
+  ishtaphel: 'v'           // Voice: Middle
+};
+
+var defaultOrderOfAramaicStem = ['q', 'Q', 'i', 't', 'p', 'u', 'P', 'M', 'a', 'h', 'e', 'H', 'v'];
+var defaultAramaicStemToCombineWithPrevious = [false, true, true, true, 
+  false, true, true, true, 
+  false, true, true, true, true];
+var oTFormIndex2CSS = {};
+var hebrewStemIndex2CSS = {};
+var aramaicStemIndex2CSS = {};
 
 var underlineCanvasName = {
   Arrow: 'ulArrow',
@@ -146,7 +287,8 @@ var underlineCanvasName = {
   Dots: 'ulDot',
   Wave: 'ulWave',
   'Dash Dot': 'ulDashDot',
-  'Dash Dot Dot': 'ulDashDotDot'
+  'Dash Dot Dot': 'ulDashDotDot',
+  'None': 'ulNone'
 };
 
 var canvasUnderlineName = {
@@ -160,12 +302,14 @@ var canvasUnderlineName = {
   ulDot: 'Dots',
   ulWave: 'Wave',
   ulDashDot: 'Dash Dot',
-  ulDashDotDot: 'Dash Dot Dot'
+  ulDashDotDot: 'Dash Dot Dot',
+  ulNone: 'None'
 };
 
-var defaultColorCodeGrammarSettingsVerbMoodTense = {
+var defaultC4VerbMoodTense = {
   enableGreekVerbColor: true,
-  enableGreekNounColor: true,
+  enableOTVerbColor: true,
+  enableGenderNumberColor: true,
   inputPassiveBackgroundColor: '#ffd6b8',
   inputPassiveUlColor1: '#000000',
   inputPassiveUlColor2: '#ffffff',
@@ -184,6 +328,24 @@ var defaultColorCodeGrammarSettingsVerbMoodTense = {
   inputCheckboxMiddleUlColor1CheckValue: false,
   inputCheckboxMiddleUlColor2: false,
   inputCheckboxMiddleUlColor2CheckValue: false,
+  inputOTPassiveBackgroundColor: '#ffd6b8',
+  inputOTPassiveUlColor1: '#000000',
+  inputOTPassiveUlColor2: '#ffffff',
+  inputCheckboxOTPassiveBackgroundColor: true,
+  inputCheckboxOTPassiveBackgroundColorCheckValue: true,
+  inputCheckboxOTPassiveUlColor1: true,
+  inputCheckboxOTPassiveUlColor1CheckValue: false,
+  inputCheckboxOTPassiveUlColor2: false,
+  inputCheckboxOTPassiveUlColor2CheckValue: false,
+  inputOTMiddleBackgroundColor: '#a3fefe',
+  inputOTMiddleUlColor1: '#000000',
+  inputOTMiddleUlColor2: '#ffffff',
+  inputCheckboxOTMiddleBackgroundColor: true,
+  inputCheckboxOTMiddleBackgroundColorCheckValue: true,
+  inputCheckboxOTMiddleUlColor1: true,
+  inputCheckboxOTMiddleUlColor1CheckValue: false,
+  inputCheckboxOTMiddleUlColor2: false,
+  inputCheckboxOTMiddleUlColor2CheckValue: false,
   inputColorVerbItem0: '#31ff00',
   inputColorVerbItem1: '#ffa500',
   inputColorVerbItem2: '#925011',
@@ -213,14 +375,58 @@ var defaultColorCodeGrammarSettingsVerbMoodTense = {
   moodToCombineWithPrevious: defaultMoodToCombineWithPrevious,
   granularControlOfMoods: false,
   granularControlOfTenses: false,
+  granularControlOfOTXAxis: false,
+  granularControlOfOTYAxis: false,
   moodsOnOff: [false, false, false, false, false, false],
   tensesOnOff: [false, false, false, false, false, false],
+  otXAxisOnOff: [false, false, false, false, false, false, false, false, false, false, false, false],
+  otYAxisOnOff: [false, false, false, false, false, false, false, false, false, false, false, false],
   xAxisForMood: true,
-  enableAdvancedTools: false
+  enableAdvancedTools: true,
+  enableOTAdvancedTools: true,
+  selectedHighlightOTVerbItem0: 'Reverse Arrow',
+  selectedHighlightOTVerbItem1: 'Dots',
+  selectedHighlightOTVerbItem2: 'Dash',
+  selectedHighlightOTVerbItem3: 'Dash Dot',
+  selectedHighlightOTVerbItem4: 'Arrow',
+  selectedHighlightOTVerbItem5: 'Short Arrow',
+  selectedHighlightOTVerbItem6: 'Underline',
+  selectedHighlightOTVerbItem7: 'Underline',
+  selectedHighlightOTVerbItem8: 'Underline',
+  selectedHighlightOTVerbItem9: 'Underline',
+  selectedHighlightOTVerbItem10: 'Underline',
+  selectedHighlightOTVerbItem11: 'Underline',
+  inputColorOTVerbItem0: '#000000',
+  inputColorOTVerbItem1: '#ff0000',
+  inputColorOTVerbItem2: '#0000ff',
+  inputColorOTVerbItem3: '#000000',
+  inputColorOTVerbItem4: '#000000',
+  inputColorOTVerbItem5: '#000000',
+  inputColorOTVerbItem6: '#000000',
+  inputColorOTVerbItem7: '#000000',
+  inputColorOTVerbItem8: '#000000',
+  inputColorOTVerbItem9: '#000000',
+  inputColorOTVerbItem10: '#000000',
+  inputColorOTVerbItem11: '#000000',
+  otVerbTableXHeader: { desc: ['Simple','Intensive / Resultative', 'Causative / Declarative'], repeat: [0, 0, 0]},
+  otVerbTableYHeader: { desc: ['Past or poss.<br>Present','Any time<br>or Present', 'Present or<br>Future'], repeat: [0, 2, 1] },
+  ntVerbTableXHeader: null,
+  ntVerbTableYHeader: { desc: ['Past', 'Past /<br>Present', 'Present', 'Future'], repeat: [2, 0, 0, 0] },
+  ntVerbTableHTML: null,
+  orderOfOTForm: defaultOrderOfOTVerbForm,
+  oTVerbFormToCombineWithPrevious: defaultOTVerbFormToCombineWithPrevious,
+  orderOfHebrewStem: defaultOrderOfHebrewStem,
+  hebrewStemToCombineWithPrevious: defaultHebriewStemToCombineWithPrevious,
+  orderOfAramaicStem: defaultOrderOfAramaicStem,
+  aramaicStemToCombineWithPrevious: defaultAramaicStemToCombineWithPrevious,
+  hebrewCodeOfStem: defaultHebrewCodeOfStem,
+  aramaicCodeOfStem: defaultAramaicCodeOfStem,
+  oTCodeOfForm: defaultCodeOfForm,
+  xAxisForStem: true
 };
 
-var defaultColorCodeGrammarSettingsVerbMoodTense2 = {
-  enableGreekNounColor: true,
+var defaultC4VerbMoodTense2 = {
+  enableGenderNumberColor: true,
   enableGreekVerbColor: true,
   inputColorVerbItem0: '#000000',
   inputColorVerbItem1: '#ff0000',
@@ -237,12 +443,16 @@ var defaultColorCodeGrammarSettingsVerbMoodTense2 = {
   orderOfMood: ['i', 'm', 's', 'o', 'n', 'p'],
   moodToCombineWithPrevious: [false, false, false, true, false, false],
   inputCheckboxPassiveBackgroundColorCheckValue: true,
-  inputCheckboxMiddleBackgroundColorCheckValue: true
+  inputCheckboxMiddleBackgroundColorCheckValue: true,
+  otVerbTableXHeader: null,
+  otVerbTableYHeader: null,
+  ntVerbTableYHeader: null,
+  ntVerbTableHTML: null
 };
 
-var defaultColorCodeGrammarSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettingsVerbMoodTense)); // Quick way to make a copy of the object
+var defaultC4 = JSON.parse(JSON.stringify(defaultC4VerbMoodTense)); // Quick way to make a copy of the object
 
-var defaultColorCodeGrammarSettingsVerbWithMiddlePassive = {
+var defaultC4VerbWithMiddlePassive = {
   inputCheckboxPassiveBackgroundColor: true,
   inputCheckboxPassiveBackgroundColorCheckValue: true,
   inputCheckboxPassiveUlColor1CheckValue: true,
@@ -251,16 +461,24 @@ var defaultColorCodeGrammarSettingsVerbWithMiddlePassive = {
   inputCheckboxMiddleBackgroundColorCheckValue: true,
   inputCheckboxMiddleUlColor1CheckValue: true,
   inputCheckboxMiddleUlColor2: true,
-  inputCheckboxMiddleUlColor2CheckValue: true
+  inputCheckboxMiddleUlColor2CheckValue: true,
+  otVerbTableXHeader: null,
+  otVerbTableYHeader: null,
+  ntVerbTableYHeader: null,
+  ntVerbTableHTML: null
 };
 
-var defaultColorCodeGrammarSettingsVerbTenseMood = {
-  enableGreekNounColor: false,
-  xAxisForMood: false
+var defaultC4VerbTenseMood = {
+  enableGenderNumberColor: false,
+  xAxisForMood: false,
+  otVerbTableXHeader: null,
+  otVerbTableYHeader: null,
+  ntVerbTableYHeader: null,
+  ntVerbTableHTML: null
 };
 
-var defaultColorCodeGrammarSettingsMainVsSupporingVerbs = {
-  enableGreekNounColor: false,
+var defaultC4MainVsSupporingVerbs = {
+  enableGenderNumberColor: false,
   inputColorVerbItem0: '#008000',
   inputColorVerbItem1: '#ed12ed',
   inputColorVerbItem2: '#ed12ed',
@@ -272,16 +490,25 @@ var defaultColorCodeGrammarSettingsMainVsSupporingVerbs = {
   selectedHighlightVerbItem2: 'Underline',
   selectedHighlightVerbItem3: 'Underline',
   selectedHighlightVerbItem4: 'Underline',
-  selectedHighlightVerbItem5: 'Underline'
+  selectedHighlightVerbItem5: 'Underline',
+  otVerbTableXHeader: null,
+  otVerbTableYHeader: null,
+  ntVerbTableYHeader: null,
+  ntVerbTableHTML: null
 }
 
-var defaultColorCodeGrammarSettingsNounOnly = {
+var defaultC4NounOnly = {
   enableGreekVerbColor: false,
-  enableGreekNounColor: true
+  enableOTVerbColor: false,
+  enableGenderNumberColor: true,
+  otVerbTableXHeader: null,
+  otVerbTableYHeader: null,
+  ntVerbTableYHeader: null,
+  ntVerbTableHTML: null
 };
 
-var defaultColorCodeGrammarSettingsImperativesOnly = {
-  enableGreekNounColor: false,
+var defaultC4ImperativesOnly = {
+  enableGenderNumberColor: false,
   granularControlOfMoods: true,
   moodsOnOff: [false, false, false, true, false, false],
   selectedHighlightVerbItem0: 'Underline',
@@ -289,27 +516,36 @@ var defaultColorCodeGrammarSettingsImperativesOnly = {
   selectedHighlightVerbItem2: 'Underline',
   selectedHighlightVerbItem3: 'Underline',
   selectedHighlightVerbItem4: 'Underline',
-  selectedHighlightVerbItem5: 'Underline'
+  selectedHighlightVerbItem5: 'Underline',
+  otVerbTableXHeader: null,
+  otVerbTableYHeader: null,
+  ntVerbTableYHeader: null,
+  ntVerbTableHTML: null
 };
-var currentColorCodeSettings;
+var c4;  //c4 is currentColorCodeConfig.  It is changed to c4 to save space
 
 function initCanvasAndCssForColorCodeGrammar() {
-  if (currentColorCodeSettings === undefined) getColorCodeGrammarSettings();
-  addVerbTable2(false, '#colorCodeTableDiv');
+  var a = performance.now();
+  if (c4 === undefined) getColorCodeGrammarSettings();  //c4 is currentColorCodeConfig.  It is changed to c4 to save space
+  addVerbTable(false, '#colorCodeTableDiv');
   createUlArrow();
   createUlShortArrow();
   createUlReverseArrow();
   createUlShortReverseArrow();
   createUlDash();
   createUlSolid();
+  createUlNone();
   createUlDoubleSolid();
   createUlDot();
   createUlWave();
   createUlDashDot();
   createUlDashDotDot();
   createUlForAllItemsInYAndX();
-  refreshForAllInstancesOfTense();
+  createUlForOT();
+//  refreshForAllInstancesOfTense();
   goAnimate();
+  var b = performance.now();
+  console.log('init took ' + (b - a) + ' ms.');
 }
 
 function calculateAnimationPixelIncrement(width) {
@@ -324,13 +560,16 @@ function calculateAnimationPixelIncrement(width) {
 }
 
 function createCanvas(canvasId, width, height) {
-  var canvas = document.createElement('canvas');
-  canvas.id = canvasId;
-  canvas.width = width;
-  canvas.height = height;
-  canvas.hidden = true;
-  var body = document.getElementsByTagName('body')[0];
-  body.appendChild(canvas);
+  var canvas = document.getElementById(canvasId);
+  if (canvas == undefined) {
+    canvas = document.createElement('canvas');
+    canvas.id = canvasId;
+    canvas.width = width;
+    canvas.height = height;
+    canvas.hidden = true;
+    var body = document.getElementsByTagName('body')[0];
+    body.appendChild(canvas);
+  }
   return canvas;
 }
 
@@ -480,6 +719,13 @@ function createUlSolid() {
   ulSolid.img.src = ulSolid.canvas.toDataURL('image/png');
 }
 
+function createUlNone() {
+  var ulNone = uLBASEIMGS[11];
+  ulNone.canvas = createCanvas(ulNone.name, 1, 10);
+  ulNone.context = ulNone.canvas.getContext('2d');
+  ulNone.img.src = ulNone.canvas.toDataURL('image/png');
+}
+
 function createUlDoubleSolid() {
   var ulDoubleSolid = uLBASEIMGS[3];
   ulDoubleSolid.canvas = createCanvas(ulDoubleSolid.name, 1, 10);
@@ -530,9 +776,65 @@ function createUlWave() {
   ulWave.animIncrement = calculateAnimationPixelIncrement(ulWave.canvas.width);
 }
 
+function creatUlForOTYAxis(rowNum, numOfRows, numOfColumns) {
+  var currentUL;
+  if ((numOfRows != null) && (rowNum == numOfRows)) currentUL = 'ulNone';
+  else currentUL = underlineCanvasName[c4['selectedHighlightOTVerbItem' + rowNum]];
+  var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == currentUL; });
+  if (numOfColumns == null) numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
+  ulOTVbCSS[rowNum] = new Array(numOfColumns * 3);
+  for (var counter2 = 0; counter2 < numOfColumns; counter2++) {
+    var currentColor = c4['inputColorOTVerbItem' + counter2];
+    for (var counter3 = 0; counter3 < 3; counter3 ++) {
+      var columnIndex = (counter2 * 3) + counter3;
+      ulOTVbCSS[rowNum][columnIndex] = new ULOBJ('R' + rowNum + 'C' + columnIndex);
+      createUlForOneInstanceOfTense(ulOTVbCSS[rowNum][columnIndex], srcImgObj, currentColor, -1);
+    }
+  }
+}
+
+function createUlForOT() {
+  numOfRows = getVariablesForOTVerbTable('H').orderOfYAxisItems.length;
+  numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
+  ulOTVbCSS = new Array(numOfRows+1);
+  for (var counter1 = 0; counter1 <= numOfRows; counter1++) { // last row is for the title of color configuration screen
+    creatUlForOTYAxis(counter1, numOfRows, numOfColumns);
+  }
+  var rowNum = -1;
+  oTFormIndex2CSS = {};
+  for (var counter = 0; counter < c4.orderOfOTForm.length; counter += 1) {
+    if (!c4.oTVerbFormToCombineWithPrevious[counter]) rowNum += 1;
+    oTFormIndex2CSS[ c4.orderOfOTForm[counter] ] = rowNum;
+  }
+  var colGroup = -1;
+  for (var counter = 0; counter < c4.orderOfHebrewStem.length; counter += 1) {
+    if (!c4.hebrewStemToCombineWithPrevious[counter]) colGroup += 1;
+    var colIndex = colGroup * 3;
+    if (c4.orderOfHebrewStem[counter] != undefined) {
+      if (c4.hebrewCodeOfStem[c4.orderOfHebrewStem[counter]][1] == 'p') 
+        colIndex += 1;
+      else if (c4.hebrewCodeOfStem[c4.orderOfHebrewStem[counter]][1] == 'm')
+        colIndex += 2;
+      hebrewStemIndex2CSS [ c4.orderOfHebrewStem[counter] ] = colIndex;
+    }
+  }
+  colGroup = -1;
+  for (var counter = 0; counter < c4.orderOfAramaicStem.length; counter += 1) {
+    if (!c4.aramaicStemToCombineWithPrevious[counter]) colGroup += 1;
+    var colIndex = colGroup * 3;
+    if (c4.orderOfAramaicStem[counter] != undefined) {
+      if (c4.aramaicCodeOfStem[c4.orderOfAramaicStem[counter]][1] == 'p') 
+        colIndex += 1;
+      else if (c4.aramaicCodeOfStem[c4.orderOfAramaicStem[counter]][1] == 'm')
+        colIndex += 2;
+      aramaicStemIndex2CSS [ c4.orderOfAramaicStem[counter] ] = colIndex;
+    }
+  }
+}
+
 function createUlForAllItemsInYAndX() {
   var moodOrTenseOnYAxis;
-  if (currentColorCodeSettings.xAxisForMood) {
+  if (c4.xAxisForMood) {
     moodOrTenseOnYAxis = 'tense';
     moodOrTenseOnXAxis = 'mood';
   }
@@ -542,11 +844,11 @@ function createUlForAllItemsInYAndX() {
   }
   var r = getVariablesForVerbTable();
   for (var counter1 = 0; counter1 < r.nameOfAllYAxisItems.length; counter1 += 1) {
-    var currentULForYAxis = underlineCanvasName[currentColorCodeSettings['selectedHighlightVerbItem' + getAxisOrderOfItem(moodOrTenseOnYAxis, counter1)]];
+    var currentULForYAxis = underlineCanvasName[c4['selectedHighlightVerbItem' + getAxisOrderOfItem(moodOrTenseOnYAxis, counter1)]];
     var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == currentULForYAxis; });
     for (var counter2 = 0; counter2 < r.nameOfAllXAxisItems.length; counter2 += 1) {
-      colorForXAxis = currentColorCodeSettings['inputColorVerbItem' + getAxisOrderOfItem(moodOrTenseOnXAxis, counter2)];
-      if (currentColorCodeSettings.xAxisForMood) {
+      colorForXAxis = c4['inputColorVerbItem' + getAxisOrderOfItem(moodOrTenseOnXAxis, counter2)];
+      if (c4.xAxisForMood) {
         moodCounter = counter2;
         tenseCounter = counter1;
         currentMoodDescription = r.nameOfAllXAxisItems[counter2];
@@ -564,8 +866,8 @@ function createUlForAllItemsInYAndX() {
         var indexToUlVerbCSS = arrayIndexOfCurrentTense[counter3];
         if (moodIndex.indexOf(indexToUlVerbCSS) > -1) {
           createUlForOneInstanceOfTense(ulVerbCSS[indexToUlVerbCSS], srcImgObj, colorForXAxis, indexToUlVerbCSS);
-          ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByTense = (!(currentColorCodeSettings.granularControlOfTenses && !currentColorCodeSettings.tensesOnOff[tenseCounter]));
-          ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByMood = (!(currentColorCodeSettings.granularControlOfMoods && !currentColorCodeSettings.moodsOnOff[moodCounter]));
+          ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByTense = (!(c4.granularControlOfTenses && !c4.tensesOnOff[tenseCounter]));
+          ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByMood = (!(c4.granularControlOfMoods && !c4.moodsOnOff[moodCounter]));
         }
       }
     }
@@ -573,76 +875,35 @@ function createUlForAllItemsInYAndX() {
 }
 
 function createUlForOneInstanceOfTense(destImgObj, srcImgObj, color, ulVerbCSSIndex) {
-  destImgObj.canvas = createCanvas(destImgObj.name, 100, 10);
+  destImgObj.canvas = createCanvas(destImgObj.name, srcImgObj.canvas.width, srcImgObj.canvas.height);
   updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex);
 }
 
-function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-  updateLocalStorage('selectedHighlightVerbItem' + itemNumberOfYAxis, canvasUnderlineName[nameOfUnderline]);
-  var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == nameOfUnderline; });
-  if (srcImgObj === undefined) {
-    alert('Error: cannot find the name of tense or underline');
-  } else {
-    var r = getVerbItemsCombinedWithCurrentItem('Y', itemNumberOfYAxis);
-    for (var count = 0; count < r.nameOfItemCombinedWithCurrentItem.length; count ++) {
-      updateUlForAllInstancesOfYAxisItem(r.nameOfItemCombinedWithCurrentItem[count], srcImgObj);
-    }
-    if ((nameOfUnderline !== 'ulSolid') && (nameOfUnderline !== 'ulDoubleSolid') && (currentColorCodeSettings.enableAdvancedTools) ) {
-      hideIndividualInputField('#inputAnimate' + itemNumberOfYAxis, true);
-      hideIndividualInputField('#inputAnimateCheckbox' + itemNumberOfYAxis, true);
-    }
-    else {
-      hideIndividualInputField('#inputAnimate' + itemNumberOfYAxis, false);
-      hideIndividualInputField('#inputAnimateCheckbox' + itemNumberOfYAxis, false);
-      updateLocalStorage('inputAnimate' + itemNumberOfYAxis, false);
-      $('#inputAnimate' + itemNumberOfYAxis).prop('checked', false);
-    }
-  }
-  
-}
-
-function updateUlForAllInstancesOfYAxisItem(nameOfYAxisItem, srcImgObj, color) {
-  var indexOfYAxisItem, orderOfCurrentXAxisItem;
-  if (currentColorCodeSettings.xAxisForMood)
-    indexOfYAxisItem = _.find(tenseIndexArray, function(obj) { return obj.name == nameOfYAxisItem; }).array;
-  else 
-    indexOfYAxisItem = _.find(moodIndexArray, function(obj) { return obj.name == nameOfYAxisItem; }).array;
-  for (var j = 0; j < indexOfYAxisItem.length; j += 1) {
-    var index = indexOfYAxisItem[j];
-    orderOfCurrentXAxisItem = getAxisOrderOfCSS(ulVerbCSS[index].name, 'X');
-    var color = currentColorCodeSettings['inputColorVerbItem' + orderOfCurrentXAxisItem];
-    updateUlForSpecificYAxis(ulVerbCSS[index], srcImgObj, color, index);
-  }
-}
-
 function displayUlVerbCSSOrNot(indexToUlVerbCSS) {
-  if ( ( (!currentColorCodeSettings.granularControlOfMoods && !currentColorCodeSettings.granularControlOfTenses) || 
-         ((indexToUlVerbCSS != null) && ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByMood && currentColorCodeSettings.granularControlOfMoods) || 
-         ((indexToUlVerbCSS != null) && ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByTense && currentColorCodeSettings.granularControlOfTenses) ) &&
-         currentColorCodeSettings.enableGreekVerbColor) 
-    return true;
+  if ( ( ( (!c4.granularControlOfMoods && !c4.granularControlOfTenses) || 
+         ((indexToUlVerbCSS != null) && ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByMood && c4.granularControlOfMoods) || 
+         ((indexToUlVerbCSS != null) && ulVerbCSS[indexToUlVerbCSS].displayStatusSelectedByTense && c4.granularControlOfTenses) ) &&
+         c4.enableGreekVerbColor) || (indexToUlVerbCSS == -1) ) return true; // indexToUlVerbCSS is -1 when it is OT verb.  Temp solution.
   else return false;
 }
 
-function refreshForAllInstancesOfTense() {
-//  var a = performance.now();
-  for (var j = 0; j < ulVerbCSS.length; j += 1) {
-    if (displayUlVerbCSSOrNot(j)) {
-      $('.v' + ulVerbCSS[j].name).css('background', 'url(' + ulVerbCSS[j].img.src + ') repeat-x 100% 100%');
+function refreshForAllInstancesOfTense(ntCSSOnThisPage, otCSSOnThisPage) {
+  if (c4.enableGenderNumberColor) {
+    if (userTurnGenderNumberFromOffToOn) {
+      userTurnGenderNumberFromOffToOn = false;
+      $('.old_mas').removeClass('old_mas').addClass('mas');
+      $('.old_fem').removeClass('old_fem').addClass('fem');
+      $('.old_neut').removeClass('old_neut').addClass('neut');
+      $('.old_sing').removeClass('old_sing').addClass('sing');
+      $('.old_plur').removeClass('old_plur').addClass('plur');
     }
-    else {
-      $('.v' + ulVerbCSS[j].name).css('background', 'none');
-    }
-  }
-
-  if (currentColorCodeSettings.enableGreekNounColor) {
-    $('.mas').css('color', currentColorCodeSettings.inputColorMasculine);
-    $('.fem').css('color', currentColorCodeSettings.inputColorFeminine);
-    $('.neut').css('color', currentColorCodeSettings.inputColorNeuter);
-    updateCssForNumber('singular', currentColorCodeSettings.selectedHighlightSingular);
-    updateCssForNumber('plural', currentColorCodeSettings.selectedHighlightPlural);
+    $('.mas').css('color', c4.inputColorMasculine);
+    $('.fem').css('color', c4.inputColorFeminine);
+    $('.neut').css('color', c4.inputColorNeuter);
+    updateCssForNumber('singular', c4.selectedHighlightSingular);
+    updateCssForNumber('plural', c4.selectedHighlightPlural);
   } else {
-    if (updatedNounCSS) {
+    if (updatedGenderNumberCSS) {
       $('.mas').css('color', '');
       $('.fem').css('color', '');
       $('.neut').css('color', '');
@@ -650,17 +911,81 @@ function refreshForAllInstancesOfTense() {
       $('.plur').css('font-weight', '');
       $('.sing').css('font-style', '');
       $('.plur').css('font-style', '');
-      updatedNounCSS = false;
+      updatedGenderNumberCSS = false;
     }
-    $('.mas').removeClass('mas');
-    $('.fem').removeClass('fem');
-    $('.neut').removeClass('neut');
-    $('.sing').removeClass('sing');
-    $('.plur').removeClass('plur');
+    $('.mas').removeClass('mas').addClass('old_mas');
+    $('.fem').removeClass('fem').addClass('old_fem');
+    $('.neut').removeClass('neut').addClass('old_neut');
+    $('.sing').removeClass('sing').addClass('old_sing');
+    $('.plur').removeClass('plur').addClass('old_plur');
   }
+  var a = performance.now();
+
+  if ((ntCSSOnThisPage == undefined) || (ntCSSOnThisPage.length > 0)) {
+    for (var j = 0; j < ulVerbCSS.length; j += 1) {
+      if (displayUlVerbCSSOrNot(j)) {
+        if ((ntCSSOnThisPage == undefined) || (ntCSSOnThisPage.indexOf(' v' + ulVerbCSS[j].name + ' ') > -1)) {
+          $('.v' + ulVerbCSS[j].name).css('background', 'url(' + ulVerbCSS[j].img.src + ') repeat-x 100% 100%');
+        }
+      }
+      else if ((!c4.enableGreekVerbColor) || ((c4.granularControlOfMoods) || (c4.granularControlOfTenses))) $('.v' + ulVerbCSS[j].name).css('background', 'none');
+    }
+  }
+
+  if (otCSSOnThisPage == undefined) {
+    for (var j = 0; j < ulOTVbCSS.length; j += 1) {
+      for (var k = 0; k < ulOTVbCSS[j].length; k += 1) {
+        var display = false;
+        if (c4.enableOTVerbColor) {
+          if (j == (ulOTVbCSS.length -1)) display = true;
+          else if ( ((!c4.granularControlOfOTYAxis) || (c4.otYAxisOnOff[j])) &&
+              ((!c4.granularControlOfOTXAxis) || (c4.otXAxisOnOff[Math.floor(k/3)])) )
+            display = true;
+          else if (c4.granularControlOfOTYAxis && c4.granularControlOfOTXAxis)
+            display = (c4.otYAxisOnOff[j]) || (c4.otXAxisOnOff[Math.floor(k/3)]);
+        }
+        if (display) $('.vot_' + ulOTVbCSS[j][k].name).css('background', 'url(' + ulOTVbCSS[j][k].img.src + ') repeat-x 100% 100%');
+        else if ((!c4.enableOTVerbColor) || ((c4.granularControlOfOTXAxis) || (c4.granularControlOfOTYAxis))) $('.vot_' + ulOTVbCSS[j][k].name).css('background', 'none');
+      }
+    }
+  }
+  else if ((otCSSOnThisPage.length > 4) && (c4.enableOTVerbColor)) {
+    cssCodes = otCSSOnThisPage.split(' ');
+    for (var j = 0; j < cssCodes.length; j += 1) {
+      var r = getRowColNum(cssCodes[j]);
+      var row = r[0];
+      var column = r[1];
+      var display = false;
+      if ((row != null) && (column != null)) {
+        if ( ((!c4.granularControlOfOTYAxis) || (c4.otYAxisOnOff[row])) &&
+            ((!c4.granularControlOfOTXAxis) || (c4.otXAxisOnOff[column])) )
+          display = true;
+        else if (c4.granularControlOfOTYAxis && c4.granularControlOfOTXAxis)
+          display = (c4.otYAxisOnOff[row]) || (c4.otXAxisOnOff[column]);
+        if (display) $('.vot_' + ulOTVbCSS[row][column].name).css('background', 'url(' + ulOTVbCSS[row][column].img.src + ') repeat-x 100% 100%');
+        else if ((c4.granularControlOfOTXAxis) || (c4.granularControlOfOTYAxis)) $('.vot_' + ulOTVbCSS[row][column].name).css('background', 'none');
+      }
+    }
+  }
+  var b = performance.now();
+  console.log('refresh took ' + (b - a) + ' ms.');
   $('.primaryLightBg').css('text-shadow', 'none'); // Need to set it in the program, if not the browser will prioritize the CSS updated in this Javascript.  
-//  var b = performance.now();
-//  console.log('refresh took ' + (b - a) + ' ms.');
+}
+
+function getRowColNum(input) {
+  var row = null, column = null;
+  var lng = input.length;
+  if ((lng >= 4) && (lng <= 6) && (input.substr(0,1) == 'R')) {
+    if (input.substr(2,1) == 'C') {
+      row = parseInt(input.substr(1, 1));
+      column = parseInt(input.substr(3));
+    }
+    else if (input.substr(3,1) == 'C') {
+      row = parseInt(input.substr(1, 2));
+      column = parseInt(input.substr(4));
+    }
+  }
+  return [row, column];
 }
 
 function updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex) {
@@ -670,237 +995,88 @@ function updateUlForSpecificYAxis(destImgObj, srcImgObj, color, ulVerbCSSIndex) 
     destImgObj.canvas.width = srcImgObj.canvas.width;
     destImgObj.context = destImgObj.canvas.getContext('2d');
     destImgObj.context.drawImage(srcImgObj.canvas, 0, 0);
+    var passiveVoice = false;
+    var middleVoice = false;
+    var passiveStrokeStyle = ''
+    var middleStrokeStyle = '';
+    var otItem = false;
     if (destImgObj.name.length === 3) {
-      if ((destImgObj.name.substr(1, 1) === 'p') &&
-        (currentColorCodeSettings.inputCheckboxPassiveBackgroundColorCheckValue)) {
-        backgroundColor = currentColorCodeSettings.inputPassiveBackgroundColor;
-      } else if ((destImgObj.name.substr(1, 1) === 'm') &&
-        (currentColorCodeSettings.inputCheckboxMiddleBackgroundColorCheckValue)) {
-        backgroundColor = currentColorCodeSettings.inputMiddleBackgroundColor;
+      var pos2 = destImgObj.name.substr(1, 1);
+      var passiveVoice = ( (destImgObj.name.length === 3) && (pos2 === 'p') );
+      var middleVoice = ( (destImgObj.name.length === 3) && (pos2 === 'm') );
+      if (passiveVoice) {
+        if (c4.inputCheckboxPassiveBackgroundColorCheckValue)
+          backgroundColor = c4.inputPassiveBackgroundColor;
+        if (c4.inputCheckboxPassiveUlColor1CheckValue)
+          passiveStrokeStyle = c4.inputPassiveUlColor1;
+      }
+      else if (middleVoice) {
+        if (c4.inputCheckboxMiddleBackgroundColorCheckValue)
+          backgroundColor = c4.inputMiddleBackgroundColor;
+        if (c4.inputCheckboxMiddleUlColor1CheckValue)
+          middleStrokeStyle = c4.inputMiddleUlColor1;
+      }
+    }
+    else if (destImgObj.name.length > 3) {
+      var r = getRowColNum(destImgObj.name);
+      var column = r[1];
+      if (column != null) {
+        otItem = true;
+        var numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
+        if (column <= (numOfColumns * 3)) {
+          if ((column % 3) == 1) {
+            passiveVoice = true;
+            if (c4.inputCheckboxOTPassiveBackgroundColorCheckValue)
+              backgroundColor = c4.inputOTPassiveBackgroundColor;
+            if (c4.inputCheckboxOTPassiveUlColor1CheckValue)
+              passiveStrokeStyle = c4.inputOTPassiveUlColor1;
+          }
+          else if ((column % 3) == 2) {
+            middleVoice = true;
+            if (c4.inputCheckboxOTMiddleBackgroundColorCheckValue)
+              backgroundColor = c4.inputOTMiddleBackgroundColor;
+            if (c4.inputCheckboxOTMiddleUlColor1CheckValue)
+              middleStrokeStyle = c4.inputOTMiddleUlColor1;
+          }
+        }
       }
     }
     changeImageColor(destImgObj, color, backgroundColor);
-    if (destImgObj.name.length === 3) {
-      if ((destImgObj.name.substr(1, 1) === 'p') &&
-        (currentColorCodeSettings.inputCheckboxPassiveUlColor1CheckValue)) {
-        destImgObj.context.beginPath();
-        destImgObj.context.strokeStyle = currentColorCodeSettings.inputPassiveUlColor1;
-        destImgObj.context.lineWidth = 2;
-        destImgObj.context.moveTo(0, destImgObj.canvas.heigth - 1);
-        destImgObj.context.lineTo(destImgObj.canvas.width, destImgObj.canvas.heigth - 1);
-        destImgObj.context.stroke();
-        destImgObj.context.closePath();
-      } else if ((destImgObj.name.substr(1, 1) === 'm') &&
-        (currentColorCodeSettings.inputCheckboxMiddleUlColor1CheckValue)) {
-        destImgObj.context.beginPath();
-        destImgObj.context.strokeStyle = currentColorCodeSettings.inputMiddleUlColor1;
-        destImgObj.context.lineWidth = 2;
-        destImgObj.context.moveTo(0, destImgObj.canvas.heigth - 1);
-        destImgObj.context.lineTo(destImgObj.canvas.width, destImgObj.canvas.heigth - 1);
-        destImgObj.context.stroke();
-        destImgObj.context.closePath();
-      }
+    if ((passiveVoice) && (passiveStrokeStyle != '')) {
+      destImgObj.context.beginPath();
+      destImgObj.context.strokeStyle = passiveStrokeStyle;
+      destImgObj.context.lineWidth = 2;
+      destImgObj.context.moveTo(0, destImgObj.canvas.heigth - 1);
+      destImgObj.context.lineTo(destImgObj.canvas.width, destImgObj.canvas.heigth - 1);
+      destImgObj.context.stroke();
+      destImgObj.context.closePath();
+    } else if ((middleVoice) && (middleStrokeStyle != '')) {
+      destImgObj.context.beginPath();
+      destImgObj.context.strokeStyle = middleStrokeStyle;
+      destImgObj.context.lineWidth = 2;
+      destImgObj.context.moveTo(0, destImgObj.canvas.heigth - 1);
+      destImgObj.context.lineTo(destImgObj.canvas.width, destImgObj.canvas.heigth - 1);
+      destImgObj.context.stroke();
+      destImgObj.context.closePath();
     }
     destImgObj.img.src = destImgObj.canvas.toDataURL('image/png');
     destImgObj.animIncrement = calculateAnimationPixelIncrement(destImgObj.canvas.width);
-    if (displayUlVerbCSSOrNot(ulVerbCSSIndex)) { 
+    if ((destImgObj.name.length == 3) && (displayUlVerbCSSOrNot(ulVerbCSSIndex))) { 
       $('.v' + destImgObj.name).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
     }
-  }
-}
-
-function checkNounColor() {
-  var currentColorPicker = $('#inputColorMasculine').spectrum('get').toHexString();
-  if (currentColorCodeSettings.inputColorMasculine != currentColorPicker) 
-    userUpdateNounColor('masculine', currentColorPicker);
-  currentColorPicker = $('#inputColorFeminine').spectrum('get').toHexString();
-  if (currentColorCodeSettings.inputColorFeminine != currentColorPicker) 
-    userUpdateNounColor('feminine', currentColorPicker);
-  currentColorPicker = $('#inputColorNeuter').spectrum('get').toHexString();
-  if (currentColorCodeSettings.inputColorNeuter != currentColorPicker) 
-    userUpdateNounColor('feminine', currentColorPicker);
-}
-
-function checkVerbColorInput() {
-  for (var i = 0; i < getVariablesForVerbTable().orderOfXAxisItems.length; i ++) {
-    var currentColor = currentColorCodeSettings['inputColorVerbItem' + i];
-    var currentColorPicker = $('#inputColorVerbItem' + i).spectrum("get").toHexString();
-    if (currentColor != currentColorPicker)
-      userUpdateColor(i, currentColorPicker);
-  }
-  var currentColor = currentColorCodeSettings.inputMiddleBackgroundColor;
-  var currentColorPicker = $('#inputMiddleBackgroundColor').spectrum("get").toHexString();
-  var colorForMiddleWasUpdated = false;
-  if (currentColor != currentColorPicker) {
-    updateLocalStorage('inputMiddleBackgroundColor', currentColorPicker);
-    colorForMiddleWasUpdated = true;
-  }
-  currentColor = currentColorCodeSettings.inputMiddleUlColor1;
-  currentColorPicker = $('#inputMiddleUlColor1').spectrum("get").toHexString();
-  if (currentColor != currentColorPicker) {
-    updateLocalStorage('inputMiddleUlColor1', currentColorPicker);
-    colorForMiddleWasUpdated = true;
-  }
-  currentColor = currentColorCodeSettings.inputMiddleUlColor2;
-  currentColorPicker = $('#inputMiddleUlColor2').spectrum("get").toHexString();
-  if (currentColor != currentColorPicker) {
-    updateLocalStorage('inputMiddleUlColor2', currentColorPicker);
-    colorForMiddleWasUpdated = true;
-  }
-  if (colorForMiddleWasUpdated) updateVerbsBackground('middle');
-  currentColor = currentColorCodeSettings.inputPassiveBackgroundColor;
-  currentColorPicker = $('#inputPassiveBackgroundColor').spectrum("get").toHexString();
-  var colorForPassiveWasUpdated = false;
-  if (currentColor != currentColorPicker) {
-    updateLocalStorage('inputPassiveBackgroundColor', currentColorPicker);
-    colorForPassiveWasUpdated = true;
-  }
-  currentColor = currentColorCodeSettings.inputPassiveUlColor1;
-  currentColorPicker = $('#inputPassiveUlColor1').spectrum("get").toHexString();
-  if (currentColor != currentColorPicker) {
-    updateLocalStorage('inputPassiveUlColor1', currentColorPicker);
-    colorForPassiveWasUpdated = true;
-  }
-  currentColor = currentColorCodeSettings.inputPassiveUlColor2;
-  currentColorPicker = $('#inputPassiveUlColor2').spectrum("get").toHexString();
-  if (currentColor != currentColorPicker) {
-    updateLocalStorage('inputPassiveUlColor2', currentColorPicker);
-    colorForPassiveWasUpdated = true;
-  }
-  if (colorForPassiveWasUpdated) updateVerbsBackground('passive');
-}
-
-function getAxisOrderOfCSS(cssName, axis) {
-  var positionInOrderOfMoodOrTense, moodOrTense;
-  if ( ((!currentColorCodeSettings.xAxisForMood) && (axis == 'X')) ||
-       ((currentColorCodeSettings.xAxisForMood) && (axis == 'Y')) ) {
-    moodOrTense = 'tense';
-    positionInOrderOfMoodOrTense = currentColorCodeSettings.orderOfTense.indexOf(cssName.substr(0, 1));
-  }
-  else {
-    moodOrTense = 'mood';
-    positionInOrderOfMoodOrTense = currentColorCodeSettings.orderOfMood.indexOf(cssName.substr(2, 1));
-  }
-  return getAxisOrderOfItem(moodOrTense, positionInOrderOfMoodOrTense);
-}
-
-function getAxisOrderOfItem(moodOrTense, itemNumber) {
-  var orderInAxis = itemNumber;
-  for (i = 1; i <= itemNumber; i++) {
-    if (currentColorCodeSettings[moodOrTense + 'ToCombineWithPrevious'][i]) orderInAxis --;
-  }
-  return orderInAxis;
-}
-
-function userUpdateColor(itemNumber, color) {
-  var robinsonCode, itemIndexArray, orderInYAxis;
-  updateLocalStorage('inputColorVerbItem' + itemNumber, color);
-  if (currentColorCodeSettings.xAxisForMood) {
-    robinsonCode = robinsonCodeOfMood;
-    itemIndexArray = moodIndexArray;
-  }
-  else {
-    robinsonCode = robinsonCodeOfTense;
-    itemIndexArray = tenseIndexArray;
-  }
-  var r = getVerbItemsCombinedWithCurrentItem('X', itemNumber);
-  for (counter = 0; counter < r.codeOfItemCombinedWithCurrentItem.length; counter ++) {
-    var currentItemName = robinsonCode[r.codeOfItemCombinedWithCurrentItem[counter]];
-    var arrayIdxWithCurrentItem = _.find(itemIndexArray, function(obj) { return obj.name == currentItemName; }).array;
-    for (var i = 0; i < arrayIdxWithCurrentItem.length; i += 1) {
-      var indexToUlVerbCSS = arrayIdxWithCurrentItem[i];
-      orderInYAxis = getAxisOrderOfCSS(ulVerbCSS[indexToUlVerbCSS].name, 'Y');
-      var selectedUnderline = underlineCanvasName[currentColorCodeSettings['selectedHighlightVerbItem' + orderInYAxis]];
-      var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == selectedUnderline; });
-      updateUlForSpecificYAxis(ulVerbCSS[indexToUlVerbCSS], srcImgObj, color, indexToUlVerbCSS);
+    else if (otItem) {
+      $('.vot_' + destImgObj.name).css('background', 'url(' + destImgObj.img.src + ') repeat-x 100% 100%');
     }
   }
-}
-
-function userUpdateNounColor(gender, color) {
-  updateLocalStorage('inputColor' + upCaseFirst(gender), color);
-  var cssName = '';
-  if (gender === 'masculine') cssName = '.mas';
-  else if (gender === 'feminine') cssName = '.fem';
-  else if (gender === 'neuter') cssName = '.neut';
-  $(cssName).css({
-    'color': color
-  });
-  updatedNounCSS = true;
-}
-
-function userUpdateNumber(type, fontHighlight) {
-  updateLocalStorage('selectedHighlight' + upCaseFirst(type), fontHighlight);
-  updateCssForNumber(type, fontHighlight);
-}
-
-function updateCssForNumber(type, fontHighlight) {
-  var cssName = '';
-  if (type === 'singular') cssName = '.sing';
-  else if (type === 'plural') cssName = '.plur';
-  else return; // unknown type. something is wrong!
-  if (fontHighlight === 'bold') {
-    $(cssName).css('font-style', 'normal');
-    $(cssName).css('font-weight', 'bold');
-  } else if (fontHighlight === 'normal') {
-    $(cssName).css('font-style', 'normal'); // 
-    $(cssName).css('font-weight', 'normal');
-  } else if (fontHighlight === 'bold_italic') {
-    $(cssName).css('font-style', 'italic');
-    $(cssName).css('font-weight', 'bold');
-  } else if (fontHighlight === 'normal_italic') {
-    $(cssName).css('font-style', 'italic');
-    $(cssName).css('font-weight', 'normal');
-  }
-  updatedNounCSS = true;
-}
-
-function userUpdateAnimation(itemNumber) {
-  var arrayIndexOfCSSRelatedToItemSelected = [];
-  var currentULForItem = currentColorCodeSettings['selectedHighlightVerbItem' + itemNumber];
-  var tempIndexArray;
-  if (currentColorCodeSettings.xAxisForMood) tempIndexArray = tenseIndexArray;
-  else tempIndexArray = moodIndexArray;
-  var r = getVerbItemsCombinedWithCurrentItem('Y', itemNumber);
-  for (i = 0; i < r.nameOfItemCombinedWithCurrentItem.length; i ++) {
-    arrayIndexOfCSSRelatedToItemSelected = arrayIndexOfCSSRelatedToItemSelected.concat( 
-      _.find(tempIndexArray, function(obj) { return obj.name == r.nameOfItemCombinedWithCurrentItem[i]; }).array );
-  }
-  if ((document.getElementById('inputAnimateCheckbox' + itemNumber).checked) &&
-    (currentULForItem !== '2 lines') && (currentULForItem !== 'Underline')) {
-    updateLocalStorage('inputAnimate' + itemNumber, true);
-    for (var j = 0; j < arrayIndexOfCSSRelatedToItemSelected.length; j += 1) {
-      var indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[j];
-      if (animationIndexArray.indexOf(indexToUlVerbCSS) === -1) animationIndexArray.push(indexToUlVerbCSS);
-    }
-  } else {
-    updateLocalStorage('inputAnimate' + itemNumber, false);
-    for (var k = 0; k < arrayIndexOfCSSRelatedToItemSelected.length; k += 1) {
-      var indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[k];
-      var tempIdx = animationIndexArray.indexOf(indexToUlVerbCSS);
-      if (indexToUlVerbCSS >= 0) animationIndexArray.splice(tempIdx, 1);
-    }
-  }
-  copyOfpassiveIndexArray = passiveIndexArray.slice(0);
-  copyOfmiddleIndexArray = middleIndexArray.slice(0);
-  for (var counter = 0; counter < animationIndexArray.length; counter += 1) {
-    var tempIndex1 = animationIndexArray[counter];
-    var tempIndex2 = copyOfpassiveIndexArray.indexOf(tempIndex1);
-    if (tempIndex2 >= 0) copyOfpassiveIndexArray.splice(tempIndex2, 1);
-    tempIndex2 = copyOfmiddleIndexArray.indexOf(tempIndex1);
-    if (tempIndex2 >= 0) copyOfmiddleIndexArray.splice(tempIndex2, 1);
-  }
-  if ((animationIndexArray.length > 0) && (handleOfRequestedAnimation === -1))
-    goAnimate();
 }
 
 function goAnimate(givenTime) {
-  var animateUlForPassive = currentColorCodeSettings.inputCheckboxPassiveUlColor1CheckValue &&
-    currentColorCodeSettings.inputCheckboxPassiveUlColor2CheckValue;
-  var animateUlForMiddle = currentColorCodeSettings.inputCheckboxMiddleUlColor1CheckValue &&
-    currentColorCodeSettings.inputCheckboxMiddleUlColor2CheckValue;
+  var animateUlForPassive = c4.inputCheckboxPassiveUlColor1CheckValue &&
+    c4.inputCheckboxPassiveUlColor2CheckValue;
+  var animateUlForMiddle = c4.inputCheckboxMiddleUlColor1CheckValue &&
+    c4.inputCheckboxMiddleUlColor2CheckValue;
   if ((animateUlForPassive || animateUlForMiddle || (animationIndexArray.length > 0)) &&
-       colorCodeGrammarAvailableAndSelected && currentColorCodeSettings.enableGreekVerbColor) {
+       colorCodeGrammarAvailableAndSelected && c4.enableGreekVerbColor) {
     if (((givenTime - timestampOfLastAnimation) > animationInterval) || (givenTime === undefined)) {
       if (numOfAnimationsAlreadyPerformedOnSamePage < maxAnimationOnSamePageWithoutMovement * 2) {
         if (numOfAnimationsAlreadyPerformedOnSamePage < maxAnimationOnSamePageWithoutMovement) {
@@ -960,11 +1136,11 @@ function animateCanvasBottomLine(cc, voice) {
 function updateBottomLineOnly(cc, voice) {
   var color1, color2;
   if (voice === 'middle') {
-    color1 = currentColorCodeSettings.inputMiddleUlColor1;
-    color2 = currentColorCodeSettings.inputMiddleUlColor2;
+    color1 = c4.inputMiddleUlColor1;
+    color2 = c4.inputMiddleUlColor2;
   } else {
-    color1 = currentColorCodeSettings.inputPassiveUlColor1;
-    color2 = currentColorCodeSettings.inputPassiveUlColor2;
+    color1 = c4.inputPassiveUlColor1;
+    color2 = c4.inputPassiveUlColor2;
   }
   cc.context.beginPath();
   cc.context.lineWidth = 2;
@@ -1009,654 +1185,17 @@ function hexToRgb(hex) {
   } : null;
 }
 
-function userUpdatePassiveMiddleVoiceBackground(voice) {
-  var ucVoice = upCaseFirst(voice);
-  if (document.getElementById('inputCheckbox' + ucVoice + 'BackgroundColor').checked) {
-    updateLocalStorage('inputCheckbox' + ucVoice + 'BackgroundColorCheckValue', true);
-    $('#input' + ucVoice + 'BackgroundColor').spectrum('enable');
-  } else {
-    updateLocalStorage('inputCheckbox' + ucVoice + 'BackgroundColorCheckValue', false);
-    $('#input' + ucVoice + 'BackgroundColor').spectrum('disable');
-  }
-  updateVerbsBackground(voice);
-}
-
-function userEnablePassiveMiddleVerbsUnderline1(voice) {
-  var ucVoice = upCaseFirst(voice);
-  if (document.getElementById('inputCheckbox' + ucVoice + 'UlColor1').checked) {
-    updateLocalStorage('inputCheckbox' + ucVoice + 'UlColor1CheckValue', true);
-    updateLocalStorage('inputCheckbox' + ucVoice + 'UlColor2', true);
-    $('#input' + ucVoice + 'UlColor1').spectrum('enable');
-    $('#inputCheckbox' + ucVoice + 'UlColor2').show();
-    $('#inputCheckbox' + ucVoice + 'UlColor2').prop('disabled', false);
-    userEnablePassiveMiddleVerbsUnderline2(voice);
-  } else {
-    updateLocalStorage('inputCheckbox' + ucVoice + 'UlColor1CheckValue', false);
-    updateLocalStorage('inputCheckbox' + ucVoice + 'UlColor2', false);
-    $('#input' + ucVoice + 'UlColor1').spectrum('disable');
-    $('#input' + ucVoice + 'UlColor1').hide();
-    $('#inputCheckbox' + ucVoice + 'UlColor2').hide();
-    $('#inputCheckbox' + ucVoice + 'UlColor2').prop('disabled', true);
-    $('#input' + ucVoice + 'UlColor2').spectrum('disable');
-  }
-  updateVerbsBackground(voice);
-}
-
-function userEnablePassiveMiddleVerbsUnderline2(voice) {
-  var ucVoice = upCaseFirst(voice);
-  if (document.getElementById('inputCheckbox' + ucVoice + 'UlColor2').checked) {
-    updateLocalStorage('inputCheckbox' + ucVoice + 'UlColor2CheckValue', true);
-    $('#input' + ucVoice + 'UlColor2').spectrum('enable');
-    if (handleOfRequestedAnimation === -1) goAnimate();
-  } else {
-    updateLocalStorage('inputCheckbox' + ucVoice + 'UlColor2CheckValue', false);
-    $('#input' + ucVoice + 'UlColor2').spectrum('disable');
-  }
-}
-
-function updateVerbsBackground(voice) {
-  var selectedUnderline, selectedColor;
-  var indexArray = [];
-  if (voice === 'passive') indexArray = passiveIndexArray;
-  else if (voice === 'middle') indexArray = middleIndexArray;
-  else if (voice === 'active') indexArray = activeIndexArray;
-  for (var counter = 0; counter < indexArray.length; counter += 1) {
-    var indexToUlVerbCSS = indexArray[counter];
-    var orderOfXAxis = getAxisOrderOfCSS(ulVerbCSS[indexToUlVerbCSS].name, 'X');
-    var orderOfYAxis = getAxisOrderOfCSS(ulVerbCSS[indexToUlVerbCSS].name, 'Y');
-    if (currentColorCodeSettings.xAxisForMood) {
-      selectedUnderline = underlineCanvasName[currentColorCodeSettings['selectedHighlightVerbItem' + orderOfYAxis]];
-      selectedColor = currentColorCodeSettings['inputColorVerbItem' + orderOfXAxis];
-    }
-    else {
-      selectedUnderline = underlineCanvasName[currentColorCodeSettings['selectedHighlightVerbItem' + orderOfXAxis]];
-      selectedColor = currentColorCodeSettings['inputColorVerbItem' + orderOfYAxis];
-    }
-    var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == selectedUnderline; });
-    updateUlForSpecificYAxis(ulVerbCSS[indexToUlVerbCSS], srcImgObj, selectedColor, indexToUlVerbCSS);
-  }
-}
-
-function updateHtmlForYAxis() {
-  r = getVariablesForVerbTable();
-  for (var i = 0; i < r.nameOfYAxisItems.length; i += 1) {
-    var item = r.nameOfYAxisItems[i];
-    var currentULForItem = currentColorCodeSettings['selectedHighlightVerbItem' + i];
-    $('#selectedHighlightVerbItem' + i + ' option')
-      .filter(function() {
-        return $.trim($(this).text()) == currentULForItem;
-      })
-      .prop('selected', true);
-    var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') && (currentColorCodeSettings.enableAdvancedTools) );
-    hideIndividualInputField('#inputAnimate' + i, temp);
-    hideIndividualInputField('#inputAnimateCheckbox' + i, temp);
-    if ((currentColorCodeSettings['inputAnimate' + i]) && (currentColorCodeSettings.enableAdvancedTools)) {
-      document.getElementById('inputAnimateCheckbox' + i).checked = true;
-      if ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline'))
-        userUpdateAnimation(i);
-    } else document.getElementById('inputAnimateCheckbox' + i).checked = false;
-  }
-}
-
-function updateHtmlForXAxis() {
-  var numOfColumns = getVariablesForVerbTable().orderOfXAxisItems.length;
-  if (numOfColumns > -1) 
-    $('#inputColorVerbItem0').spectrum({
-      color: currentColorCodeSettings.inputColorVerbItem0,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateColor(0, color.toHexString());
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  if (numOfColumns > 0) 
-    $('#inputColorVerbItem1').spectrum({
-      color: currentColorCodeSettings.inputColorVerbItem1,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateColor(1, color.toHexString());
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  if (numOfColumns > 1) 
-    $('#inputColorVerbItem2').spectrum({
-      color: currentColorCodeSettings.inputColorVerbItem2,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateColor(2, color.toHexString());
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  if (numOfColumns > 2) 
-    $('#inputColorVerbItem3').spectrum({
-      color: currentColorCodeSettings.inputColorVerbItem3,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateColor(3, color.toHexString());
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  if (numOfColumns > 3)
-    $('#inputColorVerbItem4').spectrum({
-      color: currentColorCodeSettings.inputColorVerbItem4,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateColor(4, color.toHexString());
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  if (numOfColumns > 4)
-    $('#inputColorVerbItem5').spectrum({
-      color: currentColorCodeSettings.inputColorVerbItem5,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateColor(5, color.toHexString());
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }  
-    });
-}
-
-function updateHtmlForGender() {
-  $('#inputColorMasculine').spectrum({
-    color: currentColorCodeSettings.inputColorMasculine,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      userUpdateNounColor('masculine', color.toHexString());
-    },
-    show: function(color) {
-      checkNounColor();
-    }
-  });
-  $('#inputColorFeminine').spectrum({
-    color: currentColorCodeSettings.inputColorFeminine,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      userUpdateNounColor('feminine', color.toHexString());
-    },
-    show: function(color) {
-      checkNounColor();
-    }
-  });
-  $('#inputColorNeuter').spectrum({
-    color: currentColorCodeSettings.inputColorNeuter,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      userUpdateNounColor('neuter', color.toHexString());
-    },
-    show: function(color) {
-      checkNounColor();
-    }
-  });
-}
-
-function updateHtmlForNumber() {
-  $('#selectedHighlightPlural option')
-    .filter(function() {
-      return $.trim($(this).text()) == upCaseFirst(currentColorCodeSettings.selectedHighlightPlural);
-    })
-    .attr('selected', true);
-  $('#selectedHighlightSingular option')
-    .filter(function() {
-      return $.trim($(this).text()) == upCaseFirst(currentColorCodeSettings.selectedHighlightSingular);
-    })
-    .attr('selected', true);
-}
-
-function updateHtmlForPassiveBackgroundColor() {
-  $('#inputPassiveBackgroundColor').spectrum({
-    color: currentColorCodeSettings.inputPassiveBackgroundColor,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      updateLocalStorage('inputPassiveBackgroundColor', color.toHexString());
-      updateVerbsBackground('passive');
-    },
-    show: function(color) {
-      checkVerbColorInput();
-    }
-  });
-  $('#inputPassiveUlColor1').spectrum({
-    color: currentColorCodeSettings.inputPassiveUlColor1,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      updateLocalStorage('inputPassiveUlColor1', color.toHexString());
-      updateVerbsBackground('passive');
-    },
-    show: function(color) {
-      checkVerbColorInput();
-    }
-  });
-  $('#inputPassiveUlColor2').spectrum({
-    color: currentColorCodeSettings.inputPassiveUlColor2,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      updateLocalStorage('inputPassiveUlColor2', color.toHexString());
-      updateVerbsBackground('passive');
-    },
-    show: function(color) {
-      checkVerbColorInput();
-    }
-  });
-}
-
-function updateHtmlForMiddleBackgroundColor() {
-  $('#inputMiddleBackgroundColor').spectrum({
-    color: currentColorCodeSettings.inputMiddleBackgroundColor,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      updateLocalStorage('inputMiddleBackgroundColor', color.toHexString());
-      updateVerbsBackground('middle');
-    },
-    show: function(color) {
-      checkVerbColorInput();
-    }
-  });
-  $('#inputMiddleUlColor1').spectrum({
-    color: currentColorCodeSettings.inputMiddleUlColor1,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      updateLocalStorage('inputMiddleUlColor1', color.toHexString());
-      updateVerbsBackground('middle');
-    },
-    show: function(color) {
-      checkVerbColorInput();
-    }
-  });
-  $('#inputMiddleUlColor2').spectrum({
-    color: currentColorCodeSettings.inputMiddleUlColor2,
-    showInput: true,
-    preferredFormat: 'hex',
-    clickoutFiresChange: false,
-    change: function(color) {
-      updateLocalStorage('inputMiddleUlColor2', color.toHexString());
-      updateVerbsBackground('middle');
-    },
-    show: function(color) {
-      checkVerbColorInput();
-    }
-  });
-}
-
-function hideOrShowHtmlForPassiveBackgroundColor(passiveBackgroundName) {
-  var ucPassiveBackgroundName = upCaseFirst(passiveBackgroundName);
-  var checkedValue = currentColorCodeSettings['inputCheckbox' + ucPassiveBackgroundName + 'CheckValue'];
-  $('#inputCheckbox' + ucPassiveBackgroundName).prop('checked', checkedValue);
-  if (currentColorCodeSettings['inputCheckbox' + ucPassiveBackgroundName]) {
-    $('#inputCheckbox' + ucPassiveBackgroundName).show();
-    $('#inputCheckbox' + ucPassiveBackgroundName).prop('disabled', false);
-    if ($('#input' + ucPassiveBackgroundName).length) {
-      if (checkedValue) $('#input' + ucPassiveBackgroundName).spectrum('enable');
-      else $('#input' + ucPassiveBackgroundName).spectrum('disable');
-    }
-  } else {
-    $('#inputCheckbox' + ucPassiveBackgroundName).hide();
-    $('#inputCheckbox' + ucPassiveBackgroundName).prop('disabled', true);
-    if ($('#input' + ucPassiveBackgroundName).length)
-      $('#input' + ucPassiveBackgroundName).spectrum('disable');
-  }
-}
-
-function enableOrDisableVerbAndNounButtons() {
-  var checkedValue = currentColorCodeSettings.enableGreekVerbColor;
-  $('#verbonoffswitch').prop('checked', checkedValue);
-  updateVerbInputFields(checkedValue);
-  checkedValue = currentColorCodeSettings.enableGreekNounColor;
-  $('#nounonoffswitch').prop('checked', checkedValue);
-  updateNounInputFields(checkedValue);
-}
-
-function enableOrDisableAxisConfigButtons(axis) {
-  var iconName = '#config' + axis + 'AxisIcon';
-  var onOffClassName = '.vrbInpt' + axis;
-  var onOffCheckBox = 'axis' + axis + 'OnOffCheckbox';
-  var r = getVariablesForVerbTable();
-  var moodOrTense = r[axis.toLowerCase() + 'AxisTitle'];
-  moodOrTense = moodOrTense.substr(0, moodOrTense.length - 1);
-  var ucMoodOrTense = upCaseFirst(moodOrTense);
-  var orderOfItemsInAxis = r['orderOf' + axis + 'AxisItems'];
-  var nameOfAllItemsInAxis = r['nameOfAll' + axis + 'AxisItems'];
-  var granularControlOfAxis = currentColorCodeSettings['granularControlOf' + ucMoodOrTense +'s'];
-  var itemInAxisOnOff = currentColorCodeSettings[moodOrTense + 'sOnOff'];
-  var ulVerbCSSArrayOfAxis = window[moodOrTense + 'IndexArray']
-  var itemToCombineWithPrevious = currentColorCodeSettings[moodOrTense + 'ToCombineWithPrevious'];
-  highlightIcon(iconName, granularControlOfAxis);
-  hideIndividualInputField(onOffClassName, granularControlOfAxis);
-  for (var i = 0; i < orderOfItemsInAxis.length; i += 1) {
-    $('#' + onOffCheckBox + i).prop('checked', granularControlOfAxis && itemInAxisOnOff[i]);
-  }
-  if (granularControlOfAxis) {
-    var k = -1;
-    for (var i = 0; i < nameOfAllItemsInAxis.length; i ++) {
-      if (!itemToCombineWithPrevious[i]) k++;
-      var currentItemInAxisOnOff = itemInAxisOnOff[k];
-      index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[i]; }).array;
-      for (var j = 0; j < index2.length; j += 1) {
-        ulVerbCSS[index2[j]]['displayStatusSelectedBy' + ucMoodOrTense] = currentItemInAxisOnOff;
-      }
-    }
-  }
-  else {
-    for (k = 0; k < ulVerbCSS.length; k ++) {
-      ulVerbCSS[k]['displayStatusSelectedBy' + ucMoodOrTense] = true;
-    }
-  }
-  refreshForAllInstancesOfTense(); // can be updated to only refresh the affect rows or columns
-}
-
-function highlightIcon(idOrClass, highlight) {
-  if (highlight) {
-    $(idOrClass).removeClass('icon-not-highlighted');
-    $(idOrClass).addClass('icon-highlighted');
-  }
-  else {
-    $(idOrClass).removeClass('icon-highlighted');
-    $(idOrClass).addClass('icon-not-highlighted');
-  }
-}
-
-function enableOrDisableAdvancedToolsButtons() {
-  highlightIcon('#advancedToolsIcon', currentColorCodeSettings.enableAdvancedTools);
-  hideIndividualInputField('.advancedtools', currentColorCodeSettings.enableAdvancedTools);
-}
-
-function userToggleAdvancedTools() {
-  currentColorCodeSettings.enableAdvancedTools = !currentColorCodeSettings.enableAdvancedTools;
-  updateLocalStorage('enableAdvancedTools', currentColorCodeSettings.enableAdvancedTools);
-  enableOrDisableAdvancedToolsButtons();
-  updateHtmlForYAxis();
-}
-
-function userSwapAxis() {
-  currentColorCodeSettings.xAxisForMood = !currentColorCodeSettings.xAxisForMood;
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
-  $('#sortAxisModal .close').click();
-  var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
-  updateAllSettingsAndInputFields();
-}
-
-function userSortAxis(axis) {
-  axisUserSelectedToSort = axis;
-  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-  '<div class="modal-dialog"><div class="modal-content">');
-  var temp = document.getElementById('sortAxisModal');
-  if (!temp) openConfigPage.appendTo('body');
-  $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_verb_item.html');
-}
-
-function userToggleXOrYAxisConfig(axis, index) {
-  var moodOrTense;
-  if ((currentColorCodeSettings.xAxisForMood && axis == 'X') ||
-      (!currentColorCodeSettings.xAxisForMood && axis == 'Y')) 
-    moodOrTense = 'moods';
-  else moodOrTense = 'tenses';
-  if (index == null) {
-    updateLocalStorage('granularControlOf' + upCaseFirst(moodOrTense), !currentColorCodeSettings['granularControlOf' + upCaseFirst(moodOrTense)]);
-  }
-  else {
-    currentColorCodeSettings[moodOrTense + 'OnOff'][index] = !currentColorCodeSettings[moodOrTense + 'OnOff'][index];
-    updateLocalStorage(moodOrTense + 'OnOff', currentColorCodeSettings[moodOrTense + 'OnOff']);
-  }
-  enableOrDisableAxisConfigButtons(axis);
-}
-
 function getColorCodeGrammarSettings() {
   if (typeof(Storage) !== 'undefined') {
     var tmp = localStorage.getItem('colorCode-CurrentSettings');
-    if (tmp) currentColorCodeSettings = createCopyOfColorSetting(JSON.parse(tmp));
-    else currentColorCodeSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettings));
+    if (tmp) c4 = createCopyOfColorSetting(JSON.parse(tmp));
+    else c4 = JSON.parse(JSON.stringify(defaultC4));
   }
 }
 
 function updateLocalStorage(name, value) {
-  currentColorCodeSettings[name] = value;
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
-}
-
-function userToggleColorGrammar(grammarFunction) {
-  var checkedValue;
-  if (document.getElementById(grammarFunction + 'onoffswitch').checked) checkedValue = true;
-  else checkedValue = false;
-  updateLocalStorage('enableGreek' + upCaseFirst(grammarFunction) + 'Color', checkedValue);
-  if (grammarFunction === 'verb') {
-    updateVerbInputFields(checkedValue);
-  }
-  if (grammarFunction === 'noun') {
-    updateNounInputFields(checkedValue);
-  }
-  refreshForAllInstancesOfTense();
-  if ((grammarFunction === 'verb') && (checkedValue) && (handleOfRequestedAnimation === -1)) goAnimate();
-}
-
-function hideIndividualInputField(fieldName, inputOnOff, skipShow) {
-  if (inputOnOff) {
-    $(fieldName).attr('disabled', false);
-    $(fieldName).attr('hidden', false);
-    if (skipShow == null) 
-      $(fieldName).show();
-  } else {
-    $(fieldName).attr('disabled', true);
-    $(fieldName).attr('hidden', true);
-    $(fieldName).hide();
-  }
-}
-
-function hideOrDisplayIndividualColorInputField(fieldName, inputOnOff) {
-  if (inputOnOff) $(fieldName).spectrum('enable');
-  else $(fieldName).spectrum('disable');
-}
-
-function updateVerbInputFields(inputOnOff) {
-  hideOrDisplayIndividualColorInputField('.vrbInptC', inputOnOff);
-  hideIndividualInputField('.vrbInpt1', inputOnOff);
-  hideIndividualInputField('#advancedToolsBtn', inputOnOff);
-  var showAnimationCheckbox = currentColorCodeSettings.enableAdvancedTools && inputOnOff;
-  hideIndividualInputField('#inputAnimate0', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimate1', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimate2', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimate3', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimate4', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimate5', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimateCheckbox0', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimateCheckbox1', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimateCheckbox2', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimateCheckbox3', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimateCheckbox4', showAnimationCheckbox, true);
-  hideIndividualInputField('#inputAnimateCheckbox5', showAnimationCheckbox, true);
-  
-  if (currentColorCodeSettings.xAxisForMood) {
-    hideIndividualInputField('.vrbInptX', currentColorCodeSettings.granularControlOfMoods && inputOnOff);
-    hideIndividualInputField('.vrbInptY', currentColorCodeSettings.granularControlOfTenses && inputOnOff);
-  }
-  else {
-    hideIndividualInputField('.vrbInptX', currentColorCodeSettings.granularControlOfTenses && inputOnOff);
-    hideIndividualInputField('.vrbInptY', currentColorCodeSettings.granularControlOfMoods && inputOnOff);
-  }
-  hideOrShowHtmlForPassiveBackgroundColor('PassiveBackgroundColor');
-  hideOrShowHtmlForPassiveBackgroundColor('PassiveUlColor1');
-  hideOrShowHtmlForPassiveBackgroundColor('PassiveUlColor2');
-  hideOrShowHtmlForPassiveBackgroundColor('MiddleBackgroundColor');
-  hideOrShowHtmlForPassiveBackgroundColor('MiddleUlColor1');
-  hideOrShowHtmlForPassiveBackgroundColor('MiddleUlColor2');
-  if (!inputOnOff) { // Turning on the passive colors is more complex and is handled by other routines.  
-    hideOrDisplayIndividualColorInputField('#inputPassiveBackgroundColor', inputOnOff);
-    hideOrDisplayIndividualColorInputField('#inputPassiveUlColor1', inputOnOff);
-    hideOrDisplayIndividualColorInputField('#inputPassiveUlColor2', inputOnOff);
-    hideIndividualInputField('#inputCheckboxPassiveBackgroundColor', inputOnOff);
-    hideIndividualInputField('#inputCheckboxPassiveUlColor1', inputOnOff);
-    hideIndividualInputField('#inputCheckboxPassiveUlColor2', inputOnOff);
-    hideOrDisplayIndividualColorInputField('#inputMiddleBackgroundColor', inputOnOff);
-    hideOrDisplayIndividualColorInputField('#inputMiddleUlColor1', inputOnOff);
-    hideOrDisplayIndividualColorInputField('#inputMiddleUlColor2', inputOnOff);
-    hideIndividualInputField('#inputCheckboxMiddleBackgroundColor', inputOnOff);
-    hideIndividualInputField('#inputCheckboxMiddleUlColor1', inputOnOff);
-    hideIndividualInputField('#inputCheckboxMiddleUlColor2', inputOnOff);
-  }
-}
-
-function updateNounInputFields(inputOnOff) {
-  hideIndividualInputField('.nInptN', inputOnOff);
-  hideOrDisplayIndividualColorInputField('.nInptC', inputOnOff);
-}
-
-function cancelColorChanges() {
-  if (typeof(Storage) !== 'undefined') {
-    var tmp = localStorage.getItem('colorCode-PreviousSettings');
-    if (tmp) currentColorCodeSettings = JSON.parse(tmp);
-    else currentColorCodeSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettings));
-    localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
-    alert('Your color settings has been reset to your previous setting.');
-    updateAllSettingsAndInputFields();
-  }
-}
-
-function resetColorConfig() {
-  if (typeof(Storage) !== 'undefined') {
-    currentColorCodeSettings = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettings));
-    localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
-    alert('Your color settings has been reset to default setting.');
-    updateAllSettingsAndInputFields();
-  }
-}
-
-function updateAllSettingsAndInputFields() {
-  animationIndexArray = [];
-  copyOfpassiveIndexArray = passiveIndexArray.slice(0);
-  copyOfmiddleIndexArray = middleIndexArray.slice(0);
-  updateVerbsBackground('active');
-  updateVerbsBackground('passive');
-  updateVerbsBackground('middle');
-  createUlForAllItemsInYAndX();
-  $('#theGrammarColorModal .close').click();
-  $('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
-}
-
-function addNounTable() {
-  var htmlTable = '<table class="tg2">' +
-    '<tr>' +
-        '<th valign="middle" align="center" colspan="2" rowspan="2">' +
-        '<div class="onoffswitch">' +
-        '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="nounonoffswitch" onchange=\'userToggleColorGrammar("noun")\'/>' +
-        '<label class="onoffswitch-label" for="nounonoffswitch">' +
-        '<span class="onoffswitch-inner"></span>' +
-        '<span class="onoffswitch-switch"></span>' +
-        '</label>' +
-        '</div>' +
-        '</th>' +
-        '<th class="tg-amwm2" colspan="4">Gender</th>' +
-    '</tr><tr>' +
-        '<td class="tg-yw4l">Masculine:<br>' +
-        '<input id="inputColorMasculine" type="color" class="nInptC" value="' + currentColorCodeSettings.inputColorMasculine + '"/>' +
-        '</td>' +
-        '<td class="tg-yw4l">Feminine:<br>' +
-        '<input id="inputColorFeminine" type="color" class="nInptC" value="' + currentColorCodeSettings.inputColorFeminine + '"/>' +
-        '</td>' +
-        '<td class="tg-yw4l">Neuter:<br>' +
-        '<input id="inputColorNeuter" type="color" class="nInptC" value="' + currentColorCodeSettings.inputColorNeuter + '"/>' +
-        '</td>' +
-    '</tr><tr>' +
-        '<td class="tg-e3zv2" rowspan="4">Number</td>' +
-        '<td><span>Singular:</span><br><br>' +
-            '<select id="selectedHighlightSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
-                '<option value="normal">Normal</option>' +
-                '<option value="normal_italic">Normal and Italic</option>' +
-                '<option value="bold">Bold</option>' +
-                '<option value="bold_italic">Bold and Italic</option>' +
-            '</select><br>' +
-        '</td>' +
-        '<td><span class="sing mas">Masculine singular</span><br>' +
-        '</td>' +
-        '<td><span class="sing fem">Feminine singular</span><br>' +
-        '</td>' +
-        '<td><span class="sing neut">Neuter singular</span><br>' +
-        '</td>' +
-    '</tr><tr>' +
-        '<td><span>Plural:</span><br><br>' +
-            '<select id="selectedHighlightPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
-                '<option value="normal">Normal</option>' +
-                '<option value="normal_italic">Normal and Italic</option>' +
-                '<option value="bold">Bold</option>' +
-                '<option value="bold_italic">Bold and Italic</option>' +
-            '</select><br>' +
-        '</td>' +
-        '<td><span class="plur mas">Masculine Plural</span><br>' +
-        '</td>' +
-        '<td><span class="plur fem">Feminine Plural</span><br>' +
-        '</td>' +
-        '<td><span class="plur neut">Neuter Plural</span><br>' +
-        '</td>' +
-    '</tr>' +
-    '</table>';
-  htmlTable = $(htmlTable);
-  htmlTable.appendTo('#nounColors');
-}
-
-function getVerbItemsCombinedWithCurrentItem(axis, itemNumber) {
-  var codeOfItemCombinedWithCurrentItem = [], nameOfItemCombinedWithCurrentItem = [];
-  var orderOfItem, itemsCombinedWithPreviousItem, robinsonCode;
-  if ( ((currentColorCodeSettings.xAxisForMood) && (axis == 'X')) ||
-       ((!currentColorCodeSettings.xAxisForMood) && (axis == 'Y')) ) {
-    orderOfItem = currentColorCodeSettings.orderOfMood;
-    itemsCombinedWithPreviousItem = currentColorCodeSettings.moodToCombineWithPrevious;
-    robinsonCode = robinsonCodeOfMood;
-  }
-  else {
-    orderOfItem = currentColorCodeSettings.orderOfTense;
-    itemsCombinedWithPreviousItem = currentColorCodeSettings.tenseToCombineWithPrevious;
-    robinsonCode = robinsonCodeOfTense;
-  }
-  var codeOfCurrentItem = getVariablesForVerbTable()['orderOf' + axis + 'AxisItems'][itemNumber];
-  var idxOfCurrentItem = orderOfItem.indexOf(codeOfCurrentItem); 
-  for (var i = idxOfCurrentItem; i < itemsCombinedWithPreviousItem.length; i ++) {
-    if ((itemsCombinedWithPreviousItem[i]) || (i == idxOfCurrentItem) ) {
-      codeOfItemCombinedWithCurrentItem.push(orderOfItem[i]);
-      nameOfItemCombinedWithCurrentItem.push(robinsonCode[orderOfItem[i]]);
-    }
-    if ((!itemsCombinedWithPreviousItem[i]) && (i > idxOfCurrentItem) ) break;
-  }
-  return {
-    codeOfItemCombinedWithCurrentItem: codeOfItemCombinedWithCurrentItem,
-    nameOfItemCombinedWithCurrentItem: nameOfItemCombinedWithCurrentItem
-  }
+  c4[name] = value;
+  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
 }
 
 function getVariablesForVerbTable() {
@@ -1665,28 +1204,28 @@ function getVariablesForVerbTable() {
   var orderOfMood = [], orderOfTense = [], nameOfMood = [], nameOfTense = [], descOfMood = [], descOfTense = [];
   var nameOfAllMood = [], nameOfAllTense = [];
   var previousActiveMood = -1;
-  for (var i = 0; i < currentColorCodeSettings.orderOfMood.length; i ++) {
-    if (!currentColorCodeSettings.moodToCombineWithPrevious[i]) {
-      orderOfMood.push(currentColorCodeSettings.orderOfMood[i]);
-      nameOfMood.push(robinsonCodeOfMood[currentColorCodeSettings.orderOfMood[i]]);
-      descOfMood.push(upCaseFirst(robinsonCodeOfMood[currentColorCodeSettings.orderOfMood[i]]));
+  for (var i = 0; i < c4.orderOfMood.length; i ++) {
+    if (!c4.moodToCombineWithPrevious[i]) {
+      orderOfMood.push(c4.orderOfMood[i]);
+      nameOfMood.push(robinsonCodeOfMood[c4.orderOfMood[i]]);
+      descOfMood.push(upCaseFirst(robinsonCodeOfMood[c4.orderOfMood[i]]));
       previousActiveMood ++;
     }
-    else descOfMood[previousActiveMood] += '<br>' + upCaseFirst(robinsonCodeOfMood[currentColorCodeSettings.orderOfMood[i]]);
-    nameOfAllMood.push(robinsonCodeOfMood[currentColorCodeSettings.orderOfMood[i]]);
+    else descOfMood[previousActiveMood] += '<br>' + upCaseFirst(robinsonCodeOfMood[c4.orderOfMood[i]]);
+    nameOfAllMood.push(robinsonCodeOfMood[c4.orderOfMood[i]]);
   }
   var previousActiveTense = -1;
-  for (var i = 0; i < currentColorCodeSettings.orderOfTense.length; i ++) {
-    if (!currentColorCodeSettings.tenseToCombineWithPrevious[i]) {
-      orderOfTense.push(currentColorCodeSettings.orderOfTense[i]);
-      nameOfTense.push(robinsonCodeOfTense[currentColorCodeSettings.orderOfTense[i]]);
-      descOfTense.push(upCaseFirst(robinsonCodeOfTense[currentColorCodeSettings.orderOfTense[i]]));
+  for (var i = 0; i < c4.orderOfTense.length; i ++) {
+    if (!c4.tenseToCombineWithPrevious[i]) {
+      orderOfTense.push(c4.orderOfTense[i]);
+      nameOfTense.push(robinsonCodeOfTense[c4.orderOfTense[i]]);
+      descOfTense.push(upCaseFirst(robinsonCodeOfTense[c4.orderOfTense[i]]));
       previousActiveTense ++;
     }
-    else descOfTense[previousActiveTense] += '<br>' + upCaseFirst(robinsonCodeOfTense[currentColorCodeSettings.orderOfTense[i]]);
-    nameOfAllTense.push(robinsonCodeOfTense[currentColorCodeSettings.orderOfTense[i]]);
+    else descOfTense[previousActiveTense] += '<br>' + upCaseFirst(robinsonCodeOfTense[c4.orderOfTense[i]]);
+    nameOfAllTense.push(robinsonCodeOfTense[c4.orderOfTense[i]]);
   }
-  if (currentColorCodeSettings.xAxisForMood) {
+  if (c4.xAxisForMood) {
     xAxisTitle = 'moods';
     yAxisTitle = 'tenses';
     orderOfXAxisItems = orderOfMood;
@@ -1724,461 +1263,97 @@ function getVariablesForVerbTable() {
   }
 }
 
-function addVerbTable(createUserInputFields, htmlElement) {
-  var r = getVariablesForVerbTable();
-  var htmlTable = '';
-  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
-  htmlTable += '<table class="tg2"><tr>' +
-    '<th valign="middle" align="center" colspan="2" rowspan="2">';
-  if (createUserInputFields) htmlTable +=
-    '<div class="onoffswitch">' +
-        '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="verbonoffswitch" onchange=\'userToggleColorGrammar("verb")\'/>' +
-        '<label class="onoffswitch-label" for="verbonoffswitch">' +
-            '<span class="onoffswitch-inner"></span>' +
-            '<span class="onoffswitch-switch"></span>' +
-        '</label>' +
-    '</div>';
-  htmlTable += '</th>';
-  htmlTable += '<th class="tg-amwm2" colspan="' + r.orderOfXAxisItems.length + '">' + upCaseFirst(r.xAxisTitle);
-  if (createUserInputFields) htmlTable += 
-    '&nbsp;<button id="configXAxisBtn" class="vrbInpt1 btn btn-default btn-xs" type="button" title="Granular selection of highlight for ' + r.xAxisTitle + '" onclick="userToggleXOrYAxisConfig(\'X\')">' +
-      '<span id="configXAxisIcon" class="vrbInpt1 glyphicon glyphicon-cog"></span></button>' + 
-    '&nbsp;<button id="configSortXAxisBtn" class="btn btn-default btn-xs advancedtools" type="button" title="Sort ' +  r.xAxisTitle + '" onclick="userSortAxis(\'X\')">' +
-      '<span id="configSortXAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
-
-  htmlTable += '</th></tr><tr>';
-  for (var i = 0; i < r.orderOfXAxisItems.length; i += 1) {
-    htmlTable += '<td class="tg-yw4l">' + r.descOfXAxisItems[i];
-    if (createUserInputFields) {
-      htmlTable +=
-        '<input id="axisXOnOffCheckbox' + i + '" class="vrbInptX" ' +
-          'type="checkbox" onchange=\'userToggleXOrYAxisConfig("X", "' + i + '")\'><br>' +
-        '<input id="inputColorVerbItem' + i + '" class="vrbInptC" type="color" ' +
-          'value="' + currentColorCodeSettings['inputColorVerbItem' + i ] + '" ';
-    }
-    htmlTable += '</td>';
-  }
-  htmlTable += '<tr>' +
-    '<td class="tg-e3zv2" rowspan="' + r.orderOfYAxisItems.length + '">' + upCaseFirst(r.yAxisTitle);
-  if (createUserInputFields) htmlTable += 
-    '<button id="configYAxisBtn" class="vrbInpt1 btn btn-default btn-xs" type="button" title="Granular selection of ' + r.yAxisTitle + '" onclick="userToggleXOrYAxisConfig(\'Y\')">' +
-      '<span id="configYAxisIcon" class="vrbInpt1 glyphicon glyphicon-cog"></span></button>' +
-    '<br><br><button id="configSortYAxisBtn" class="btn btn-default btn-xs advancedtools" type="button" title="Sort ' +  r.yAxisTitle + '" onclick="userSortAxis(\'Y\')">' +
-      '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort advancedtools"></span></button>';
-
-  htmlTable += '</td>';
-  for (i = 0; i < r.orderOfYAxisItems.length; i += 1) {
-    if (i > 0) htmlTable += '<tr>';
-    htmlTable += '<td>' + r.descOfYAxisItems[i] + '<br>';
-    if (createUserInputFields) htmlTable +=
-      '<input id="axisYOnOffCheckbox' + i + '" class="vrbInptY" ' +
-        'type="checkbox" onchange=\'userToggleXOrYAxisConfig("Y", "' + i + '")\'><br>' +
-      '<select id="selectedHighlightVerbItem' + i + '" class="vrbInpt1" ' +
-        'onchange=\'userUpdateYAxisItem("' + i + '", value)\'>' +
-        '<option value="ulSolid">Underline</option>' +
-        '<option value="ulDoubleSolid">2 lines</option>' +
-        '<option value="ulDash">Dash</option>' +
-        '<option value="ulDashDot">Dash Dot</option>' +
-        '<option value="ulDashDotDot">Dash Dot Dot</option>' +
-        '<option value="ulDot">Dots</option>' +
-        '<option value="ulWave">Wave</option>' +
-        '<option value="ulArrow">Arrow</option>' +
-        '<option value="ulShortArrow">Short Arrow</option>' +
-        '<option value="ulReverseArrow">Reverse Arrow</option>' +
-        '<option value="ulShortReverseArrow">Short Reverse Arrow</option>' +
-      '</select><br>' +
-      '<span id="inputAnimate' + i + '" class="advancedtools">' +
-      'Animate:<input id="inputAnimateCheckbox' + i + '" class="advancedtools" ' +
-      'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
-    htmlTable += '</td>';
-    for (var counter = 0; counter < r.orderOfXAxisItems.length; counter += 1) {
-      htmlTable += '<td>';
-      htmlTable += voicesInTenseAndMood(r.orderOfXAxisItems[counter], r.orderOfYAxisItems[i], createUserInputFields);
-      htmlTable += '</td>';
-    }
-  }
-  htmlTable += '</table><br>';
-  if (createUserInputFields) htmlTable +=
-    '<span>Middle voice: background - </span><input id="inputCheckboxMiddleBackgroundColor" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBackground("middle")\'>' +
-    '<input id="inputMiddleBackgroundColor" type="color" ' +
-    'value="' + currentColorCodeSettings.inputMiddleBackgroundColor + '"/>' +
-    '<span>underline - </span><input id="inputCheckboxMiddleUlColor1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("middle")\'>' +
-    '<input id="inputMiddleUlColor1" type="color" ' +
-    'value="' + currentColorCodeSettings.inputMiddleUlColor1 + '"/>' +
-    '<span>animated underline - </span>' +
-    '<input id="inputCheckboxMiddleUlColor2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("middle")\'>' +
-    '<input id="inputMiddleUlColor2" type="color" ' +
-    'value="' + currentColorCodeSettings.inputMiddleUlColor2 + '"/><br><br>' +
-    '<span>Passive voice: background - </span><input id="inputCheckboxPassiveBackgroundColor" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBackground("passive")\'>' +
-    '<input id="inputPassiveBackgroundColor" type="color" ' +
-    'value="' + currentColorCodeSettings.inputPassiveBackgroundColor + '"/>' +
-    '<span>underline - </span><input id="inputCheckboxPassiveUlColor1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive")\'>' +
-    '<input id="inputPassiveUlColor1" type="color" ' +
-    'value="' + currentColorCodeSettings.inputPassiveUlColor1 + '"/>' +
-    '<span>animated underline - </span>' +
-    '<input id="inputCheckboxPassiveUlColor2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("passive")\'>' +
-    '<input id="inputPassiveUlColor2" type="color" ' +
-    'value="' + currentColorCodeSettings.inputPassiveUlColor2 + '"/>' +
-    '&nbsp;<button id="advancedToolsBtn" class="btn btn-default btn-xs" type="button" title="Advanced tools" onclick="userToggleAdvancedTools(\'Y\')">' +
-      '<span id="advancedToolsIcon" class="glyphicon glyphicon-wrench"></span></button>';
-  htmlTable = $(htmlTable);
-  htmlTable.appendTo(htmlElement);
-}
-
-function addVerbTable2(createUserInputFields, htmlElement) {
-  var r = getVariablesForVerbTable();
-  var htmlTable = '';
-  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
-  htmlTable += '<table class="tg2"><tr>' +
-    '<th valign="middle" align="center" colspan="2" rowspan="2">';
-  htmlTable += '</th>';
-  htmlTable += '<th class="tg-amwm2" colspan="' + r.nameOfAllXAxisItems.length + '">' + upCaseFirst(r.xAxisTitle);
-
-  htmlTable += '</th></tr><tr>';
-  for (var i = 0; i < r.nameOfAllXAxisItems.length; i += 1) {
-    htmlTable += '<td class="tg-yw4l">' + r.nameOfAllXAxisItems[i];
-    htmlTable += '</td>';
-  }
-  htmlTable += '<tr>' +
-    '<td class="tg-e3zv2" rowspan="' + r.nameOfAllYAxisItems.length + '">' + upCaseFirst(r.yAxisTitle);
-  htmlTable += '</td>';
-  for (i = 0; i < r.nameOfAllYAxisItems.length; i += 1) {
-    if (i > 0) htmlTable += '<tr>';
-    htmlTable += '<td>' + r.nameOfAllYAxisItems[i] + '<br>';
-    htmlTable += '</td>';
-    for (var counter = 0; counter < r.nameOfAllXAxisItems.length; counter += 1) {
-      htmlTable += '<td>';
-      var xAxisCode, yAxisCode;
-      if (currentColorCodeSettings.xAxisForMood) {
-        xAxisCode = robinsonNameOfMood[r.nameOfAllXAxisItems[counter]];
-        yAxisCode = robinsonNameOfTense[r.nameOfAllYAxisItems[i]];
-      }
-      else {
-        yAxisCode = robinsonNameOfMood[r.nameOfAllXAxisItems[counter]];
-        xAxisCode = robinsonNameOfTense[r.nameOfAllYAxisItems[i]];
-      }
-      htmlTable += voicesInTenseAndMood(xAxisCode, yAxisCode, true);
-      htmlTable += '</td>';
-    }
-  }
-  htmlTable += '</table><br>';
-  htmlTable = $(htmlTable);
-  htmlTable.appendTo(htmlElement);
-}
-
-function voicesInTenseAndMood(xAxisItem, yAxisItem, createUserInputFields) {
-  var currentMoodCode, currentTenseCode;
-  var highlightMiddle = currentColorCodeSettings['inputCheckboxMiddleBackgroundColorCheckValue'] ||
-    currentColorCodeSettings['inputCheckboxMiddleUlColor1CheckValue'];
-  var highlightPassive = currentColorCodeSettings['inputCheckboxPassiveBackgroundColorCheckValue'] ||
-    currentColorCodeSettings['inputCheckboxPassiveUlColor1CheckValue'];
-  var htmlTable = '';
-  if (currentColorCodeSettings.xAxisForMood) {
-    currentMoodCode = xAxisItem;
-    currentTenseCode = yAxisItem;
+function getVariablesForOTVerbTable(language) {
+  var nameOfXAxisItems = [], nameOfYAxisItems = [], descOfXAxisItems = [], descOfYAxisItems = [];
+  var orderOfXAxisItems, orderOfYAxisItems, xAxisTitle, yAxisTitle, nameOfAllXAxisItems, nameOfAllYAxisItems;
+  var orderOfStem = [], orderOfForm = [], nameOfStem = [], nameOfForm = [], descOfStem = [], descOfForm = [];
+  var nameOfAllStem = [], nameOfAllForm = []; var stemToCombineWithPrevious; var lengthOfOrderOfStem = 0;
+  var previousActiveStem = -1;
+  if (language == 'H') {
+    stemToCombineWithPrevious = c4.hebrewStemToCombineWithPrevious;
+    lengthOfOrderOfStem = c4.orderOfHebrewStem.length;
   }
   else {
-    currentMoodCode = yAxisItem;
-    currentTenseCode = xAxisItem;   
+    stemToCombineWithPrevious = c4.aramaicStemToCombineWithPrevious;
+    lengthOfOrderOfStem = c4.orderOfAramaicStem.length;
   }
-  var arrayIndexOfCurrentTense = _.find(tenseIndexArray, function(obj) { return obj.name == robinsonCodeOfTense[currentTenseCode]; }).array;
-  var numberOfEntriesAdded = 0;
-  var lastVoiceAdded = '';
-  for (var i = 0; i < arrayIndexOfCurrentTense.length; i += 1) {
-    var indexToUlVerbCSS = arrayIndexOfCurrentTense[i];
-    var voice = '';
-    if (currentMoodCode === ulVerbCSS[indexToUlVerbCSS].name.substr(2, 1)) {
-      if (ulVerbCSS[indexToUlVerbCSS].name.substr(1, 1) === 'a') voice = 'active';
-      else if ((ulVerbCSS[indexToUlVerbCSS].name.substr(1, 1) === 'm') &&
-        (highlightMiddle || createUserInputFields)) voice = 'middle';
-      else if ((ulVerbCSS[indexToUlVerbCSS].name.substr(1, 1) === 'p') &&
-        (highlightPassive || createUserInputFields)) voice = 'passive';
-      if (voice !== '') {
-        if (numberOfEntriesAdded === 0) {
-          if (voice === 'middle') htmlTable += '<br>';
-          else if (voice === 'passive') {
-            if ((!createUserInputFields) && (!highlightMiddle)) htmlTable += '<br>';
-            else htmlTable += '<br><br>';
-          }
-        } else if ( (numberOfEntriesAdded === 1) && (voice === 'passive') && (lastVoiceAdded == 'active') &&
-            ((createUserInputFields) || (highlightMiddle))) 
-            htmlTable += '<br>';
-        htmlTable += '<span class="v' + ulVerbCSS[indexToUlVerbCSS].name + '">' + voice + '</span>';
-        lastVoiceAdded = voice;
-        if (voice !== "passive") htmlTable += '<br>';
-        numberOfEntriesAdded += 1;
-      }    
+  for (var i = 0; i < lengthOfOrderOfStem; i ++) {
+    var currentStem = ''; var currentName = ''; var currentTitleDisplayStatus = false;
+    if ((language == 'H') && (c4.orderOfHebrewStem[i] != null)) {
+      currentStem = c4.orderOfHebrewStem[i];
+      currentName = c4.hebrewCodeOfStem[currentStem][0];
+      currentTitleDisplayStatus = c4.hebrewCodeOfStem[currentStem][2];
     }
-  }
-  if ((numberOfEntriesAdded === 1) && (lastVoiceAdded === "active")) {
-    if (createUserInputFields) htmlTable += "<br><br>";
-    else {
-      if (highlightMiddle) htmlTable += '<br>';
-      if (highlightPassive) htmlTable += '<br>';
+    else if ((language == 'A') && (c4.orderOfAramaicStem[i] != null)) {
+        currentStem = c4.orderOfAramaicStem[i];
+        currentName = c4.aramaicCodeOfStem[currentStem][0];
+        currentTitleDisplayStatus = c4.aramaicCodeOfStem[currentStem][2];
     }
-  }
-  else if ((numberOfEntriesAdded === 2) && (lastVoiceAdded === "middle")) htmlTable += "<br>";
-  return htmlTable;
-}
-
-function initializeColorCodeHtmlModalPage() {
-  addVerbTable(true, '#verbColors');
-  addNounTable();
-  updateHtmlForYAxis();
-  updateHtmlForXAxis();
-  updateHtmlForGender();
-  updateHtmlForNumber();
-  updateHtmlForPassiveBackgroundColor();
-  updateHtmlForMiddleBackgroundColor();
-  enableOrDisableAxisConfigButtons('X');
-  enableOrDisableAxisConfigButtons('Y');
-  enableOrDisableAdvancedToolsButtons();
-  enableOrDisableVerbAndNounButtons();
-  refreshForAllInstancesOfTense();
-  if ((((currentColorCodeSettings['inputCheckboxPassiveUlColor1CheckValue']) && (currentColorCodeSettings['inputCheckboxPassiveUlColor2CheckValue'])) ||
-      ((currentColorCodeSettings['inputCheckboxMiddleUlColor1CheckValue']) && (currentColorCodeSettings['inputCheckboxMiddleUlColor2CheckValue']))) &&
-    (handleOfRequestedAnimation === -1)) goAnimate();
-  localStorage.setItem('colorCode-PreviousSettings', JSON.stringify(currentColorCodeSettings));
-}
-
-function createCopyOfColorSetting(obj) {
-  var result = JSON.parse(JSON.stringify(defaultColorCodeGrammarSettings)); // Make a copy of the default
-  for (var key in obj) { // Add keys and values which are in the user selected color config
-    if (key in result) result[key] = obj[key]; // If the key does not exist in the default settings, it is probably an old key that is no longer used
-  }
-  return result;
-}
-
-function openColorConfig() {
-  if (typeof(Storage) !== 'undefined') {
-    var openConfigPage = $('<div id="openColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('openColorModal');
-    if (!temp) openConfigPage.appendTo('body');
-    $('#openColorModal').modal('show').find('.modal-content').load('/open_color_code_grammar.html');
-  }
-}
-
-function initOpenColorCodeModal() {
-  var s = $('<select id="openColorConfigDropdown"/>');
-  s.append($('<option/>').html('Verb, Gender and Number'));
-  s.append($('<option/>').html('Verb, Gender and Number, 2nd version'));
-  s.append($('<option/>').html('Verb only (tense-mood)'));
-  s.append($('<option/>').html('Verb with Middle and Passive Voices'));
-  s.append($('<option/>').html('Verb, imperative mood'));
-  s.append($('<option/>').html('Verb, main vs supporting verbs'));
-  s.append($('<option/>').html('Gender and Number'));
-  var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
-  if (tmp) {
-    var UserColorConfigNames = JSON.parse(tmp);
-    for (var i in UserColorConfigNames) {
-      s.append($('<option/>').html(UserColorConfigNames[i]));
+    if (!stemToCombineWithPrevious[i]) {
+      orderOfStem.push(currentStem);
+      nameOfStem.push(currentName);
+      if (currentTitleDisplayStatus) descOfStem.push(upCaseFirst(currentName));
+      else descOfStem.push('');
+      previousActiveStem ++;
     }
+    else if (currentTitleDisplayStatus) {
+      if (descOfStem[previousActiveStem].length > 0) descOfStem[previousActiveStem] += '<br>';
+      descOfStem[previousActiveStem] += upCaseFirst(currentName);
+    }
+    nameOfAllStem.push(currentName);
   }
-  $('#openColorModalSelectArea').append(s);
-}
-
-function initSortVerbItem() {
-  r = getVariablesForVerbTable();
-  var sortType = r[axisUserSelectedToSort.toLowerCase() + 'AxisTitle'];
-  var moodOrTense = sortType.substr(0,sortType.length - 1);
-  var nameOfAllItems = r['nameOfAll' + axisUserSelectedToSort + 'AxisItems'];
-  var itemsToCombineWithPrevious = currentColorCodeSettings[sortType.substr(0, sortType.length -1) + 'ToCombineWithPrevious'];
-  var axisName, otherAxisName;
-  if (axisUserSelectedToSort == 'X') {
-    axisName = 'horizontal';
-    otherAxisName = 'vertical'; 
+  var previousActiveForm = -1;
+  for (var i = 0; i < c4.orderOfOTForm.length; i ++) {
+    if (!c4.oTVerbFormToCombineWithPrevious[i]) {
+      orderOfForm.push(c4.orderOfOTForm[i]);
+      nameOfForm.push(c4.oTCodeOfForm[c4.orderOfOTForm[i]][0]);
+      if (c4.oTCodeOfForm[c4.orderOfOTForm[i]][2])
+        descOfForm.push(c4.oTCodeOfForm[c4.orderOfOTForm[i]][1]);
+      else descOfForm.push('');
+      previousActiveForm ++;
+    }
+    else if (c4.oTCodeOfForm[c4.orderOfOTForm[i]][2]) {
+      if (descOfForm[previousActiveForm].length > 0) descOfForm[previousActiveForm] += '<br>';
+      descOfForm[previousActiveForm] += c4.oTCodeOfForm[c4.orderOfOTForm[i]][1];
+    }
+    nameOfAllForm.push(c4.oTCodeOfForm[c4.orderOfOTForm[i]][0]);
+  }
+  if (c4.xAxisForStem) {
+    xAxisTitle = 'stems';
+    yAxisTitle = 'forms';
+    orderOfXAxisItems = orderOfStem;
+    orderOfYAxisItems = orderOfForm;
+    nameOfXAxisItems = nameOfStem;
+    nameOfYAxisItems = nameOfForm;
+    descOfXAxisItems = descOfStem;
+    descOfYAxisItems = descOfForm;
+    nameOfAllXAxisItems = nameOfAllStem;
+    nameOfAllYAxisItems = nameOfAllForm;
   }
   else {
-    axisName = 'vertical'; 
-    otherAxisName = 'horizontal';
+    xAxisTitle = 'forms';
+    yAxisTitle = 'stems';
+    orderOfXAxisItems = orderOfForm;
+    orderOfYAxisItems = orderOfStem;
+    nameOfXAxisItems = nameOfForm;
+    nameOfYAxisItems = nameOfStem;
+    descOfXAxisItems = descOfForm;
+    descOfYAxisItems = descOfStem;
+    nameOfAllXAxisItems = nameOfAllForm;
+    nameOfAllYAxisItems = nameOfAllStem;
   }
-  var s = '<p class="col-12">The ' + sortType + ' are currently in the ' + axisName + ' axis.</p>' +
-    '<button id="swapAxisBtn" class="btn btn-default btn-sm icon-not-highlighted" type="button" title="Swap" onclick="userSwapAxis()">' +
-    '<p class="col-10">Swap the ' + sortType + ' from the ' + axisName + ' to the ' + otherAxisName + ' axis.</p>' +
-    '</button><br><br>';
-  s += '<p class="col-12">The ' + sortType + ' are listed in the currently selected order.<br>' +
-    'Click and drag a ' + moodOrTense + ' to can change the order of the ' + sortType + '.<br>' +
-    'Drag an ' + moodOrTense + ' on top on another to combine them.<br>' +
-    'When you are finished with your changes to the order of ' + moodOrTense + ' , click on the "Save the order" button at the bottom.<br>' +
-    '<div id="nestedVerbItem" class="list-group col nested-sortable">';
-  var skipDiv = false;
-  for (var i = 0; i < nameOfAllItems.length; i++) {
-    s += '<div class="list-group-item nested-1">' + upCaseFirst(nameOfAllItems[i]) + 
-    '<div class="list-group nested-sortable">';
-    if ((i >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[i + 1])) {
-      s += '</div></div>';
-      if (skipDiv) {
-        s += '</div></div>';
-        skipDiv = false;
-      }
-    } 
-    else {
-      if (skipDiv) {
-        s += '</div></div>';
-      }
-      skipDiv = true;
-    }
+  return {
+    nameOfXAxisItems: nameOfXAxisItems,
+    nameOfYAxisItems: nameOfYAxisItems,
+    descOfXAxisItems: descOfXAxisItems,
+    descOfYAxisItems: descOfYAxisItems,
+    orderOfXAxisItems: orderOfXAxisItems,
+    orderOfYAxisItems: orderOfYAxisItems,
+    xAxisTitle: xAxisTitle,
+    yAxisTitle: yAxisTitle,
+    nameOfAllXAxisItems: nameOfAllXAxisItems,
+    nameOfAllYAxisItems: nameOfAllYAxisItems
   }
-  s += '</div>';
-  $('#sortVerbItemArea').append($(s));
-
-  var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
-
-  for (var i = 0; i < nestedSortables.length; i++) {
-    new Sortable(nestedSortables[i], {
-      group: 'nested',
-      animation: 150,
-      onEnd: function(/**Event*/evt) {
-        userProvidedSortOrder = [];
-        for (var i = 0; i < $('#nestedVerbItem')[0].children.length; i ++) {
-          userProvidedSortOrder.push($('#nestedVerbItem')[0].children[i].innerText);
-        }
-      }
-    });
-  }
-}
-
-function saveSortOrder() {
-  if (axisUserSelectedToSort == 'X') 
-    sortType = getVariablesForVerbTable().xAxisTitle;
-  else
-    sortType = getVariablesForVerbTable().yAxisTitle;
-  var currentItem;
-  var orderOfUserProvidedItems = [], itemsToCombineWithPrevious = [false, false, false, false, false, false];
-  var j = 0;
-  for (i = 0; i < userProvidedSortOrder.length; i ++) {
-    var verbItem = userProvidedSortOrder[i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n    
-    while (verbItem.length > 0) {
-      indexOfLineBreak = verbItem.indexOf('\n');
-      if (indexOfLineBreak == -1) {
-        currentItem = verbItem;
-        verbItem = '';
-      }
-      else {
-        currentItem = verbItem.substr(0, indexOfLineBreak).toLowerCase();
-        verbItem = verbItem.substr(indexOfLineBreak + 1);
-        if (verbItem.length > 0) itemsToCombineWithPrevious[j+1] = true; // Edge can add an extra \n to the end.
-      }
-      if (sortType == 'moods')
-        orderOfUserProvidedItems[j] = robinsonNameOfMood[currentItem];
-      else
-        orderOfUserProvidedItems[j] = robinsonNameOfTense[currentItem];
-      j++;
-    }
-  }
-  if (sortType == 'moods') {
-    currentColorCodeSettings.orderOfMood = orderOfUserProvidedItems;
-    currentColorCodeSettings.moodToCombineWithPrevious = itemsToCombineWithPrevious;
-  }
-  else {
-    currentColorCodeSettings.orderOfTense = orderOfUserProvidedItems;
-    currentColorCodeSettings.tenseToCombineWithPrevious = itemsToCombineWithPrevious;
-  }
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
-  $('#sortAxisModal .close').click();
-  var element = document.getElementById('sortAxisModal');
-  element.parentNode.removeChild(element);
-  updateAllSettingsAndInputFields();
-}
-
-function openUserSelectedConfig(name) {
-  var selectedConfig;
-  if (name != null) selectedConfig = name;
-  else selectedConfig = document.getElementById('openColorConfigDropdown').value.toLowerCase();
-  if (selectedConfig === 'verb, gender and number') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbMoodTense);
-  else if (selectedConfig === 'verb only (tense-mood)') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbTenseMood);
-  else if (selectedConfig === 'gender and number') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsNounOnly);
-  else if (selectedConfig === 'verb with middle and passive voices') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbWithMiddlePassive);
-  else if (selectedConfig === 'verb, imperative mood') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsImperativesOnly);
-  else if (selectedConfig === 'verb, main vs supporting verbs') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsMainVsSupporingVerbs);
-  else if (selectedConfig === 'verb, gender and number, 2nd version') currentColorCodeSettings = createCopyOfColorSetting(defaultColorCodeGrammarSettingsVerbMoodTense2);
-  else {
-    var found = false;
-    var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
-    if (tmp) {
-      var UserColorConfigNames = JSON.parse(tmp);
-      for (var i = 0; i < UserColorConfigNames.length; i += 1) {
-        if (UserColorConfigNames[i].toLowerCase() === selectedConfig) {
-          var tmp2 = localStorage.getItem('colorCode-UserColorConfigName-' + UserColorConfigNames[i]);
-          if (tmp2) {
-            found = true;
-            currentColorCodeSettings = createCopyOfColorSetting(JSON.parse(tmp2));
-          } else UserColorConfigNames.splice(i, 1);
-        }
-      }
-    }
-    if (!found) {
-      alert('Cannot find a configuation that match your selection');
-      return;
-    }
-  }
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(currentColorCodeSettings));
-  if (name == null) { 
-    $('#openColorModal .close').click();
-    var element = document.getElementById('openColorModal');
-    element.parentNode.removeChild(element);
-    updateAllSettingsAndInputFields();
-  }
-}
-
-function saveColorConfig() {
-  if (typeof(Storage) !== 'undefined') {
-    var saveConfigPage = $('<div id="saveColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('saveColorModal');
-    if (!temp) {
-      saveConfigPage.appendTo('body');
-    }
-    $('#saveColorModal').modal('show').find('.modal-content').load('/save_color_code_grammar.html');
-  }
-}
-
-function initSaveColorCodeModal() {
-  var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
-  if (tmp) {
-    $('#saveColorModalPromptForDropdownList').show();
-    var s = $('<select id="saveColorConfigDropdown"/>');
-    var UserColorConfigNames = JSON.parse(tmp);
-    s.append($('<option/>').html(''));
-    for (var i in UserColorConfigNames) {
-      s.append($('<option/>').html(UserColorConfigNames[i]));
-    }
-    $('#saveColorModalSelectArea').append(s);
-  } else $('#saveColorModalPromptForDropdownList').hide();
-}
-
-function saveUserColorConfig() {
-  var UserColorConfigNames = [];
-  var inputText = document.getElementById('saveColorModalInputArea').value.trim();
-  var selectedConfig = document.getElementById('saveColorConfigDropdown');
-  if (selectedConfig) selectedConfig = selectedConfig.value.trim();
-  var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
-  if (inputText === '') {
-    if (!tmp) {
-      alert('Please enter a name for your color configuration before using the "Save" button.');
-      return;
-    } else if (selectedConfig === '') {
-      alert('Please enter or select a name for your color configuration before using the "Save" button.');
-      return;
-    } else inputText = selectedConfig;
-  } else {
-    if (tmp) {
-      UserColorConfigNames = JSON.parse(tmp);
-      for (var i = 0; i < UserColorConfigNames.length; i += 1) {
-        if (UserColorConfigNames[i] === inputText) {
-          alert('The name you entered is already used.  If you want to save the configuration to the same name, select the name from the dropdown list instead of using the text input field.');
-          return;
-        }
-      }
-    }
-    UserColorConfigNames.push(inputText);
-    localStorage.setItem('colorCode-UserColorConfigNames', JSON.stringify(UserColorConfigNames));
-  }
-  localStorage.setItem('colorCode-UserColorConfigName-' + inputText, JSON.stringify(currentColorCodeSettings));
-  $('#saveColorModal .close').click();
-  var element = document.getElementById('saveColorModal');
-  element.parentNode.removeChild(element);
 }
 
 function upCaseFirst(string) {
@@ -2195,4 +1370,656 @@ function setupNextPageAndGotoUrl(url, configName, infoMsg) {
   else openUserSelectedConfig(configName);
   localStorage.setItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
   window.location.assign(url); 
+}
+
+function getSpecificMorphologyInfo(morphCode, morphName, result) {
+  var index;
+  var ot_var = otMorph[morphName];
+  for (var count = morphCode.length; ((count > 0) && (index == undefined)); count --) {
+    index = ot_var[morphCode.substr(0, count)];
+  }
+  if (index == undefined) {
+    console.log("cannot find code " + morphCode + " name: " + morphName);
+    return;
+  }
+  else {
+    var resultStr = otMorph.txtArray[index];
+    if (resultStr == undefined) {
+      console.log("Cannot find code: " + morphCode + " name: " + morphName);
+      return;  
+    }
+    result[morphName] = resultStr;
+  }
+}
+
+function getTOSMorphologyInfo(morphCode) {
+  var result = {};
+  if ((morphCode.startsWith('TOS:')) && (otMorph != null)) {
+    var code = morphCode.substr(4);
+    var languageCode = code.substr(0, 1);
+    getSpecificMorphologyInfo(languageCode, "language", result);
+    var descriptionCode = code.substr(1) + code.substr(0, 1);
+    getSpecificMorphologyInfo(descriptionCode, "description", result);
+    var functionCd = code.substr(1, 1);
+    getSpecificMorphologyInfo(functionCd, "ot_function", result);
+    if (result["ot_function"] != undefined) {
+      if (code.length > 2) {
+        var formPos = 2; var stemExpandedCd = '';
+        if (result["ot_function"].toLowerCase().startsWith('verb')) {
+          formPos = 3; 
+          stemExpandedCd = code.substr(2, 1) + languageCode;
+          getSpecificMorphologyInfo(stemExpandedCd, "stem", result);
+          if ( (code.length == 5) && ((code.substr(3, 2) == 'aa') || (code.substr(3, 2) == 'cc')) ) {
+              getSpecificMorphologyInfo(code.substr(4, 1), "state", result);
+              getSpecificMorphologyInfo(code.substr(4, 1), "stateExplained", result);
+              getSpecificMorphologyInfo(code.substr(4, 1), "stateDesc", result);
+              code = code.substr(0, 3) + 'f' + code.substr(4, 1); // Have to change the code for infinitive code because it does not have one.  
+          }
+        }
+        var formCd = code.substr(formPos, 1);
+        var formExpandedCd = formCd + functionCd;
+        getSpecificMorphologyInfo(formExpandedCd, "form", result);
+        if (code.length == (formPos + 4)) {
+          var pos1 = code.substr(formPos + 1, 1);
+          var pos2 = code.substr(formPos + 2, 1);
+          var pos3 = code.substr(formPos + 3, 1);
+          var genderCd, numberCd, personCd;
+          if ((pos1 == '1') || (pos1 == '2') || (pos1 == '3') ) {
+            personCd = pos1;
+            getSpecificMorphologyInfo(personCd, "person", result);
+            getSpecificMorphologyInfo(pos1 + pos3, "personExplained", result);
+            getSpecificMorphologyInfo(pos1 + pos3, "personDesc", result);
+            genderCd = pos2;
+            numberCd = pos3;
+          }
+          else {
+            genderCd = pos1;
+            numberCd = pos2;
+            getSpecificMorphologyInfo(pos3, "state", result);
+            getSpecificMorphologyInfo(pos3, "stateExplained", result);
+            getSpecificMorphologyInfo(pos3, "stateDesc", result);
+          }
+          getSpecificMorphologyInfo(genderCd, "gender", result);
+          getSpecificMorphologyInfo(numberCd, "number", result);
+          getSpecificMorphologyInfo(genderCd, "genderExplained", result);
+          var genderExpandedCd = genderCd + numberCd;
+          getSpecificMorphologyInfo(genderExpandedCd, "genderDesc", result);
+          getSpecificMorphologyInfo(numberCd, "numberExplained", result);
+          getSpecificMorphologyInfo(numberCd, "numberDesc", result);
+        }
+        else if (code.length == 4) {
+          getSpecificMorphologyInfo(code.substr(3, 1), "gender", result);
+          getSpecificMorphologyInfo(code.substr(3, 1), "genderExplained", result);
+          getSpecificMorphologyInfo(code.substr(3, 1), "genderDesc", result);
+        }
+        if (functionCd == 'V') {
+          getSpecificMorphologyInfo(stemExpandedCd, "ot_action", result);
+          var voiceCd = stemExpandedCd;
+          if ((formExpandedCd == 'sV') && (stemExpandedCd == 'qH')) voiceCd = stemExpandedCd + formCd;
+          getSpecificMorphologyInfo(voiceCd, "ot_voice", result);
+          getSpecificMorphologyInfo(formExpandedCd, "ot_tense", result);
+          var moodCd = formExpandedCd;
+          if (formExpandedCd == 'iV') moodCd = formExpandedCd + personCd;
+          getSpecificMorphologyInfo(moodCd, "ot_mood", result);
+          getSpecificMorphologyInfo(moodCd, "ot_moodExplained", result);
+          getSpecificMorphologyInfo(moodCd, "ot_moodDesc", result);
+          getSpecificMorphologyInfo(stemExpandedCd, "stemExplained", result);
+          getSpecificMorphologyInfo(stemExpandedCd, "stemDesc", result);
+          getSpecificMorphologyInfo(stemExpandedCd, "ot_actionExplained", result);
+          getSpecificMorphologyInfo(stemExpandedCd, "ot_actionDesc", result);
+          getSpecificMorphologyInfo(voiceCd + numberCd, "ot_voiceExplained", result);
+          getSpecificMorphologyInfo(voiceCd + numberCd, "ot_voiceDesc", result);
+          getSpecificMorphologyInfo(formExpandedCd, "ot_tenseExplained", result);
+          getSpecificMorphologyInfo(formExpandedCd, "ot_tenseDesc", result);
+        }
+        var functionExpandedCd = functionCd + formCd + numberCd;
+        getSpecificMorphologyInfo(functionExpandedCd, "functionExplained", result);   
+        getSpecificMorphologyInfo(functionExpandedCd, "functionDesc", result); 
+        getSpecificMorphologyInfo(formExpandedCd, "formExplained", result);
+        getSpecificMorphologyInfo(formExpandedCd, "formDesc", result);
+      }
+    }
+  }
+  getExplanationOfMorph(code, result);
+  var resultArray = [];
+  resultArray.push(result);
+  //console.log(result);
+  return resultArray;
+}
+
+function getExplanationOfMorph(code, result) {
+  var resultString = '';
+  if (code.search(/^[HA]V[a-zA-Z](fc|fa)$/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['ot_actionDesc', 'functionDesc', 'ot_moodDesc', 'formDesc', 'ot_voiceDesc', 'stateDesc']);
+  else if (code.search(/^[HA]V[a-zA-Z][rs]/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['ot_actionDesc', 'functionDesc', 'formDesc', 'ot_voiceDesc', 'genderDesc', 'numberDesc', 'stateDesc']);
+  else if (code.search(/^[HA]V/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['ot_actionDesc', 'functionDesc', 'ot_moodDesc', 'formDesc', 'ot_tenseDesc', 'ot_voiceDesc', 'genderDesc', 'numberDesc', 'personDesc']);
+  else if (code.search(/^[HA]Ng\w\wd$/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'stateDesc', 'genderDesc', 'numberDesc', 'formDesc']);
+  else if ((code.search(/^[HA]Ng\w\w[ac]$/) > -1) || (code.search(/^[HA]Aabsa$/) > -1))
+    resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'genderDesc', 'numberDesc', 'formDesc', 'stateDesc']);
+  else if (code.search(/^[HA][PS]p\w\w\w$/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'formDesc',  'genderDesc', 'numberDesc', 'personDesc']);
+  else if (code.search(/^[HA]Ng$/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'formDesc',  'genderDesc', 'numberDesc', 'personDesc']);
+  else if (code.search(/^[HA]A[co]\w\wd$/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'formDesc',  'stateDesc', 'genderDesc', 'numberDesc']); // 15B9A
+  else if (code.search(/^[HA][NA]\w\w\wd$/) > -1)
+    resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'stateDesc', 'formDesc',  'genderDesc', 'numberDesc']); // 1B59A
+  else resultString = assembleDescriptionsOfMorph(result, ['functionDesc', 'ot_actionDesc', 'ot_voiceDesc', 'fromDesc', 'ot_tenseDesc', 'ot_moodDesc', 'personDesc', 'genderDesc', 'numberDesc', 'stateDesc']);
+  if (resultString != '') {
+    result['explanation'] = resultString;
+  }
+}
+
+function assembleDescriptionsOfMorph(morphObj, keys) {
+  result = '';
+  for (var c = 0; c < keys.length; c++) {
+    if ((morphObj[keys[c]] != undefined) || (morphObj[keys[c]] != null) && (morphObj[keys[c]].length > 0))
+      result += morphObj[keys[c]] + ' ';
+//    else console.log('assembleDescriptionsOfMorph cannot find key: ' + keys[c]);
+  }
+  return result.replace(/\s\s+/, ' ').replace(/^\s/, '').replace(/\s$/, '');
+}
+
+function addClassForTHOT(passageHTML) {
+  var result = '';
+  var pLength = passageHTML.length;
+  var currentPos = 0; var lastCopyPos = 0;
+  var otCSSOnThisPage = '';
+
+  while (currentPos < pLength) {
+    var morphPos = passageHTML.indexOf("morph=", currentPos);
+    if (morphPos > -1) {
+      var charAfterMorph = passageHTML.substr(morphPos + 6, 1);
+      if (((charAfterMorph == '"') || (charAfterMorph == "'")) && (passageHTML.substr(morphPos + 7, 4) == 'TOS:')) {
+        currentPos = morphPos + 11;
+        var endingQuotePos = passageHTML.indexOf(charAfterMorph, currentPos);
+        if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 10)) {
+          var morphCode = passageHTML.substring(currentPos, endingQuotePos);
+          currentPos = endingQuotePos + 1;
+          var cssCode = morph2CSS(morphCode).trim();
+          if (cssCode.length > 0) {
+            var foundPos3 = passageHTML.indexOf(">", currentPos);
+            if (foundPos3 > -1) {
+              var shorterStringToSearch = passageHTML.substring(currentPos, foundPos3);
+              var classPos = shorterStringToSearch.indexOf("class=");
+              if (classPos > 0) {
+                var foundPos5 = currentPos + classPos + 7;
+                result = result.concat(passageHTML.substring(lastCopyPos, foundPos5));
+                lastCopyPos = foundPos5;
+                result = result.concat(cssCode);
+                var cssCodes = cssCode.split(" ");
+                for (var cc = 0; cc < cssCodes.length; cc ++) {
+                  if (cssCodes[cc].substr(0, 4) == 'vot_')
+                    if (otCSSOnThisPage.indexOf(cssCodes[cc].substr(4, 4)) == -1) otCSSOnThisPage = otCSSOnThisPage + ' ' + cssCodes[cc].substr(4, 4);
+                }
+              }
+              else alert("warning: addClassForTHOT cannot find class");
+            }
+            else alert("warning: addClassForTHOT cannot find >");
+          }
+        }
+        else alert("warning: addClassForTHOT cannot find ending quote at " + endingQuotePos);
+      }
+      else currentPos = morphPos + 6;
+    }
+    else break;
+  }
+  return [result.concat(passageHTML.substring(lastCopyPos, pLength)), otCSSOnThisPage + ' '];
+}
+
+function getClassesForNT(passageHTML) {
+  var pLength = passageHTML.length;
+  var currentPos = 0;
+  var ntCSSOnThisPage = '';
+  while (currentPos < pLength) {
+    var classPos = passageHTML.indexOf("class=", currentPos);
+    if (classPos > -1) {
+      var charAfterClass = passageHTML.substr(classPos + 6, 1);
+      if ((charAfterClass == '"') || (charAfterClass == "'")) {
+        currentPos = classPos + 7;
+        var endingQuotePos = passageHTML.indexOf(charAfterClass, currentPos);
+        if ((endingQuotePos > -1) && (endingQuotePos - currentPos < 100)) {
+          if (endingQuotePos > 0) {
+            var morphCodes = passageHTML.substring(currentPos, endingQuotePos);
+            var cssCodes = morphCodes.split(" ");
+            for (var cc = 0; cc < cssCodes.length; cc ++) {
+              if ((cssCodes[cc].substr(0, 1) == 'v') && (cssCodes[cc].substr(1, 1) != 'e'))
+                if (ntCSSOnThisPage.indexOf(cssCodes[cc]) == -1) ntCSSOnThisPage = ntCSSOnThisPage + ' ' + cssCodes[cc];
+            }
+          }
+          currentPos = endingQuotePos + 1;
+        }
+        else alert("warning: addClassForNT cannot find ending quote at " + endingQuotePos);
+      }
+      else currentPos = classPos + 6;
+    }
+    else break;
+  }
+  return ntCSSOnThisPage + ' ';
+}
+
+function createCopyOfColorSetting(obj) {
+  var result = JSON.parse(JSON.stringify(defaultC4)); // Make a copy of the default
+  for (var key in obj) { // Add keys and values which are in the user selected color config
+    if (key in result) result[key] = obj[key]; // If the key does not exist in the default settings, it is probably an old key that is no longer used
+  }
+  return result;
+}
+
+function tableAxisSpan(axis, createUserInputFields, ot) {
+  var otPrefix = 'nt';
+  if ((ot != undefined) && (ot == 'OT')) otPrefix = 'ot';
+  var curXTitle = c4[otPrefix + 'VerbTable' + axis + 'Header'];
+  var modalWidth = $('body').width();
+  if ((modalWidth != undefined) && (modalWidth != null) && (!isNaN(modalWidth)) && (modalWidth < 605) && (axis == 'Y')) return 2;
+  if ((curXTitle != null) && (createUserInputFields)) return 3; // The header information is not showed if there are no user input fields which is at the help quicklinks panel
+  else return 2;
+}
+
+function addTitleToYAxis(rowNum, descOfYAxisItems, createUserInputFields, xAxisRowSpan, ot) {
+  var htmlTable = ''; var prefix = 'nt';
+  if ((ot != undefined) && (ot == 'OT')) prefix = 'ot';
+  var curYTitle = c4[prefix + 'VerbTableYHeader'];
+  if ((curYTitle != null) && (createUserInputFields) && (xAxisRowSpan == 3)) { // screen size might not be wide enough for help quicklink
+    var title_range_low = 0;
+    for (var i = 0; i < curYTitle.desc.length; i ++) {
+      rowsCovered = curYTitle.repeat[i] + 1;
+      if (rowNum == title_range_low) {
+        htmlTable += '<td class="tg-yw4l" rowspan="' + rowsCovered + '">' + curYTitle.desc[i] + '</td>';
+        break;
+      }
+      title_range_low += rowsCovered;
+    }
+  }
+  htmlTable += '<td>' + descOfYAxisItems;
+  return htmlTable;
+}
+
+function morph2CSS(morphCode) {
+  var result = '';
+  if (morphCode != undefined) {
+    var number = ''; var gender = '';
+    var morphCodeLength = morphCode.length;
+    if ((morphCodeLength == 6) || (morphCodeLength == 7)) {
+        var charMinus2 = morphCode.substr(morphCodeLength - 3, 1);
+        if ((charMinus2 == "1") || (charMinus2 == "2") || (charMinus2 == "3")) {
+            gender = morphCode.substr(morphCodeLength - 2, 1);
+            number = morphCode.substr(morphCodeLength - 1, 1);
+        }
+        else if ((charMinus2 == "b") || (charMinus2 == "c") || (charMinus2 == "f") || (charMinus2 == "l") || (charMinus2 == "m") || (charMinus2 == "t")) {
+            gender = charMinus2;
+            number = morphCode.substr(morphCodeLength - 2, 1);
+        }
+    }
+    else if (morphCodeLength == 4) {
+        gender = morphCode.substr(3, 1);
+    }
+    if (number != "") {
+        if ((number == "p") || (number == "d")) result += 'plur ';
+        else if (number == "s") result += 'sing ';
+    }
+    if (gender != "") {
+        if (gender == "m") result += 'mas ';
+        else if (gender == "f") result += 'fem ';
+        else if ((gender == "b") || (gender == "c") || (gender == "l") || (gender == "t")) result += 'neut ';
+    }
+    if (morphCode.substr(1, 1) == 'V') {
+        if (morphCode.length == 5)
+            morphCode = morphCode.substr(0, 3) + 'f' + morphCode.substr(4, 1);
+        var formIndex = oTFormIndex2CSS[morphCode.substr(3, 1)];
+        var stemIndex;
+        if (morphCode.substr(0, 1) == 'H')
+            stemIndex = hebrewStemIndex2CSS[morphCode.substr(2, 1)];
+        else if (morphCode.substr(0, 1) == 'A')
+            stemIndex = aramaicStemIndex2CSS[morphCode.substr(2, 1)];
+        if ((formIndex != undefined) && (stemIndex != undefined)) {
+          result += 'vot_R' + formIndex + 'C' + stemIndex;
+        }
+        else console.log("unknown verb "+ morphCode);                              
+    }
+  }
+  return result;
+}
+
+function addVerbTable(createUserInputFields, htmlElement) {
+  var r = getVariablesForVerbTable();
+  var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
+  xAxisItems = r.orderOfXAxisItems;
+  yAxisItems = r.orderOfYAxisItems;
+  descOfXAxisItems = r.descOfXAxisItems;
+  descOfYAxisItems = r.descOfYAxisItems;
+  var htmlTable = '';
+  if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
+  if ((createUserInputFields) && (c4.ntVerbTableHTML != undefined) && (c4.ntVerbTableHTML != null))
+    htmlTable += c4.ntVerbTableHTML;
+  else {
+    var yAxisSpan = tableAxisSpan('Y', createUserInputFields);
+    htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
+      yAxisSpan + '" rowspan="' + tableAxisSpan('X', createUserInputFields) + '">';
+    if (createUserInputFields) htmlTable += htmlToAdd1();
+    htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + upCaseFirst(r.xAxisTitle);
+    if (createUserInputFields) htmlTable += htmlToAdd2(r.xAxisTitle);
+    htmlTable += '</th></tr>';
+    htmlTable += addTitleToXAxis(descOfXAxisItems, createUserInputFields);
+    htmlTable += '<tr>' +
+      '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + upCaseFirst(r.yAxisTitle);
+    if (createUserInputFields) htmlTable += htmlToAdd4(r.yAxisTitle);
+    htmlTable += '</td>';
+    for (i = 0; i < yAxisItems.length; i += 1) {
+      if (i > 0) htmlTable += '<tr>';
+      htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], createUserInputFields, yAxisSpan);
+      if (createUserInputFields) htmlTable += htmlToAdd5(i);
+      htmlTable += '</td>';
+      for (var counter = 0; counter < xAxisItems.length; counter += 1) {
+        htmlTable += '<td>';
+        if (createUserInputFields) {// add code to provide for all items in the group
+          var allTM = getAllTenseMoodForThisGroup(r, counter, i);
+          htmlTable += voicesInTenseAndMood(allTM.x, allTM.y, createUserInputFields);
+        }
+        else {
+          var xAxisCode, yAxisCode;
+          if (c4.xAxisForMood) {
+            xAxisCode = robinsonNameOfMood[r.nameOfAllXAxisItems[counter]];
+            yAxisCode = robinsonNameOfTense[r.nameOfAllYAxisItems[i]];
+          }
+          else {
+            yAxisCode = robinsonNameOfMood[r.nameOfAllXAxisItems[counter]];
+            xAxisCode = robinsonNameOfTense[r.nameOfAllYAxisItems[i]];
+          }
+          htmlTable += voicesInTenseAndMood([xAxisCode], [yAxisCode], true);
+        }
+        htmlTable += '</td>';
+      }
+      htmlTable += '</tr>';
+    }
+    htmlTable += '</table><br>';
+    if (createUserInputFields) htmlTable += htmlToAdd6();
+  }
+  htmlTable = $(htmlTable);
+  htmlTable.appendTo(htmlElement);
+}
+
+function htmlToAdd1(otVerb) {
+  var otPrefix = '';
+  if (otVerb !== undefined) otPrefix = 'OT';
+  return '<div class="onoffswitch">' +
+  '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="' + otPrefix + 'verbonoffswitch" onchange=\'userToggleColorGrammar("' + otPrefix + 'verb")\'/>' +
+  '<label class="onoffswitch-label" for="' + otPrefix + 'verbonoffswitch">' +
+      '<span class="onoffswitch-inner"></span>' +
+      '<span class="onoffswitch-switch"></span>' +
+  '</label></div>';
+}
+
+function htmlToAdd2(xAxisTitle, otVerb) {
+  var otPrefix = '';
+  if (otVerb !== undefined) otPrefix = 'OT';
+  return '&nbsp;<button id="' + otPrefix + 'configXAxisBtn" class="' + otPrefix + 'vrbInpt1 btn btn-default btn-xs" type="button" title="Select ' + 
+    xAxisTitle + '" onclick=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X")\'>' +
+    '<span id="' + otPrefix + 'configXAxisIcon" class="' + otPrefix + 'vrbInpt1 glyphicon glyphicon-cog"></span></button>' + 
+    '&nbsp;<button id="' + otPrefix + 'configSortXAxisBtn" class="btn btn-default btn-xs ' + otPrefix + 'advancedtools ' + otPrefix + 'vrbInpt1" type="button" title="Sort ' +  xAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'X\')">' +
+    '<span id="configSortXAxisIcon" class="glyphicon glyphicon-sort"></span></button>';
+}
+
+function htmlToAdd3(i, otVerb) {
+  var otPrefix = ''; var result = '';
+  if (otVerb !== undefined) otPrefix = 'OT';
+  result = '<input id="' + otPrefix + 'axisXOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptX" ' +
+    'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "X", "' + i + '")\'>';
+  result += '<br><input id="inputColor' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInptC" type="color" ' +
+    'value="' + c4['inputColor' + otPrefix + 'VerbItem' + i ] + '" ';
+  return result;
+}
+
+function htmlToAdd4(yAxisTitle, otVerb) {
+  var otPrefix = ''; var result = '';
+  if (otVerb !== undefined) otPrefix = 'OT';
+  return '<button id="' + otPrefix + 'configYAxisBtn" class="' + otPrefix + 'vrbInpt1 btn btn-default btn-xs" type="button" title="Select ' + yAxisTitle + '" onclick=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y")\'>' +
+    '<span id="' + otPrefix + 'configYAxisIcon" class="' + otPrefix + 'vrbInpt1 glyphicon glyphicon-cog"></span></button>' +
+    '<br><br><button id="' + otPrefix + 'configSortYAxisBtn" class="btn btn-default btn-xs ' + otPrefix + 'advancedtools ' + otPrefix + 'vrbInpt1" type="button" title="Sort ' +  yAxisTitle + '" onclick="userSort' + otPrefix + 'Axis(\'Y\')">' +
+    '<span id="configSortYAxisIcon" class="glyphicon glyphicon-sort ' + otPrefix + 'advancedtools"></span></button>';
+}
+
+function htmlToAdd5(i, otVerb) {
+  var otPrefix = ''; var result = '';
+  if (otVerb != undefined) otPrefix = 'OT';
+  result = '<input id="' + otPrefix + 'axisYOnOffCheckbox' + i + '" class="' + otPrefix + 'vrbInptY" ' +
+    'type="checkbox" onchange=\'userToggleXOrYAxisConfig("' + otPrefix + '", "Y", "' + i + '")\'><br>';
+  result += '<select id="selectedHighlight' + otPrefix + 'VerbItem' + i + '" class="' + otPrefix + 'vrbInpt1" ' +
+    'onchange=\'userUpdate' + otPrefix +'YAxisItem("' + i + '", value)\'';
+  if (otPrefix != 'OT') result += ' style="width: 52px"';
+  result += '>' +
+    '<option value="ulSolid">Underline</option>' +
+    '<option value="ulDoubleSolid">2 lines</option>' +
+    '<option value="ulDash">Dash</option>' +
+    '<option value="ulDashDot">Dash Dot</option>' +
+    '<option value="ulDashDotDot">Dash Dot Dot</option>' +
+    '<option value="ulDot">Dots</option>' +
+    '<option value="ulWave">Wave</option>' +
+    '<option value="ulArrow">Arrow</option>' +
+    '<option value="ulShortArrow">Short Arrow</option>' +
+    '<option value="ulReverseArrow">Reverse Arrow</option>' +
+    '<option value="ulShortReverseArrow">Short Reverse Arrow</option>' +
+    '</select>';
+  if (otVerb == undefined) result += '<br><span id="inputAnimate' + i + '" class="advancedtools">' +
+    'Animate:<input id="inputAnimateCheckbox' + i + '" class="advancedtools" ' +
+    'type="checkbox" onchange=\'userUpdateAnimation("' + i + '")\'></span>';
+  return result;
+}
+
+function htmlToAdd6(otVerb) {
+  var otPrefix = '';
+  if (otVerb != undefined) otPrefix = 'OT';
+  var result = '<span>Passive voice: background - </span><input id="inputCheckbox' + otPrefix + 'PassiveBackgroundColor" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBackground("passive", "' + otPrefix + '")\'>' +
+    '<input id="input' + otPrefix + 'PassiveBackgroundColor" type="color" ' +
+    'value="' + c4['input' + otPrefix + 'PassiveBackgroundColor'] + '"/>' +
+    '<span>underline - </span><input id="inputCheckbox' + otPrefix + 'PassiveUlColor1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("passive", "' + otPrefix + '")\'>' +
+    '<input id="input' + otPrefix + 'PassiveUlColor1" type="color" ' +
+    'value="' + c4['input' + otPrefix + 'PassiveUlColor1'] + '"/>';
+  if (otVerb == undefined) result += '<span>animated underline - </span>' +
+    '<input id="inputCheckbox' + otPrefix + 'PassiveUlColor2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("passive", "' + otPrefix + '")\'>' +
+    '<input id="input' + otPrefix + 'PassiveUlColor2" type="color" ' +
+    'value="' + c4['input' + otPrefix + 'PassiveUlColor2'] + '"/>';
+  result += '<br><br>' +
+    '<span>Middle voice: background - </span><input id="inputCheckbox' + otPrefix + 'MiddleBackgroundColor" type="checkbox" onchange=\'userUpdatePassiveMiddleVoiceBackground("middle", "' + otPrefix + '")\'>' +
+    '<input id="input' + otPrefix + 'MiddleBackgroundColor" type="color" ' +
+    'value="' + c4['input' + otPrefix + 'MiddleBackgroundColor'] + '"/>' +
+    '<span>underline - </span><input id="inputCheckbox' + otPrefix + 'MiddleUlColor1" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline1("middle", "' + otPrefix + '")\'>' +
+    '<input id="input' + otPrefix + 'MiddleUlColor1" type="color" ' +
+    'value="' + c4['input' + otPrefix + 'MiddleUlColor1'] + '"/>';
+  if (otVerb == undefined) result += '<span>animated underline - </span>' +
+    '<input id="inputCheckbox' + otPrefix + 'MiddleUlColor2" type="checkbox" onchange=\'userEnablePassiveMiddleVerbsUnderline2("middle", "' + otPrefix + '")\'>' +
+    '<input id="input' + otPrefix + 'MiddleUlColor2" type="color" ' +
+    'value="' + c4['input' + otPrefix + 'MiddleUlColor2'] + '"/>';
+//  result += '&nbsp;<button id="' + otPrefix + 'advancedToolsBtn" class="btn btn-default btn-xs" type="button" title="Advanced tools" onclick="userToggleAdvancedTools(\'' + otPrefix + '\')">' +
+//    '<span id="' + otPrefix + 'advancedToolsIcon" class="glyphicon glyphicon-wrench"></span></button>';
+  return result;
+}
+
+function addTitleToXAxis(descOfXAxisItems, createUserInputFields) {
+  var htmlTable = '';
+  var curXTitle = c4['ntVerbTableXHeader'];
+  if ((curXTitle != null) && (createUserInputFields)) {
+    htmlTable += '<tr>';
+    for (var i = 0; i < curXTitle.desc.length; i ++) {
+      htmlTable += '<td class="tg-yw4l" align="center" colspan="' + (curXTitle.repeat[i] + 1) + '">' + curXTitle.desc[i] + '</td>';
+    }
+    htmlTable += '</tr>';
+  }
+  htmlTable += '<tr>';
+  for (var i = 0; i < descOfXAxisItems.length; i += 1) {
+    htmlTable += '<td class="tg-yw4l"';
+    if (descOfXAxisItems[i].length < 10) htmlTable += ' width=72';
+    htmlTable += '>' + descOfXAxisItems[i];
+    if (createUserInputFields) htmlTable += htmlToAdd3(i);
+    htmlTable += '</td>';
+  }
+  htmlTable += '</tr>';
+  return htmlTable;
+}
+
+function voicesInTenseAndMood(xAxisItem, yAxisItem, createUserInputFields) {
+  var currentMoodCode, currentTenseCode;
+  var highlightMiddle = c4['inputCheckboxMiddleBackgroundColorCheckValue'] ||
+    c4['inputCheckboxMiddleUlColor1CheckValue'];
+  var highlightPassive = c4['inputCheckboxPassiveBackgroundColorCheckValue'] ||
+    c4['inputCheckboxPassiveUlColor1CheckValue'];
+  var htmlTable = '';
+  if (c4.xAxisForMood) {
+    currentMoodCode = xAxisItem;
+    currentTenseCode = yAxisItem;
+  }
+  else {
+    currentMoodCode = yAxisItem;
+    currentTenseCode = xAxisItem;   
+  }
+  var cssClassForActive = '';
+  var cssClassForPassive = '';
+  var cssClassForMiddle = '';
+  for (var j = 0; j < currentTenseCode.length; j ++) {
+    var arrayIndexOfCurrentTense = _.find(tenseIndexArray, function(obj) { return obj.name == robinsonCodeOfTense[currentTenseCode[j]]; }).array;
+    for (var i = 0; i < arrayIndexOfCurrentTense.length; i += 1) {
+      var cssName = ulVerbCSS[arrayIndexOfCurrentTense[i]].name;
+      if (currentMoodCode.indexOf(cssName.substr(2, 1)) > -1) {
+        if (cssName.substr(1, 1) === 'a') cssClassForActive = cssName;
+        else if ((cssName.substr(1, 1) === 'm') &&
+          (highlightMiddle || createUserInputFields)) cssClassForMiddle = cssName;
+        else if ((cssName.substr(1, 1) === 'p') &&
+          (highlightPassive || createUserInputFields)) cssClassForPassive = cssName;
+      }
+    }
+  }
+  if (cssClassForActive != '') htmlTable += '<span class="v' + cssClassForActive + '">active</span>';
+  htmlTable += '<br>';
+  if (cssClassForPassive != '') htmlTable += '<span class="v' + cssClassForPassive + '">passive</span>';
+  htmlTable += '<br>';
+  if (cssClassForMiddle != '') htmlTable += '<span class="v' + cssClassForMiddle + '">middle</span>';
+  return htmlTable;
+}
+
+function getAllTenseMoodForThisGroup(r, x, y) {
+  var currentMoodCodes, currentTenseCodes, moodIndex, tenseIndex, allMoods, allTenses;
+  var allMoodsCdInThisGroup = [], allTensesCdInThisGroup = [];
+  if (c4.xAxisForMood) {
+    currentMoodCodes = r.orderOfXAxisItems;
+    moodIndex = x;
+    allMoods = r.nameOfAllXAxisItems;
+    currentTenseCodes = r.orderOfYAxisItems;
+    tenseIndex = y;
+    allTenses = r.nameOfAllYAxisItems;
+  }
+  else {
+    currentMoodCodes = r.orderOfYAxisItems;
+    moodIndex = y;
+    allMoods = r.nameOfAllYAxisItems;
+    currentTenseCodes = r.orderOfXAxisItems;
+    tenseIndex = x;
+    allTenses = r.nameOfAllXAxisItems;
+  }
+  var currentMoodName = robinsonCodeOfMood[ currentMoodCodes[moodIndex] ];
+  var indexOfCurrentMood = allMoods.indexOf(currentMoodName);
+  var currentTenseName = robinsonCodeOfTense[currentTenseCodes[tenseIndex]];
+  var indexOfCurrentTense = allTenses.indexOf(currentTenseName);
+  if (currentMoodCodes.length > (moodIndex + 1)) {
+    var nextMoodName = robinsonCodeOfMood[ currentMoodCodes[moodIndex+1]];
+    var indexToEndOfCurrentMoodGroup = allMoods.indexOf(nextMoodName) - 1;
+  }
+  else indexToEndOfCurrentMoodGroup = allMoods.length - 1;
+  if (currentTenseCodes.length > (tenseIndex + 1)) {
+    var nextTenseName = robinsonCodeOfTense[ currentTenseCodes[tenseIndex+1]];
+    var indexToEndOfCurrentTenseGroup = allTenses.indexOf(nextTenseName) - 1;
+  }
+  else indexToEndOfCurrentTenseGroup = allTenses.length - 1;
+  for (var j = indexOfCurrentMood; j <= indexToEndOfCurrentMoodGroup; j ++) {
+    allMoodsCdInThisGroup.push( robinsonNameOfMood[allMoods[j]] );
+  }
+  for (var j = indexOfCurrentTense; j <= indexToEndOfCurrentTenseGroup; j ++) {
+    allTensesCdInThisGroup.push( robinsonNameOfTense[allTenses[j]] );
+  }
+  if (c4.xAxisForMood) {
+    var allInXAxis = allMoodsCdInThisGroup;
+    var allInYAxis = allTensesCdInThisGroup;
+  }
+  else {
+    var allInXAxis = allTensesCdInThisGroup;
+    var allInYAxis = allMoodsCdInThisGroup;
+  }
+  return {
+    x: allInXAxis,
+    y: allInYAxis
+  }
+}
+
+function updateCssForNumber(type, fontHighlight) {
+  var cssName = '';
+  if (type === 'singular') cssName = '.sing';
+  else if (type === 'plural') cssName = '.plur';
+  else return; // unknown type. something is wrong!
+  if (fontHighlight === 'bold') {
+    $(cssName).css('font-style', 'normal');
+    $(cssName).css('font-weight', 'bold');
+  } else if (fontHighlight === 'normal') {
+    $(cssName).css('font-style', 'normal'); // 
+    $(cssName).css('font-weight', 'normal');
+  } else if (fontHighlight === 'bold_italic') {
+    $(cssName).css('font-style', 'italic');
+    $(cssName).css('font-weight', 'bold');
+  } else if (fontHighlight === 'normal_italic') {
+    $(cssName).css('font-style', 'italic');
+    $(cssName).css('font-weight', 'normal');
+  }
+  updatedGenderNumberCSS = true;
+}
+
+function getAxisOrderOfItem(moodOrTense, itemNumber) {
+  var orderInAxis = itemNumber;
+  for (i = 1; i <= itemNumber; i++) {
+    if (c4[moodOrTense + 'ToCombineWithPrevious'][i]) orderInAxis --;
+  }
+  return orderInAxis;
+}
+
+function openUserSelectedConfig(name) {
+  var selectedConfig;
+  if (name != null) selectedConfig = name;
+  else selectedConfig = document.getElementById('openColorConfigDropdown').value.toLowerCase();
+  var previousEnableGenderNumberColor = true;
+  if (c4 != undefined) previousEnableGenderNumberColor = c4.enableGenderNumberColor;
+  if (selectedConfig === 'verb, gender and number') c4 = createCopyOfColorSetting(defaultC4VerbMoodTense);
+  else if (selectedConfig === 'verb only (tense-mood)') c4 = createCopyOfColorSetting(defaultC4VerbTenseMood);
+  else if (selectedConfig === 'gender and number') c4 = createCopyOfColorSetting(defaultC4NounOnly);
+  else if (selectedConfig === 'verb with middle and passive voices') c4 = createCopyOfColorSetting(defaultC4VerbWithMiddlePassive);
+  else if (selectedConfig === 'verb, imperative mood') c4 = createCopyOfColorSetting(defaultC4ImperativesOnly);
+  else if (selectedConfig === 'verb, main vs supporting verbs') c4 = createCopyOfColorSetting(defaultC4MainVsSupporingVerbs);
+  else if (selectedConfig === 'verb, gender and number, 2nd version') c4 = createCopyOfColorSetting(defaultC4VerbMoodTense2);
+  else {
+    var found = false;
+    var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
+    if (tmp) {
+      var UserColorConfigNames = JSON.parse(tmp);
+      for (var i = 0; i < UserColorConfigNames.length; i += 1) {
+        if (UserColorConfigNames[i].toLowerCase() === selectedConfig) {
+          var tmp2 = localStorage.getItem('colorCode-UserColorConfigName-' + UserColorConfigNames[i]);
+          if (tmp2) {
+            found = true;
+            c4 = createCopyOfColorSetting(JSON.parse(tmp2));
+          } else UserColorConfigNames.splice(i, 1);
+        }
+      }
+    }
+    if (!found) {
+      alert('Cannot find a configuation that match your selection');
+      return;
+    }
+  }
+  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+  if ((!previousEnableGenderNumberColor) && (c4.enableGenderNumberColor)) userTurnGenderNumberFromOffToOn = true;
+  if (name == null) { 
+    $('#openColorModal .close').click();
+    var element = document.getElementById('openColorModal');
+    element.parentNode.removeChild(element);
+    updateAllSettingsAndInputFields();
+  }
 }

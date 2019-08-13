@@ -679,13 +679,25 @@ var PassageMenuView = Backbone.View.extend({
     },
 		
 	showConfigGrammarColor: function (e) {
-		var grammarColorConfigPage = $('<div id="theGrammarColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +	
-			'<div class="modal-dialog">' +
-			'<div class="modal-content">');
+        var grammarColorConfigPage = $('<div id="theGrammarColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +	
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">');
+        var temp = document.getElementById("theGrammarColorModal");
+        e.preventDefault();
+        if (!temp) grammarColorConfigPage.appendTo("body");
+        if ($.getUrlVars().indexOf("debug") == -1) 
+            $('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
+        else 
+            $('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
+
+    /*  var htmlText = colorConfigHTML1;
+        if ($.getUrlVars().indexOf("debug") == -1) htmlText += '.' + step.state.version + '.min';
+        htmlText += colorConfigHTML2;
+        var grammarColorConfigPage = $(htmlText);
 		var temp = document.getElementById("theGrammarColorModal");
 		e.preventDefault();
 		if (!temp) grammarColorConfigPage.appendTo("body");
-		$('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
+		$('#theGrammarColorModal').modal('show'); */
 	}
 	
 });

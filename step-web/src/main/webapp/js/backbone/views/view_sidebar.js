@@ -1,4 +1,5 @@
 var SidebarView = Backbone.View.extend({
+    lastMorphCode: '',
     initialize: function () {
         //hide the help
         step.util.showOrHideTutorial(true);
@@ -61,6 +62,10 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.addClass("active");
             //load content
             var requestTime = new Date().getTime();
+            lastMorphCode = '';
+            if ((this.model.get("morph") != undefined) && (this.model.get("morph").startsWith('TOS:'))) {
+                lastMorphCode = this.model.get("morph");
+            }
             $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph")], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
@@ -140,6 +145,10 @@ var SidebarView = Backbone.View.extend({
                 }
 
                 this._createBriefWordPanel(panelBody, item);
+// need to handle multiple morphInfo (array)
+                if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
+                    data.morphInfos = getTOSMorphologyInfo(lastMorphCode);
+                } 
                 if(i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -158,6 +167,10 @@ var SidebarView = Backbone.View.extend({
 
         } else {
             this._createBriefWordPanel(this.lexicon, data.vocabInfos[0]);
+            // need to handle multiple morphInfo (array)
+            if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
+                data.morphInfos = getTOSMorphologyInfo(lastMorphCode);
+            }
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
@@ -243,10 +256,13 @@ var SidebarView = Backbone.View.extend({
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_stem, "stem");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_form, "form");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_state, "state");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
         panel.append(")<br />");
     },
@@ -261,22 +277,31 @@ var SidebarView = Backbone.View.extend({
     _createMorphInfo: function (panel, info) {
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         panel.append($("<h2>").append(__s.display_grammar));
-        this.renderMorphItem(panel, info, "function");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_stem, "stem");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_action, "ot_action");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_voice, "ot_voice");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_form, "form");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_tense, "ot_tense");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_mood, "ot_mood");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_person, "person");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_number, "number");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_state, "state");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
         panel.append("<br />");
 
-
-        panel.append($("<h3>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
-        panel.append("<br />");
-        panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
+        if (info["explanation"] != undefined) {
+            panel.append($("<h3>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
+            panel.append("<br />");
+        }
+        if (info["description"] != undefined)
+            panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
     },
     renderMorphItem: function (panel, info, title, param) {
         if(info && param && info[param]) {
