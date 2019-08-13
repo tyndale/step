@@ -357,7 +357,7 @@
                                 <search:sample_search explanation="sblg_verb_color_explanation" option1="SBLG" option1type="version" option2="Rom 12" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN', 'verb, gender and number', 'look_at_color_table')" />
-                                <search:sample_search explanation="sblg_verb_color_explanation" option1="THOT" option1type="version" option2="Gen 1" option2type="reference"
+                                <search:sample_search explanation="ot_explanation" option1="THOT" option1type="version" option2="Gen 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
                                     sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=THOT|reference=Gen.1&options=HVLUNC', 'verb, gender and number', '')" />
                                 <search:sample_search explanation="cun_verb_color_explanation" option1="CUn" option1type="version" option2="Col 1" option2type="reference"
