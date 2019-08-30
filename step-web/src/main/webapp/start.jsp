@@ -526,14 +526,17 @@
     <script>
         $(document).ready(function(){
             var exPanelWidth = $('.examplesContainer').width();
+            const C_displayQuickTryoutAccordion1 = 2,
+                    C_displayQuickTryoutAccordion2 = 3,
+                    C_displayQuickTryoutAccordion3 = 4;
             if ((exPanelWidth != undefined) && (exPanelWidth != null) && (!isNaN(exPanelWidth))) {
                 if (exPanelWidth < 365) $('.hidenarrow').hide();
                 else $('.hidenarrow').show();
             }
-            if (typeof displayQuickTryoutAccordion1 !== "undefined") {
+            if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") {
                 var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion1');
-                if (tmp) displayQuickTryoutAccordion1 = JSON.parse(tmp);
-                if (displayQuickTryoutAccordion1 == true) {
+                if (tmp) cgv[C_displayQuickTryoutAccordion1] = JSON.parse(tmp);
+                if (cgv[C_displayQuickTryoutAccordion1] == true) {
                     $("#accordion-body1").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus1").text('-');  /* add minus sign */
                 }
@@ -542,10 +545,10 @@
                     $("#plusminus1").text('+');  /* add minus sign */
                 }
             }
-            if (typeof displayQuickTryoutAccordion2 !== "undefined") {
+            if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") {
                 var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion2');
-                if (tmp) displayQuickTryoutAccordion2 = JSON.parse(tmp);
-                if (displayQuickTryoutAccordion2 == true) {
+                if (tmp) cgv[C_displayQuickTryoutAccordion2] = JSON.parse(tmp);
+                if (cgv[C_displayQuickTryoutAccordion2] == true) {
                     $("#accordion-body2").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus2").text('-');  /* add minus sign */
                 }
@@ -554,10 +557,10 @@
                     $("#plusminus2").text('+');  /* add minus sign */
                 }
             }
-            if (typeof displayQuickTryoutAccordion3 !== "undefined") {
+            if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") {
                 var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion3');
-                if (tmp) displayQuickTryoutAccordion3 = JSON.parse(tmp);
-                if (displayQuickTryoutAccordion3 == true) {
+                if (tmp) cgv[C_displayQuickTryoutAccordion3] = JSON.parse(tmp);
+                if (cgv[C_displayQuickTryoutAccordion3] == true) {
                     $("#accordion-body3").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus3").text('-');  /* add minus sign */
                 }
@@ -571,42 +574,42 @@
                 if($("#accordion-body1").is(':visible')) {  /* check the condition accordion-body is visible or not */
                     $("#accordion-body1").slideUp(300);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus1").text('+')    /* add plus sign */
-                    if (typeof displayQuickTryoutAccordion1 !== "undefined") displayQuickTryoutAccordion1 = false;
+                    if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") cgv[C_displayQuickTryoutAccordion1] = false;
                 }
                 else{
                     $("#accordion-body1").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus1").text('-');  /* add minus sign */
-                    if (typeof displayQuickTryoutAccordion1 !== "undefined") displayQuickTryoutAccordion1 = true;
+                    if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") cgv[C_displayQuickTryoutAccordion1] = true;
                 }
-                if (typeof displayQuickTryoutAccordion1 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion1', JSON.stringify(displayQuickTryoutAccordion1));
+                if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion1', JSON.stringify(cgv[C_displayQuickTryoutAccordion1]));
             });
 
             $("#accordion-heading2").click(function() {
                 if($("#accordion-body2").is(':visible')) {  /* check the condition accordion-body is visible or not */
                     $("#accordion-body2").slideUp(300);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus2").text('+')    /* add plus sign */
-                    if (typeof displayQuickTryoutAccordion2 !== "undefined") displayQuickTryoutAccordion2 = false;
+                    if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") cgv[C_displayQuickTryoutAccordion2] = false;
                 }
                 else{
                     $("#accordion-body2").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus2").text('-');  /* add minus sign */
-                    if (typeof displayQuickTryoutAccordion2 !== "undefined") displayQuickTryoutAccordion2 = true;
+                    if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") cgv[C_displayQuickTryoutAccordion2] = true;
                 }
-                if (typeof displayQuickTryoutAccordion2 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion2', JSON.stringify(displayQuickTryoutAccordion2));
+                if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion2', JSON.stringify(cgv[C_displayQuickTryoutAccordion2]));
             });
 
             $("#accordion-heading3").click(function(){
                 if($("#accordion-body3").is(':visible')){  /* check the condition accordion-body is visible or not */
                     $("#accordion-body3").slideUp(300);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus3").text('+')    /* add plus sign */
-                    if (typeof displayQuickTryoutAccordion3 !== "undefined") displayQuickTryoutAccordion3 = false;
+                    if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") cgv[C_displayQuickTryoutAccordion3] = false;
                 }
                 else{
                     $("#accordion-body3").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus3").text('-');  /* add minus sign */
-                    if (typeof displayQuickTryoutAccordion3 !== "undefined") displayQuickTryoutAccordion3 = true;
+                    if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") cgv[C_displayQuickTryoutAccordion3] = true;
                 }
-                if (typeof displayQuickTryoutAccordion3 !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion3', JSON.stringify(displayQuickTryoutAccordion3));
+                if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion3', JSON.stringify(cgv[C_displayQuickTryoutAccordion3]));
             });
 
         });

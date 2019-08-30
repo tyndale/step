@@ -388,26 +388,150 @@
 					<version>1.5.3</version>
 					<executions>
 						<execution>
+                            <id>change-version</id>
 							<phase>prepare-package</phase>
 							<goals>
 								<goal>replace</goal>
 							</goals>
+           					<configuration>
+                                <includes>
+                                    <include>${basedir}/target/**/step.*.js</include>
+                                </includes>
+                                <replacements>
+                                    <replacement>
+                                        <token>STEP_SERVER_VERSION_TOKEN</token>
+                                        <value>${project.version}</value>
+                                    </replacement>
+                                </replacements>
+                            </configuration>
+						</execution>
+						<execution>
+                            <id>remove-const</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                            <!-- Remove const which give long, readable index names in the program -->
+                                <includes>
+                                    <include>${basedir}/target/**/color_code_grammar.*.js</include>
+                                    <include>${basedir}/target/**/color_code_config.*.js</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token>C_Greek</token><value>0</value></replacement>
+                                    <replacement><token>C_enableVerbClr</token><value>0</value></replacement>
+                                    <replacement><token>C_inClrVerbItem</token><value>1</value></replacement>
+                                    <replacement><token>C_slctUlVerbItem</token><value>2</value></replacement>
+                                    <replacement><token>C_inPassiveBkgrdClr</token><value>3</value></replacement>
+                                    <replacement><token>C_inPassiveUlClr1</token><value>4</value></replacement>
+                                    <replacement><token>C_chkbxPassiveBkgrdClr</token><value>5</value></replacement>
+                                    <replacement><token>C_chkbxPassiveBkgrdColrValue</token><value>6</value></replacement>
+                                    <replacement><token>C_chkbxPassiveUlClr1</token><value>7</value></replacement>
+                                    <replacement><token>C_chkbxPassiveUlColr1Value</token><value>8</value></replacement>
+                                    <replacement><token>C_inMiddleBkgrdClr</token><value>9</value></replacement>
+                                    <replacement><token>C_inMiddleUlClr1</token><value>10</value></replacement>
+                                    <replacement><token>C_chkbxMiddleBkgrdClr</token><value>11</value></replacement>
+                                    <replacement><token>C_chkbxMiddleBkgrdColrValue</token><value>12</value></replacement>
+                                    <replacement><token>C_chkbxMiddleUlClr1</token><value>13</value></replacement>
+                                    <replacement><token>C_chkbxMiddleUlColr1Value</token><value>14</value></replacement>
+                                    <replacement><token>C_verbTableXHeader</token><value>15</value></replacement>
+                                    <replacement><token>C_verbTableYHeader</token><value>16</value></replacement>
+                                    <replacement><token>C_granularControlOfMoods</token><value>17</value></replacement>
+                                    <replacement><token>C_granularControlOfTenses</token><value>18</value></replacement>
+                                    <replacement><token>C_moodsOnOff</token><value>19</value></replacement>
+                                    <replacement><token>C_tensesOnOff</token><value>20</value></replacement>
+                                    <replacement><token>C_inAnimate</token><value>21</value></replacement>
+                                    <replacement><token>C_orderOfTense</token><value>22</value></replacement>
+                                    <replacement><token>C_orderOfMood</token><value>23</value></replacement>
+                                    <replacement><token>C_tenseToCombineWithPrevious</token><value>24</value></replacement>
+                                    <replacement><token>C_moodToCombineWithPrevious</token><value>25</value></replacement>
+                                    <replacement><token>C_xAxisForMood</token><value>26</value></replacement>
+                                    <replacement><token>C_inPassiveUlClr2</token><value>27</value></replacement>
+                                    <replacement><token>C_inMiddleUlClr2</token><value>28</value></replacement>
+                                    <replacement><token>C_chkbxPassiveUlClr2</token><value>29</value></replacement>
+                                    <replacement><token>C_chkbxPassiveUlColr2Value</token><value>30</value></replacement>
+                                    <replacement><token>C_chkbxMiddleUlClr2</token><value>31</value></replacement>
+                                    <replacement><token>C_chkbxMiddleUlColr2Value</token><value>32</value></replacement>
+                                    <replacement><token>C_OT</token><value>1</value></replacement>
+                                    <replacement><token>C_granularControlOfXAxis</token><value>17</value></replacement>
+                                    <replacement><token>C_granularControlOfYAxis</token><value>18</value></replacement>
+                                    <replacement><token>C_xAxisOnOff</token><value>19</value></replacement>
+                                    <replacement><token>C_yAxisOnOff</token><value>20</value></replacement>
+                                    <replacement><token>C_orderOfForm</token><value>21</value></replacement>
+                                    <replacement><token>C_verbFormToCombineWithPrevious</token><value>22</value></replacement>
+                                    <replacement><token>C_orderOfHebrewStem</token><value>23</value></replacement>
+                                    <replacement><token>C_hebrewStemToCombineWithPrevious</token><value>24</value></replacement>
+                                    <replacement><token>C_orderOfAramaicStem</token><value>25</value></replacement>
+                                    <replacement><token>C_aramaicStemToCombineWithPrevious</token><value>26</value></replacement>
+                                    <replacement><token>C_hebrewCodeOfStem</token><value>27</value></replacement>
+                                    <replacement><token>C_aramaicCodeOfStem</token><value>28</value></replacement>
+                                    <replacement><token>C_codeOfForm</token><value>29</value></replacement>
+                                    <replacement><token>C_xAxisForStem</token><value>30</value></replacement>
+                                    <replacement><token>C_enableAdvancedTools</token><value>2</value></replacement>
+                                    <replacement><token>C_enableGenderNumberClr</token><value>3</value></replacement>
+                                    <replacement><token>C_inClrMasculine</token><value>4</value></replacement>
+                                    <replacement><token>C_inClrFeminine</token><value>5</value></replacement>
+                                    <replacement><token>C_inClrNeuter</token><value>6</value></replacement>
+                                    <replacement><token>C_slctUlSingular</token><value>7</value></replacement>
+                                    <replacement><token>C_slctUlPlural</token><value>8</value></replacement>
+                                    <replacement><token>C_activeIndexArray</token><value>0</value></replacement>
+                                    <replacement><token>C_middleIndexArray</token><value>1</value></replacement>
+                                    <replacement><token>C_passiveIndexArray</token><value>2</value></replacement>
+                                    <replacement><token>C_animationInterval</token><value>3</value></replacement>
+                                    <replacement><token>C_maxAnimationOnSamePageWithoutMovement</token><value>4</value></replacement>
+                                    <replacement><token>C_robinsonCodeOfTense</token><value>5</value></replacement>
+                                    <replacement><token>C_robinsonNameOfTense</token><value>6</value></replacement>
+                                    <replacement><token>C_defaultOrderOfTense</token><value>7</value></replacement>
+                                    <replacement><token>C_defaultTenseToCombineWithPrevious</token><value>8</value></replacement>
+                                    <replacement><token>C_robinsonCodeOfMood</token><value>9</value></replacement>
+                                    <replacement><token>C_robinsonNameOfMood</token><value>10</value></replacement>
+                                    <replacement><token>C_defaultOrderOfMood</token><value>11</value></replacement>
+                                    <replacement><token>C_defaultMoodToCombineWithPrevious</token><value>12</value></replacement>
+                                    <replacement><token>C_otNameOfVerbForm</token><value>13</value></replacement>
+                                    <replacement><token>C_defaultOrderOfOTVerbForm</token><value>14</value></replacement>
+                                    <replacement><token>C_defaultOTVerbFormToCombineWithPrevious</token><value>15</value></replacement>
+                                    <replacement><token>C_hebrewNameOfStem</token><value>16</value></replacement>
+                                    <replacement><token>C_defaultOrderOfHebrewStem</token><value>17</value></replacement>
+                                    <replacement><token>C_defaultHebriewStemToCombineWithPrevious</token><value>18</value></replacement>
+                                    <replacement><token>C_aramaicNameOfStem</token><value>19</value></replacement>
+                                    <replacement><token>C_defaultOrderOfAramaicStem</token><value>20</value></replacement>
+                                    <replacement><token>C_defaultAramaicStemToCombineWithPrevious</token><value>21</value></replacement>
+                                    <replacement><token>C_underlineCanvasName</token><value>22</value></replacement>
+                                    <replacement><token>C_canvasUnderlineName</token><value>23</value></replacement>
+                                    <replacement><token>C_moodIndexArray</token><value>24</value></replacement>
+                                    <replacement><token>C_tenseIndexArray</token><value>25</value></replacement>
+                                    <replacement><token>C_defaultCodeOfForm</token><value>26</value></replacement>
+                                    <replacement><token>C_defaultHebrewCodeOfStem</token><value>27</value></replacement>
+                                    <replacement><token>C_defaultAramaicCodeOfStem</token><value>28</value></replacement>
+                                    <replacement><token>C_colorCodeGrammarAvailableAndSelected</token><value>0</value></replacement>
+                                    <replacement><token>C_otMorph</token><value>1</value></replacement>
+                                    <replacement><token>C_displayQuickTryoutAccordion1</token><value>2</value></replacement>
+                                    <replacement><token>C_displayQuickTryoutAccordion2</token><value>3</value></replacement>
+                                    <replacement><token>C_displayQuickTryoutAccordion3</token><value>4</value></replacement>
+                                    <replacement><token>C_uLBASEIMGS</token><value>5</value></replacement>
+                                    <replacement><token>C_ulVerbCSS</token><value>6</value></replacement>
+                                    <replacement><token>C_ulOTVbCSS</token><value>7</value></replacement>
+                                    <replacement><token>C_oTFormIndex2CSS</token><value>8</value></replacement>
+                                    <replacement><token>C_hebrewStemIndex2CSS</token><value>9</value></replacement>
+                                    <replacement><token>C_aramaicStemIndex2CSS</token><value>10</value></replacement>
+                                    <replacement><token>C_handleOfRequestedAnimation</token><value>11</value></replacement>
+                                    <replacement><token>C_copyOfPassiveIndexArray</token><value>12</value></replacement>
+                                    <replacement><token>C_copyOfMiddleIndexArray</token><value>13</value></replacement>
+                                    <replacement><token>C_animationIndexArray</token><value>14</value></replacement>
+                                    <replacement><token>C_timestampOfLastAnimation</token><value>15</value></replacement>
+                                    <replacement><token>C_numOfAnimationsAlreadyPerformedOnSamePage</token><value>16</value></replacement>
+                                    <replacement><token>C_axisUserSelectedToSort</token><value>17</value></replacement>
+                                    <replacement><token>C_userProvidedSortOrder</token><value>18</value></replacement>
+                                    <replacement><token>C_updatedGenderNumberCSS</token><value>19</value></replacement>
+                                    <replacement><token>C_userTurnGenderNumberFromOffToOn</token><value>20</value></replacement>
+                                    <replacement><token>^\/\*TBRBMR\*\/.*$</token><value></value></replacement>
+                                    <replacement><token>const 0=0,[\d\s=,]+;</token><value></value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
+                            </configuration>
 						</execution>
 					</executions>
-					<configuration>
-						<includes>
-							<include>${basedir}/target/**/step.*.js</include>
-							<include>${basedir}/target/**/color_code_grammar.*.js</include>
-						</includes>
-						<replacements>
-							<replacement>
-								<token>STEP_SERVER_VERSION_TOKEN</token>
-								<value>${project.version}</value>
-							</replacement>
-						</replacements>
-					</configuration>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.codehaus.cargo</groupId>
 					<artifactId>cargo-maven2-plugin</artifactId>

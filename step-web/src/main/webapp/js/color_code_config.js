@@ -1,13 +1,13 @@
-function initializeColorCodeHtmlModalPage() {
-  addVerbTable(true, '#verbColors');
-  addOTVerbTable(true, '#hVerbColors');
+function initializeClrCodeHtmlModalPage() {
+  addVerbTable(true, '#verbClrs');
+  addOTVerbTable(true, '#hVerbClrs');
   addNounTable();
   updateHtmlForYAxis();
   updateHtmlForXAxis();
   updateHtmlForGender();
   updateHtmlForNumber();
-  updateHtmlForPassiveBackgroundColor();
-  updateHtmlForMiddleBackgroundColor();
+  updateHtmlForPassiveBkgrdClr();
+  updateHtmlForMiddleBkgrdClr();
   enableOrDisableAxisConfigButtons('X');
   enableOrDisableAxisConfigButtons('Y');
   enableOrDisableAxisConfigButtons('X', 'OT');
@@ -15,25 +15,25 @@ function initializeColorCodeHtmlModalPage() {
   enableOrDisableAdvancedToolsButtons();
   enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtons();
-  refreshForAllInstancesOfTense();
-  if ((((c4['inputCheckboxPassiveUlColor1CheckValue']) && (c4['inputCheckboxPassiveUlColor2CheckValue'])) ||
-      ((c4['inputCheckboxMiddleUlColor1CheckValue']) && (c4['inputCheckboxMiddleUlColor2CheckValue']))) &&
-    (handleOfRequestedAnimation === -1)) goAnimate();  //c4 is currentColorCodeConfig.  It is changed to c4 to save space
-  localStorage.setItem('colorCode-PreviousSettings', JSON.stringify(c4));
+  refreshClrGrammarCSS();
+  if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
+      ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
+    (cgv[C_handleOfRequestedAnimation] === -1)) goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
+  window.localStorage.setItem('colorCode-PreviousSettings', JSON.stringify(c4));
 }
-
-function openColorConfig() {
+  
+function openClrConfig() {
   if (typeof(Storage) !== 'undefined') {
-    var openConfigPage = $('<div id="openColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
       '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('openColorModal');
+    var temp = document.getElementById('openClrModal');
     if (!temp) openConfigPage.appendTo('body');
-    $('#openColorModal').modal('show').find('.modal-content').load('/open_color_code_grammar.html');
+    $('#openClrModal').modal('show').find('.modal-content').load('/open_color_code_grammar.html');
   }
 }
 
-function initOpenColorCodeModal() {
-  var s = $('<select id="openColorConfigDropdown"/>');
+function initOpenClrCodeModal() {
+  var s = $('<select id="openClrConfigDropdown"/>');
   s.append($('<option/>').html('Verb, Gender and Number'));
   s.append($('<option/>').html('Verb, Gender and Number, 2nd version'));
   s.append($('<option/>').html('Verb only (tense-mood)'));
@@ -41,29 +41,29 @@ function initOpenColorCodeModal() {
   s.append($('<option/>').html('Verb, imperative mood'));
   s.append($('<option/>').html('Verb, main vs supporting verbs'));
   s.append($('<option/>').html('Gender and Number'));
-  var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
+  var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
   if (tmp) {
-    var UserColorConfigNames = JSON.parse(tmp);
-    for (var i in UserColorConfigNames) {
-      s.append($('<option/>').html(UserColorConfigNames[i]));
+    var UserClrConfigNames = JSON.parse(tmp);
+    for (var i in UserClrConfigNames) {
+      s.append($('<option/>').html(UserClrConfigNames[i]));
     }
   }
-  $('#openColorModalSelectArea').append(s);
+  $('#openClrModalSelectArea').append(s);
 }
 
 function initSortVerbItem() {
   var r = getVariablesForVerbTable();
-  var sortType = r[axisUserSelectedToSort.toLowerCase() + 'AxisTitle'];
+  var sortType = r[cgv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
   var moodOrTense = sortType.substr(0,sortType.length - 1);
-  var nameOfAllItems = r['nameOfAll' + axisUserSelectedToSort + 'AxisItems'];
-  var itemsToCombineWithPrevious = c4[sortType.substr(0, sortType.length -1) + 'ToCombineWithPrevious'];
+  var nameOfAllItems = r['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
+  var itemsToCombineWithPrevious = (sortType.substr(0, sortType.length -1) == 'mood') ? c4[C_Greek][C_moodToCombineWithPrevious] : c4[C_Greek][C_tenseToCombineWithPrevious];
   var axisName, otherAxisName;
-  if (axisUserSelectedToSort == 'X') {
+  if (cgv[C_axisUserSelectedToSort] == 'X') {
     axisName = 'horizontal';
-    otherAxisName = 'vertical'; 
+    otherAxisName = 'vertical';
   }
   else {
-    axisName = 'vertical'; 
+    axisName = 'vertical';
     otherAxisName = 'horizontal';
   }
   var s = '<p class="col-12">The ' + sortType + ' are currently in the ' + axisName + ' axis.</p>' +
@@ -77,7 +77,7 @@ function initSortVerbItem() {
     '<div id="nestedVerbItem" class="list-group col nested-sortable">';
   var skipDiv = false;
   for (var i = 0; i < nameOfAllItems.length; i++) {
-    s += '<div class="list-group-item nested-1">' + upCaseFirst(nameOfAllItems[i]) + 
+    s += '<div class="list-group-item nested-1">' + upCaseFirst(nameOfAllItems[i]) +
     '<div class="list-group nested-sortable">';
     if ((i >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[i + 1])) {
       s += '</div></div>';
@@ -85,7 +85,7 @@ function initSortVerbItem() {
         s += '</div></div>';
         skipDiv = false;
       }
-    } 
+    }
     else {
       if (skipDiv) {
         s += '</div></div>';
@@ -98,14 +98,14 @@ function initSortVerbItem() {
 
   var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
 
-  for (var i = 0; i < nestedSortables.length; i++) {
-    new Sortable(nestedSortables[i], {
+  for (var j = 0; j < nestedSortables.length; j++) {
+    new Sortable(nestedSortables[j], {
       group: 'nested',
       animation: 150,
       onEnd: function(/**Event*/evt) {
-        userProvidedSortOrder = [];
-        for (var i = 0; i < $('#nestedVerbItem')[0].children.length; i ++) {
-          userProvidedSortOrder.push($('#nestedVerbItem')[0].children[i].innerText);
+        cgv[C_userProvidedSortOrder] = [];
+        for (var j = 0; j < $('#nestedVerbItem')[0].children.length; j ++) {
+          cgv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[j].innerText);
         }
       }
     });
@@ -119,20 +119,22 @@ function initAddHeaderInfo() {
   if (testament == 'ot') {
     var r = getVariablesForOTVerbTable('H');
     if (axis == 'X') {
-      r2 = getVariablesForOTVerbTable('A');
+      var r2 = getVariablesForOTVerbTable('A');
       for (var i = 0; i < r.descOfXAxisItems.length; i ++) {
         var aramaicStems = (r2.descOfXAxisItems[i].length > 0) ? r2.descOfXAxisItems[i].replace(/^/, "(").replace(/$/, ")") : '';
-        arrayDesc.push(r.descOfXAxisItems[i] + '<br>' + aramaicStems.replace(/<br>/g, ")<br>(")); 
+        arrayDesc.push(r.descOfXAxisItems[i] + '<br>' + aramaicStems.replace(/<br>/g, ")<br>("));
       }
     }
-    else arrayDesc = getVariablesForOTVerbTable('H')['descOfYAxisItems'];
+    else arrayDesc = getVariablesForOTVerbTable('H').descOfYAxisItems;
   }
   else {
     arrayDesc = getVariablesForVerbTable()['descOf' + axis + 'AxisItems'];
   }
-  var previousHeader = c4[testament + 'VerbTable' + axis + 'Header'];
-  c4[testament + 'VerbTable' + axis + 'Header'] = null;
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4)); // If user does not save, the previous header should not be re-use so clear it.  
+  var c4Ref = (testament == 'nt') ? c4[C_Greek]: c4[C_OT];
+  var temp2 = (axis == 'X') ? c4Ref[C_verbTableXHeader] : c4Ref[C_verbTableYHeader];
+  var previousHeader = JSON.parse(JSON.stringify(temp2)); // Quick way to make a copy of the object
+  (axis == 'X') ? c4Ref.verbTableXHeader = null : c4Ref.verbTableYHeader = null;
+  updtLocalStorage(); // If user does not save, the previous header should not be re-use so clear it.
   var prevHdrArray = [];
   if (previousHeader != null) {
     for (var j = 0; j < previousHeader.desc.length; j ++) {
@@ -141,15 +143,15 @@ function initAddHeaderInfo() {
       }
     }
   }
-  for (var j = 0; j < 25; j ++) { // add some extra blank items so that the input fields will not show "undefined"
+  for (var l = 0; l < 25; l ++) { // add some extra blank items so that the input fields will not show "undefined"
     prevHdrArray.push('');
   }
   var s = '<p class="col-12">Enter the additional header information for the ' + axis + ' axis.</p><br>' +
-    '<span id="uahi_num_of_input" style="visibility:hidden">' + arrayDesc.length + '</span>' + 
+    '<span id="uahi_num_of_input" style="visibility:hidden">' + arrayDesc.length + '</span>' +
     '<form>';
-  for (var j = 0; j < arrayDesc.length; j ++) {
-    var text = arrayDesc[j].replace(/<br>/g, ", ");
-    s += text + '<br><input id="uahi_input' + j + '" type="text" value="' + prevHdrArray[j] + '"><br>';
+  for (var cc = 0; cc < arrayDesc.length; cc ++) {
+    var text = arrayDesc[cc].replace(/<br>/g, ", ");
+    s += text + '<br><input id="uahi_input' + cc + '" type="text" value="' + prevHdrArray[cc] + '"><br>';
   }
   s += '</form>';
   $('#addHeaderInfoArea').append($(s));
@@ -159,25 +161,25 @@ function saveHeaderInfo() {
   var testament = $('#uahi_testament')[0].innerHTML;
   var axis = $('#uahi_axis')[0].innerHTML;
   var numOfInput = $('#uahi_num_of_input')[0].innerHTML;
-  if (testament == 'ot') {
-    r = getVariablesForOTVerbTable('H');
-  }
-  else {
-    r = getVariablesForVerbTable();
-  }
-  c4[testament + 'VerbTable' + axis + 'Header'] = {desc: [], repeat: []};
+  var newHeader = {desc: [], repeat: []};
   var hdrNum = 0;
   for (var j = 0; j < numOfInput; j ++) {
     var text = $('#uahi_input' + j)[0].value;
-    if ((hdrNum > 0) && (c4[testament + 'VerbTable' + axis + 'Header'].desc[(hdrNum-1)] == text))
-      c4[testament + 'VerbTable' + axis + 'Header'].repeat[(hdrNum-1)] ++;
+    if ((hdrNum > 0) && (newHeader.desc[(hdrNum-1)] == text))
+    newHeader.repeat[(hdrNum-1)] ++;
     else {
-      c4[testament + 'VerbTable' + axis + 'Header'].desc.push(text);
-      c4[testament + 'VerbTable' + axis + 'Header'].repeat.push(0);
+      newHeader.desc.push(text);
+      newHeader.repeat.push(0);
       hdrNum ++;
     }
   }
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+  if (testament == 'ot') {
+    (axis == 'X') ? c4[C_OT][C_verbTableXHeader] = newHeader : c4[C_OT][C_verbTableYHeader] = newHeader;
+  }
+  else {
+    (axis == 'X') ? c4[C_Greek][C_verbTableXHeader] = newHeader : c4[C_Greek][C_verbTableYHeader] = newHeader;
+  }
+  updtLocalStorage();
   $('#addHeaderInfoModal .close').click();
   var element = document.getElementById('addHeaderInfoModal');
   element.parentNode.removeChild(element);
@@ -188,22 +190,22 @@ function saveHeaderInfo() {
 function initSortOTVerbItem() {
   var r1 = getVariablesForOTVerbTable('H');
   var r2 = getVariablesForOTVerbTable('A');
-  var sortType = r1[axisUserSelectedToSort.toLowerCase() + 'AxisTitle'];
+  var sortType = r1[cgv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
   var stemOrForm = sortType.substr(0,sortType.length - 1);
 
   var itemsToCombineWithPrevious = []; var nameOfAllItems = [];
-  if (axisUserSelectedToSort == 'X') {
-    var nameOfAllHebrewItems = r1['nameOfAll' + axisUserSelectedToSort + 'AxisItems'];
-    var nameOfAllAramaicItems = r2['nameOfAll' + axisUserSelectedToSort + 'AxisItems'];
+  if (cgv[C_axisUserSelectedToSort] == 'X') {
+    var nameOfAllHebrewItems = r1['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
+    var nameOfAllAramaicItems = r2['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
     var aramaicStemIndex = 0;
     for (var i = 0; i < nameOfAllHebrewItems.length; i ++) {
       var noStemForThisGroupYet = true;
       if (nameOfAllHebrewItems[i] != '') {
         nameOfAllItems.push(nameOfAllHebrewItems[i]);
-        itemsToCombineWithPrevious.push(c4.hebrewStemToCombineWithPrevious[i]);
+        itemsToCombineWithPrevious.push(c4[C_OT][C_hebrewStemToCombineWithPrevious][i]);
         noStemForThisGroupYet = false;
       }
-      if ((i == (nameOfAllHebrewItems.length - 1)) || (!c4.hebrewStemToCombineWithPrevious[i+1])) {
+      if ((i == (nameOfAllHebrewItems.length - 1)) || (!c4[C_OT][C_hebrewStemToCombineWithPrevious][i+1])) {
         do {
           if (nameOfAllAramaicItems[aramaicStemIndex] != '') {
             nameOfAllItems.push('(' + nameOfAllAramaicItems[aramaicStemIndex] + ')');
@@ -211,59 +213,59 @@ function initSortOTVerbItem() {
             noStemForThisGroupYet = false;
           }
           aramaicStemIndex ++;
-        } while ((aramaicStemIndex < nameOfAllAramaicItems.length) && (c4.aramaicStemToCombineWithPrevious[aramaicStemIndex]))
+        } while ((aramaicStemIndex < nameOfAllAramaicItems.length) && (c4[C_OT][C_aramaicStemToCombineWithPrevious][aramaicStemIndex]));
       }
     }
   }
   else {
-    nameOfAllItems = r1['nameOfAll' + axisUserSelectedToSort + 'AxisItems'];
-    itemsToCombineWithPrevious = c4.oTVerbFormToCombineWithPrevious;
+    nameOfAllItems = r1['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
+    itemsToCombineWithPrevious = c4[C_OT][C_verbFormToCombineWithPrevious];
   }
   var s = '<p class="col-12">Click and drag a ' + stemOrForm + ' to can change the order of the ' + sortType + '.<br>' +
     'Drag a ' + stemOrForm + ' on top on another to group them to the same color configuration.<br>';
   if (stemOrForm == 'stem') s += 'Aramaic stems are in parentheses (round brackets).<br>';
   s += 'When you are finished, click on "Save" at the bottom.<br>' +
     '<div id="nestedVerbItem" class="list-group col nested-sortable">';
-  var skipDiv = false; var voice; var displayInTitle;
-  for (var i = 0; i < nameOfAllItems.length; i++) {
-    var voice; var displayInTitle = ''; var activeSelected = ''; var passiveSelected = ''; var middleSelected = ''; var languageCode = ''; 
-    var nameOfCurrentItem =  nameOfAllItems[i];
+  var skipDiv = false, voice;
+  for (var cc = 0; cc < nameOfAllItems.length; cc++) {
+    var displayInTitle = '', activeSelected = '', passiveSelected = '', middleSelected = '', languageCode = '';
+    var nameOfCurrentItem =  nameOfAllItems[cc];
     var upperCaseName = upCaseFirst(nameOfCurrentItem);
-    if (axisUserSelectedToSort == 'X') {
-      if (nameOfAllItems[i].charAt(0) == '(') {
+    if (cgv[C_axisUserSelectedToSort] == 'X') {
+      if (nameOfAllItems[cc].charAt(0) == '(') {
         languageCode = 'A';
-        nameOfCurrentItem = nameOfAllItems[i].substr(1, (nameOfAllItems[i].length - 2));
+        nameOfCurrentItem = nameOfAllItems[cc].substr(1, (nameOfAllItems[cc].length - 2));
         upperCaseName = '(' + upperCaseName.charAt(1).toUpperCase() + upperCaseName.slice(2);
-        voice = c4.aramaicCodeOfStem[aramaicNameOfStem[nameOfCurrentItem]][1];
-        displayInTitle = (c4.aramaicCodeOfStem[aramaicNameOfStem[nameOfCurrentItem]][2] === true) ? ' checked' : '';
+        voice = c4[C_OT][C_aramaicCodeOfStem][cgc[C_aramaicNameOfStem][nameOfCurrentItem]][1];
+        displayInTitle = (c4[C_OT][C_aramaicCodeOfStem][cgc[C_aramaicNameOfStem][nameOfCurrentItem]][2] === true) ? ' checked' : '';
       }
       else {
         languageCode = 'H';
-        nameOfCurrentItem = nameOfAllItems[i];
-        voice = c4.hebrewCodeOfStem[hebrewNameOfStem[nameOfCurrentItem]][1];
-        displayInTitle = (c4.hebrewCodeOfStem[hebrewNameOfStem[nameOfCurrentItem]][2] === true) ? ' checked' : '';
+        nameOfCurrentItem = nameOfAllItems[cc];
+        voice = c4[C_OT][C_hebrewCodeOfStem][cgc[C_hebrewNameOfStem][nameOfCurrentItem]][1];
+        displayInTitle = (c4[C_OT][C_hebrewCodeOfStem][cgc[C_hebrewNameOfStem][nameOfCurrentItem]][2] === true) ? ' checked' : '';
       }
       if (voice == 'a') activeSelected = ' selected';
       else if (voice == 'p') passiveSelected = ' selected';
       else if (voice == 'm') middleSelected = ' selected';
     }
     else {
-      upperCaseName = c4.oTCodeOfForm[otNameOfVerbForm[nameOfCurrentItem]][1];
-      displayInTitle = (c4.oTCodeOfForm[otNameOfVerbForm[nameOfCurrentItem]][2] === true) ? ' checked' : '';
+      upperCaseName = c4[C_OT][C_codeOfForm][cgc[C_otNameOfVerbForm][nameOfCurrentItem]][1];
+      displayInTitle = (c4[C_OT][C_codeOfForm][cgc[C_otNameOfVerbForm][nameOfCurrentItem]][2] === true) ? ' checked' : '';
     }
     s += '<div class="list-group-item nested-1">' + upperCaseName + ' - ' +
       '<span>Show at title of colour config screen: </span>' +
       '<input id="sortCheckbox'  + languageCode + nameOfCurrentItem + '"type="checkbox"' + displayInTitle + '></input>';
-    if (axisUserSelectedToSort == 'X') 
+    if (cgv[C_axisUserSelectedToSort] == 'X')
       s += '<span>&nbsp;Voice:&nbsp;</span><select id="sortSelect' + languageCode + nameOfCurrentItem + '"><option value="a"' + activeSelected + '>Active</option><option value="p"' + passiveSelected + '>Passive</option><option value="m"' + middleSelected + '>Middle</option></select>';
     s += '<div class="list-group nested-sortable">';
-    if ((i >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[i + 1])) {
+    if ((cc >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[cc + 1])) {
       s += '</div></div>';
       if (skipDiv) {
         s += '</div></div>';
         skipDiv = false;
       }
-    } 
+    }
     else {
       if (skipDiv) {
         s += '</div></div>';
@@ -276,14 +278,14 @@ function initSortOTVerbItem() {
 
   var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
 
-  for (var i = 0; i < nestedSortables.length; i++) {
-    new Sortable(nestedSortables[i], {
+  for (var cc2 = 0; cc2 < nestedSortables.length; cc2++) {
+    new Sortable(nestedSortables[cc2], {
       group: 'nested',
       animation: 150,
       onEnd: function(/**Event*/evt) {
-        userProvidedSortOrder = [];
-        for (var i = 0; i < $('#nestedVerbItem')[0].children.length; i ++) {
-          userProvidedSortOrder.push($('#nestedVerbItem')[0].children[i].innerText);
+        cgv[C_userProvidedSortOrder] = [];
+        for (var cc3 = 0; cc3 < $('#nestedVerbItem')[0].children.length; cc3 ++) {
+          cgv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[cc3].innerText);
         }
       }
     });
@@ -294,27 +296,26 @@ function resetSortOrder() {
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   element.parentNode.removeChild(element);
-  userSortAxis(axisUserSelectedToSort);
+  userSortAxis(cgv[C_axisUserSelectedToSort]);
 }
 
 function resetSortOTOrder() {
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   element.parentNode.removeChild(element);
-  userSortOTAxis(axisUserSelectedToSort);
+  userSortOTAxis(cgv[C_axisUserSelectedToSort]);
 }
 
 function saveSortOrder() {
-  if (axisUserSelectedToSort == 'X') sortType = getVariablesForVerbTable().xAxisTitle;
-  else sortType = getVariablesForVerbTable().yAxisTitle;
-  var currentItem;
-  var orderOfUserProvidedItems = [], itemsToCombineWithPrevious = [false, false, false, false, false, false];
+  var currentItem, sortType, orderOfUserProvidedItems = [], itemsToCombineWithPrevious = [false, false, false, false, false, false];
   var j = 0;
-  if (userProvidedSortOrder.length > 0) {
-    for (i = 0; i < userProvidedSortOrder.length; i ++) {
-      var verbItem = userProvidedSortOrder[i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n    
+  if (cgv[C_axisUserSelectedToSort] == 'X') sortType = getVariablesForVerbTable().xAxisTitle;
+  else sortType = getVariablesForVerbTable().yAxisTitle;
+  if (cgv[C_userProvidedSortOrder].length > 0) {
+    for (var i = 0; i < cgv[C_userProvidedSortOrder].length; i ++) {
+      var verbItem = cgv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
       while (verbItem.length > 0) {
-        indexOfLineBreak = verbItem.indexOf('\n');
+        var indexOfLineBreak = verbItem.indexOf('\n');
         if (indexOfLineBreak == -1) {
           currentItem = verbItem;
           verbItem = '';
@@ -324,26 +325,26 @@ function saveSortOrder() {
           verbItem = verbItem.substr(indexOfLineBreak + 1);
           if (verbItem.length > 0) itemsToCombineWithPrevious[j+1] = true; // Edge can add an extra \n to the end.
         }
-        if (sortType == 'moods') orderOfUserProvidedItems[j] = robinsonNameOfMood[currentItem];
-        else orderOfUserProvidedItems[j] = robinsonNameOfTense[currentItem];
+        if (sortType == 'moods') orderOfUserProvidedItems[j] = cgc[C_robinsonNameOfMood][currentItem];
+        else orderOfUserProvidedItems[j] = cgc[C_robinsonNameOfTense][currentItem];
         j++;
       }
     }
     if (sortType == 'moods') {
-      c4.orderOfMood = orderOfUserProvidedItems;
-      c4.moodToCombineWithPrevious = itemsToCombineWithPrevious;
+      c4[C_Greek][C_orderOfMood] = orderOfUserProvidedItems;
+      c4[C_Greek][C_moodToCombineWithPrevious] = itemsToCombineWithPrevious;
     }
     else {
-      c4.orderOfTense = orderOfUserProvidedItems;
-      c4.tenseToCombineWithPrevious = itemsToCombineWithPrevious;
+      c4[C_Greek][C_orderOfTense] = orderOfUserProvidedItems;
+      c4[C_Greek][C_tenseToCombineWithPrevious] = itemsToCombineWithPrevious;
     }
-    localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+    updtLocalStorage();
     if (confirm('Do you want to edit the optional header information for the verb ' + sortType + '?'))
-      userAddHeaderInfo(axisUserSelectedToSort);
+      userAddHeaderInfo(cgv[C_axisUserSelectedToSort]);
     else {
-      if (axisUserSelectedToSort == 'X') c4.ntVerbTableXHeader = null;
-      else c4.ntVerbTableYHeader = null;
-      localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+      if (cgv[C_axisUserSelectedToSort] == 'X') c4[C_Greek][C_verbTableXHeader] = null;
+      else c4[C_Greek][C_verbTableYHeader] = null;
+      updtLocalStorage();
     }
   }
   $('#sortAxisModal .close').click();
@@ -353,94 +354,94 @@ function saveSortOrder() {
 }
 
 function saveSortOTOrder() {
-  var sortType;
-  if (axisUserSelectedToSort == 'X') 
+  var sortType, previousString, currentStemCode, currentStem, verbItem;
+  if (cgv[C_axisUserSelectedToSort] == 'X')
     sortType = getVariablesForOTVerbTable('H').xAxisTitle;
   else
     sortType = getVariablesForOTVerbTable('H').yAxisTitle;
   if (sortType == 'stems') {
-    if (userProvidedSortOrder.length > 0) {
-      c4.orderOfHebrewStem = [];
-      c4.hebrewStemToCombineWithPrevious = [];
-      c4.orderOfAramaicStem = [];
-      c4.aramaicStemToCombineWithPrevious = [];
-      for (i = 0; i < userProvidedSortOrder.length; i ++) {
-        var verbItem = userProvidedSortOrder[i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n    
-        verbItem = '\n' + verbItem.replace(/(active|passive|middle)\n?/g, "").replace(/\s-\sshow at title of colour config screen:\s+voice:/g, "").replace(/\s+/g, "\n");
+    if (cgv[C_userProvidedSortOrder].length > 0) {
+      c4[C_OT][C_orderOfHebrewStem] = [];
+      c4[C_OT][C_hebrewStemToCombineWithPrevious] = [];
+      c4[C_OT][C_orderOfAramaicStem] = [];
+      c4[C_OT][C_aramaicStemToCombineWithPrevious] = [];
+      for (var i = 0; i < cgv[C_userProvidedSortOrder].length; i ++) {
+        verbItem = cgv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
+        verbItem = '\n' + verbItem.replace(/(active|passive|middle)\n?/g, "").replace(/\s-\sshow\sat\stitle\sof\scolour\sconfig\sscreen:\s+voice:/g, "").replace(/\s+/g, "\n");
         var updatedString = verbItem;
         do {
-          var previousString = updatedString;
+          previousString = updatedString;
           updatedString = updatedString.replace(/\n\([a-z]+\)\n/g, "\n"); // loop is requried because the global replace will not include the newly replaced "\n"
         } while (previousString != updatedString);
         var hebrewStemsInThisGroup = updatedString.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").split(' ');
         updatedString = verbItem;
         do {
-          var previousString = updatedString;
+          previousString = updatedString;
           updatedString = updatedString.replace(/\n[a-z]+\n/g, "\n"); // loop is requried because the global replace will not include the newly replaced "\n"
         } while (previousString != updatedString);
-        var aramaicStemsInThisGroup = updatedString.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[\(\)]/g, "").split(' ');
+        var aramaicStemsInThisGroup = updatedString.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[()]/g, "").split(' ');
         for (var j = 0; j < hebrewStemsInThisGroup.length; j++) {
-          c4.orderOfHebrewStem.push( hebrewNameOfStem[hebrewStemsInThisGroup[j]] );
-          c4.hebrewStemToCombineWithPrevious.push( (j > 0) );
+          c4[C_OT][C_orderOfHebrewStem].push( cgc[C_hebrewNameOfStem][hebrewStemsInThisGroup[j]] );
+          c4[C_OT][C_hebrewStemToCombineWithPrevious].push( (j > 0) );
         }
         for (var k = 0; k < aramaicStemsInThisGroup.length; k++) {
-          c4.orderOfAramaicStem.push( aramaicNameOfStem[aramaicStemsInThisGroup[k]] );
-          c4.aramaicStemToCombineWithPrevious.push( (k > 0) );
+          c4[C_OT][C_orderOfAramaicStem].push( cgc[C_aramaicNameOfStem][aramaicStemsInThisGroup[k]] );
+          c4[C_OT][C_aramaicStemToCombineWithPrevious].push( (k > 0) );
         }
       }
     }
-    for (var j = 0; j < c4.orderOfHebrewStem.length; j++) {
-      var currentStemCode = c4.orderOfHebrewStem[j];
+    for (var cc2 = 0; cc2 < c4[C_OT][C_orderOfHebrewStem].length; cc2++) {
+      currentStemCode = c4[C_OT][C_orderOfHebrewStem][cc2];
       if (currentStemCode != undefined) {
-        var currentStem = c4.hebrewCodeOfStem[currentStemCode][0];
+        currentStem = c4[C_OT][C_hebrewCodeOfStem][currentStemCode][0];
         if (currentStem != '') {
-          c4.hebrewCodeOfStem[currentStemCode][1] = $('#sortSelectH' + currentStem + ' option:selected')[0].value;
-          c4.hebrewCodeOfStem[currentStemCode][2] = $('#sortCheckboxH' + currentStem)[0].checked;
+          c4[C_OT][C_hebrewCodeOfStem][currentStemCode][1] = $('#sortSelectH' + currentStem + ' option:selected')[0].value;
+          c4[C_OT][C_hebrewCodeOfStem][currentStemCode][2] = $('#sortCheckboxH' + currentStem)[0].checked;
         }
       }
     }
-    for (var j = 0; j < c4.orderOfAramaicStem.length; j++) {
-      var currentStemCode = c4.orderOfAramaicStem[j];
+    for (var cc = 0; cc < c4[C_OT][C_orderOfAramaicStem].length; cc++) {
+      currentStemCode = c4[C_OT][C_orderOfAramaicStem][cc];
       if (currentStemCode != undefined) {
-        var currentStem = c4.aramaicCodeOfStem[currentStemCode][0];
+        currentStem = c4[C_OT][C_aramaicCodeOfStem][currentStemCode][0];
         if (currentStem != '') {
-          c4.aramaicCodeOfStem[currentStemCode][1] = $('#sortSelectA' + currentStem + ' option:selected')[0].value;
-          c4.aramaicCodeOfStem[currentStemCode][2] = $('#sortCheckboxA' + currentStem)[0].checked;
+          c4[C_OT][C_aramaicCodeOfStem][currentStemCode][1] = $('#sortSelectA' + currentStem + ' option:selected')[0].value;
+          c4[C_OT][C_aramaicCodeOfStem][currentStemCode][2] = $('#sortCheckboxA' + currentStem)[0].checked;
         }
       }
     }
   }
   else {
-    if (userProvidedSortOrder.length > 0) {
-      c4.orderOfOTForm = [];
-      c4.oTVerbFormToCombineWithPrevious = [];
-      for (i = 0; i < userProvidedSortOrder.length; i ++) {
-        var verbItem = userProvidedSortOrder[i].replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n    
-        verbItem = '\n' + verbItem.replace(/\s-\sShow at title of colour config screen: /g, "").replace(/\s+/g, "\n");
-        var formsInThisGroup = verbItem.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[\(\)]/g, "").split(' ');
-        for (var j = 0; j < formsInThisGroup.length; j++) {
-          var result = _.find(c4.oTCodeOfForm, function(obj) { return obj[1] == formsInThisGroup[j]; });
-          c4.orderOfOTForm.push( otNameOfVerbForm[result[0]] );
-          c4.oTVerbFormToCombineWithPrevious.push( (j > 0) );
+    if (cgv[C_userProvidedSortOrder].length > 0) {
+      c4[C_OT][C_orderOfForm] = [];
+      c4[C_OT][C_verbFormToCombineWithPrevious] = [];
+      for (var cc6 = 0; cc6 < cgv[C_userProvidedSortOrder].length; cc6 ++) {
+        verbItem = cgv[C_userProvidedSortOrder][cc6].replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
+        verbItem = '\n' + verbItem.replace(/\s-\sShow\sat\stitle\sof\scolour\sconfig\sscreen:\s/g, "").replace(/\s+/g, "\n");
+        var formsInThisGroup = verbItem.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[()]/g, "").split(' ');
+        for (var cc5 = 0; cc5 < formsInThisGroup.length; cc5++) {
+          var result = _.find(c4[C_OT][C_codeOfForm], function(obj) { return obj[1] == formsInThisGroup[cc5]; });
+          c4[C_OT][C_orderOfForm].push( cgc[C_otNameOfVerbForm][result[0]] );
+          c4[C_OT][C_verbFormToCombineWithPrevious].push( (cc5 > 0) );
         }
       }
     }
-    for (var j = 0; j < c4.orderOfOTForm.length; j++) {
-      var currentFormCode = c4.orderOfOTForm[j];
+    for (var cc3 = 0; cc3 < c4[C_OT][C_orderOfForm].length; cc3++) {
+      var currentFormCode = c4[C_OT][C_orderOfForm][cc3];
       if (currentFormCode != undefined) {
-        var currentForm = c4.oTCodeOfForm[currentFormCode][0];
+        var currentForm = c4[C_OT][C_codeOfForm][currentFormCode][0];
         if (currentForm != '')
-          c4.oTCodeOfForm[currentFormCode][2] = $('#sortCheckbox' + currentForm)[0].checked;
+          c4[C_OT][C_codeOfForm][currentFormCode][2] = $('#sortCheckbox' + currentForm)[0].checked;
       }
     }
   }
-  localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+  updtLocalStorage();
   if (confirm('Do you want to edit the optional header information for the verb ' + sortType + '?'))
-    userAddHeaderInfo(axisUserSelectedToSort, 'OT');
+    userAddHeaderInfo(cgv[C_axisUserSelectedToSort], 'OT');
   else {
-    if (axisUserSelectedToSort == 'X') c4.otVerbTableXHeader = null;
-    else c4.otVerbTableYHeader = null;
-    localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
+    if (cgv[C_axisUserSelectedToSort] == 'X') c4[C_OT][C_verbTableXHeader] = null;
+    else c4[C_OT][C_verbTableYHeader] = null;
+    updtLocalStorage();
   }
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
@@ -448,1242 +449,1202 @@ function saveSortOTOrder() {
   updateAllSettingsAndInputFields();
 }
 
-function saveColorConfig() {
+function saveClrConfig() {
   if (typeof(Storage) !== 'undefined') {
-    var saveConfigPage = $('<div id="saveColorModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    var saveConfigPage = $('<div id="saveClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
       '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('saveColorModal');
+    var temp = document.getElementById('saveClrModal');
     if (!temp) {
       saveConfigPage.appendTo('body');
     }
-    $('#saveColorModal').modal('show').find('.modal-content').load('/save_color_code_grammar.html');
+    $('#saveClrModal').modal('show').find('.modal-content').load('/save_color_code_grammar.html');
   }
 }
 
-function initSaveColorCodeModal() {
-  var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
+function initSaveClrCodeModal() {
+  var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
   if (tmp) {
-    $('#saveColorModalPromptForDropdownList').show();
-    var s = $('<select id="saveColorConfigDropdown"/>');
-    var UserColorConfigNames = JSON.parse(tmp);
+    $('#saveClrModalPromptForDropdownList').show();
+    var s = $('<select id="saveClrConfigDropdown"/>');
+    var UserClrConfigNames = JSON.parse(tmp);
     s.append($('<option/>').html(''));
-    for (var i in UserColorConfigNames) {
-      s.append($('<option/>').html(UserColorConfigNames[i]));
+    for (var i in UserClrConfigNames) {
+      s.append($('<option/>').html(UserClrConfigNames[i]));
     }
-    $('#saveColorModalSelectArea').append(s);
-  } else $('#saveColorModalPromptForDropdownList').hide();
+    $('#saveClrModalSelectArea').append(s);
+  } else $('#saveClrModalPromptForDropdownList').hide();
 }
 
-function saveUserColorConfig() {
-  var UserColorConfigNames = [];
-  var inputText = document.getElementById('saveColorModalInputArea').value.trim();
-  var selectedConfig = document.getElementById('saveColorConfigDropdown');
+function saveUserClrConfig() {
+  var UserClrConfigNames = [];
+  var inTxt = document.getElementById('saveClrModalInputArea').value.trim();
+  var selectedConfig = document.getElementById('saveClrConfigDropdown');
   if (selectedConfig) selectedConfig = selectedConfig.value.trim();
-  var tmp = localStorage.getItem('colorCode-UserColorConfigNames');
-  if (inputText === '') {
+  var tmp = window.localStorage.getItem('colorCode-UserClrConfigNames');
+  if (inTxt === '') {
     if (!tmp) {
       alert('Please enter a name for your color configuration before using the "Save" button.');
       return;
     } else if (selectedConfig === '') {
       alert('Please enter or select a name for your color configuration before using the "Save" button.');
       return;
-    } else inputText = selectedConfig;
+    } else inTxt = selectedConfig;
   } else {
     if (tmp) {
-      UserColorConfigNames = JSON.parse(tmp);
-      for (var i = 0; i < UserColorConfigNames.length; i += 1) {
-        if (UserColorConfigNames[i] === inputText) {
-          alert('The name you entered is already used.  If you want to save the configuration to the same name, select the name from the dropdown list instead of using the text input field.');
+      UserClrConfigNames = JSON.parse(tmp);
+      for (var i = 0; i < UserClrConfigNames.length; i += 1) {
+        if (UserClrConfigNames[i] === inTxt) {
+          alert('The name you entered is already used.  If you want to save the configuration to the same name, select the name from the dropdown list instead of using the text in field.');
           return;
         }
       }
     }
-    UserColorConfigNames.push(inputText);
-    localStorage.setItem('colorCode-UserColorConfigNames', JSON.stringify(UserColorConfigNames));
+    UserClrConfigNames.push(inTxt);
+    window.localStorage.setItem('colorCode-UserClrConfigNames', JSON.stringify(UserClrConfigNames));
   }
-  localStorage.setItem('colorCode-UserColorConfigName-' + inputText, JSON.stringify(c4));
-  $('#saveColorModal .close').click();
-  var element = document.getElementById('saveColorModal');
+  window.localStorage.setItem('colorCode-UserClrConfigName-' + inTxt, JSON.stringify(c4));
+  $('#saveClrModal .close').click();
+  var element = document.getElementById('saveClrModal');
   element.parentNode.removeChild(element);
 }
 
 function addNounTable() {
-    var htmlTable = '<table class="tg2">' +
-      '<tr>' +
-          '<th valign="middle" align="center" colspan="2" rowspan="2">' +
-          '<div class="onoffswitch">' +
-          '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gennumonoffswitch" onchange=\'userToggleColorGrammar("gennum")\'/>' +
-          '<label class="onoffswitch-label" for="gennumonoffswitch">' +
-          '<span class="onoffswitch-inner"></span>' +
-          '<span class="onoffswitch-switch"></span>' +
-          '</label>' +
-          '</div>' +
-          '</th>' +
-          '<th class="tg-amwm2" colspan="4">Gender</th>' +
-      '</tr><tr>' +
-          '<td class="tg-yw4l">Masculine:<br>' +
-          '<input id="inputColorMasculine" type="color" class="nInptC" value="' + c4.inputColorMasculine + '"/>' +
-          '</td>' +
-          '<td class="tg-yw4l">Feminine:<br>' +
-          '<input id="inputColorFeminine" type="color" class="nInptC" value="' + c4.inputColorFeminine + '"/>' +
-          '</td>' +
-          '<td class="tg-yw4l">Neuter:<br>' +
-          '<input id="inputColorNeuter" type="color" class="nInptC" value="' + c4.inputColorNeuter + '"/>' +
-          '</td>' +
-      '</tr><tr>' +
-          '<td class="tg-e3zv2" rowspan="4">Number</td>' +
-          '<td><span>Singular:</span><br><br>' +
-              '<select id="selectedHighlightSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
-                  '<option value="normal">Normal</option>' +
-                  '<option value="normal_italic">Normal and Italic</option>' +
-                  '<option value="bold">Bold</option>' +
-                  '<option value="bold_italic">Bold and Italic</option>' +
-              '</select><br>' +
-          '</td>' +
-          '<td><span class="sing mas">Masculine singular</span><br>' +
-          '</td>' +
-          '<td><span class="sing fem">Feminine singular</span><br>' +
-          '</td>' +
-          '<td><span class="sing neut">Neuter singular</span><br>' +
-          '</td>' +
-      '</tr><tr>' +
-          '<td><span>Plural:</span><br><br>' +
-              '<select id="selectedHighlightPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
-                  '<option value="normal">Normal</option>' +
-                  '<option value="normal_italic">Normal and Italic</option>' +
-                  '<option value="bold">Bold</option>' +
-                  '<option value="bold_italic">Bold and Italic</option>' +
-              '</select><br>' +
-          '</td>' +
-          '<td><span class="plur mas">Masculine Plural</span><br>' +
-          '</td>' +
-          '<td><span class="plur fem">Feminine Plural</span><br>' +
-          '</td>' +
-          '<td><span class="plur neut">Neuter Plural</span><br>' +
-          '</td>' +
-      '</tr>' +
-      '</table>';
-    htmlTable = $(htmlTable);
-    htmlTable.appendTo('#nounColors');
+  var htmlTable = '<table class="tg2">' +
+    '<tr>' +
+        '<th valign="middle" align="center" colspan="2" rowspan="2">' +
+        '<div class="onoffswitch">' +
+        '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gennumonoffswitch" onchange=\'userToggleClrGrammar("gennum")\'/>' +
+        '<label class="onoffswitch-label" for="gennumonoffswitch">' +
+        '<span class="onoffswitch-inner"></span>' +
+        '<span class="onoffswitch-switch"></span>' +
+        '</label>' +
+        '</div>' +
+        '</th>' +
+        '<th class="tg-amwm2" colspan="4">Gender</th>' +
+    '</tr><tr>' +
+        '<td class="tg-yw4l">Masculine:<br>' +
+        '<input id="inClrMasculine" type="color" class="nInptC" value="' + c4[C_inClrMasculine] + '"/>' +
+        '</td>' +
+        '<td class="tg-yw4l">Feminine:<br>' +
+        '<input id="inClrFeminine" type="color" class="nInptC" value="' + c4[C_inClrFeminine] + '"/>' +
+        '</td>' +
+        '<td class="tg-yw4l">Neuter:<br>' +
+        '<input id="inClrNeuter" type="color" class="nInptC" value="' + c4[C_inClrNeuter] + '"/>' +
+        '</td>' +
+    '</tr><tr>' +
+        '<td class="tg-e3zv2" rowspan="4">Number</td>' +
+        '<td><span>Singular:</span><br><br>' +
+            '<select id="slctUlSingular" class="nInptN" onchange=\'userUpdateNumber("singular", value)\'>' +
+                '<option value="normal">Normal</option>' +
+                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="bold">Bold</option>' +
+                '<option value="bold_italic">Bold and Italic</option>' +
+            '</select><br>' +
+        '</td>' +
+        '<td><span class="sing mas">Masculine singular</span><br>' +
+        '</td>' +
+        '<td><span class="sing fem">Feminine singular</span><br>' +
+        '</td>' +
+        '<td><span class="sing neut">Neuter singular</span><br>' +
+        '</td>' +
+    '</tr><tr>' +
+        '<td><span>Plural:</span><br><br>' +
+            '<select id="slctUlPlural" class="nInptN" onchange=\'userUpdateNumber("plural", value)\'>' +
+                '<option value="normal">Normal</option>' +
+                '<option value="normal_italic">Normal and Italic</option>' +
+                '<option value="bold">Bold</option>' +
+                '<option value="bold_italic">Bold and Italic</option>' +
+            '</select><br>' +
+        '</td>' +
+        '<td><span class="plur mas">Masculine Plural</span><br>' +
+        '</td>' +
+        '<td><span class="plur fem">Feminine Plural</span><br>' +
+        '</td>' +
+        '<td><span class="plur neut">Neuter Plural</span><br>' +
+        '</td>' +
+    '</tr>' +
+    '</table>';
+  htmlTable = $(htmlTable);
+  htmlTable.appendTo('#nounClrs');
 }
-  
-function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows, createUserInputFields) {
-    var htmlTable = '';
-    var curXTitle = c4['otVerbTableXHeader'];
-    if (curXTitle != null) {
-        htmlTable += '<tr>';
-        for (var i = 0; i < curXTitle.desc.length; i ++) {
+
+function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows, createUserInputs) {
+  var htmlTable = '';
+  var curXTitle = c4[C_OT][C_verbTableXHeader];
+  if (curXTitle != null) {
+      htmlTable += '<tr>';
+      for (var i = 0; i < curXTitle.desc.length; i ++) {
         htmlTable += '<td class="tg-yw4l" align="center" colspan="' + (curXTitle.repeat[i] + 1) + '"';
         if (curXTitle.desc[i].length < 10) htmlTable += ' width=70';
         htmlTable += '>' + curXTitle.desc[i] + '</td>';
-        }
-        htmlTable += '</tr>';
-    }
-    htmlTable += '<tr>';
-    var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
-    for (var i = 0; i < descOfHebrewXAxisItems.length; i += 1) {
-        htmlTable += '<td class="tg-yw4l">' + descOfXAxisItems[i];
-        if (createUserInputFields) htmlTable += htmlToAdd3(i, 'OT');
-        htmlTable += '</td>';
-    }
-    htmlTable += '</tr>';
-    return htmlTable;
+      }
+      htmlTable += '</tr>';
+  }
+  htmlTable += '<tr>';
+  var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
+  for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
+    htmlTable += '<td class="tg-yw4l">' + descOfXAxisItems[j];
+    if (createUserInputs) htmlTable += htmlToAdd3(j, 'OT');
+    htmlTable += '</td>';
+  }
+  htmlTable += '</tr>';
+  return htmlTable;
 }
   
 function addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows) {
-    var result = [];
-    for (var c = 0; c < descOfHebrewXAxisItems.length; c++) {
-      var hebrewStemsInThisGroup = descOfHebrewXAxisItems[c].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
-      var aramaicStemsInThisGroup = descOfAramaicwXAxisItems[c].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
-      result.push("");
-      for (var i = 0; i < hebrewStemsInThisGroup.length; i++) {
-        if (hebrewStemsInThisGroup[i] != '') {
-          if (result[c].length > 0) result[c] += '<br>';
-          var voice = c4.hebrewCodeOfStem[hebrewNameOfStem[hebrewStemsInThisGroup[i].toLowerCase()]][1];
-          if (voice == 'p') {
+  var result = [], voice;
+  for (var c = 0; c < descOfHebrewXAxisItems.length; c++) {
+    var hebrewStemsInThisGroup = descOfHebrewXAxisItems[c].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
+    var aramaicStemsInThisGroup = descOfAramaicwXAxisItems[c].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
+    result.push("");
+    for (var i = 0; i < hebrewStemsInThisGroup.length; i++) {
+      if (hebrewStemsInThisGroup[i] != '') {
+        if (result[c].length > 0) result[c] += '<br>';
+        voice = c4[C_OT][C_hebrewCodeOfStem][cgc[C_hebrewNameOfStem][hebrewStemsInThisGroup[i].toLowerCase()]][1];
+        if (voice == 'p') {
             result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+1) + '">' + hebrewStemsInThisGroup[i] + '</span>';
-          }
-          else if (voice == 'm') {
+        }
+        else if (voice == 'm') {
             result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+2) + '">' + hebrewStemsInThisGroup[i] + '</span>';
-          }
-          else result[c] += hebrewStemsInThisGroup[i];
         }
-      }
-      for (var i = 0; i < aramaicStemsInThisGroup.length; i++) {
-        if (aramaicStemsInThisGroup[i] != '') {
-          if (result[c].length > 0) result[c] += '<br>';
-          var voice = c4.aramaicCodeOfStem[aramaicNameOfStem[aramaicStemsInThisGroup[i].toLowerCase()]][1];
-          if (voice == 'p') {
-            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+1) + '">(' + aramaicStemsInThisGroup[i] + ')</span>' 
-          }
-          else if (voice == 'm') {
-            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+2) + '">(' + aramaicStemsInThisGroup[i] + ')</span>' 
-          }
-          else result[c] += '(' + aramaicStemsInThisGroup[i] + ')';
-        }
+        else result[c] += hebrewStemsInThisGroup[i];
       }
     }
-    return result;
+    for (var j = 0; j < aramaicStemsInThisGroup.length; j++) {
+      if (aramaicStemsInThisGroup[j] != '') {
+        if (result[c].length > 0) result[c] += '<br>';
+        voice = c4[C_OT][C_aramaicCodeOfStem][cgc[C_aramaicNameOfStem][aramaicStemsInThisGroup[j].toLowerCase()]][1];
+        if (voice == 'p') {
+            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+1) + '">(' + aramaicStemsInThisGroup[j] + ')</span>';
+        }
+        else if (voice == 'm') {
+            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+2) + '">(' + aramaicStemsInThisGroup[j] + ')</span>';
+        }
+        else result[c] += '(' + aramaicStemsInThisGroup[j] + ')';
+      }
+    }
+  }
+  return result;
 }
   
-function addOTVerbTable(createUserInputFields, htmlElement) {
-    var r = getVariablesForOTVerbTable('H');
-    var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
-    if (createUserInputFields) {
-      xAxisItems = r.orderOfXAxisItems;
-      yAxisItems = r.orderOfYAxisItems;
-      descOfXAxisItems = r.descOfXAxisItems;
-      descOfYAxisItems = r.descOfYAxisItems;
-    }
-    else {
-      xAxisItems = r.nameOfAllXAxisItems;
-      yAxisItems = r.nameOfAllYAxisItems;
-      descOfXAxisItems = r.nameOfAllXAxisItems;
-      descOfYAxisItems = r.nameOfAllYAxisItems;
-    }
-    var htmlTable = '';
-    if (!createUserInputFields) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
-    var yAxisSpan = tableAxisSpan('Y', createUserInputFields, 'OT');
-    htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-    yAxisSpan + '" rowspan="' + tableAxisSpan('X', createUserInputFields, 'OT') + '">';
-    if (createUserInputFields) htmlTable += htmlToAdd1('OT');
-    htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + upCaseFirst(r.xAxisTitle);
-    if (createUserInputFields) htmlTable += htmlToAdd2(r.xAxisTitle, 'OT');
-    htmlTable += '</th></tr>';
-    htmlTable += addOtTitleToXAxis(descOfXAxisItems, getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, createUserInputFields);
-    htmlTable += '<tr>' +
-      '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + upCaseFirst(r.yAxisTitle);
-    if (createUserInputFields) htmlTable += htmlToAdd4(r.yAxisTitle, 'OT');
+function addOTVerbTable(createUserInputs, htmlElement) {
+  var r = getVariablesForOTVerbTable('H');
+  var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
+  if (createUserInputs) {
+    xAxisItems = r.orderOfXAxisItems;
+    yAxisItems = r.orderOfYAxisItems;
+    descOfXAxisItems = r.descOfXAxisItems;
+    descOfYAxisItems = r.descOfYAxisItems;
+  }
+  else {
+    xAxisItems = r.nameOfAllXAxisItems;
+    yAxisItems = r.nameOfAllYAxisItems;
+    descOfXAxisItems = r.nameOfAllXAxisItems;
+    descOfYAxisItems = r.nameOfAllYAxisItems;
+  }
+  var htmlTable = '';
+  if (!createUserInputs) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
+  var yAxisSpan = tableAxisSpan('Y', createUserInputs, 'OT');
+  htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
+  yAxisSpan + '" rowspan="' + tableAxisSpan('X', createUserInputs, 'OT') + '">';
+  if (createUserInputs) htmlTable += htmlToAdd1('OT');
+  htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + upCaseFirst(r.xAxisTitle);
+  if (createUserInputs) htmlTable += htmlToAdd2(r.xAxisTitle, 'OT');
+  htmlTable += '</th></tr>';
+  htmlTable += addOtTitleToXAxis(descOfXAxisItems, getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, createUserInputs);
+  htmlTable += '<tr>' +
+  '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + upCaseFirst(r.yAxisTitle);
+  if (createUserInputs) htmlTable += htmlToAdd4(r.yAxisTitle, 'OT');
+  htmlTable += '</td>';
+  for (var i = 0; i < yAxisItems.length; i += 1) {
+    if (i > 0) htmlTable += '<tr>';
+    htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan, 'OT');
+    if (createUserInputs) htmlTable += htmlToAdd5(i, 'OT');
     htmlTable += '</td>';
-    for (i = 0; i < yAxisItems.length; i += 1) {
-      if (i > 0) htmlTable += '<tr>';
-      htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], createUserInputFields, yAxisSpan, 'OT');
-      if (createUserInputFields) htmlTable += htmlToAdd5(i, 'OT');
-      htmlTable += '</td>';
-      for (var counter = 0; counter < xAxisItems.length; counter += 1) {
-        htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
-      }
-      htmlTable += '</tr>';
+    for (var counter = 0; counter < xAxisItems.length; counter += 1) {
+      htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
     }
-    htmlTable += '</table><br>';
-    if (createUserInputFields) htmlTable += htmlToAdd6('OT');
-    htmlTable = $(htmlTable);
-    htmlTable.appendTo(htmlElement);
+    htmlTable += '</tr>';
+  }
+  htmlTable += '</table><br>';
+  if (createUserInputs) htmlTable += htmlToAdd6('OT');
+  htmlTable = $(htmlTable);
+  htmlTable.appendTo(htmlElement);
 }
   
 function voicesInFormAndStem(yAxisNum, xAxisNum) {
-    yAxisNum = yAxisNum * 3
-    return '<span class="vot_' + ulOTVbCSS[xAxisNum][yAxisNum].name + '">active</span><br>' +
-           '<span class="vot_' + ulOTVbCSS[xAxisNum][yAxisNum+1].name + '">passive</span><br>' +
-           '<span class="vot_' + ulOTVbCSS[xAxisNum][yAxisNum+2].name + '">middle</span>';
+  yAxisNum = yAxisNum * 3;
+  return '<span class="vot_' + cgv[C_ulOTVbCSS][xAxisNum][yAxisNum].name + '">active</span><br>' +
+          '<span class="vot_' + cgv[C_ulOTVbCSS][xAxisNum][yAxisNum+1].name + '">passive</span><br>' +
+          '<span class="vot_' + cgv[C_ulOTVbCSS][xAxisNum][yAxisNum+2].name + '">middle</span>';
 }
-
+  
 function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-    updateLocalStorage('selectedHighlightVerbItem' + itemNumberOfYAxis, canvasUnderlineName[nameOfUnderline]);
-    var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == nameOfUnderline; });
-    if (srcImgObj === undefined) {
-      alert('Error: cannot find the name of tense or underline');
-    } 
-    else {
-      var r = getVerbItemsCombinedWithCurrentItem('Y', itemNumberOfYAxis);
-      for (var count = 0; count < r.nameOfItemCombinedWithCurrentItem.length; count ++) {
-        updateUlForAllInstancesOfYAxisItem(r.nameOfItemCombinedWithCurrentItem[count], srcImgObj);
-      }
-      if ((nameOfUnderline !== 'ulSolid') && (nameOfUnderline !== 'ulDoubleSolid') && (c4.enableAdvancedTools) ) {
-        hideIndividualInputField('#inputAnimate' + itemNumberOfYAxis, true);
-        hideIndividualInputField('#inputAnimateCheckbox' + itemNumberOfYAxis, true);
-      }
-      else {
-        hideIndividualInputField('#inputAnimate' + itemNumberOfYAxis, false);
-        hideIndividualInputField('#inputAnimateCheckbox' + itemNumberOfYAxis, false);
-        updateLocalStorage('inputAnimate' + itemNumberOfYAxis, false);
-        $('#inputAnimate' + itemNumberOfYAxis).prop('checked', false);
-      }
-    }
+  c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cgc[C_canvasUnderlineName][nameOfUnderline];
+  updtLocalStorage();
+  createUlForAllItemsInYAndX();
 }
   
 function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-    updateLocalStorage('selectedHighlightOTVerbItem' + itemNumberOfYAxis, canvasUnderlineName[nameOfUnderline]);
-    creatUlForOTYAxis(itemNumberOfYAxis);
-}
-  
-function updateUlForAllInstancesOfYAxisItem(nameOfYAxisItem, srcImgObj, color) {
-    var indexOfYAxisItem, orderOfCurrentXAxisItem;
-    if (c4.xAxisForMood)
-      indexOfYAxisItem = _.find(tenseIndexArray, function(obj) { return obj.name == nameOfYAxisItem; }).array;
-    else 
-      indexOfYAxisItem = _.find(moodIndexArray, function(obj) { return obj.name == nameOfYAxisItem; }).array;
-    for (var j = 0; j < indexOfYAxisItem.length; j += 1) {
-      var index = indexOfYAxisItem[j];
-      orderOfCurrentXAxisItem = getAxisOrderOfCSS(ulVerbCSS[index].name, 'X');
-      var color = c4['inputColorVerbItem' + orderOfCurrentXAxisItem];
-      updateUlForSpecificYAxis(ulVerbCSS[index], srcImgObj, color, index);
-    }
-}
-  
-function userSwapAxis() {
-    c4.xAxisForMood = !c4.xAxisForMood;
-    localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
-    $('#sortAxisModal .close').click();
-    var element = document.getElementById('sortAxisModal');
-    element.parentNode.removeChild(element);
-    updateAllSettingsAndInputFields();
-  }
-  
-function userSortAxis(axis) {
-    axisUserSelectedToSort = axis;
-    var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('sortAxisModal');
-    if (!temp) openConfigPage.appendTo('body');
-    $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_verb_item.html');
-}
-  
-function userAddHeaderInfo(axis, ot) {
-    var otPrefix = 'nt';
-    if ((ot != undefined) && (ot == 'OT')) otPrefix = 'ot';
-    $('#addHeaderInfoModal').remove();
-    var openConfigPage = $('<div id="addHeaderInfoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<span id="uahi_testament" style="visibility:hidden">' + otPrefix + '</span>' + 
-      '<span id="uahi_axis" style="visibility:hidden">' + axis + '</span>' + 
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('addHeaderInfoModal');
-    if (!temp) openConfigPage.appendTo('body');
-    $('#addHeaderInfoModal').modal('show').find('.modal-content').load('/add_header_to_color_config.html');
-}
-  
-function userSortOTAxis(axis) {
-    axisUserSelectedToSort = axis;
-    var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('sortAxisModal');
-    if (!temp) openConfigPage.appendTo('body');
-    $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_ot_verb_item.html');
-  }
-  
-function userToggleXOrYAxisConfig(ot, axis, index) {
-    var otPrefix = '';
-    if ((ot != undefined) && (ot == 'OT')) {
-      otPrefix = 'OT';
-      if (index == null) {
-        c4['granularControlOfOT' + axis + 'Axis'] = !c4['granularControlOfOT' + axis + 'Axis'];
-        updateLocalStorage('granularControlOfOT' + axis + 'Axis', c4['granularControlOfOT' + axis + 'Axis']);
-      }
-      else {
-        c4['ot' + axis + 'AxisOnOff'][index] = !c4['ot' + axis + 'AxisOnOff'][index];
-        updateLocalStorage('ot' + axis + 'AxisOnOff', c4['ot' + axis + 'AxisOnOff']);
-      }
-    }
-    else {
-      var moodOrTense;
-      if ((c4.xAxisForMood && axis == 'X') ||
-          (!c4.xAxisForMood && axis == 'Y')) 
-        moodOrTense = 'moods';
-      else moodOrTense = 'tenses';
-      if (index == null)
-        updateLocalStorage('granularControlOf' + upCaseFirst(moodOrTense), !c4['granularControlOf' + upCaseFirst(moodOrTense)]);
-      else {
-        c4[moodOrTense + 'OnOff'][index] = !c4[moodOrTense + 'OnOff'][index];
-        updateLocalStorage(moodOrTense + 'OnOff', c4[moodOrTense + 'OnOff']);
-      }
-    }
-    enableOrDisableAxisConfigButtons(axis, otPrefix);
-    refreshForAllInstancesOfTense();
+  c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cgc[C_canvasUnderlineName][nameOfUnderline];
+  updtLocalStorage();
+  createUlForOTYAxis(itemNumberOfYAxis);
 }
 
-function userToggleColorGrammar(grammarFunction) {
+function userSwapAxis() {
+  var tmp = c4[C_Greek][C_verbTableXHeader];
+  c4[C_Greek][C_verbTableXHeader] = c4[C_Greek][C_verbTableYHeader];
+  c4[C_Greek][C_verbTableYHeader] = tmp;
+  c4[C_Greek][C_xAxisForMood] = !c4[C_Greek][C_xAxisForMood];
+  updtLocalStorage();
+  $('#sortAxisModal .close').click();
+  var element = document.getElementById('sortAxisModal');
+  element.parentNode.removeChild(element);
+  updateAllSettingsAndInputFields();
+}
+  
+function userSortAxis(axis) {
+  cgv[C_axisUserSelectedToSort] = axis;
+  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    '<div class="modal-dialog"><div class="modal-content">');
+  var temp = document.getElementById('sortAxisModal');
+  if (!temp) openConfigPage.appendTo('body');
+  $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_verb_item.html');
+}
+
+function userAddHeaderInfo(axis, ot) {
+  var otPrefix = 'nt';
+  if ((ot != undefined) && (ot == 'OT')) otPrefix = 'ot';
+  $('#addHeaderInfoModal').remove();
+  var openConfigPage = $('<div id="addHeaderInfoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    '<span id="uahi_testament" style="visibility:hidden">' + otPrefix + '</span>' +
+    '<span id="uahi_axis" style="visibility:hidden">' + axis + '</span>' +
+    '<div class="modal-dialog"><div class="modal-content">');
+  var temp = document.getElementById('addHeaderInfoModal');
+  if (!temp) openConfigPage.appendTo('body');
+  $('#addHeaderInfoModal').modal('show').find('.modal-content').load('/add_header_to_color_config.html');
+}
+
+function userSortOTAxis(axis) {
+  cgv[C_axisUserSelectedToSort] = axis;
+  var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    '<div class="modal-dialog"><div class="modal-content">');
+  var temp = document.getElementById('sortAxisModal');
+  if (!temp) openConfigPage.appendTo('body');
+  $('#sortAxisModal').modal('show').find('.modal-content').load('/sort_ot_verb_item.html');
+}
+
+function userToggleXOrYAxisConfig(ot, axis, index) {
+  var otPrefix = '';
+  if ((ot != undefined) && (ot == 'OT')) {
+    otPrefix = 'OT';
+    if (index == null) {
+      if (axis == 'X') c4[C_OT][C_granularControlOfXAxis] = !c4[C_OT][C_granularControlOfXAxis];
+      else c4[C_OT][C_granularControlOfYAxis] = !c4[C_OT][C_granularControlOfYAxis];
+    }
+    else {
+      if (axis == 'X') c4[C_OT][C_xAxisOnOff][index] = !c4[C_OT][C_xAxisOnOff][index];
+      else c4[C_OT][C_yAxisOnOff][index] = !c4[C_OT][C_yAxisOnOff][index];
+    }
+  }
+  else {
+    if ((c4[C_Greek][C_xAxisForMood] && axis == 'X') || (!c4[C_Greek][C_xAxisForMood] && axis == 'Y')) {
+      if (index == null) c4[C_Greek][C_granularControlOfMoods] = !c4[C_Greek][C_granularControlOfMoods];
+      else c4[C_Greek][C_moodsOnOff][index] = !c4[C_Greek][C_moodsOnOff][index];
+    }
+    else {
+      if (index == null) c4[C_Greek][C_granularControlOfTenses] = !c4[C_Greek][C_granularControlOfTenses];
+      else c4[C_Greek][C_tensesOnOff][index] = !c4[C_Greek][C_tensesOnOff][index];
+    }
+  }
+  updtLocalStorage();
+  enableOrDisableAxisConfigButtons(axis, otPrefix);
+  refreshClrGrammarCSS();
+}
+
+function userToggleClrGrammar(grammarFunction) {
     var checkedValue;
     if (document.getElementById(grammarFunction + 'onoffswitch').checked) checkedValue = true;
     else checkedValue = false;
     if (grammarFunction === 'verb') {
-      updateLocalStorage('enableGreekVerbColor', checkedValue);
+      c4[C_Greek][C_enableVerbClr] = checkedValue;
+      updtLocalStorage();
       updateVerbInputFields(checkedValue);
     }
     else if (grammarFunction === 'gennum') {
       updateNounInputFields(checkedValue);
-      updateLocalStorage('enableGenderNumberColor', checkedValue);
-      userTurnGenderNumberFromOffToOn = checkedValue;
+      c4[C_enableGenderNumberClr] = checkedValue;
+      updtLocalStorage();
+      cgv[C_userTurnGenderNumberFromOffToOn] = checkedValue;
     }
     else if (grammarFunction === 'OTverb') {
-      updateLocalStorage('enableOTVerbColor', checkedValue);
+      c4[C_OT][C_enableVerbClr] = checkedValue;
+      updtLocalStorage();
       updateVerbInputFields(checkedValue, 'OT');
     }
-    refreshForAllInstancesOfTense();
-    if ((grammarFunction === 'verb') && (checkedValue) && (handleOfRequestedAnimation === -1)) goAnimate();
+    refreshClrGrammarCSS();
+    if ((grammarFunction === 'verb') && (checkedValue) && (cgv[C_handleOfRequestedAnimation] === -1)) goAnimate(0);
 }
 
-function userUpdateColor(itemNumber, color) {
-    var robinsonCode, itemIndexArray, orderInYAxis;
-    updateLocalStorage('inputColorVerbItem' + itemNumber, color);
-    if (c4.xAxisForMood) {
-      robinsonCode = robinsonCodeOfMood;
-      itemIndexArray = moodIndexArray;
-    }
-    else {
-      robinsonCode = robinsonCodeOfTense;
-      itemIndexArray = tenseIndexArray;
-    }
-    var r = getVerbItemsCombinedWithCurrentItem('X', itemNumber);
-    for (counter = 0; counter < r.codeOfItemCombinedWithCurrentItem.length; counter ++) {
-      var currentItemName = robinsonCode[r.codeOfItemCombinedWithCurrentItem[counter]];
-      var arrayIdxWithCurrentItem = _.find(itemIndexArray, function(obj) { return obj.name == currentItemName; }).array;
-      for (var i = 0; i < arrayIdxWithCurrentItem.length; i += 1) {
-        var indexToUlVerbCSS = arrayIdxWithCurrentItem[i];
-        orderInYAxis = getAxisOrderOfCSS(ulVerbCSS[indexToUlVerbCSS].name, 'Y');
-        var selectedUnderline = underlineCanvasName[c4['selectedHighlightVerbItem' + orderInYAxis]];
-        var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == selectedUnderline; });
-        updateUlForSpecificYAxis(ulVerbCSS[indexToUlVerbCSS], srcImgObj, color, indexToUlVerbCSS);
-      }
-    }
+function userUpdateClr(itemNumber, color) {
+  c4[C_Greek][C_inClrVerbItem][itemNumber] = color;
+  updtLocalStorage();
+  createUlForAllItemsInYAndX();
 }
-  
-function userUpdateOTColor(itemNumber, color) {
-    updateLocalStorage('inputColorOTVerbItem' + itemNumber, color);
-    var numOfRows = getVariablesForOTVerbTable('H').orderOfYAxisItems.length;
-    var numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
-    for (var counter1 = 0; counter1 < numOfRows; counter1++) {
-      creatUlForOTYAxis(counter1, numOfRows, numOfColumns);
-    }
+
+function userUpdateOTClr(itemNumber, color) {
+  c4[C_OT][C_inClrVerbItem][itemNumber] = color;
+  updtLocalStorage();
+  createUlForOT();
 }
-  
-function userUpdateNounColor(gender, color) {
-    updateLocalStorage('inputColor' + upCaseFirst(gender), color);
-    var cssName = '';
-    if (gender === 'masculine') cssName = '.mas';
-    else if (gender === 'feminine') cssName = '.fem';
-    else if (gender === 'neuter') cssName = '.neut';
-    $(cssName).css({
-      'color': color
-    });
-    updatedGenderNumberCSS = true;
+
+function userUpdateNounClr(gender, color) {
+  if (gender == 'masculine') c4[C_inClrMasculine] = color;
+  else if (gender == 'feminine') c4[C_inClrFeminine] = color;
+  else if (gender == 'neuter') c4[C_inClrNeuter] = color;
+  else alert('Error: userUpdateNounClr, cannot identify gender');
+  updtLocalStorage();
+  var cssName = '';
+  if (gender === 'masculine') cssName = '.mas';
+  else if (gender === 'feminine') cssName = '.fem';
+  else if (gender === 'neuter') cssName = '.neut';
+  $(cssName).css({
+    'color': color
+  });
+  cgv[C_updatedGenderNumberCSS] = true;
 }
-  
-  function userUpdateNumber(type, fontHighlight) {
-    updateLocalStorage('selectedHighlight' + upCaseFirst(type), fontHighlight);
-    updateCssForNumber(type, fontHighlight);
+
+function userUpdateNumber(type, fontHighlight) {
+  if (type == 'singular') c4[C_slctUlSingular] = fontHighlight;
+  else if (type == 'plural') c4[C_slctUlPlural] = fontHighlight;
+  else alert('Error: userUpdateNumber, cannot identify number type');
+  updtLocalStorage();
+  updateCssForNumber(type, fontHighlight);
 }
 
 function userUpdateAnimation(itemNumber) {
     var arrayIndexOfCSSRelatedToItemSelected = [];
-    var currentULForItem = c4['selectedHighlightVerbItem' + itemNumber];
+    var currentULForItem = c4[C_Greek][C_slctUlVerbItem][itemNumber];
     var tempIndexArray;
-    if (c4.xAxisForMood) tempIndexArray = tenseIndexArray;
-    else tempIndexArray = moodIndexArray;
+    if (c4[C_Greek][C_xAxisForMood]) tempIndexArray = cgc[C_tenseIndexArray];
+    else tempIndexArray = cgc[C_moodIndexArray];
     var r = getVerbItemsCombinedWithCurrentItem('Y', itemNumber);
-    for (i = 0; i < r.nameOfItemCombinedWithCurrentItem.length; i ++) {
-      arrayIndexOfCSSRelatedToItemSelected = arrayIndexOfCSSRelatedToItemSelected.concat( 
+    for (var i = 0; i < r.nameOfItemCombinedWithCurrentItem.length; i ++) {
+      arrayIndexOfCSSRelatedToItemSelected = arrayIndexOfCSSRelatedToItemSelected.concat(
         _.find(tempIndexArray, function(obj) { return obj.name == r.nameOfItemCombinedWithCurrentItem[i]; }).array );
     }
-    if ((document.getElementById('inputAnimateCheckbox' + itemNumber).checked) &&
+    var indexToUlVerbCSS;
+    if ((document.getElementById('inAnimateCheckbox' + itemNumber).checked) &&
       (currentULForItem !== '2 lines') && (currentULForItem !== 'Underline')) {
-      updateLocalStorage('inputAnimate' + itemNumber, true);
+      c4[C_Greek][C_inAnimate][itemNumber] = true;
+      updtLocalStorage();
       for (var j = 0; j < arrayIndexOfCSSRelatedToItemSelected.length; j += 1) {
-        var indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[j];
-        if (animationIndexArray.indexOf(indexToUlVerbCSS) === -1) animationIndexArray.push(indexToUlVerbCSS);
+        indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[j];
+        if (cgv[C_animationIndexArray].indexOf(indexToUlVerbCSS) === -1) cgv[C_animationIndexArray].push(indexToUlVerbCSS);
       }
     } else {
-      updateLocalStorage('inputAnimate' + itemNumber, false);
+      c4[C_Greek][C_inAnimate][itemNumber] = false;
+      updtLocalStorage();
       for (var k = 0; k < arrayIndexOfCSSRelatedToItemSelected.length; k += 1) {
-        var indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[k];
-        var tempIdx = animationIndexArray.indexOf(indexToUlVerbCSS);
-        if (indexToUlVerbCSS >= 0) animationIndexArray.splice(tempIdx, 1);
+        indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[k];
+        var tempIdx = cgv[C_animationIndexArray].indexOf(indexToUlVerbCSS);
+        if (indexToUlVerbCSS >= 0) cgv[C_animationIndexArray].splice(tempIdx, 1);
       }
     }
-    copyOfpassiveIndexArray = passiveIndexArray.slice(0);
-    copyOfmiddleIndexArray = middleIndexArray.slice(0);
-    for (var counter = 0; counter < animationIndexArray.length; counter += 1) {
-      var tempIndex1 = animationIndexArray[counter];
-      var tempIndex2 = copyOfpassiveIndexArray.indexOf(tempIndex1);
-      if (tempIndex2 >= 0) copyOfpassiveIndexArray.splice(tempIndex2, 1);
-      tempIndex2 = copyOfmiddleIndexArray.indexOf(tempIndex1);
-      if (tempIndex2 >= 0) copyOfmiddleIndexArray.splice(tempIndex2, 1);
+    cgv[C_copyOfPassiveIndexArray] = cgc[C_passiveIndexArray].slice(0);
+    cgv[C_copyOfMiddleIndexArray] = cgc[C_middleIndexArray].slice(0);
+    for (var counter = 0; counter < cgv[C_animationIndexArray].length; counter += 1) {
+      var tempIndex1 = cgv[C_animationIndexArray][counter];
+      var tempIndex2 = cgv[C_copyOfPassiveIndexArray].indexOf(tempIndex1);
+      if (tempIndex2 >= 0) cgv[C_copyOfPassiveIndexArray].splice(tempIndex2, 1);
+      tempIndex2 = cgv[C_copyOfMiddleIndexArray].indexOf(tempIndex1);
+      if (tempIndex2 >= 0) cgv[C_copyOfMiddleIndexArray].splice(tempIndex2, 1);
     }
-    if ((animationIndexArray.length > 0) && (handleOfRequestedAnimation === -1))
-      goAnimate();
+    if ((cgv[C_animationIndexArray].length > 0) && (cgv[C_handleOfRequestedAnimation] === -1))
+      goAnimate(0);
 }
 
-function userUpdatePassiveMiddleVoiceBackground(voice, otVerb) {
-    var otPrefix = '';
-    if ((otVerb != undefined) && (otVerb != '')) otPrefix = otVerb;
-    var ucVoice = upCaseFirst(voice);
-    if (document.getElementById('inputCheckbox' + otPrefix + ucVoice + 'BackgroundColor').checked) {
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'BackgroundColorCheckValue', true);
-      $('#input' + otPrefix + ucVoice + 'BackgroundColor').spectrum('enable');
-    } else {
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'BackgroundColorCheckValue', false);
-      $('#input' + otPrefix + ucVoice + 'BackgroundColor').spectrum('disable');
-    }
-    if (otVerb == 'OT') createUlForOT();
-    else updateVerbsBackground(voice);
+function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) {
+  var otPrefix = ''; var c4Ref;
+  if ((otVerb != undefined) && (otVerb != '')) {
+    otPrefix = otVerb;
+    c4Ref = c4[C_OT];
+  }
+  else c4Ref = c4[C_Greek];
+  var ucVoice = upCaseFirst(voice);
+  if (document.getElementById('chkbx' + otPrefix + ucVoice + 'BkgrdClr').checked) {
+    (voice == 'passive') ? c4Ref[C_chkbxPassiveBkgrdColrValue] = true : c4Ref[C_chkbxMiddleBkgrdColrValue] = true;
+    $('#in' + otPrefix + ucVoice + 'BkgrdClr').spectrum('enable');
+  } else {
+    (voice == 'passive') ? c4Ref[C_chkbxPassiveBkgrdColrValue] = false : c4Ref[C_chkbxMiddleBkgrdColrValue] = false;
+    $('#in' + otPrefix + ucVoice + 'BkgrdClr').spectrum('disable');
+  }
+  updtLocalStorage();
+  if (otVerb == 'OT') createUlForOT();
+  else updateVerbsBkgrd(voice);
 }
-  
+
 function userEnablePassiveMiddleVerbsUnderline1(voice, otVerb) {
-    var otPrefix = '';
-    if ((otVerb != undefined) && (otVerb != '')) otPrefix = otVerb;
-    var ucVoice = upCaseFirst(voice);
-    if (document.getElementById('inputCheckbox' + otPrefix + ucVoice + 'UlColor1').checked) {
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'UlColor1CheckValue', true);
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'UlColor2', true);
-      $('#input' + otPrefix + ucVoice + 'UlColor1').spectrum('enable');
-      $('#inputCheckbox' + otPrefix + ucVoice + 'UlColor2').show();
-      $('#inputCheckbox' + otPrefix + ucVoice + 'UlColor2').prop('disabled', false);
-      userEnablePassiveMiddleVerbsUnderline2(voice, otVerb);
-    } else {
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'UlColor1CheckValue', false);
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'UlColor2', false);
-      $('#input' + otPrefix + ucVoice + 'UlColor1').spectrum('disable');
-      $('#input' + otPrefix + ucVoice + 'UlColor1').hide();
-      $('#inputCheckbox' + otPrefix + ucVoice + 'UlColor2').hide();
-      $('#inputCheckbox' + otPrefix + ucVoice + 'UlColor2').prop('disabled', true);
-      $('#input' + otPrefix + ucVoice + 'UlColor2').spectrum('disable');
-    }
-    if (otVerb == 'OT') createUlForOT();
-    else updateVerbsBackground(voice);
+  var otPrefix = '', c4Ref, checkedValue;
+  if ((otVerb != undefined) && (otVerb != '')) {
+    otPrefix = otVerb;
+    c4Ref = c4[C_OT];
+  }
+  else c4Ref = c4[C_Greek];
+  var ucVoice = upCaseFirst(voice);
+  if (document.getElementById('chkbx' + otPrefix + ucVoice + 'UlClr1').checked) {
+    checkedValue = true;
+    $('#in' + otPrefix + ucVoice + 'UlClr1').spectrum('enable');
+    $('#chkbx' + otPrefix + ucVoice + 'UlClr2').show();
+    $('#chkbx' + otPrefix + ucVoice + 'UlClr2').prop('disabled', false);
+    userEnablePassiveMiddleVerbsUnderline2(voice, otVerb);
+  } else {
+    checkedValue = false;
+    $('#in' + otPrefix + ucVoice + 'UlClr1').spectrum('disable');
+    $('#in' + otPrefix + ucVoice + 'UlClr1').hide();
+    $('#chkbx' + otPrefix + ucVoice + 'UlClr2').hide();
+    $('#chkbx' + otPrefix + ucVoice + 'UlClr2').prop('disabled', true);
+    $('#in' + otPrefix + ucVoice + 'UlClr2').spectrum('disable');
+  }
+  if (voice == 'passive') {
+    c4Ref[C_chkbxPassiveUlColr1Value] = checkedValue;
+    if (otPrefix == '') c4Ref[C_chkbxPassiveUlClr2] = checkedValue;
+  }
+  else if (voice == 'middle') {
+    c4Ref[C_chkbxMiddleUlColr1Value] = checkedValue;
+    if (otPrefix == '') c4Ref[C_chkbxMiddleUlClr2] = checkedValue;
+  }
+  updtLocalStorage();
+  if (otPrefix == 'OT') createUlForOT();
+  else updateVerbsBkgrd(voice);
 }
-  
+
 function userEnablePassiveMiddleVerbsUnderline2(voice, otVerb) {
-    var otPrefix = '';
-    if ((otVerb != undefined) && (otVerb != '')) return;
-    var ucVoice = upCaseFirst(voice);
-    if (document.getElementById('inputCheckbox' + otPrefix + ucVoice + 'UlColor2').checked) {
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'UlColor2CheckValue', true);
-      $('#input' + otPrefix + ucVoice + 'UlColor2').spectrum('enable');
-      if (handleOfRequestedAnimation === -1) goAnimate();
-    } else {
-      updateLocalStorage('inputCheckbox' + otPrefix + ucVoice + 'UlColor2CheckValue', false);
-      $('#input' + otPrefix + ucVoice + 'UlColor2').spectrum('disable');
-    }
+  var otPrefix = '';
+  if ((otVerb != undefined) && (otVerb != '')) return;
+  var ucVoice = upCaseFirst(voice);
+  if (document.getElementById('chkbx' + otPrefix + ucVoice + 'UlClr2').checked) {
+    (voice == 'passive') ? c4[C_Greek][C_chkbxPassiveUlColr2Value] = true : c4[C_Greek][C_chkbxMiddleUlColr2Value] = true;
+    updtLocalStorage();
+    $('#in' + otPrefix + ucVoice + 'UlClr2').spectrum('enable');
+    if (cgv[C_handleOfRequestedAnimation] === -1) goAnimate(0);
+  } else {
+    (voice == 'passive') ? c4[C_Greek][C_chkbxPassiveUlColr2Value] = false : c4[C_Greek][C_chkbxMiddleUlColr2Value] = false;
+    updtLocalStorage();
+    $('#in' + otPrefix + ucVoice + 'UlClr2').spectrum('disable');
+  }
 }
 
 /*function userToggleAdvancedTools(ot) {
   var otPrefix = '';
   if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
   c4['enable' + otPrefix + 'AdvancedTools'] = !c4['enable' + otPrefix + 'AdvancedTools'];
-  updateLocalStorage('enable' + otPrefix + 'AdvancedTools', c4['enable' + otPrefix + 'AdvancedTools']);
+  updtLocalStorage('enable' + otPrefix + 'AdvancedTools', c4['enable' + otPrefix + 'AdvancedTools']);
   enableOrDisableAdvancedToolsButtons(otPrefix);
   updateHtmlForYAxis();
 }*/
 
 function enableOrDisableVerbAndNounButtons() {
-    var checkedValue = c4.enableGreekVerbColor;
+    var checkedValue = c4[C_Greek][C_enableVerbClr];
     $('#verbonoffswitch').prop('checked', checkedValue);
     updateVerbInputFields(checkedValue);
-    checkedValue = c4.enableGenderNumberColor;
+    checkedValue = c4[C_enableGenderNumberClr];
     $('#gennumonoffswitch').prop('checked', checkedValue);
     updateNounInputFields(checkedValue);
-    checkedValue = c4.enableOTVerbColor;
+    checkedValue = c4[C_OT][C_enableVerbClr];
     updateVerbInputFields(checkedValue, 'OT');
     $('#OTverbonoffswitch').prop('checked', checkedValue);
 }
-  
+
 function enableOrDisableAxisConfigButtons(axis, ot) {
-    var otPrefix = ''
-    if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
-    var iconName = '#' + otPrefix + 'config' + axis + 'AxisIcon';
-    var onOffClassName = '.' + otPrefix + 'vrbInpt' + axis;
-    var onOffCheckBox = otPrefix + 'axis' + axis + 'OnOffCheckbox';
-    if (otPrefix == '') {
-      var r = getVariablesForVerbTable();
-      var moodOrTense = r[axis.toLowerCase() + 'AxisTitle'];
-      moodOrTense = moodOrTense.substr(0, moodOrTense.length - 1);
-      var ucMoodOrTense = upCaseFirst(moodOrTense);
-      var orderOfItemsInAxis = r['orderOf' + axis + 'AxisItems'];
-      var nameOfAllItemsInAxis = r['nameOfAll' + axis + 'AxisItems'];
-      var granularControlOfAxis = c4['granularControlOf' + ucMoodOrTense +'s'];
-      var itemInAxisOnOff = c4[moodOrTense + 'sOnOff'];
-      var ulVerbCSSArrayOfAxis = window[moodOrTense + 'IndexArray']
-      var itemToCombineWithPrevious = c4[moodOrTense + 'ToCombineWithPrevious'];
-      highlightIcon(iconName, granularControlOfAxis);
-      hideIndividualInputField(onOffClassName, granularControlOfAxis);
-      for (var i = 0; i < orderOfItemsInAxis.length; i += 1) {
-        $('#' + onOffCheckBox + i).prop('checked', granularControlOfAxis && itemInAxisOnOff[i]);
-      }
-      if (granularControlOfAxis) {
-        var k = -1;
-        for (var i = 0; i < nameOfAllItemsInAxis.length; i ++) {
-          if (!itemToCombineWithPrevious[i]) k++;
-          var currentItemInAxisOnOff = itemInAxisOnOff[k];
-          index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[i]; }).array;
-          for (var j = 0; j < index2.length; j += 1) {
-            ulVerbCSS[index2[j]]['displayStatusSelectedBy' + ucMoodOrTense] = currentItemInAxisOnOff;
-          }
-        }
-      }
-      else {
-        for (k = 0; k < ulVerbCSS.length; k ++) {
-          ulVerbCSS[k]['displayStatusSelectedBy' + ucMoodOrTense] = true;
-        }
-      }
-    }
-    else if (otPrefix == 'OT') {
-      var granularControlOfAxis = c4['granularControlOfOT' + axis +'Axis'];
-      var itemInAxisOnOff = c4['ot' + axis + 'AxisOnOff'];
-      highlightIcon(iconName, granularControlOfAxis);
-      hideIndividualInputField(onOffClassName, granularControlOfAxis);
-      if (axis == 'Y')
-        for (var j = 0; j < ulOTVbCSS.length; j += 1) {
-          $('#' + onOffCheckBox + j).prop('checked', granularControlOfAxis && c4.otYAxisOnOff[j]);
-        }
-      else if (axis == 'X') {
-        for (var k = 0; k < ulOTVbCSS[0].length; k += 1) {
-          if ((k % 3) == 0) $('#' + onOffCheckBox + (k/3)).prop('checked', granularControlOfAxis && c4.otXAxisOnOff[k/3]);
-        }
-      }
-    }
-}
-  
-function highlightIcon(idOrClass, highlight) {
-    if (highlight) {
-      $(idOrClass).removeClass('icon-not-highlighted');
-      $(idOrClass).addClass('icon-highlighted');
+  var otPrefix = '', granularControlOfAxis, itemInAxisOnOff, ulVerbCSSArrayOfAxis, itemToCombineWithPrevious;
+  if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
+  var iconName = '#' + otPrefix + 'config' + axis + 'AxisIcon';
+  var onOffClassName = '.' + otPrefix + 'vrbInpt' + axis;
+  var onOffCheckBox = otPrefix + 'axis' + axis + 'OnOffCheckbox';
+  if (otPrefix == '') {
+    var r = getVariablesForVerbTable();
+    var moodOrTense = r[axis.toLowerCase() + 'AxisTitle'];
+    moodOrTense = moodOrTense.substr(0, moodOrTense.length - 1);
+    var ucMoodOrTense = upCaseFirst(moodOrTense);
+    var orderOfItemsInAxis = r['orderOf' + axis + 'AxisItems'];
+    var nameOfAllItemsInAxis = r['nameOfAll' + axis + 'AxisItems'];
+    if (moodOrTense == 'mood') {
+      granularControlOfAxis = c4[C_Greek][C_granularControlOfMoods];
+      itemInAxisOnOff = c4[C_Greek][C_moodsOnOff];
+      ulVerbCSSArrayOfAxis = cgc[C_moodIndexArray];
+      itemToCombineWithPrevious = c4[C_Greek][C_moodToCombineWithPrevious];
     }
     else {
-      $(idOrClass).removeClass('icon-highlighted');
-      $(idOrClass).addClass('icon-not-highlighted');
+      granularControlOfAxis = c4[C_Greek][C_granularControlOfTenses];
+      itemInAxisOnOff = c4[C_Greek][C_tensesOnOff];
+      ulVerbCSSArrayOfAxis = cgc[C_tenseIndexArray];
+      itemToCombineWithPrevious = c4[C_Greek][C_tenseToCombineWithPrevious];
     }
-}
-  
-function enableOrDisableAdvancedToolsButtons(ot) {
-    var otPrefix = '';
-    if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
-  //  highlightIcon('#' + otPrefix + 'advancedToolsIcon', c4['enable' + otPrefix + 'AdvancedTools']);
-    hideIndividualInputField('.' + otPrefix + 'advancedtools', c4['enable' + otPrefix + 'AdvancedTools']);
+    highlightIcon(iconName, granularControlOfAxis);
+    hideIndividualInputField(onOffClassName, granularControlOfAxis);
+    for (var i = 0; i < orderOfItemsInAxis.length; i += 1) {
+      $('#' + onOffCheckBox + i).prop('checked', granularControlOfAxis && itemInAxisOnOff[i]);
+    }
+    if (granularControlOfAxis) {
+      var k = -1;
+      for (var cc = 0; cc < nameOfAllItemsInAxis.length; cc ++) {
+        if (!itemToCombineWithPrevious[cc]) k++;
+        var currentItemInAxisOnOff = itemInAxisOnOff[k];
+        var index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[cc]; }).array;
+        for (var j = 0; j < index2.length; j += 1) {
+          cgv[C_ulVerbCSS][index2[j]]['displayStatusSelectedBy' + ucMoodOrTense] = currentItemInAxisOnOff;
+        }
+      }
+    }
+    else {
+      for (var cc2 = 0; cc2 < cgv[C_ulVerbCSS].length; cc2 ++) {
+        cgv[C_ulVerbCSS][cc2]['displayStatusSelectedBy' + ucMoodOrTense] = true;
+      }
+    }
+  }
+  else if (otPrefix == 'OT') {
+    if (axis == 'X') {
+      granularControlOfAxis = c4[C_OT][C_granularControlOfXAxis];
+    }
+    else {
+      granularControlOfAxis = c4[C_OT][C_granularControlOfYAxis];
+    }
+    highlightIcon(iconName, granularControlOfAxis);
+    hideIndividualInputField(onOffClassName, granularControlOfAxis);
+    if (axis == 'Y')
+      for (var cc3 = 0; cc3 < cgv[C_ulOTVbCSS].length; cc3 += 1) {
+        $('#' + onOffCheckBox + cc3).prop('checked', granularControlOfAxis && c4[C_OT][C_yAxisOnOff][cc3]);
+      }
+    else if (axis == 'X') {
+      for (var cc4 = 0; cc4 < cgv[C_ulOTVbCSS][0].length; cc4 += 1) {
+        if ((cc4 % 3) == 0) $('#' + onOffCheckBox + (cc4/3)).prop('checked', granularControlOfAxis && c4[C_OT][C_xAxisOnOff][cc4/3]);
+      }
+    }
+  }
 }
 
-function checkNounColor() {
-    var currentColorPicker = $('#inputColorMasculine').spectrum('get').toHexString();
-    if (c4.inputColorMasculine != currentColorPicker) 
-      userUpdateNounColor('masculine', currentColorPicker);
-    currentColorPicker = $('#inputColorFeminine').spectrum('get').toHexString();
-    if (c4.inputColorFeminine != currentColorPicker) 
-      userUpdateNounColor('feminine', currentColorPicker);
-    currentColorPicker = $('#inputColorNeuter').spectrum('get').toHexString();
-    if (c4.inputColorNeuter != currentColorPicker) 
-      userUpdateNounColor('feminine', currentColorPicker);
+function highlightIcon(idOrClass, highlight) {
+  if (highlight) {
+    $(idOrClass).removeClass('icon-not-highlighted');
+    $(idOrClass).addClass('icon-highlighted');
+  }
+  else {
+    $(idOrClass).removeClass('icon-highlighted');
+    $(idOrClass).addClass('icon-not-highlighted');
+  }
 }
-  
-function checkVerbColorInput() {
-    for (var i = 0; i < getVariablesForVerbTable().orderOfXAxisItems.length; i ++) {
-      var currentColor = c4['inputColorVerbItem' + i];
-      var currentColorPicker = $('#inputColorVerbItem' + i).spectrum("get").toHexString();
-      if (currentColor != currentColorPicker) userUpdateColor(i, currentColorPicker);
-    }
-    for (var i = 0; i < getVariablesForOTVerbTable('H').orderOfXAxisItems.length; i ++) {
-      var currentColor = c4['inputColorOTVerbItem' + i];
-      var currentColorPicker = $('#inputColorOTVerbItem' + i).spectrum("get").toHexString();
-      if (currentColor != currentColorPicker) userUpdateOTColor(i, currentColorPicker);
-    }
-    var currentColor = c4.inputMiddleBackgroundColor;
-    var currentColorPicker = $('#inputMiddleBackgroundColor').spectrum("get").toHexString();
-    var colorForMiddleWasUpdated = false;
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputMiddleBackgroundColor', currentColorPicker);
-      colorForMiddleWasUpdated = true;
-    }
-    currentColor = c4.inputMiddleUlColor1;
-    currentColorPicker = $('#inputMiddleUlColor1').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputMiddleUlColor1', currentColorPicker);
-      colorForMiddleWasUpdated = true;
-    }
-    currentColor = c4.inputMiddleUlColor2;
-    currentColorPicker = $('#inputMiddleUlColor2').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputMiddleUlColor2', currentColorPicker);
-      colorForMiddleWasUpdated = true;
-    }
-    if (colorForMiddleWasUpdated) updateVerbsBackground('middle');
-    currentColor = c4.inputPassiveBackgroundColor;
-    currentColorPicker = $('#inputPassiveBackgroundColor').spectrum("get").toHexString();
-    var colorForPassiveWasUpdated = false;
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputPassiveBackgroundColor', currentColorPicker);
-      colorForPassiveWasUpdated = true;
-    }
-    currentColor = c4.inputPassiveUlColor1;
-    currentColorPicker = $('#inputPassiveUlColor1').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputPassiveUlColor1', currentColorPicker);
-      colorForPassiveWasUpdated = true;
-    }
-    currentColor = c4.inputPassiveUlColor2;
-    currentColorPicker = $('#inputPassiveUlColor2').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputPassiveUlColor2', currentColorPicker);
-      colorForPassiveWasUpdated = true;
-    }
-    if (colorForPassiveWasUpdated) updateVerbsBackground('passive');
-    var currentColor = c4.inputMiddleBackgroundColor;
-    var currentColorPicker = $('#inputMiddleBackgroundColor').spectrum("get").toHexString();
-    var colorForMiddleWasUpdated = false;
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputMiddleBackgroundColor', currentColorPicker);
-      colorForMiddleWasUpdated = true;
-    }
-    currentColor = c4.inputMiddleUlColor1;
-    currentColorPicker = $('#inputMiddleUlColor1').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputMiddleUlColor1', currentColorPicker);
-      colorForMiddleWasUpdated = true;
-    }
-    currentColor = c4.inputMiddleUlColor2;
-    currentColorPicker = $('#inputMiddleUlColor2').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputMiddleUlColor2', currentColorPicker);
-      colorForMiddleWasUpdated = true;
-    }
-    if (colorForMiddleWasUpdated) updateVerbsBackground('middle');
-    currentColor = c4.inputPassiveBackgroundColor;
-    currentColorPicker = $('#inputPassiveBackgroundColor').spectrum("get").toHexString();
-    var colorForPassiveWasUpdated = false;
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputPassiveBackgroundColor', currentColorPicker);
-      colorForPassiveWasUpdated = true;
-    }
-    currentColor = c4.inputPassiveUlColor1;
-    currentColorPicker = $('#inputPassiveUlColor1').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputPassiveUlColor1', currentColorPicker);
-      colorForPassiveWasUpdated = true;
-    }
-    currentColor = c4.inputPassiveUlColor2;
-    currentColorPicker = $('#inputPassiveUlColor2').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputPassiveUlColor2', currentColorPicker);
-      colorForPassiveWasUpdated = true;
-    }
-    if (colorForPassiveWasUpdated) updateVerbsBackground('passive');
-  
-  
-    currentColor = c4.inputOTMiddleBackgroundColor;
-    currentColorPicker = $('#inputOTMiddleBackgroundColor').spectrum("get").toHexString();
-    var colorForOTWasUpdated = false;
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputOTMiddleBackgroundColor', currentColorPicker);
-      colorForOTWasUpdated = true;
-    }
-    currentColor = c4.inputOTMiddleUlColor1;
-    currentColorPicker = $('#inputOTMiddleUlColor1').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputOTMiddleUlColor1', currentColorPicker);
-      colorForOTWasUpdated = true;
-    }
-  /*  currentColor = c4.inputOTMiddleUlColor2;
-    currentColorPicker = $('#inputOTMiddleUlColor2').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputOTMiddleUlColor2', currentColorPicker);
-      colorForOTWasUpdated = true;
-    } */
-    currentColor = c4.inputOTPassiveBackgroundColor;
-    currentColorPicker = $('#inputOTPassiveBackgroundColor').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputOTPassiveBackgroundColor', currentColorPicker);
-      colorForOTWasUpdated = true;
-    }
-    currentColor = c4.inputOTPassiveUlColor1;
-    currentColorPicker = $('#inputOTPassiveUlColor1').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputOTPassiveUlColor1', currentColorPicker);
-      colorForOTWasUpdated = true;
-    }
-  /*  currentColor = c4.inputOTPassiveUlColor2;
-    currentColorPicker = $('#inputOTPassiveUlColor2').spectrum("get").toHexString();
-    if (currentColor != currentColorPicker) {
-      updateLocalStorage('inputOTPassiveUlColor2', currentColorPicker);
-      colorForOTWasUpdated = true;
-    } */
-    if (colorForOTWasUpdated) createUlForOT();
+
+function enableOrDisableAdvancedToolsButtons(ot) {
+  hideIndividualInputField('.' + ot + 'advancedtools', c4[C_enableAdvancedTools]);
+}
+
+function checkNounClr() {
+    var currentClrPicker = $('#inClrMasculine').spectrum('get').toHexString();
+    if (c4[C_inClrMasculine] != currentClrPicker)
+      userUpdateNounClr('masculine', currentClrPicker);
+    currentClrPicker = $('#inClrFeminine').spectrum('get').toHexString();
+    if (c4[C_inClrFeminine] != currentClrPicker)
+      userUpdateNounClr('feminine', currentClrPicker);
+    currentClrPicker = $('#inClrNeuter').spectrum('get').toHexString();
+    if (c4[C_inClrNeuter] != currentClrPicker)
+      userUpdateNounClr('feminine', currentClrPicker);
+}
+
+function checkVerbClrInput() {
+  var currentClr, currentClrPicker;
+  for (var i = 0; i < getVariablesForVerbTable().orderOfXAxisItems.length; i ++) {
+    currentClr = c4[C_Greek][C_inClrVerbItem][i];
+    currentClrPicker = $('#inClrVerbItem' + i).spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) userUpdateClr(i, currentClrPicker);
+  }
+  for (var cc = 0; cc < getVariablesForOTVerbTable('H').orderOfXAxisItems.length; cc ++) {
+    currentClr = c4[C_OT][C_inClrVerbItem][cc];
+    currentClrPicker = $('#inClrOTVerbItem' + cc).spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) userUpdateOTClr(cc, currentClrPicker);
+  }
+  currentClr = c4[C_Greek][C_inMiddleBkgrdClr];
+  currentClrPicker = $('#inMiddleBkgrdClr').spectrum("get").toHexString();
+  var colorForMiddleWasUpdated = false;
+  if (currentClr != currentClrPicker) {
+    c4[C_Greek][C_inMiddleBkgrdClr] = currentClrPicker;
+    updtLocalStorage();
+    colorForMiddleWasUpdated = true;
+  }
+  currentClr = c4[C_Greek][C_inMiddleUlClr1];
+  currentClrPicker = $('#inMiddleUlClr1').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_Greek][C_inMiddleUlClr1] = currentClrPicker;
+    updtLocalStorage();
+    colorForMiddleWasUpdated = true;
+  }
+  currentClr = c4[C_Greek][C_inMiddleUlClr2];
+  currentClrPicker = $('#inMiddleUlClr2').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_Greek][C_inMiddleUlClr2] = currentClrPicker;
+    updtLocalStorage();
+    colorForMiddleWasUpdated = true;
+  }
+  if (colorForMiddleWasUpdated) updateVerbsBkgrd('middle');
+  currentClr = c4[C_Greek][C_inPassiveBkgrdClr];
+  currentClrPicker = $('#inPassiveBkgrdClr').spectrum("get").toHexString();
+  var colorForPassiveWasUpdated = false;
+  if (currentClr != currentClrPicker) {
+    c4[C_Greek][C_inPassiveBkgrdClr] = currentClrPicker;
+    updtLocalStorage();
+    colorForPassiveWasUpdated = true;
+  }
+  currentClr = c4[C_Greek][C_inPassiveUlClr1];
+  currentClrPicker = $('#inPassiveUlClr1').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_Greek][C_inPassiveUlClr1] = currentClrPicker;
+    updtLocalStorage();
+    colorForPassiveWasUpdated = true;
+  }
+  currentClr = c4[C_Greek][C_inPassiveUlClr2];
+  currentClrPicker = $('#inPassiveUlClr2').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_Greek][C_inPassiveUlClr2] = currentClrPicker;
+    updtLocalStorage();
+    colorForPassiveWasUpdated = true;
+  }
+  if (colorForPassiveWasUpdated) updateVerbsBkgrd('passive');
+  if (colorForMiddleWasUpdated) updateVerbsBkgrd('middle');
+
+  currentClr = c4[C_OT][C_inMiddleBkgrdClr];
+  currentClrPicker = $('#inOTMiddleBkgrdClr').spectrum("get").toHexString();
+  var colorForOTWasUpdated = false;
+  if (currentClr != currentClrPicker) {
+    c4[C_OT][C_inMiddleBkgrdClr] = currentClrPicker;
+    updtLocalStorage();
+    colorForOTWasUpdated = true;
+  }
+  currentClr = c4[C_OT][C_inMiddleUlClr1];
+  currentClrPicker = $('#inOTMiddleUlClr1').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_OT][C_inMiddleUlClr1] = currentClrPicker;
+    updtLocalStorage();
+    colorForOTWasUpdated = true;
+  }
+  currentClr = c4[C_OT][C_inPassiveBkgrdClr];
+  currentClrPicker = $('#inOTPassiveBkgrdClr').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_OT][C_inPassiveBkgrdClr] = currentClrPicker;
+    updtLocalStorage();
+    colorForOTWasUpdated = true;
+  }
+  currentClr = c4[C_OT][C_inPassiveUlClr1];
+  currentClrPicker = $('#inOTPassiveUlClr1').spectrum("get").toHexString();
+  if (currentClr != currentClrPicker) {
+    c4[C_OT][C_inPassiveUlClr1] = currentClrPicker;
+    updtLocalStorage();
+    colorForOTWasUpdated = true;
+  }
+  if (colorForOTWasUpdated) createUlForOT();
 }
 
 function updateHtmlForYAxis() {
-    var numOfRows = getVariablesForVerbTable().nameOfYAxisItems.length;
-    for (var i = 0; i < numOfRows; i += 1) {
-      var currentULForItem = c4['selectedHighlightVerbItem' + i];
-      $('#selectedHighlightVerbItem' + i + ' option')
-        .filter(function() {
-          return $.trim($(this).text()) == currentULForItem;
-        })
-        .prop('selected', true);
-      var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') && (c4.enableAdvancedTools) );
-      hideIndividualInputField('#inputAnimate' + i, temp);
-      hideIndividualInputField('#inputAnimateCheckbox' + i, temp);
-      if ((c4['inputAnimate' + i]) && (c4.enableAdvancedTools)) {
-        document.getElementById('inputAnimateCheckbox' + i).checked = true;
-        if ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline'))
-          userUpdateAnimation(i);
-      } else document.getElementById('inputAnimateCheckbox' + i).checked = false;
-    }
-    numOfRows = getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
-    for (var i = 0; i < numOfRows; i += 1) {
-      var currentULForItem = c4['selectedHighlightOTVerbItem' + i];
-      $('#selectedHighlightOTVerbItem' + i + ' option')
-        .filter(function() {
-          return $.trim($(this).text()) == currentULForItem;
-        })
-        .prop('selected', true);
-    }
-  }
-  
-function updateHtmlForXAxis() {
-    var numOfColumns = getVariablesForVerbTable().orderOfXAxisItems.length;
-    if (numOfColumns > -1) 
-      $('#inputColorVerbItem0').spectrum({
-        color: c4.inputColorVerbItem0,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateColor(0, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput();
-        }
-      });
-    if (numOfColumns > 0) 
-      $('#inputColorVerbItem1').spectrum({
-        color: c4.inputColorVerbItem1,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateColor(1, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput();
-        }
-      });
-    if (numOfColumns > 1) 
-      $('#inputColorVerbItem2').spectrum({
-        color: c4.inputColorVerbItem2,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateColor(2, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput();
-        }
-      });
-    if (numOfColumns > 2) 
-      $('#inputColorVerbItem3').spectrum({
-        color: c4.inputColorVerbItem3,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateColor(3, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput();
-        }
-      });
-    if (numOfColumns > 3)
-      $('#inputColorVerbItem4').spectrum({
-        color: c4.inputColorVerbItem4,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateColor(4, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput();
-        }
-      });
-    if (numOfColumns > 4)
-      $('#inputColorVerbItem5').spectrum({
-        color: c4.inputColorVerbItem5,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateColor(5, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput();
-        }  
-      });
-    numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
-    if (numOfColumns > -1) 
-      $('#inputColorOTVerbItem0').spectrum({
-        color: c4.inputColorOTVerbItem0,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateOTColor(0, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput('OT');
-        }
-      });
-    if (numOfColumns > 0) 
-      $('#inputColorOTVerbItem1').spectrum({
-        color: c4.inputColorOTVerbItem1,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateOTColor(1, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput('OT');
-        }
-      });
-    if (numOfColumns > 1) 
-      $('#inputColorOTVerbItem2').spectrum({
-        color: c4.inputColorOTVerbItem2,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateOTColor(2, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput('OT');
-        }
-      });
-    if (numOfColumns > 2) 
-      $('#inputColorOTVerbItem3').spectrum({
-        color: c4.inputColorOTVerbItem3,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateOTColor(3, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput('OT');
-        }
-      });
-    if (numOfColumns > 3)
-      $('#inputColorOTVerbItem4').spectrum({
-        color: c4.inputColorOTVerbItem4,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateOTColor(4, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput('OT');
-        }
-      });
-    if (numOfColumns > 4)
-      $('#inputColorOTVerbItem5').spectrum({
-        color: c4.inputColorOTVerbItem5,
-        showInput: true,
-        preferredFormat: 'hex',
-        clickoutFiresChange: false,
-        change: function(color) {
-          userUpdateOTColor(5, color.toHexString());
-        },
-        show: function(color) {
-          checkVerbColorInput('OT');
-        }  
-      });
-  }
-  
-  function updateHtmlForGender() {
-    $('#inputColorMasculine').spectrum({
-      color: c4.inputColorMasculine,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateNounColor('masculine', color.toHexString());
-      },
-      show: function(color) {
-        checkNounColor();
-      }
-    });
-    $('#inputColorFeminine').spectrum({
-      color: c4.inputColorFeminine,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateNounColor('feminine', color.toHexString());
-      },
-      show: function(color) {
-        checkNounColor();
-      }
-    });
-    $('#inputColorNeuter').spectrum({
-      color: c4.inputColorNeuter,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        userUpdateNounColor('neuter', color.toHexString());
-      },
-      show: function(color) {
-        checkNounColor();
-      }
-    });
-  }
-  
-  function updateHtmlForNumber() {
-    $('#selectedHighlightPlural option')
+  var currentULForItem;
+  var numOfRows = getVariablesForVerbTable().nameOfYAxisItems.length;
+  for (var i = 0; i < numOfRows; i += 1) {
+    currentULForItem = c4[C_Greek][C_slctUlVerbItem][i];
+    $('#slctUlVerbItem' + i + ' option')
       .filter(function() {
-        return $.trim($(this).text()) == upCaseFirst(c4.selectedHighlightPlural);
+        return $.trim($(this).text()) == currentULForItem;
       })
-      .attr('selected', true);
-    $('#selectedHighlightSingular option')
-      .filter(function() {
-        return $.trim($(this).text()) == upCaseFirst(c4.selectedHighlightSingular);
-      })
-      .attr('selected', true);
+      .prop('selected', true);
+    var temp = ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline') && (c4[C_enableAdvancedTools]) );
+    hideIndividualInputField('#inAnimate' + i, temp);
+    hideIndividualInputField('#inAnimateCheckbox' + i, temp);
+    if ((c4[C_Greek][C_inAnimate][i]) && (c4[C_enableAdvancedTools])) {
+      document.getElementById('inAnimateCheckbox' + i).checked = true;
+      if ((currentULForItem !== '2 lines') && (currentULForItem !== 'Underline'))
+        userUpdateAnimation(i);
+    } else document.getElementById('inAnimateCheckbox' + i).checked = false;
   }
-  
-  function updateHtmlForPassiveBackgroundColor() {
-    $('#inputPassiveBackgroundColor').spectrum({
-      color: c4.inputPassiveBackgroundColor,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputPassiveBackgroundColor', color.toHexString());
-        updateVerbsBackground('passive');
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-    $('#inputPassiveUlColor1').spectrum({
-      color: c4.inputPassiveUlColor1,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputPassiveUlColor1', color.toHexString());
-        updateVerbsBackground('passive');
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-    $('#inputPassiveUlColor2').spectrum({
-      color: c4.inputPassiveUlColor2,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputPassiveUlColor2', color.toHexString());
-        updateVerbsBackground('passive');
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  
-    $('#inputOTPassiveBackgroundColor').spectrum({
-      color: c4.inputOTPassiveBackgroundColor,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputOTPassiveBackgroundColor', color.toHexString());
-        createUlForOT();
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-    $('#inputOTPassiveUlColor1').spectrum({
-      color: c4.inputOTPassiveUlColor1,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputOTPassiveUlColor1', color.toHexString());
-        createUlForOT();
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  /*  $('#inputOTPassiveUlColor2').spectrum({
-      color: c4.inputOTPassiveUlColor2,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputOTPassiveUlColor2', color.toHexString());
-        createUlForOT();
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    }); */
-  
-  
-}
-  
-function updateHtmlForMiddleBackgroundColor() {
-    $('#inputMiddleBackgroundColor').spectrum({
-      color: c4.inputMiddleBackgroundColor,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputMiddleBackgroundColor', color.toHexString());
-        updateVerbsBackground('middle');
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-    $('#inputMiddleUlColor1').spectrum({
-      color: c4.inputMiddleUlColor1,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputMiddleUlColor1', color.toHexString());
-        updateVerbsBackground('middle');
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-    $('#inputMiddleUlColor2').spectrum({
-      color: c4.inputMiddleUlColor2,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputMiddleUlColor2', color.toHexString());
-        updateVerbsBackground('middle');
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  
-    $('#inputOTMiddleBackgroundColor').spectrum({
-      color: c4.inputOTMiddleBackgroundColor,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputOTMiddleBackgroundColor', color.toHexString());
-        createUlForOT();
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-    $('#inputOTMiddleUlColor1').spectrum({
-      color: c4.inputOTMiddleUlColor1,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputOTMiddleUlColor1', color.toHexString());
-        createUlForOT();
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    });
-  /*  $('#inputOTMiddleUlColor2').spectrum({
-      color: c4.inputOTMiddleUlColor2,
-      showInput: true,
-      preferredFormat: 'hex',
-      clickoutFiresChange: false,
-      change: function(color) {
-        updateLocalStorage('inputOTMiddleUlColor2', color.toHexString());
-        createUlForOT();
-      },
-      show: function(color) {
-        checkVerbColorInput();
-      }
-    }); */
-  
-}
-  
-function hideOrShowHtmlForPassiveBackgroundColor(passiveBackgroundName) {
-    var ucPassiveBackgroundName = upCaseFirst(passiveBackgroundName);
-    var checkedValue = c4['inputCheckbox' + ucPassiveBackgroundName + 'CheckValue'];
-    $('#inputCheckbox' + ucPassiveBackgroundName).prop('checked', checkedValue);
-    if (c4['inputCheckbox' + ucPassiveBackgroundName]) {
-      $('#inputCheckbox' + ucPassiveBackgroundName).show();
-      $('#inputCheckbox' + ucPassiveBackgroundName).prop('disabled', false);
-      if ($('#input' + ucPassiveBackgroundName).length) {
-        if (checkedValue) $('#input' + ucPassiveBackgroundName).spectrum('enable');
-        else $('#input' + ucPassiveBackgroundName).spectrum('disable');
-      }
-    } else {
-      $('#inputCheckbox' + ucPassiveBackgroundName).hide();
-      $('#inputCheckbox' + ucPassiveBackgroundName).prop('disabled', true);
-      if ($('#input' + ucPassiveBackgroundName).length)
-        $('#input' + ucPassiveBackgroundName).spectrum('disable');
-    }
+  numOfRows = getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
+  for (var cc = 0; cc < numOfRows; cc += 1) {
+    currentULForItem = c4[C_OT][C_slctUlVerbItem][cc];
+    $('#slctUlOTVerbItem' + cc + ' option')
+      .filter(function() {
+        return $.trim($(this).text()) == currentULForItem;
+      })
+      .prop('selected', true);
+  }
 }
 
-function cancelColorChanges() {
+function updateHtmlForXAxis() {
+  var numOfColumns = getVariablesForVerbTable().orderOfXAxisItems.length;
+  if (numOfColumns > -1)
+    $('#inClrVerbItem0').spectrum({
+      color: c4[C_Greek][C_inClrVerbItem][0],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateClr(0, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput();
+      }
+    });
+  if (numOfColumns > 0)
+    $('#inClrVerbItem1').spectrum({
+      color: c4[C_Greek][C_inClrVerbItem][1],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateClr(1, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput();
+      }
+    });
+  if (numOfColumns > 1)
+    $('#inClrVerbItem2').spectrum({
+      color: c4[C_Greek][C_inClrVerbItem][2],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateClr(2, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput();
+      }
+    });
+  if (numOfColumns > 2)
+    $('#inClrVerbItem3').spectrum({
+      color: c4[C_Greek][C_inClrVerbItem][3],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateClr(3, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput();
+      }
+    });
+  if (numOfColumns > 3)
+    $('#inClrVerbItem4').spectrum({
+      color: c4[C_Greek][C_inClrVerbItem][4],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateClr(4, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput();
+      }
+    });
+  if (numOfColumns > 4)
+    $('#inClrVerbItem5').spectrum({
+      color: c4[C_Greek][C_inClrVerbItem][5],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateClr(5, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput();
+      }
+    });
+  numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
+  if (numOfColumns > -1)
+    $('#inClrOTVerbItem0').spectrum({
+      color: c4[C_OT][C_inClrVerbItem][0],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateOTClr(0, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput('OT');
+      }
+    });
+  if (numOfColumns > 0)
+    $('#inClrOTVerbItem1').spectrum({
+      color: c4[C_OT][C_inClrVerbItem][1],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateOTClr(1, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput('OT');
+      }
+    });
+  if (numOfColumns > 1)
+    $('#inClrOTVerbItem2').spectrum({
+      color: c4[C_OT][C_inClrVerbItem][2],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateOTClr(2, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput('OT');
+      }
+    });
+  if (numOfColumns > 2)
+    $('#inClrOTVerbItem3').spectrum({
+      color: c4[C_OT][C_inClrVerbItem][3],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateOTClr(3, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput('OT');
+      }
+    });
+  if (numOfColumns > 3)
+    $('#inClrOTVerbItem4').spectrum({
+      color: c4[C_OT][C_inClrVerbItem][4],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateOTClr(4, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput('OT');
+      }
+    });
+  if (numOfColumns > 4)
+    $('#inClrOTVerbItem5').spectrum({
+      color: c4[C_OT][C_inClrVerbItem][5],
+      showInput: true,
+      preferredFormat: 'hex',
+      clickoutFiresChange: false,
+      change: function(color) {
+        userUpdateOTClr(5, color.toHexString());
+      },
+      show: function(color) {
+        checkVerbClrInput('OT');
+      }
+    });
+}
+
+function updateHtmlForGender() {
+  $('#inClrMasculine').spectrum({
+    color: c4[C_inClrMasculine],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      userUpdateNounClr('masculine', color.toHexString());
+    },
+    show: function(color) {
+      checkNounClr();
+    }
+  });
+  $('#inClrFeminine').spectrum({
+    color: c4[C_inClrFeminine],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      userUpdateNounClr('feminine', color.toHexString());
+    },
+    show: function(color) {
+      checkNounClr();
+    }
+  });
+  $('#inClrNeuter').spectrum({
+    color: c4[C_inClrNeuter],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      userUpdateNounClr('neuter', color.toHexString());
+    },
+    show: function(color) {
+      checkNounClr();
+    }
+  });
+}
+
+function updateHtmlForNumber() {
+  $('#slctUlPlural option')
+    .filter(function() {
+      return $.trim($(this).text()) == upCaseFirst(c4[C_slctUlPlural]);
+    })
+    .attr('selected', true);
+  $('#slctUlSingular option')
+    .filter(function() {
+      return $.trim($(this).text()) == upCaseFirst(c4[C_slctUlSingular]);
+    })
+    .attr('selected', true);
+}
+
+function updateHtmlForPassiveBkgrdClr() {
+  $('#inPassiveBkgrdClr').spectrum({
+    color: c4[C_Greek][C_inPassiveBkgrdClr],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_Greek][C_inPassiveBkgrdClr] = color.toHexString();
+      updtLocalStorage();
+      updateVerbsBkgrd('passive');
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inPassiveUlClr1').spectrum({
+    color: c4[C_Greek][C_inPassiveUlClr1],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_Greek][C_inPassiveUlClr1] = color.toHexString();
+      updtLocalStorage();
+      updateVerbsBkgrd('passive');
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inPassiveUlClr2').spectrum({
+    color: c4[C_Greek][C_inPassiveUlClr2],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_Greek][C_inPassiveUlClr2] = color.toHexString();
+      updtLocalStorage();
+      updateVerbsBkgrd('passive');
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+
+  $('#inOTPassiveBkgrdClr').spectrum({
+    color: c4[C_OT][C_inPassiveBkgrdClr],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_OT][C_inPassiveBkgrdClr] = color.toHexString();
+      updtLocalStorage();
+      createUlForOT();
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inOTPassiveUlClr1').spectrum({
+    color: c4[C_OT][C_inPassiveUlClr1],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_OT][C_inPassiveUlClr1] = color.toHexString();
+      updtLocalStorage();
+      createUlForOT();
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+}
+
+function updateHtmlForMiddleBkgrdClr() {
+  $('#inMiddleBkgrdClr').spectrum({
+    color: c4[C_Greek][C_inMiddleBkgrdClr],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_Greek][C_inMiddleBkgrdClr] = color.toHexString();
+      updtLocalStorage();
+      updateVerbsBkgrd('middle');
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inMiddleUlClr1').spectrum({
+    color: c4[C_Greek][C_inMiddleUlClr1],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_Greek][C_inMiddleUlClr1] = color.toHexString();
+      updtLocalStorage();
+      updateVerbsBkgrd('middle');
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inMiddleUlClr2').spectrum({
+    color: c4[C_Greek][C_inMiddleUlClr2],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_Greek][C_inMiddleUlClr2] = color.toHexString();
+      updtLocalStorage();
+      updateVerbsBkgrd('middle');
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inOTMiddleBkgrdClr').spectrum({
+    color: c4[C_OT][C_inMiddleBkgrdClr],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_OT][C_inMiddleBkgrdClr] = color.toHexString();
+      updtLocalStorage();
+      createUlForOT();
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+  $('#inOTMiddleUlClr1').spectrum({
+    color: c4[C_OT][C_inMiddleUlClr1],
+    showInput: true,
+    preferredFormat: 'hex',
+    clickoutFiresChange: false,
+    change: function(color) {
+      c4[C_OT][C_inMiddleUlClr1] = color.toHexString();
+      updtLocalStorage();
+      createUlForOT();
+    },
+    show: function(color) {
+      checkVerbClrInput();
+    }
+  });
+}
+
+function hideOrShowHtmlForPassiveBkgrdClr(passiveBkgrdName, otPrefix) {
+  var checkedValue, checkBox, c4Ref;
+  if ((otPrefix !== null) && (otPrefix == 'OT')) {
+    c4Ref = c4[C_OT];
+  }
+  else {
+    c4Ref = c4[C_Greek];
+    otPrefix = '';
+  }
+  if (passiveBkgrdName == 'PassiveBkgrdClr') {
+    checkBox = c4Ref[C_chkbxPassiveBkgrdClr];
+    checkedValue = c4Ref[C_chkbxPassiveBkgrdColrValue];
+  }
+  else if (passiveBkgrdName == 'PassiveUlClr1') {
+    checkBox = c4Ref[C_chkbxPassiveUlClr1];
+    checkedValue = c4Ref[C_chkbxPassiveUlColr1Value];
+  }
+  else if (passiveBkgrdName == 'PassiveUlClr2') {
+    checkBox = c4Ref[C_chkbxPassiveUlClr2];
+    checkedValue = c4Ref[C_chkbxPassiveUlColr2Value];
+  }
+  else if (passiveBkgrdName == 'MiddleBkgrdClr') {
+    checkBox = c4Ref[C_chkbxMiddleBkgrdClr];
+    checkedValue = c4Ref[C_chkbxMiddleBkgrdColrValue];
+  }
+  else if (passiveBkgrdName == 'MiddleUlClr1') {
+    checkBox = c4Ref[C_chkbxMiddleUlClr1];
+    checkedValue = c4Ref[C_chkbxMiddleUlColr1Value];
+  }
+  else if (passiveBkgrdName == 'MiddleUlClr2') {
+    checkBox = c4Ref[C_chkbxMiddleUlClr2];
+    checkedValue = c4Ref[C_chkbxMiddleUlColr2Value];
+  }
+  passiveBkgrdName = otPrefix + passiveBkgrdName;
+  $('#chkbx' + passiveBkgrdName).prop('checked', checkedValue);
+  if (checkBox) {
+    $('#chkbx' + passiveBkgrdName).show();
+    $('#chkbx' + passiveBkgrdName).prop('disabled', false);
+    if ($('#in' + passiveBkgrdName).length) {
+      if (checkedValue) $('#in' + passiveBkgrdName).spectrum('enable');
+      else $('#in' + passiveBkgrdName).spectrum('disable');
+    }
+  } else {
+    $('#chkbx' + passiveBkgrdName).hide();
+    $('#chkbx' + passiveBkgrdName).prop('disabled', true);
+    if ($('#in' + passiveBkgrdName).length)
+      $('#in' + passiveBkgrdName).spectrum('disable');
+  }
+}
+
+function cancelClrChanges() {
     if (typeof(Storage) !== 'undefined') {
-      var previousEnableGenderNumberColor = c4.enableGenderNumberColor;
-      var tmp = localStorage.getItem('colorCode-PreviousSettings');
+      var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
+      var tmp = window.localStorage.getItem('colorCode-PreviousSettings');
       if (tmp) c4 = JSON.parse(tmp);
-      else c4 = JSON.parse(JSON.stringify(defaultC4));
-      localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
-      if ((!previousEnableGenderNumberColor) && (c4.enableGenderNumberColor)) userTurnGenderNumberFromOffToOn = true;
+      else c4 = createC4();
+      updtLocalStorage();
+      if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cgv[C_userTurnGenderNumberFromOffToOn] = true;
       alert('Your color settings has been reset to your previous setting.');
       updateAllSettingsAndInputFields();
     }
 }
-  
-function resetColorConfig() {
+
+function resetClrConfig() {
     if (typeof(Storage) !== 'undefined') {
-      var previousEnableGenderNumberColor = c4.enableGenderNumberColor;
-      c4 = JSON.parse(JSON.stringify(defaultC4));
-      localStorage.setItem('colorCode-CurrentSettings', JSON.stringify(c4));
-      if ((!previousEnableGenderNumberColor) && (c4.enableGenderNumberColor)) userTurnGenderNumberFromOffToOn = true;
+      var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
+      c4 = createC4();
+      updtLocalStorage();
+      if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cgv[C_userTurnGenderNumberFromOffToOn] = true;
       alert('Your color settings has been reset to default setting.');
       updateAllSettingsAndInputFields();
     }
 }
-  
-function closeColorConfig() {
-  $('#theGrammarColorModal').modal('hide');
-  $('#theGrammarColorModal').modal({
+
+function closeClrConfig() {
+  $('#theGrammarClrModal').modal('hide');
+  $('#theGrammarClrModal').modal({
     show: 'false'
   });
-  var element = document.getElementById('theGrammarColorModal');
+  var element = document.getElementById('theGrammarClrModal');
   element.parentNode.removeChild(element);
+  $('.sp-container').remove(); // The color selection tool is not totally removed so manually remove it. 08/19/2019
 }
 
 function updateAllSettingsAndInputFields() {
-    animationIndexArray = [];
-    copyOfpassiveIndexArray = passiveIndexArray.slice(0);
-    copyOfmiddleIndexArray = middleIndexArray.slice(0);
-    updateVerbsBackground('active');
-    updateVerbsBackground('passive');
-    updateVerbsBackground('middle');
-    createUlForAllItemsInYAndX();
-    createUlForOT();
-    $('#theGrammarColorModal').modal({
-      show: 'false'
-    });
-    if ($.getUrlVars().indexOf("debug") == -1) 
-      $('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
-    else 
-      $('#theGrammarColorModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
+  cgv[C_animationIndexArray] = [];
+  cgv[C_copyOfPassiveIndexArray] = cgc[C_passiveIndexArray].slice(0);
+  cgv[C_copyOfMiddleIndexArray] = cgc[C_middleIndexArray].slice(0);
+  updateVerbsBkgrd('active');
+  updateVerbsBkgrd('passive');
+  updateVerbsBkgrd('middle');
+  createUlForAllItemsInYAndX();
+  createUlForOT();
+  $('#theGrammarClrModal').modal({
+    show: 'false'
+  });
+  if ($.getUrlVars().indexOf("debug") == -1)
+    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
+  else
+    $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.html');
 }
-  
+
 function updateNounInputFields(inputOnOff) {
     hideIndividualInputField('.nInptN', inputOnOff);
-    hideOrDisplayIndividualColorInputField('.nInptC', inputOnOff);
+    hideOrDisplayIndividualClrInputField('.nInptC', inputOnOff);
 }
 
 function hideIndividualInputField(fieldName, inputOnOff, skipShow) {
     if (inputOnOff) {
       $(fieldName).attr('disabled', false);
       $(fieldName).attr('hidden', false);
-      if (skipShow == null) 
+      if (skipShow == null)
         $(fieldName).show();
     } else {
       $(fieldName).attr('disabled', true);
@@ -1691,128 +1652,128 @@ function hideIndividualInputField(fieldName, inputOnOff, skipShow) {
       $(fieldName).hide();
     }
 }
-  
-function hideOrDisplayIndividualColorInputField(fieldName, inputOnOff) {
+
+function hideOrDisplayIndividualClrInputField(fieldName, inputOnOff) {
     if (inputOnOff) $(fieldName).spectrum('enable');
     else $(fieldName).spectrum('disable');
 }
-  
+
 function updateVerbInputFields(inputOnOff, ot) {
     var otPrefix = '';
     if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
-  
-    hideOrDisplayIndividualColorInputField('.' + otPrefix + 'vrbInptC', inputOnOff);
+
+    hideOrDisplayIndividualClrInputField('.' + otPrefix + 'vrbInptC', inputOnOff);
     hideIndividualInputField('.' + otPrefix + 'vrbInpt1', inputOnOff);
   //  hideIndividualInputField('#advancedToolsBtn', inputOnOff);
     if (otPrefix != 'OT') {
-      var showAnimationCheckbox = c4.enableAdvancedTools && inputOnOff;
-      hideIndividualInputField('#inputAnimate0', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimate1', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimate2', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimate3', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimate4', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimate5', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimateCheckbox0', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimateCheckbox1', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimateCheckbox2', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimateCheckbox3', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimateCheckbox4', showAnimationCheckbox, true);
-      hideIndividualInputField('#inputAnimateCheckbox5', showAnimationCheckbox, true);
-      if (c4.xAxisForMood) {
-        hideIndividualInputField('.vrbInptX', c4.granularControlOfMoods && inputOnOff);
-        hideIndividualInputField('.vrbInptY', c4.granularControlOfTenses && inputOnOff);
+      var showAnimationCheckbox = c4[C_enableAdvancedTools] && inputOnOff;
+      hideIndividualInputField('#inAnimate0', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimate1', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimate2', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimate3', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimate4', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimate5', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimateCheckbox0', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimateCheckbox1', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimateCheckbox2', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimateCheckbox3', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimateCheckbox4', showAnimationCheckbox, true);
+      hideIndividualInputField('#inAnimateCheckbox5', showAnimationCheckbox, true);
+      if (c4[C_Greek][C_xAxisForMood]) {
+        hideIndividualInputField('.vrbInptX', c4[C_Greek][C_granularControlOfMoods] && inputOnOff);
+        hideIndividualInputField('.vrbInptY', c4[C_Greek][C_granularControlOfTenses] && inputOnOff);
       }
       else {
-        hideIndividualInputField('.vrbInptX', c4.granularControlOfTenses && inputOnOff);
-        hideIndividualInputField('.vrbInptY', c4.granularControlOfMoods && inputOnOff);
+        hideIndividualInputField('.vrbInptX', c4[C_Greek][C_granularControlOfTenses] && inputOnOff);
+        hideIndividualInputField('.vrbInptY', c4[C_Greek][C_granularControlOfMoods] && inputOnOff);
       }
-      hideOrShowHtmlForPassiveBackgroundColor('PassiveUlColor2');
-      hideOrShowHtmlForPassiveBackgroundColor('MiddleUlColor2');
+      hideOrShowHtmlForPassiveBkgrdClr('PassiveUlClr2');
+      hideOrShowHtmlForPassiveBkgrdClr('MiddleUlClr2');
     }
-    hideOrShowHtmlForPassiveBackgroundColor(otPrefix + 'PassiveBackgroundColor');
-    hideOrShowHtmlForPassiveBackgroundColor(otPrefix + 'PassiveUlColor1');
-    hideOrShowHtmlForPassiveBackgroundColor(otPrefix + 'MiddleBackgroundColor');
-    hideOrShowHtmlForPassiveBackgroundColor(otPrefix + 'MiddleUlColor1');
-    if (!inputOnOff) { // Turning on the passive colors is more complex and is handled by other routines.  
-      hideOrDisplayIndividualColorInputField('#input' + otPrefix + 'PassiveBackgroundColor', inputOnOff);
-      hideOrDisplayIndividualColorInputField('#input' + otPrefix + 'PassiveUlColor1', inputOnOff);
-      hideIndividualInputField('#inputCheckbox' + otPrefix + 'PassiveBackgroundColor', inputOnOff);
-      hideIndividualInputField('#inputCheckbox' + otPrefix + 'PassiveUlColor1', inputOnOff);
-      hideIndividualInputField('#inputCheckboxPassiveUlColor2', inputOnOff);
-      hideOrDisplayIndividualColorInputField('#input' + otPrefix + 'MiddleBackgroundColor', inputOnOff);
-      hideOrDisplayIndividualColorInputField('#input' + otPrefix + 'MiddleUlColor1', inputOnOff);
-      hideIndividualInputField('#inputCheckbox' + otPrefix + 'MiddleBackgroundColor', inputOnOff);
-      hideIndividualInputField('#inputCheckbox' + otPrefix + 'MiddleUlColor1', inputOnOff);
+    hideOrShowHtmlForPassiveBkgrdClr('PassiveBkgrdClr', otPrefix);
+    hideOrShowHtmlForPassiveBkgrdClr('PassiveUlClr1', otPrefix);
+    hideOrShowHtmlForPassiveBkgrdClr('MiddleBkgrdClr', otPrefix);
+    hideOrShowHtmlForPassiveBkgrdClr('MiddleUlClr1', otPrefix);
+    if (!inputOnOff) { // Turning on the passive colors is more complex and is handled by other routines.
+      hideOrDisplayIndividualClrInputField('#in' + otPrefix + 'PassiveBkgrdClr', inputOnOff);
+      hideOrDisplayIndividualClrInputField('#in' + otPrefix + 'PassiveUlClr1', inputOnOff);
+      hideIndividualInputField('#chkbx' + otPrefix + 'PassiveBkgrdClr', inputOnOff);
+      hideIndividualInputField('#chkbx' + otPrefix + 'PassiveUlClr1', inputOnOff);
+      hideIndividualInputField('#chkbxPassiveUlClr2', inputOnOff);
+      hideOrDisplayIndividualClrInputField('#in' + otPrefix + 'MiddleBkgrdClr', inputOnOff);
+      hideOrDisplayIndividualClrInputField('#in' + otPrefix + 'MiddleUlClr1', inputOnOff);
+      hideIndividualInputField('#chkbx' + otPrefix + 'MiddleBkgrdClr', inputOnOff);
+      hideIndividualInputField('#chkbx' + otPrefix + 'MiddleUlClr1', inputOnOff);
       if (otPrefix != 'OT') {
-        hideOrDisplayIndividualColorInputField('#inputPassiveUlColor2', inputOnOff);
-        hideOrDisplayIndividualColorInputField('#inputMiddleUlColor2', inputOnOff);
-        hideIndividualInputField('#inputCheckboxMiddleUlColor2', inputOnOff);
+        hideOrDisplayIndividualClrInputField('#inPassiveUlClr2', inputOnOff);
+        hideOrDisplayIndividualClrInputField('#inMiddleUlClr2', inputOnOff);
+        hideIndividualInputField('#chkbxMiddleUlClr2', inputOnOff);
       }
     }
 }
 
-function updateVerbsBackground(voice) {
-    var selectedUnderline, selectedColor;
-    var indexArray = [];
-    if (voice === 'passive') indexArray = passiveIndexArray;
-    else if (voice === 'middle') indexArray = middleIndexArray;
-    else if (voice === 'active') indexArray = activeIndexArray;
-    for (var counter = 0; counter < indexArray.length; counter += 1) {
-      var indexToUlVerbCSS = indexArray[counter];
-      var orderOfXAxis = getAxisOrderOfCSS(ulVerbCSS[indexToUlVerbCSS].name, 'X');
-      var orderOfYAxis = getAxisOrderOfCSS(ulVerbCSS[indexToUlVerbCSS].name, 'Y');
-      if (c4.xAxisForMood) {
-        selectedUnderline = underlineCanvasName[c4['selectedHighlightVerbItem' + orderOfYAxis]];
-        selectedColor = c4['inputColorVerbItem' + orderOfXAxis];
-      }
-      else {
-        selectedUnderline = underlineCanvasName[c4['selectedHighlightVerbItem' + orderOfXAxis]];
-        selectedColor = c4['inputColorVerbItem' + orderOfYAxis];
-      }
-      var srcImgObj = _.find(uLBASEIMGS, function(obj) { return obj.name == selectedUnderline; });
-      updateUlForSpecificYAxis(ulVerbCSS[indexToUlVerbCSS], srcImgObj, selectedColor, indexToUlVerbCSS);
-    }
-}
-  
-function getVerbItemsCombinedWithCurrentItem(axis, itemNumber) {
-    var codeOfItemCombinedWithCurrentItem = [], nameOfItemCombinedWithCurrentItem = [];
-    var orderOfItem, itemsCombinedWithPreviousItem, robinsonCode;
-    if ( ((c4.xAxisForMood) && (axis == 'X')) ||
-         ((!c4.xAxisForMood) && (axis == 'Y')) ) {
-      orderOfItem = c4.orderOfMood;
-      itemsCombinedWithPreviousItem = c4.moodToCombineWithPrevious;
-      robinsonCode = robinsonCodeOfMood;
+function updateVerbsBkgrd(voice) {
+  var selectedUnderline, selectedClr;
+  var indexArray = [];
+  if (voice === 'passive') indexArray = cgc[C_passiveIndexArray];
+  else if (voice === 'middle') indexArray = cgc[C_middleIndexArray];
+  else if (voice === 'active') indexArray = cgc[C_activeIndexArray];
+  for (var counter = 0; counter < indexArray.length; counter += 1) {
+    var indexToUlVerbCSS = indexArray[counter];
+    var orderOfXAxis = getAxisOrderOfCSS(cgv[C_ulVerbCSS][indexToUlVerbCSS].name, 'X');
+    var orderOfYAxis = getAxisOrderOfCSS(cgv[C_ulVerbCSS][indexToUlVerbCSS].name, 'Y');
+    if (c4[C_Greek][C_xAxisForMood]) {
+      selectedUnderline = cgc[C_underlineCanvasName][c4[C_Greek][C_slctUlVerbItem][orderOfYAxis]];
+      selectedClr = c4[C_Greek][C_inClrVerbItem][orderOfXAxis];
     }
     else {
-      orderOfItem = c4.orderOfTense;
-      itemsCombinedWithPreviousItem = c4.tenseToCombineWithPrevious;
-      robinsonCode = robinsonCodeOfTense;
+      selectedUnderline = cgc[C_underlineCanvasName][c4[C_Greek][C_slctUlVerbItem][orderOfXAxis]];
+      selectedClr = c4[C_Greek][C_inClrVerbItem][orderOfYAxis];
     }
-    var codeOfCurrentItem = getVariablesForVerbTable()['orderOf' + axis + 'AxisItems'][itemNumber];
-    var idxOfCurrentItem = orderOfItem.indexOf(codeOfCurrentItem); 
-    for (var i = idxOfCurrentItem; i < itemsCombinedWithPreviousItem.length; i ++) {
-      if ((itemsCombinedWithPreviousItem[i]) || (i == idxOfCurrentItem) ) {
-        codeOfItemCombinedWithCurrentItem.push(orderOfItem[i]);
-        nameOfItemCombinedWithCurrentItem.push(robinsonCode[orderOfItem[i]]);
-      }
-      if ((!itemsCombinedWithPreviousItem[i]) && (i > idxOfCurrentItem) ) break;
+    var srcImgObj = _.find(cgv[C_uLBASEIMGS], function(obj) { return obj.name == selectedUnderline; });
+    updateUlForSpecificYAxis(cgv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, selectedClr, indexToUlVerbCSS);
+  }
+}
+
+function getVerbItemsCombinedWithCurrentItem(axis, itemNumber) {
+  var codeOfItemCombinedWithCurrentItem = [], nameOfItemCombinedWithCurrentItem = [];
+  var orderOfItem, itemsCombinedWithPreviousItem, robinsonCode;
+  if ( ((c4[C_Greek][C_xAxisForMood]) && (axis == 'X')) ||
+        ((!c4[C_Greek][C_xAxisForMood]) && (axis == 'Y')) ) {
+    orderOfItem = c4[C_Greek][C_orderOfMood];
+    itemsCombinedWithPreviousItem = c4[C_Greek][C_moodToCombineWithPrevious];
+    robinsonCode = cgc[C_robinsonCodeOfMood];
+  }
+  else {
+    orderOfItem = c4[C_Greek][C_orderOfTense];
+    itemsCombinedWithPreviousItem = c4[C_Greek][C_tenseToCombineWithPrevious];
+    robinsonCode = cgc[C_robinsonCodeOfTense];
+  }
+  var codeOfCurrentItem = getVariablesForVerbTable()['orderOf' + axis + 'AxisItems'][itemNumber];
+  var idxOfCurrentItem = orderOfItem.indexOf(codeOfCurrentItem);
+  for (var i = idxOfCurrentItem; i < itemsCombinedWithPreviousItem.length; i ++) {
+    if ((itemsCombinedWithPreviousItem[i]) || (i == idxOfCurrentItem) ) {
+      codeOfItemCombinedWithCurrentItem.push(orderOfItem[i]);
+      nameOfItemCombinedWithCurrentItem.push(robinsonCode[orderOfItem[i]]);
     }
-    return {
-      codeOfItemCombinedWithCurrentItem: codeOfItemCombinedWithCurrentItem,
-      nameOfItemCombinedWithCurrentItem: nameOfItemCombinedWithCurrentItem
-    }
+    if ((!itemsCombinedWithPreviousItem[i]) && (i > idxOfCurrentItem) ) break;
+  }
+  return {
+    codeOfItemCombinedWithCurrentItem: codeOfItemCombinedWithCurrentItem,
+    nameOfItemCombinedWithCurrentItem: nameOfItemCombinedWithCurrentItem
+  };
 }
 
 function getAxisOrderOfCSS(cssName, axis) {
-    var positionInOrderOfMoodOrTense, moodOrTense;
-    if ( ((!c4.xAxisForMood) && (axis == 'X')) ||
-         ((c4.xAxisForMood) && (axis == 'Y')) ) {
-      moodOrTense = 'tense';
-      positionInOrderOfMoodOrTense = c4.orderOfTense.indexOf(cssName.substr(0, 1));
-    }
-    else {
-      moodOrTense = 'mood';
-      positionInOrderOfMoodOrTense = c4.orderOfMood.indexOf(cssName.substr(2, 1));
-    }
-    return getAxisOrderOfItem(moodOrTense, positionInOrderOfMoodOrTense);
+  var positionInOrderOfMoodOrTense, moodOrTense;
+  if ( ((!c4[C_Greek][C_xAxisForMood]) && (axis == 'X')) ||
+        ((c4[C_Greek][C_xAxisForMood]) && (axis == 'Y')) ) {
+    moodOrTense = 'tense';
+    positionInOrderOfMoodOrTense = c4[C_Greek][C_orderOfTense].indexOf(cssName.substr(0, 1));
+  }
+  else {
+    moodOrTense = 'mood';
+    positionInOrderOfMoodOrTense = c4[C_Greek][C_orderOfMood].indexOf(cssName.substr(2, 1));
+  }
+  return getAxisOrderOfItem(moodOrTense, positionInOrderOfMoodOrTense);
 }

@@ -124,9 +124,9 @@ var QuickLexicon = Backbone.View.extend({
             this.loadDefinition(time);
         }
         // added for colour code grammar
-        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null))
-            numOfAnimationsAlreadyPerformedOnSamePage = 0;
-
+        const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+        if ((cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
+            cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
         return this;
     },
     displayQuickDef: function(lexicon) {
@@ -161,14 +161,14 @@ var QuickLexicon = Backbone.View.extend({
     },
 	// for one-line morphology
     _createBriefMorphInfo: function (morphInfo) {
-		var grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "function");
+		var grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "ot_function");
 		var tense = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_tense, "tense");
 		var voice = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_tense, "voice");
 		var mood = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_mood, "mood");
         var briefMorph = grammar_function;
 		briefMorph += tense + voice + mood;
         var stem = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_stem, "stem");
-        var form = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_form, "form");
+        var form = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_form, "ot_form");
         var state = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_state, "state");
 		briefMorph += stem + form;
         briefMorph += this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_case, "wordCase") +

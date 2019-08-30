@@ -79,8 +79,9 @@ var SidebarView = Backbone.View.extend({
             self.createHelp();
         }
         // added for colour code grammar
-        if ((numOfAnimationsAlreadyPerformedOnSamePage !== undefined) && (numOfAnimationsAlreadyPerformedOnSamePage !== null)) 
-            numOfAnimationsAlreadyPerformedOnSamePage = 0;
+        const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+        if ((cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
+            cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
@@ -250,14 +251,14 @@ var SidebarView = Backbone.View.extend({
     },
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info) {
-        panel.append("( ");
+        panel.append("(");
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_function, "function");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_stem, "stem");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_form, "form");
+        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_form, "ot_form");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
         this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
@@ -278,14 +279,14 @@ var SidebarView = Backbone.View.extend({
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
         panel.append($("<h2>").append(__s.display_grammar));
         this.renderMorphItem(panel, info, __s.lexicon_grammar_language, "language");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_stem, "stem");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_action, "ot_action");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_voice, "ot_voice");
-        this.renderMorphItem(panel, info, __s.lexicon_grammar_form, "form");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_form, "ot_form");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_tense, "ot_tense");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_ot_mood, "ot_mood");
         this.renderMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
