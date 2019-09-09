@@ -1,5 +1,5 @@
 function initializeClrCodeHtmlModalPage() {
-  addVerbTable(true, '#verbClrs');
+  cf.addVerbTable(true, '#verbClrs');
   addOTVerbTable(true, '#hVerbClrs');
   addNounTable();
   updateHtmlForYAxis();
@@ -15,21 +15,19 @@ function initializeClrCodeHtmlModalPage() {
   enableOrDisableAdvancedToolsButtons();
   enableOrDisableAdvancedToolsButtons('OT');
   enableOrDisableVerbAndNounButtons();
-  refreshClrGrammarCSS();
+  cf.refreshClrGrammarCSS();
   if ((((c4[C_Greek][C_chkbxPassiveUlColr1Value]) && (c4[C_Greek][C_chkbxPassiveUlColr2Value])) ||
       ((c4[C_Greek][C_chkbxMiddleUlColr1Value]) && (c4[C_Greek][C_chkbxMiddleUlColr2Value]))) &&
-    (cgv[C_handleOfRequestedAnimation] === -1)) goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
+    (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);  //c4 is currentClrCodeConfig.  It is changed to c4 to save space
   window.localStorage.setItem('colorCode-PreviousSettings', JSON.stringify(c4));
 }
   
 function openClrConfig() {
-  if (typeof(Storage) !== 'undefined') {
-    var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('openClrModal');
-    if (!temp) openConfigPage.appendTo('body');
-    $('#openClrModal').modal('show').find('.modal-content').load('/open_color_code_grammar.html');
-  }
+  var openConfigPage = $('<div id="openClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    '<div class="modal-dialog"><div class="modal-content">');
+  var temp = document.getElementById('openClrModal');
+  if (!temp) openConfigPage.appendTo('body');
+  $('#openClrModal').modal('show').find('.modal-content').load('/open_color_code_grammar.html');
 }
 
 function initOpenClrCodeModal() {
@@ -52,13 +50,13 @@ function initOpenClrCodeModal() {
 }
 
 function initSortVerbItem() {
-  var r = getVariablesForVerbTable();
-  var sortType = r[cgv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
+  var r = cf.getVariablesForVerbTable();
+  var sortType = r[cv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
   var moodOrTense = sortType.substr(0,sortType.length - 1);
-  var nameOfAllItems = r['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
+  var nameOfAllItems = r['nameOfAll' + cv[C_axisUserSelectedToSort] + 'AxisItems'];
   var itemsToCombineWithPrevious = (sortType.substr(0, sortType.length -1) == 'mood') ? c4[C_Greek][C_moodToCombineWithPrevious] : c4[C_Greek][C_tenseToCombineWithPrevious];
   var axisName, otherAxisName;
-  if (cgv[C_axisUserSelectedToSort] == 'X') {
+  if (cv[C_axisUserSelectedToSort] == 'X') {
     axisName = 'horizontal';
     otherAxisName = 'vertical';
   }
@@ -66,6 +64,7 @@ function initSortVerbItem() {
     axisName = 'vertical';
     otherAxisName = 'horizontal';
   }
+  cv[C_userProvidedSortOrder] = [];
   var s = '<p class="col-12">The ' + sortType + ' are currently in the ' + axisName + ' axis.</p>' +
     '<button id="swapAxisBtn" class="btn btn-default btn-sm icon-not-highlighted" type="button" title="Swap" onclick="userSwapAxis()">' +
     '<p class="col-10">Swap the ' + sortType + ' from the ' + axisName + ' to the ' + otherAxisName + ' axis.</p>' +
@@ -77,7 +76,7 @@ function initSortVerbItem() {
     '<div id="nestedVerbItem" class="list-group col nested-sortable">';
   var skipDiv = false;
   for (var i = 0; i < nameOfAllItems.length; i++) {
-    s += '<div class="list-group-item nested-1">' + upCaseFirst(nameOfAllItems[i]) +
+    s += '<div class="list-group-item nested-1">' + cf.upCaseFirst(nameOfAllItems[i]) +
     '<div class="list-group nested-sortable">';
     if ((i >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[i + 1])) {
       s += '</div></div>';
@@ -97,15 +96,14 @@ function initSortVerbItem() {
   $('#sortVerbItemArea').append($(s));
 
   var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
-
   for (var j = 0; j < nestedSortables.length; j++) {
     new Sortable(nestedSortables[j], {
       group: 'nested',
       animation: 150,
       onEnd: function(/**Event*/evt) {
-        cgv[C_userProvidedSortOrder] = [];
+        cv[C_userProvidedSortOrder] = [];
         for (var j = 0; j < $('#nestedVerbItem')[0].children.length; j ++) {
-          cgv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[j].innerText);
+          cv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[j].innerText);
         }
       }
     });
@@ -117,24 +115,24 @@ function initAddHeaderInfo() {
   var testament = $('#uahi_testament')[0].innerHTML;
   var axis = $('#uahi_axis')[0].innerHTML;
   if (testament == 'ot') {
-    var r = getVariablesForOTVerbTable('H');
+    var r = cf.getVariablesForOTVerbTable('H');
     if (axis == 'X') {
-      var r2 = getVariablesForOTVerbTable('A');
+      var r2 = cf.getVariablesForOTVerbTable('A');
       for (var i = 0; i < r.descOfXAxisItems.length; i ++) {
         var aramaicStems = (r2.descOfXAxisItems[i].length > 0) ? r2.descOfXAxisItems[i].replace(/^/, "(").replace(/$/, ")") : '';
         arrayDesc.push(r.descOfXAxisItems[i] + '<br>' + aramaicStems.replace(/<br>/g, ")<br>("));
       }
     }
-    else arrayDesc = getVariablesForOTVerbTable('H').descOfYAxisItems;
+    else arrayDesc = cf.getVariablesForOTVerbTable('H').descOfYAxisItems;
   }
   else {
-    arrayDesc = getVariablesForVerbTable()['descOf' + axis + 'AxisItems'];
+    arrayDesc = cf.getVariablesForVerbTable()['descOf' + axis + 'AxisItems'];
   }
   var c4Ref = (testament == 'nt') ? c4[C_Greek]: c4[C_OT];
   var temp2 = (axis == 'X') ? c4Ref[C_verbTableXHeader] : c4Ref[C_verbTableYHeader];
   var previousHeader = JSON.parse(JSON.stringify(temp2)); // Quick way to make a copy of the object
-  (axis == 'X') ? c4Ref.verbTableXHeader = null : c4Ref.verbTableYHeader = null;
-  updtLocalStorage(); // If user does not save, the previous header should not be re-use so clear it.
+  (axis == 'X') ? c4Ref[C_verbTableXHeader] = null : c4Ref[C_verbTableYHeader] = null;
+  cf.updtLocalStorage(); // If user does not save, the previous header should not be re-use so clear it.
   var prevHdrArray = [];
   if (previousHeader != null) {
     for (var j = 0; j < previousHeader.desc.length; j ++) {
@@ -149,9 +147,9 @@ function initAddHeaderInfo() {
   var s = '<p class="col-12">Enter the additional header information for the ' + axis + ' axis.</p><br>' +
     '<span id="uahi_num_of_input" style="visibility:hidden">' + arrayDesc.length + '</span>' +
     '<form>';
-  for (var cc = 0; cc < arrayDesc.length; cc ++) {
-    var text = arrayDesc[cc].replace(/<br>/g, ", ");
-    s += text + '<br><input id="uahi_input' + cc + '" type="text" value="' + prevHdrArray[cc] + '"><br>';
+  for (var counter = 0; counter < arrayDesc.length; counter ++) {
+    var text = arrayDesc[counter].replace(/<br>/g, ", ");
+    s += text + '<br><input id="uahi_input' + counter + '" type="text" value="' + prevHdrArray[counter] + '"><br>';
   }
   s += '</form>';
   $('#addHeaderInfoArea').append($(s));
@@ -179,7 +177,7 @@ function saveHeaderInfo() {
   else {
     (axis == 'X') ? c4[C_Greek][C_verbTableXHeader] = newHeader : c4[C_Greek][C_verbTableYHeader] = newHeader;
   }
-  updtLocalStorage();
+  cf.updtLocalStorage();
   $('#addHeaderInfoModal .close').click();
   var element = document.getElementById('addHeaderInfoModal');
   element.parentNode.removeChild(element);
@@ -188,15 +186,15 @@ function saveHeaderInfo() {
 }
 
 function initSortOTVerbItem() {
-  var r1 = getVariablesForOTVerbTable('H');
-  var r2 = getVariablesForOTVerbTable('A');
-  var sortType = r1[cgv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
+  var r1 = cf.getVariablesForOTVerbTable('H');
+  var r2 = cf.getVariablesForOTVerbTable('A');
+  var sortType = r1[cv[C_axisUserSelectedToSort].toLowerCase() + 'AxisTitle'];
   var stemOrForm = sortType.substr(0,sortType.length - 1);
 
   var itemsToCombineWithPrevious = []; var nameOfAllItems = [];
-  if (cgv[C_axisUserSelectedToSort] == 'X') {
-    var nameOfAllHebrewItems = r1['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
-    var nameOfAllAramaicItems = r2['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
+  if (cv[C_axisUserSelectedToSort] == 'X') {
+    var nameOfAllHebrewItems = r1['nameOfAll' + cv[C_axisUserSelectedToSort] + 'AxisItems'];
+    var nameOfAllAramaicItems = r2['nameOfAll' + cv[C_axisUserSelectedToSort] + 'AxisItems'];
     var aramaicStemIndex = 0;
     for (var i = 0; i < nameOfAllHebrewItems.length; i ++) {
       var noStemForThisGroupYet = true;
@@ -218,48 +216,49 @@ function initSortOTVerbItem() {
     }
   }
   else {
-    nameOfAllItems = r1['nameOfAll' + cgv[C_axisUserSelectedToSort] + 'AxisItems'];
+    nameOfAllItems = r1['nameOfAll' + cv[C_axisUserSelectedToSort] + 'AxisItems'];
     itemsToCombineWithPrevious = c4[C_OT][C_verbFormToCombineWithPrevious];
   }
+  cv[C_userProvidedSortOrder] = [];
   var s = '<p class="col-12">Click and drag a ' + stemOrForm + ' to can change the order of the ' + sortType + '.<br>' +
     'Drag a ' + stemOrForm + ' on top on another to group them to the same color configuration.<br>';
   if (stemOrForm == 'stem') s += 'Aramaic stems are in parentheses (round brackets).<br>';
   s += 'When you are finished, click on "Save" at the bottom.<br>' +
     '<div id="nestedVerbItem" class="list-group col nested-sortable">';
   var skipDiv = false, voice;
-  for (var cc = 0; cc < nameOfAllItems.length; cc++) {
+  for (var counter = 0; counter < nameOfAllItems.length; counter++) {
     var displayInTitle = '', activeSelected = '', passiveSelected = '', middleSelected = '', languageCode = '';
-    var nameOfCurrentItem =  nameOfAllItems[cc];
-    var upperCaseName = upCaseFirst(nameOfCurrentItem);
-    if (cgv[C_axisUserSelectedToSort] == 'X') {
-      if (nameOfAllItems[cc].charAt(0) == '(') {
+    var nameOfCurrentItem =  nameOfAllItems[counter];
+    var upperCaseName = cf.upCaseFirst(nameOfCurrentItem);
+    if (cv[C_axisUserSelectedToSort] == 'X') {
+      if (nameOfAllItems[counter].charAt(0) == '(') {
         languageCode = 'A';
-        nameOfCurrentItem = nameOfAllItems[cc].substr(1, (nameOfAllItems[cc].length - 2));
+        nameOfCurrentItem = nameOfAllItems[counter].substr(1, (nameOfAllItems[counter].length - 2));
         upperCaseName = '(' + upperCaseName.charAt(1).toUpperCase() + upperCaseName.slice(2);
-        voice = c4[C_OT][C_aramaicCodeOfStem][cgc[C_aramaicNameOfStem][nameOfCurrentItem]][1];
-        displayInTitle = (c4[C_OT][C_aramaicCodeOfStem][cgc[C_aramaicNameOfStem][nameOfCurrentItem]][2] === true) ? ' checked' : '';
+        voice = c4[C_OT][C_aramaicCodeOfStem][cc[C_aramaicNameOfStem][nameOfCurrentItem]][1];
+        displayInTitle = (c4[C_OT][C_aramaicCodeOfStem][cc[C_aramaicNameOfStem][nameOfCurrentItem]][2] === true) ? ' checked' : '';
       }
       else {
         languageCode = 'H';
-        nameOfCurrentItem = nameOfAllItems[cc];
-        voice = c4[C_OT][C_hebrewCodeOfStem][cgc[C_hebrewNameOfStem][nameOfCurrentItem]][1];
-        displayInTitle = (c4[C_OT][C_hebrewCodeOfStem][cgc[C_hebrewNameOfStem][nameOfCurrentItem]][2] === true) ? ' checked' : '';
+        nameOfCurrentItem = nameOfAllItems[counter];
+        voice = c4[C_OT][C_hebrewCodeOfStem][cc[C_hebrewNameOfStem][nameOfCurrentItem]][1];
+        displayInTitle = (c4[C_OT][C_hebrewCodeOfStem][cc[C_hebrewNameOfStem][nameOfCurrentItem]][2] === true) ? ' checked' : '';
       }
       if (voice == 'a') activeSelected = ' selected';
       else if (voice == 'p') passiveSelected = ' selected';
       else if (voice == 'm') middleSelected = ' selected';
     }
     else {
-      upperCaseName = c4[C_OT][C_codeOfForm][cgc[C_otNameOfVerbForm][nameOfCurrentItem]][1];
-      displayInTitle = (c4[C_OT][C_codeOfForm][cgc[C_otNameOfVerbForm][nameOfCurrentItem]][2] === true) ? ' checked' : '';
+      upperCaseName = c4[C_OT][C_codeOfForm][cc[C_otNameOfVerbForm][nameOfCurrentItem]][1];
+      displayInTitle = (c4[C_OT][C_codeOfForm][cc[C_otNameOfVerbForm][nameOfCurrentItem]][2] === true) ? ' checked' : '';
     }
     s += '<div class="list-group-item nested-1">' + upperCaseName + ' - ' +
       '<span>Show at title of colour config screen: </span>' +
       '<input id="sortCheckbox'  + languageCode + nameOfCurrentItem + '"type="checkbox"' + displayInTitle + '></input>';
-    if (cgv[C_axisUserSelectedToSort] == 'X')
+    if (cv[C_axisUserSelectedToSort] == 'X')
       s += '<span>&nbsp;Voice:&nbsp;</span><select id="sortSelect' + languageCode + nameOfCurrentItem + '"><option value="a"' + activeSelected + '>Active</option><option value="p"' + passiveSelected + '>Passive</option><option value="m"' + middleSelected + '>Middle</option></select>';
     s += '<div class="list-group nested-sortable">';
-    if ((cc >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[cc + 1])) {
+    if ((counter >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[counter + 1])) {
       s += '</div></div>';
       if (skipDiv) {
         s += '</div></div>';
@@ -278,14 +277,14 @@ function initSortOTVerbItem() {
 
   var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
 
-  for (var cc2 = 0; cc2 < nestedSortables.length; cc2++) {
-    new Sortable(nestedSortables[cc2], {
+  for (var counter2 = 0; counter2 < nestedSortables.length; counter2++) {
+    new Sortable(nestedSortables[counter2], {
       group: 'nested',
       animation: 150,
       onEnd: function(/**Event*/evt) {
-        cgv[C_userProvidedSortOrder] = [];
-        for (var cc3 = 0; cc3 < $('#nestedVerbItem')[0].children.length; cc3 ++) {
-          cgv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[cc3].innerText);
+        cv[C_userProvidedSortOrder] = [];
+        for (var counter3 = 0; counter3 < $('#nestedVerbItem')[0].children.length; counter3 ++) {
+          cv[C_userProvidedSortOrder].push($('#nestedVerbItem')[0].children[counter3].innerText);
         }
       }
     });
@@ -296,24 +295,24 @@ function resetSortOrder() {
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   element.parentNode.removeChild(element);
-  userSortAxis(cgv[C_axisUserSelectedToSort]);
+  userSortAxis(cv[C_axisUserSelectedToSort]);
 }
 
 function resetSortOTOrder() {
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   element.parentNode.removeChild(element);
-  userSortOTAxis(cgv[C_axisUserSelectedToSort]);
+  userSortOTAxis(cv[C_axisUserSelectedToSort]);
 }
 
 function saveSortOrder() {
   var currentItem, sortType, orderOfUserProvidedItems = [], itemsToCombineWithPrevious = [false, false, false, false, false, false];
   var j = 0;
-  if (cgv[C_axisUserSelectedToSort] == 'X') sortType = getVariablesForVerbTable().xAxisTitle;
-  else sortType = getVariablesForVerbTable().yAxisTitle;
-  if (cgv[C_userProvidedSortOrder].length > 0) {
-    for (var i = 0; i < cgv[C_userProvidedSortOrder].length; i ++) {
-      var verbItem = cgv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
+  if (cv[C_axisUserSelectedToSort] == 'X') sortType = cf.getVariablesForVerbTable().xAxisTitle;
+  else sortType = cf.getVariablesForVerbTable().yAxisTitle;
+  if (cv[C_userProvidedSortOrder].length > 0) {
+    for (var i = 0; i < cv[C_userProvidedSortOrder].length; i ++) {
+      var verbItem = cv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
       while (verbItem.length > 0) {
         var indexOfLineBreak = verbItem.indexOf('\n');
         if (indexOfLineBreak == -1) {
@@ -325,8 +324,8 @@ function saveSortOrder() {
           verbItem = verbItem.substr(indexOfLineBreak + 1);
           if (verbItem.length > 0) itemsToCombineWithPrevious[j+1] = true; // Edge can add an extra \n to the end.
         }
-        if (sortType == 'moods') orderOfUserProvidedItems[j] = cgc[C_robinsonNameOfMood][currentItem];
-        else orderOfUserProvidedItems[j] = cgc[C_robinsonNameOfTense][currentItem];
+        if (sortType == 'moods') orderOfUserProvidedItems[j] = cc[C_robinsonNameOfMood][currentItem];
+        else orderOfUserProvidedItems[j] = cc[C_robinsonNameOfTense][currentItem];
         j++;
       }
     }
@@ -338,14 +337,15 @@ function saveSortOrder() {
       c4[C_Greek][C_orderOfTense] = orderOfUserProvidedItems;
       c4[C_Greek][C_tenseToCombineWithPrevious] = itemsToCombineWithPrevious;
     }
-    updtLocalStorage();
+    cf.updtLocalStorage();
     if (confirm('Do you want to edit the optional header information for the verb ' + sortType + '?'))
-      userAddHeaderInfo(cgv[C_axisUserSelectedToSort]);
+      userAddHeaderInfo(cv[C_axisUserSelectedToSort]);
     else {
-      if (cgv[C_axisUserSelectedToSort] == 'X') c4[C_Greek][C_verbTableXHeader] = null;
+      if (cv[C_axisUserSelectedToSort] == 'X') c4[C_Greek][C_verbTableXHeader] = null;
       else c4[C_Greek][C_verbTableYHeader] = null;
-      updtLocalStorage();
+      cf.updtLocalStorage();
     }
+    cv[C_userProvidedSortOrder] = [];
   }
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
@@ -355,18 +355,18 @@ function saveSortOrder() {
 
 function saveSortOTOrder() {
   var sortType, previousString, currentStemCode, currentStem, verbItem;
-  if (cgv[C_axisUserSelectedToSort] == 'X')
-    sortType = getVariablesForOTVerbTable('H').xAxisTitle;
-  else
-    sortType = getVariablesForOTVerbTable('H').yAxisTitle;
-  if (sortType == 'stems') {
-    if (cgv[C_userProvidedSortOrder].length > 0) {
+  if (cv[C_userProvidedSortOrder].length > 0) {
+    if (cv[C_axisUserSelectedToSort] == 'X')
+      sortType = cf.getVariablesForOTVerbTable('H').xAxisTitle;
+    else
+      sortType = cf.getVariablesForOTVerbTable('H').yAxisTitle;
+    if (sortType == 'stems') {
       c4[C_OT][C_orderOfHebrewStem] = [];
       c4[C_OT][C_hebrewStemToCombineWithPrevious] = [];
       c4[C_OT][C_orderOfAramaicStem] = [];
       c4[C_OT][C_aramaicStemToCombineWithPrevious] = [];
-      for (var i = 0; i < cgv[C_userProvidedSortOrder].length; i ++) {
-        verbItem = cgv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
+      for (var i = 0; i < cv[C_userProvidedSortOrder].length; i ++) {
+        verbItem = cv[C_userProvidedSortOrder][i].toLowerCase().replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
         verbItem = '\n' + verbItem.replace(/(active|passive|middle)\n?/g, "").replace(/\s-\sshow\sat\stitle\sof\scolour\sconfig\sscreen:\s+voice:/g, "").replace(/\s+/g, "\n");
         var updatedString = verbItem;
         do {
@@ -381,67 +381,66 @@ function saveSortOTOrder() {
         } while (previousString != updatedString);
         var aramaicStemsInThisGroup = updatedString.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[()]/g, "").split(' ');
         for (var j = 0; j < hebrewStemsInThisGroup.length; j++) {
-          c4[C_OT][C_orderOfHebrewStem].push( cgc[C_hebrewNameOfStem][hebrewStemsInThisGroup[j]] );
+          c4[C_OT][C_orderOfHebrewStem].push( cc[C_hebrewNameOfStem][hebrewStemsInThisGroup[j]] );
           c4[C_OT][C_hebrewStemToCombineWithPrevious].push( (j > 0) );
         }
         for (var k = 0; k < aramaicStemsInThisGroup.length; k++) {
-          c4[C_OT][C_orderOfAramaicStem].push( cgc[C_aramaicNameOfStem][aramaicStemsInThisGroup[k]] );
+          c4[C_OT][C_orderOfAramaicStem].push( cc[C_aramaicNameOfStem][aramaicStemsInThisGroup[k]] );
           c4[C_OT][C_aramaicStemToCombineWithPrevious].push( (k > 0) );
         }
       }
-    }
-    for (var cc2 = 0; cc2 < c4[C_OT][C_orderOfHebrewStem].length; cc2++) {
-      currentStemCode = c4[C_OT][C_orderOfHebrewStem][cc2];
-      if (currentStemCode != undefined) {
-        currentStem = c4[C_OT][C_hebrewCodeOfStem][currentStemCode][0];
-        if (currentStem != '') {
-          c4[C_OT][C_hebrewCodeOfStem][currentStemCode][1] = $('#sortSelectH' + currentStem + ' option:selected')[0].value;
-          c4[C_OT][C_hebrewCodeOfStem][currentStemCode][2] = $('#sortCheckboxH' + currentStem)[0].checked;
+      for (var counter2 = 0; counter2 < c4[C_OT][C_orderOfHebrewStem].length; counter2++) {
+        currentStemCode = c4[C_OT][C_orderOfHebrewStem][counter2];
+        if (currentStemCode != undefined) {
+          currentStem = c4[C_OT][C_hebrewCodeOfStem][currentStemCode][0];
+          if (currentStem != '') {
+            c4[C_OT][C_hebrewCodeOfStem][currentStemCode][1] = $('#sortSelectH' + currentStem + ' option:selected')[0].value;
+            c4[C_OT][C_hebrewCodeOfStem][currentStemCode][2] = $('#sortCheckboxH' + currentStem)[0].checked;
+          }
+        }
+      }
+      for (var counter3 = 0; counter3 < c4[C_OT][C_orderOfAramaicStem].length; counter3++) {
+        currentStemCode = c4[C_OT][C_orderOfAramaicStem][counter3];
+        if (currentStemCode != undefined) {
+          currentStem = c4[C_OT][C_aramaicCodeOfStem][currentStemCode][0];
+          if (currentStem != '') {
+            c4[C_OT][C_aramaicCodeOfStem][currentStemCode][1] = $('#sortSelectA' + currentStem + ' option:selected')[0].value;
+            c4[C_OT][C_aramaicCodeOfStem][currentStemCode][2] = $('#sortCheckboxA' + currentStem)[0].checked;
+          }
         }
       }
     }
-    for (var cc = 0; cc < c4[C_OT][C_orderOfAramaicStem].length; cc++) {
-      currentStemCode = c4[C_OT][C_orderOfAramaicStem][cc];
-      if (currentStemCode != undefined) {
-        currentStem = c4[C_OT][C_aramaicCodeOfStem][currentStemCode][0];
-        if (currentStem != '') {
-          c4[C_OT][C_aramaicCodeOfStem][currentStemCode][1] = $('#sortSelectA' + currentStem + ' option:selected')[0].value;
-          c4[C_OT][C_aramaicCodeOfStem][currentStemCode][2] = $('#sortCheckboxA' + currentStem)[0].checked;
-        }
-      }
-    }
-  }
-  else {
-    if (cgv[C_userProvidedSortOrder].length > 0) {
+    else {
       c4[C_OT][C_orderOfForm] = [];
       c4[C_OT][C_verbFormToCombineWithPrevious] = [];
-      for (var cc6 = 0; cc6 < cgv[C_userProvidedSortOrder].length; cc6 ++) {
-        verbItem = cgv[C_userProvidedSortOrder][cc6].replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
+      for (var counter4 = 0; counter4 < cv[C_userProvidedSortOrder].length; counter4 ++) {
+        verbItem = cv[C_userProvidedSortOrder][counter4].replace(/\r\n/g, "\n").replace(/\n\n/g, "\n"); // IE would have \r\n\r\n instead of \n.  The two replace will handle either 1 or 2 \r\n
         verbItem = '\n' + verbItem.replace(/\s-\sShow\sat\stitle\sof\scolour\sconfig\sscreen:\s/g, "").replace(/\s+/g, "\n");
         var formsInThisGroup = verbItem.replace(/^\n/, "").replace(/\n$/, "").replace(/\s+/g, " ").replace(/[()]/g, "").split(' ');
-        for (var cc5 = 0; cc5 < formsInThisGroup.length; cc5++) {
-          var result = _.find(c4[C_OT][C_codeOfForm], function(obj) { return obj[1] == formsInThisGroup[cc5]; });
-          c4[C_OT][C_orderOfForm].push( cgc[C_otNameOfVerbForm][result[0]] );
-          c4[C_OT][C_verbFormToCombineWithPrevious].push( (cc5 > 0) );
+        for (var counter5 = 0; counter5 < formsInThisGroup.length; counter5++) {
+          var result = _.find(c4[C_OT][C_codeOfForm], function(obj) { return obj[1] == formsInThisGroup[counter5]; });
+          c4[C_OT][C_orderOfForm].push( cc[C_otNameOfVerbForm][result[0]] );
+          c4[C_OT][C_verbFormToCombineWithPrevious].push( (counter5 > 0) );
+        }
+      }
+      for (var counter6 = 0; counter6 < c4[C_OT][C_orderOfForm].length; counter6++) {
+        var currentFormCode = c4[C_OT][C_orderOfForm][counter6];
+        if (currentFormCode != undefined) {
+          var currentForm = c4[C_OT][C_codeOfForm][currentFormCode][0];
+          if (currentForm != '')
+            c4[C_OT][C_codeOfForm][currentFormCode][2] = $('#sortCheckbox' + currentForm)[0].checked;
         }
       }
     }
-    for (var cc3 = 0; cc3 < c4[C_OT][C_orderOfForm].length; cc3++) {
-      var currentFormCode = c4[C_OT][C_orderOfForm][cc3];
-      if (currentFormCode != undefined) {
-        var currentForm = c4[C_OT][C_codeOfForm][currentFormCode][0];
-        if (currentForm != '')
-          c4[C_OT][C_codeOfForm][currentFormCode][2] = $('#sortCheckbox' + currentForm)[0].checked;
-      }
+    cf.updtLocalStorage();
+    if (confirm('Do you want to edit the optional header information for the verb ' + sortType + '?'))
+        userAddHeaderInfo(cv[C_axisUserSelectedToSort], 'OT');
+    else {
+        if (cv[C_axisUserSelectedToSort] == 'X') c4[C_OT][C_verbTableXHeader] = null;
+        else c4[C_OT][C_verbTableYHeader] = null;
+        cf.updtLocalStorage();
     }
-  }
-  updtLocalStorage();
-  if (confirm('Do you want to edit the optional header information for the verb ' + sortType + '?'))
-    userAddHeaderInfo(cgv[C_axisUserSelectedToSort], 'OT');
-  else {
-    if (cgv[C_axisUserSelectedToSort] == 'X') c4[C_OT][C_verbTableXHeader] = null;
-    else c4[C_OT][C_verbTableYHeader] = null;
-    updtLocalStorage();
+    cv[C_userProvidedSortOrder] = [];
   }
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
@@ -450,15 +449,13 @@ function saveSortOTOrder() {
 }
 
 function saveClrConfig() {
-  if (typeof(Storage) !== 'undefined') {
-    var saveConfigPage = $('<div id="saveClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-      '<div class="modal-dialog"><div class="modal-content">');
-    var temp = document.getElementById('saveClrModal');
-    if (!temp) {
-      saveConfigPage.appendTo('body');
-    }
-    $('#saveClrModal').modal('show').find('.modal-content').load('/save_color_code_grammar.html');
+  var saveConfigPage = $('<div id="saveClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    '<div class="modal-dialog"><div class="modal-content">');
+  var temp = document.getElementById('saveClrModal');
+  if (!temp) {
+    saveConfigPage.appendTo('body');
   }
+  $('#saveClrModal').modal('show').find('.modal-content').load('/save_color_code_grammar.html');
 }
 
 function initSaveClrCodeModal() {
@@ -476,7 +473,7 @@ function initSaveClrCodeModal() {
 }
 
 function saveUserClrConfig() {
-  var UserClrConfigNames = [];
+  var userClrConfigNames = [];
   var inTxt = document.getElementById('saveClrModalInputArea').value.trim();
   var selectedConfig = document.getElementById('saveClrConfigDropdown');
   if (selectedConfig) selectedConfig = selectedConfig.value.trim();
@@ -491,16 +488,14 @@ function saveUserClrConfig() {
     } else inTxt = selectedConfig;
   } else {
     if (tmp) {
-      UserClrConfigNames = JSON.parse(tmp);
-      for (var i = 0; i < UserClrConfigNames.length; i += 1) {
-        if (UserClrConfigNames[i] === inTxt) {
-          alert('The name you entered is already used.  If you want to save the configuration to the same name, select the name from the dropdown list instead of using the text in field.');
-          return;
-        }
+      userClrConfigNames = JSON.parse(tmp);
+      if (userClrConfigNames.filter(function(cfgName) { return cfgName.toLowerCase() == inTxt; }).length > 0) {
+        alert('The name you entered is already used.  If you want to save the configuration to the same name, select the name from the dropdown list instead of using the text in field.');
+        return;
       }
     }
-    UserClrConfigNames.push(inTxt);
-    window.localStorage.setItem('colorCode-UserClrConfigNames', JSON.stringify(UserClrConfigNames));
+    userClrConfigNames.push(inTxt);
+    window.localStorage.setItem('colorCode-UserClrConfigNames', JSON.stringify(userClrConfigNames));
   }
   window.localStorage.setItem('colorCode-UserClrConfigName-' + inTxt, JSON.stringify(c4));
   $('#saveClrModal .close').click();
@@ -584,7 +579,7 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
   var descOfXAxisItems = addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows);
   for (var j = 0; j < descOfHebrewXAxisItems.length; j += 1) {
     htmlTable += '<td class="tg-yw4l">' + descOfXAxisItems[j];
-    if (createUserInputs) htmlTable += htmlToAdd3(j, 'OT');
+    if (createUserInputs) htmlTable += cf.htmlToAdd3(j, 'OT');
     htmlTable += '</td>';
   }
   htmlTable += '</tr>';
@@ -593,34 +588,34 @@ function addOtTitleToXAxis(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, num
   
 function addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, numOfRows) {
   var result = [], voice;
-  for (var c = 0; c < descOfHebrewXAxisItems.length; c++) {
-    var hebrewStemsInThisGroup = descOfHebrewXAxisItems[c].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
-    var aramaicStemsInThisGroup = descOfAramaicwXAxisItems[c].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
+  for (var counter = 0; counter < descOfHebrewXAxisItems.length; counter++) {
+    var hebrewStemsInThisGroup = descOfHebrewXAxisItems[counter].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
+    var aramaicStemsInThisGroup = descOfAramaicwXAxisItems[counter].replace(/<br>/g, " ").replace(/\s+/g, " ").split(' ');
     result.push("");
     for (var i = 0; i < hebrewStemsInThisGroup.length; i++) {
       if (hebrewStemsInThisGroup[i] != '') {
-        if (result[c].length > 0) result[c] += '<br>';
-        voice = c4[C_OT][C_hebrewCodeOfStem][cgc[C_hebrewNameOfStem][hebrewStemsInThisGroup[i].toLowerCase()]][1];
+        if (result[counter].length > 0) result[counter] += '<br>';
+        voice = c4[C_OT][C_hebrewCodeOfStem][cc[C_hebrewNameOfStem][hebrewStemsInThisGroup[i].toLowerCase()]][1];
         if (voice == 'p') {
-            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+1) + '">' + hebrewStemsInThisGroup[i] + '</span>';
+            result[counter] += '<span class="vot_R' + numOfRows + 'C' + ((counter*3)+1) + '">' + hebrewStemsInThisGroup[i] + '</span>';
         }
         else if (voice == 'm') {
-            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+2) + '">' + hebrewStemsInThisGroup[i] + '</span>';
+            result[counter] += '<span class="vot_R' + numOfRows + 'C' + ((counter*3)+2) + '">' + hebrewStemsInThisGroup[i] + '</span>';
         }
-        else result[c] += hebrewStemsInThisGroup[i];
+        else result[counter] += hebrewStemsInThisGroup[i];
       }
     }
     for (var j = 0; j < aramaicStemsInThisGroup.length; j++) {
       if (aramaicStemsInThisGroup[j] != '') {
-        if (result[c].length > 0) result[c] += '<br>';
-        voice = c4[C_OT][C_aramaicCodeOfStem][cgc[C_aramaicNameOfStem][aramaicStemsInThisGroup[j].toLowerCase()]][1];
+        if (result[counter].length > 0) result[counter] += '<br>';
+        voice = c4[C_OT][C_aramaicCodeOfStem][cc[C_aramaicNameOfStem][aramaicStemsInThisGroup[j].toLowerCase()]][1];
         if (voice == 'p') {
-            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+1) + '">(' + aramaicStemsInThisGroup[j] + ')</span>';
+            result[counter] += '<span class="vot_R' + numOfRows + 'C' + ((counter*3)+1) + '">(' + aramaicStemsInThisGroup[j] + ')</span>';
         }
         else if (voice == 'm') {
-            result[c] += '<span class="vot_R' + numOfRows + 'C' + ((c*3)+2) + '">(' + aramaicStemsInThisGroup[j] + ')</span>';
+            result[counter] += '<span class="vot_R' + numOfRows + 'C' + ((counter*3)+2) + '">(' + aramaicStemsInThisGroup[j] + ')</span>';
         }
-        else result[c] += '(' + aramaicStemsInThisGroup[j] + ')';
+        else result[counter] += '(' + aramaicStemsInThisGroup[j] + ')';
       }
     }
   }
@@ -628,7 +623,7 @@ function addCssToXAxisHeader(descOfHebrewXAxisItems, descOfAramaicwXAxisItems, n
 }
   
 function addOTVerbTable(createUserInputs, htmlElement) {
-  var r = getVariablesForOTVerbTable('H');
+  var r = cf.getVariablesForOTVerbTable('H');
   var xAxisItems, yAxisItems, descOfXAxisItems, descOfYAxisItems;
   if (createUserInputs) {
     xAxisItems = r.orderOfXAxisItems;
@@ -644,22 +639,22 @@ function addOTVerbTable(createUserInputs, htmlElement) {
   }
   var htmlTable = '';
   if (!createUserInputs) htmlTable = '<link href="css/color_code_grammar.css" rel="stylesheet" media="screen"/>';
-  var yAxisSpan = tableAxisSpan('Y', createUserInputs, 'OT');
+  var yAxisSpan = cf.tableAxisSpan('Y', createUserInputs, 'OT');
   htmlTable += '<table class="tg2"><tr><th valign="middle" align="center" colspan="' +
-  yAxisSpan + '" rowspan="' + tableAxisSpan('X', createUserInputs, 'OT') + '">';
-  if (createUserInputs) htmlTable += htmlToAdd1('OT');
-  htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + upCaseFirst(r.xAxisTitle);
-  if (createUserInputs) htmlTable += htmlToAdd2(r.xAxisTitle, 'OT');
+  yAxisSpan + '" rowspan="' + cf.tableAxisSpan('X', createUserInputs, 'OT') + '">';
+  if (createUserInputs) htmlTable += cf.htmlToAdd1('OT');
+  htmlTable += '</th><th class="tg-amwm2" colspan="' + xAxisItems.length + '">' + cf.upCaseFirst(r.xAxisTitle);
+  if (createUserInputs) htmlTable += cf.htmlToAdd2(r.xAxisTitle, 'OT');
   htmlTable += '</th></tr>';
-  htmlTable += addOtTitleToXAxis(descOfXAxisItems, getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, createUserInputs);
+  htmlTable += addOtTitleToXAxis(descOfXAxisItems, cf.getVariablesForOTVerbTable('A').descOfXAxisItems, yAxisItems.length, createUserInputs);
   htmlTable += '<tr>' +
-  '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + upCaseFirst(r.yAxisTitle);
-  if (createUserInputs) htmlTable += htmlToAdd4(r.yAxisTitle, 'OT');
+  '<td class="tg-e3zv2" rowspan="' + yAxisItems.length + '">' + cf.upCaseFirst(r.yAxisTitle);
+  if (createUserInputs) htmlTable += cf.htmlToAdd4(r.yAxisTitle, 'OT');
   htmlTable += '</td>';
   for (var i = 0; i < yAxisItems.length; i += 1) {
     if (i > 0) htmlTable += '<tr>';
-    htmlTable += addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan, 'OT');
-    if (createUserInputs) htmlTable += htmlToAdd5(i, 'OT');
+    htmlTable += cf.addTitleToYAxis(i, descOfYAxisItems[i], createUserInputs, yAxisSpan, 'OT');
+    if (createUserInputs) htmlTable += cf.htmlToAdd5(i, 'OT');
     htmlTable += '</td>';
     for (var counter = 0; counter < xAxisItems.length; counter += 1) {
       htmlTable += '<td>' + voicesInFormAndStem(counter, i) + '</td>';
@@ -667,28 +662,29 @@ function addOTVerbTable(createUserInputs, htmlElement) {
     htmlTable += '</tr>';
   }
   htmlTable += '</table><br>';
-  if (createUserInputs) htmlTable += htmlToAdd6('OT');
+  if (createUserInputs) htmlTable += cf.htmlToAdd6('OT');
   htmlTable = $(htmlTable);
   htmlTable.appendTo(htmlElement);
 }
   
 function voicesInFormAndStem(yAxisNum, xAxisNum) {
   yAxisNum = yAxisNum * 3;
-  return '<span class="vot_' + cgv[C_ulOTVbCSS][xAxisNum][yAxisNum].name + '">active</span><br>' +
-          '<span class="vot_' + cgv[C_ulOTVbCSS][xAxisNum][yAxisNum+1].name + '">passive</span><br>' +
-          '<span class="vot_' + cgv[C_ulOTVbCSS][xAxisNum][yAxisNum+2].name + '">middle</span>';
+  return '<span class="vot_' + cv[C_ulOTVbCSS][xAxisNum][yAxisNum].name + '">active</span><br>' +
+          '<span class="vot_' + cv[C_ulOTVbCSS][xAxisNum][yAxisNum+1].name + '">passive</span><br>' +
+          '<span class="vot_' + cv[C_ulOTVbCSS][xAxisNum][yAxisNum+2].name + '">middle</span>';
 }
   
 function userUpdateYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-  c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cgc[C_canvasUnderlineName][nameOfUnderline];
-  updtLocalStorage();
-  createUlForAllItemsInYAndX();
+  c4[C_Greek][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
+  cf.updtLocalStorage();
+  cf.createUlForAllItemsInYAndX();
+  updateHtmlForYAxis();
 }
   
 function userUpdateOTYAxisItem(itemNumberOfYAxis, nameOfUnderline) {
-  c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cgc[C_canvasUnderlineName][nameOfUnderline];
-  updtLocalStorage();
-  createUlForOTYAxis(itemNumberOfYAxis);
+  c4[C_OT][C_slctUlVerbItem][itemNumberOfYAxis] = cc[C_canvasUnderlineName][nameOfUnderline];
+  cf.updtLocalStorage();
+  cf.createUlForOTYAxis(itemNumberOfYAxis);
 }
 
 function userSwapAxis() {
@@ -696,7 +692,7 @@ function userSwapAxis() {
   c4[C_Greek][C_verbTableXHeader] = c4[C_Greek][C_verbTableYHeader];
   c4[C_Greek][C_verbTableYHeader] = tmp;
   c4[C_Greek][C_xAxisForMood] = !c4[C_Greek][C_xAxisForMood];
-  updtLocalStorage();
+  cf.updtLocalStorage();
   $('#sortAxisModal .close').click();
   var element = document.getElementById('sortAxisModal');
   element.parentNode.removeChild(element);
@@ -704,7 +700,7 @@ function userSwapAxis() {
 }
   
 function userSortAxis(axis) {
-  cgv[C_axisUserSelectedToSort] = axis;
+  cv[C_axisUserSelectedToSort] = axis;
   var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('sortAxisModal');
@@ -726,7 +722,7 @@ function userAddHeaderInfo(axis, ot) {
 }
 
 function userSortOTAxis(axis) {
-  cgv[C_axisUserSelectedToSort] = axis;
+  cv[C_axisUserSelectedToSort] = axis;
   var openConfigPage = $('<div id="sortAxisModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
     '<div class="modal-dialog"><div class="modal-content">');
   var temp = document.getElementById('sortAxisModal');
@@ -757,9 +753,9 @@ function userToggleXOrYAxisConfig(ot, axis, index) {
       else c4[C_Greek][C_tensesOnOff][index] = !c4[C_Greek][C_tensesOnOff][index];
     }
   }
-  updtLocalStorage();
+  cf.updtLocalStorage();
   enableOrDisableAxisConfigButtons(axis, otPrefix);
-  refreshClrGrammarCSS();
+  cf.refreshClrGrammarCSS();
 }
 
 function userToggleClrGrammar(grammarFunction) {
@@ -768,34 +764,34 @@ function userToggleClrGrammar(grammarFunction) {
     else checkedValue = false;
     if (grammarFunction === 'verb') {
       c4[C_Greek][C_enableVerbClr] = checkedValue;
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbInputFields(checkedValue);
     }
     else if (grammarFunction === 'gennum') {
       updateNounInputFields(checkedValue);
       c4[C_enableGenderNumberClr] = checkedValue;
-      updtLocalStorage();
-      cgv[C_userTurnGenderNumberFromOffToOn] = checkedValue;
+      cf.updtLocalStorage();
+      cv[C_userTurnGenderNumberFromOffToOn] = checkedValue;
     }
     else if (grammarFunction === 'OTverb') {
       c4[C_OT][C_enableVerbClr] = checkedValue;
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbInputFields(checkedValue, 'OT');
     }
-    refreshClrGrammarCSS();
-    if ((grammarFunction === 'verb') && (checkedValue) && (cgv[C_handleOfRequestedAnimation] === -1)) goAnimate(0);
+    cf.refreshClrGrammarCSS();
+    if ((grammarFunction === 'verb') && (checkedValue) && (cv[C_handleOfRequestedAnimation] === -1)) cf.goAnimate(0);
 }
 
 function userUpdateClr(itemNumber, color) {
   c4[C_Greek][C_inClrVerbItem][itemNumber] = color;
-  updtLocalStorage();
-  createUlForAllItemsInYAndX();
+  cf.updtLocalStorage();
+  cf.createUlForAllItemsInYAndX();
 }
 
 function userUpdateOTClr(itemNumber, color) {
   c4[C_OT][C_inClrVerbItem][itemNumber] = color;
-  updtLocalStorage();
-  createUlForOT();
+  cf.updtLocalStorage();
+  cf.createUlFor_OT();
 }
 
 function userUpdateNounClr(gender, color) {
@@ -803,7 +799,7 @@ function userUpdateNounClr(gender, color) {
   else if (gender == 'feminine') c4[C_inClrFeminine] = color;
   else if (gender == 'neuter') c4[C_inClrNeuter] = color;
   else alert('Error: userUpdateNounClr, cannot identify gender');
-  updtLocalStorage();
+  cf.updtLocalStorage();
   var cssName = '';
   if (gender === 'masculine') cssName = '.mas';
   else if (gender === 'feminine') cssName = '.fem';
@@ -811,23 +807,23 @@ function userUpdateNounClr(gender, color) {
   $(cssName).css({
     'color': color
   });
-  cgv[C_updatedGenderNumberCSS] = true;
+  cv[C_updatedGenderNumberCSS] = true;
 }
 
 function userUpdateNumber(type, fontHighlight) {
   if (type == 'singular') c4[C_slctUlSingular] = fontHighlight;
   else if (type == 'plural') c4[C_slctUlPlural] = fontHighlight;
   else alert('Error: userUpdateNumber, cannot identify number type');
-  updtLocalStorage();
-  updateCssForNumber(type, fontHighlight);
+  cf.updtLocalStorage();
+  cf.updateCssForNumber(type, fontHighlight);
 }
 
 function userUpdateAnimation(itemNumber) {
     var arrayIndexOfCSSRelatedToItemSelected = [];
     var currentULForItem = c4[C_Greek][C_slctUlVerbItem][itemNumber];
     var tempIndexArray;
-    if (c4[C_Greek][C_xAxisForMood]) tempIndexArray = cgc[C_tenseIndexArray];
-    else tempIndexArray = cgc[C_moodIndexArray];
+    if (c4[C_Greek][C_xAxisForMood]) tempIndexArray = cc[C_tenseIndexArray];
+    else tempIndexArray = cc[C_moodIndexArray];
     var r = getVerbItemsCombinedWithCurrentItem('Y', itemNumber);
     for (var i = 0; i < r.nameOfItemCombinedWithCurrentItem.length; i ++) {
       arrayIndexOfCSSRelatedToItemSelected = arrayIndexOfCSSRelatedToItemSelected.concat(
@@ -837,31 +833,31 @@ function userUpdateAnimation(itemNumber) {
     if ((document.getElementById('inAnimateCheckbox' + itemNumber).checked) &&
       (currentULForItem !== '2 lines') && (currentULForItem !== 'Underline')) {
       c4[C_Greek][C_inAnimate][itemNumber] = true;
-      updtLocalStorage();
+      cf.updtLocalStorage();
       for (var j = 0; j < arrayIndexOfCSSRelatedToItemSelected.length; j += 1) {
         indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[j];
-        if (cgv[C_animationIndexArray].indexOf(indexToUlVerbCSS) === -1) cgv[C_animationIndexArray].push(indexToUlVerbCSS);
+        if (cv[C_animationIndexArray].indexOf(indexToUlVerbCSS) === -1) cv[C_animationIndexArray].push(indexToUlVerbCSS);
       }
     } else {
       c4[C_Greek][C_inAnimate][itemNumber] = false;
-      updtLocalStorage();
+      cf.updtLocalStorage();
       for (var k = 0; k < arrayIndexOfCSSRelatedToItemSelected.length; k += 1) {
         indexToUlVerbCSS = arrayIndexOfCSSRelatedToItemSelected[k];
-        var tempIdx = cgv[C_animationIndexArray].indexOf(indexToUlVerbCSS);
-        if (indexToUlVerbCSS >= 0) cgv[C_animationIndexArray].splice(tempIdx, 1);
+        var tempIdx = cv[C_animationIndexArray].indexOf(indexToUlVerbCSS);
+        if (indexToUlVerbCSS >= 0) cv[C_animationIndexArray].splice(tempIdx, 1);
       }
     }
-    cgv[C_copyOfPassiveIndexArray] = cgc[C_passiveIndexArray].slice(0);
-    cgv[C_copyOfMiddleIndexArray] = cgc[C_middleIndexArray].slice(0);
-    for (var counter = 0; counter < cgv[C_animationIndexArray].length; counter += 1) {
-      var tempIndex1 = cgv[C_animationIndexArray][counter];
-      var tempIndex2 = cgv[C_copyOfPassiveIndexArray].indexOf(tempIndex1);
-      if (tempIndex2 >= 0) cgv[C_copyOfPassiveIndexArray].splice(tempIndex2, 1);
-      tempIndex2 = cgv[C_copyOfMiddleIndexArray].indexOf(tempIndex1);
-      if (tempIndex2 >= 0) cgv[C_copyOfMiddleIndexArray].splice(tempIndex2, 1);
+    cv[C_copyOfPassiveIndexArray] = cc[C_passiveIndexArray].slice(0);
+    cv[C_copyOfMiddleIndexArray] = cc[C_middleIndexArray].slice(0);
+    for (var counter = 0; counter < cv[C_animationIndexArray].length; counter += 1) {
+      var tempIndex1 = cv[C_animationIndexArray][counter];
+      var tempIndex2 = cv[C_copyOfPassiveIndexArray].indexOf(tempIndex1);
+      if (tempIndex2 >= 0) cv[C_copyOfPassiveIndexArray].splice(tempIndex2, 1);
+      tempIndex2 = cv[C_copyOfMiddleIndexArray].indexOf(tempIndex1);
+      if (tempIndex2 >= 0) cv[C_copyOfMiddleIndexArray].splice(tempIndex2, 1);
     }
-    if ((cgv[C_animationIndexArray].length > 0) && (cgv[C_handleOfRequestedAnimation] === -1))
-      goAnimate(0);
+    if ((cv[C_animationIndexArray].length > 0) && (cv[C_handleOfRequestedAnimation] === -1))
+      cf.goAnimate(0);
 }
 
 function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) {
@@ -871,7 +867,7 @@ function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) {
     c4Ref = c4[C_OT];
   }
   else c4Ref = c4[C_Greek];
-  var ucVoice = upCaseFirst(voice);
+  var ucVoice = cf.upCaseFirst(voice);
   if (document.getElementById('chkbx' + otPrefix + ucVoice + 'BkgrdClr').checked) {
     (voice == 'passive') ? c4Ref[C_chkbxPassiveBkgrdColrValue] = true : c4Ref[C_chkbxMiddleBkgrdColrValue] = true;
     $('#in' + otPrefix + ucVoice + 'BkgrdClr').spectrum('enable');
@@ -879,8 +875,8 @@ function userUpdatePassiveMiddleVoiceBkgrd(voice, otVerb) {
     (voice == 'passive') ? c4Ref[C_chkbxPassiveBkgrdColrValue] = false : c4Ref[C_chkbxMiddleBkgrdColrValue] = false;
     $('#in' + otPrefix + ucVoice + 'BkgrdClr').spectrum('disable');
   }
-  updtLocalStorage();
-  if (otVerb == 'OT') createUlForOT();
+  cf.updtLocalStorage();
+  if (otVerb == 'OT') cf.createUlFor_OT();
   else updateVerbsBkgrd(voice);
 }
 
@@ -891,7 +887,7 @@ function userEnablePassiveMiddleVerbsUnderline1(voice, otVerb) {
     c4Ref = c4[C_OT];
   }
   else c4Ref = c4[C_Greek];
-  var ucVoice = upCaseFirst(voice);
+  var ucVoice = cf.upCaseFirst(voice);
   if (document.getElementById('chkbx' + otPrefix + ucVoice + 'UlClr1').checked) {
     checkedValue = true;
     $('#in' + otPrefix + ucVoice + 'UlClr1').spectrum('enable');
@@ -914,23 +910,23 @@ function userEnablePassiveMiddleVerbsUnderline1(voice, otVerb) {
     c4Ref[C_chkbxMiddleUlColr1Value] = checkedValue;
     if (otPrefix == '') c4Ref[C_chkbxMiddleUlClr2] = checkedValue;
   }
-  updtLocalStorage();
-  if (otPrefix == 'OT') createUlForOT();
+  cf.updtLocalStorage();
+  if (otPrefix == 'OT') cf.createUlFor_OT();
   else updateVerbsBkgrd(voice);
 }
 
 function userEnablePassiveMiddleVerbsUnderline2(voice, otVerb) {
   var otPrefix = '';
   if ((otVerb != undefined) && (otVerb != '')) return;
-  var ucVoice = upCaseFirst(voice);
+  var ucVoice = cf.upCaseFirst(voice);
   if (document.getElementById('chkbx' + otPrefix + ucVoice + 'UlClr2').checked) {
     (voice == 'passive') ? c4[C_Greek][C_chkbxPassiveUlColr2Value] = true : c4[C_Greek][C_chkbxMiddleUlColr2Value] = true;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     $('#in' + otPrefix + ucVoice + 'UlClr2').spectrum('enable');
-    if (cgv[C_handleOfRequestedAnimation] === -1) goAnimate(0);
+    if (cv[C_handleOfRequestedAnimation] === -1) cf.goAnimate(0);
   } else {
     (voice == 'passive') ? c4[C_Greek][C_chkbxPassiveUlColr2Value] = false : c4[C_Greek][C_chkbxMiddleUlColr2Value] = false;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     $('#in' + otPrefix + ucVoice + 'UlClr2').spectrum('disable');
   }
 }
@@ -939,7 +935,7 @@ function userEnablePassiveMiddleVerbsUnderline2(voice, otVerb) {
   var otPrefix = '';
   if ((ot != undefined) && (ot == 'OT')) otPrefix = 'OT';
   c4['enable' + otPrefix + 'AdvancedTools'] = !c4['enable' + otPrefix + 'AdvancedTools'];
-  updtLocalStorage('enable' + otPrefix + 'AdvancedTools', c4['enable' + otPrefix + 'AdvancedTools']);
+  cf.updtLocalStorage('enable' + otPrefix + 'AdvancedTools', c4['enable' + otPrefix + 'AdvancedTools']);
   enableOrDisableAdvancedToolsButtons(otPrefix);
   updateHtmlForYAxis();
 }*/
@@ -963,22 +959,22 @@ function enableOrDisableAxisConfigButtons(axis, ot) {
   var onOffClassName = '.' + otPrefix + 'vrbInpt' + axis;
   var onOffCheckBox = otPrefix + 'axis' + axis + 'OnOffCheckbox';
   if (otPrefix == '') {
-    var r = getVariablesForVerbTable();
+    var r = cf.getVariablesForVerbTable();
     var moodOrTense = r[axis.toLowerCase() + 'AxisTitle'];
     moodOrTense = moodOrTense.substr(0, moodOrTense.length - 1);
-    var ucMoodOrTense = upCaseFirst(moodOrTense);
+    var ucMoodOrTense = cf.upCaseFirst(moodOrTense);
     var orderOfItemsInAxis = r['orderOf' + axis + 'AxisItems'];
     var nameOfAllItemsInAxis = r['nameOfAll' + axis + 'AxisItems'];
     if (moodOrTense == 'mood') {
       granularControlOfAxis = c4[C_Greek][C_granularControlOfMoods];
       itemInAxisOnOff = c4[C_Greek][C_moodsOnOff];
-      ulVerbCSSArrayOfAxis = cgc[C_moodIndexArray];
+      ulVerbCSSArrayOfAxis = cc[C_moodIndexArray];
       itemToCombineWithPrevious = c4[C_Greek][C_moodToCombineWithPrevious];
     }
     else {
       granularControlOfAxis = c4[C_Greek][C_granularControlOfTenses];
       itemInAxisOnOff = c4[C_Greek][C_tensesOnOff];
-      ulVerbCSSArrayOfAxis = cgc[C_tenseIndexArray];
+      ulVerbCSSArrayOfAxis = cc[C_tenseIndexArray];
       itemToCombineWithPrevious = c4[C_Greek][C_tenseToCombineWithPrevious];
     }
     highlightIcon(iconName, granularControlOfAxis);
@@ -988,18 +984,18 @@ function enableOrDisableAxisConfigButtons(axis, ot) {
     }
     if (granularControlOfAxis) {
       var k = -1;
-      for (var cc = 0; cc < nameOfAllItemsInAxis.length; cc ++) {
-        if (!itemToCombineWithPrevious[cc]) k++;
+      for (var counter = 0; counter < nameOfAllItemsInAxis.length; counter ++) {
+        if (!itemToCombineWithPrevious[counter]) k++;
         var currentItemInAxisOnOff = itemInAxisOnOff[k];
-        var index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[cc]; }).array;
+        var index2 = _.find(ulVerbCSSArrayOfAxis, function(obj) { return obj.name == nameOfAllItemsInAxis[counter]; }).array;
         for (var j = 0; j < index2.length; j += 1) {
-          cgv[C_ulVerbCSS][index2[j]]['displayStatusSelectedBy' + ucMoodOrTense] = currentItemInAxisOnOff;
+          cv[C_ulVerbCSS][index2[j]]['displayStatusBy' + ucMoodOrTense] = currentItemInAxisOnOff;
         }
       }
     }
     else {
-      for (var cc2 = 0; cc2 < cgv[C_ulVerbCSS].length; cc2 ++) {
-        cgv[C_ulVerbCSS][cc2]['displayStatusSelectedBy' + ucMoodOrTense] = true;
+      for (var counter2 = 0; counter2 < cv[C_ulVerbCSS].length; counter2 ++) {
+        cv[C_ulVerbCSS][counter2]['displayStatusBy' + ucMoodOrTense] = true;
       }
     }
   }
@@ -1013,12 +1009,12 @@ function enableOrDisableAxisConfigButtons(axis, ot) {
     highlightIcon(iconName, granularControlOfAxis);
     hideIndividualInputField(onOffClassName, granularControlOfAxis);
     if (axis == 'Y')
-      for (var cc3 = 0; cc3 < cgv[C_ulOTVbCSS].length; cc3 += 1) {
-        $('#' + onOffCheckBox + cc3).prop('checked', granularControlOfAxis && c4[C_OT][C_yAxisOnOff][cc3]);
+      for (var counter3 = 0; counter3 < cv[C_ulOTVbCSS].length; counter3 += 1) {
+        $('#' + onOffCheckBox + counter3).prop('checked', granularControlOfAxis && c4[C_OT][C_yAxisOnOff][counter3]);
       }
     else if (axis == 'X') {
-      for (var cc4 = 0; cc4 < cgv[C_ulOTVbCSS][0].length; cc4 += 1) {
-        if ((cc4 % 3) == 0) $('#' + onOffCheckBox + (cc4/3)).prop('checked', granularControlOfAxis && c4[C_OT][C_xAxisOnOff][cc4/3]);
+      for (var counter4 = 0; counter4 < cv[C_ulOTVbCSS][0].length; counter4 += 1) {
+        if ((counter4 % 3) == 0) $('#' + onOffCheckBox + (counter4/3)).prop('checked', granularControlOfAxis && c4[C_OT][C_xAxisOnOff][counter4/3]);
       }
     }
   }
@@ -1053,36 +1049,36 @@ function checkNounClr() {
 
 function checkVerbClrInput() {
   var currentClr, currentClrPicker;
-  for (var i = 0; i < getVariablesForVerbTable().orderOfXAxisItems.length; i ++) {
+  for (var i = 0; i < cf.getVariablesForVerbTable().orderOfXAxisItems.length; i ++) {
     currentClr = c4[C_Greek][C_inClrVerbItem][i];
     currentClrPicker = $('#inClrVerbItem' + i).spectrum("get").toHexString();
     if (currentClr != currentClrPicker) userUpdateClr(i, currentClrPicker);
   }
-  for (var cc = 0; cc < getVariablesForOTVerbTable('H').orderOfXAxisItems.length; cc ++) {
-    currentClr = c4[C_OT][C_inClrVerbItem][cc];
-    currentClrPicker = $('#inClrOTVerbItem' + cc).spectrum("get").toHexString();
-    if (currentClr != currentClrPicker) userUpdateOTClr(cc, currentClrPicker);
+  for (var counter = 0; counter < cf.getVariablesForOTVerbTable('H').orderOfXAxisItems.length; counter ++) {
+    currentClr = c4[C_OT][C_inClrVerbItem][counter];
+    currentClrPicker = $('#inClrOTVerbItem' + counter).spectrum("get").toHexString();
+    if (currentClr != currentClrPicker) userUpdateOTClr(counter, currentClrPicker);
   }
   currentClr = c4[C_Greek][C_inMiddleBkgrdClr];
   currentClrPicker = $('#inMiddleBkgrdClr').spectrum("get").toHexString();
   var colorForMiddleWasUpdated = false;
   if (currentClr != currentClrPicker) {
     c4[C_Greek][C_inMiddleBkgrdClr] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForMiddleWasUpdated = true;
   }
   currentClr = c4[C_Greek][C_inMiddleUlClr1];
   currentClrPicker = $('#inMiddleUlClr1').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_Greek][C_inMiddleUlClr1] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForMiddleWasUpdated = true;
   }
   currentClr = c4[C_Greek][C_inMiddleUlClr2];
   currentClrPicker = $('#inMiddleUlClr2').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_Greek][C_inMiddleUlClr2] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForMiddleWasUpdated = true;
   }
   if (colorForMiddleWasUpdated) updateVerbsBkgrd('middle');
@@ -1091,21 +1087,21 @@ function checkVerbClrInput() {
   var colorForPassiveWasUpdated = false;
   if (currentClr != currentClrPicker) {
     c4[C_Greek][C_inPassiveBkgrdClr] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForPassiveWasUpdated = true;
   }
   currentClr = c4[C_Greek][C_inPassiveUlClr1];
   currentClrPicker = $('#inPassiveUlClr1').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_Greek][C_inPassiveUlClr1] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForPassiveWasUpdated = true;
   }
   currentClr = c4[C_Greek][C_inPassiveUlClr2];
   currentClrPicker = $('#inPassiveUlClr2').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_Greek][C_inPassiveUlClr2] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForPassiveWasUpdated = true;
   }
   if (colorForPassiveWasUpdated) updateVerbsBkgrd('passive');
@@ -1116,36 +1112,36 @@ function checkVerbClrInput() {
   var colorForOTWasUpdated = false;
   if (currentClr != currentClrPicker) {
     c4[C_OT][C_inMiddleBkgrdClr] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForOTWasUpdated = true;
   }
   currentClr = c4[C_OT][C_inMiddleUlClr1];
   currentClrPicker = $('#inOTMiddleUlClr1').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_OT][C_inMiddleUlClr1] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForOTWasUpdated = true;
   }
   currentClr = c4[C_OT][C_inPassiveBkgrdClr];
   currentClrPicker = $('#inOTPassiveBkgrdClr').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_OT][C_inPassiveBkgrdClr] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForOTWasUpdated = true;
   }
   currentClr = c4[C_OT][C_inPassiveUlClr1];
   currentClrPicker = $('#inOTPassiveUlClr1').spectrum("get").toHexString();
   if (currentClr != currentClrPicker) {
     c4[C_OT][C_inPassiveUlClr1] = currentClrPicker;
-    updtLocalStorage();
+    cf.updtLocalStorage();
     colorForOTWasUpdated = true;
   }
-  if (colorForOTWasUpdated) createUlForOT();
+  if (colorForOTWasUpdated) cf.createUlFor_OT();
 }
 
 function updateHtmlForYAxis() {
   var currentULForItem;
-  var numOfRows = getVariablesForVerbTable().nameOfYAxisItems.length;
+  var numOfRows = cf.getVariablesForVerbTable().nameOfYAxisItems.length;
   for (var i = 0; i < numOfRows; i += 1) {
     currentULForItem = c4[C_Greek][C_slctUlVerbItem][i];
     $('#slctUlVerbItem' + i + ' option')
@@ -1162,10 +1158,10 @@ function updateHtmlForYAxis() {
         userUpdateAnimation(i);
     } else document.getElementById('inAnimateCheckbox' + i).checked = false;
   }
-  numOfRows = getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
-  for (var cc = 0; cc < numOfRows; cc += 1) {
-    currentULForItem = c4[C_OT][C_slctUlVerbItem][cc];
-    $('#slctUlOTVerbItem' + cc + ' option')
+  numOfRows = cf.getVariablesForOTVerbTable('H').nameOfYAxisItems.length;
+  for (var counter = 0; counter < numOfRows; counter += 1) {
+    currentULForItem = c4[C_OT][C_slctUlVerbItem][counter];
+    $('#slctUlOTVerbItem' + counter + ' option')
       .filter(function() {
         return $.trim($(this).text()) == currentULForItem;
       })
@@ -1174,7 +1170,7 @@ function updateHtmlForYAxis() {
 }
 
 function updateHtmlForXAxis() {
-  var numOfColumns = getVariablesForVerbTable().orderOfXAxisItems.length;
+  var numOfColumns = cf.getVariablesForVerbTable().orderOfXAxisItems.length;
   if (numOfColumns > -1)
     $('#inClrVerbItem0').spectrum({
       color: c4[C_Greek][C_inClrVerbItem][0],
@@ -1253,7 +1249,7 @@ function updateHtmlForXAxis() {
         checkVerbClrInput();
       }
     });
-  numOfColumns = getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
+  numOfColumns = cf.getVariablesForOTVerbTable('H').orderOfXAxisItems.length;
   if (numOfColumns > -1)
     $('#inClrOTVerbItem0').spectrum({
       color: c4[C_OT][C_inClrVerbItem][0],
@@ -1376,12 +1372,12 @@ function updateHtmlForGender() {
 function updateHtmlForNumber() {
   $('#slctUlPlural option')
     .filter(function() {
-      return $.trim($(this).text()) == upCaseFirst(c4[C_slctUlPlural]);
+      return $.trim($(this).text()) == cf.upCaseFirst(c4[C_slctUlPlural]);
     })
     .attr('selected', true);
   $('#slctUlSingular option')
     .filter(function() {
-      return $.trim($(this).text()) == upCaseFirst(c4[C_slctUlSingular]);
+      return $.trim($(this).text()) == cf.upCaseFirst(c4[C_slctUlSingular]);
     })
     .attr('selected', true);
 }
@@ -1394,7 +1390,7 @@ function updateHtmlForPassiveBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_Greek][C_inPassiveBkgrdClr] = color.toHexString();
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbsBkgrd('passive');
     },
     show: function(color) {
@@ -1408,7 +1404,7 @@ function updateHtmlForPassiveBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_Greek][C_inPassiveUlClr1] = color.toHexString();
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbsBkgrd('passive');
     },
     show: function(color) {
@@ -1422,7 +1418,7 @@ function updateHtmlForPassiveBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_Greek][C_inPassiveUlClr2] = color.toHexString();
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbsBkgrd('passive');
     },
     show: function(color) {
@@ -1437,8 +1433,8 @@ function updateHtmlForPassiveBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_OT][C_inPassiveBkgrdClr] = color.toHexString();
-      updtLocalStorage();
-      createUlForOT();
+      cf.updtLocalStorage();
+      cf.createUlFor_OT();
     },
     show: function(color) {
       checkVerbClrInput();
@@ -1451,8 +1447,8 @@ function updateHtmlForPassiveBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_OT][C_inPassiveUlClr1] = color.toHexString();
-      updtLocalStorage();
-      createUlForOT();
+      cf.updtLocalStorage();
+      cf.createUlFor_OT();
     },
     show: function(color) {
       checkVerbClrInput();
@@ -1468,7 +1464,7 @@ function updateHtmlForMiddleBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_Greek][C_inMiddleBkgrdClr] = color.toHexString();
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbsBkgrd('middle');
     },
     show: function(color) {
@@ -1482,7 +1478,7 @@ function updateHtmlForMiddleBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_Greek][C_inMiddleUlClr1] = color.toHexString();
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbsBkgrd('middle');
     },
     show: function(color) {
@@ -1496,7 +1492,7 @@ function updateHtmlForMiddleBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_Greek][C_inMiddleUlClr2] = color.toHexString();
-      updtLocalStorage();
+      cf.updtLocalStorage();
       updateVerbsBkgrd('middle');
     },
     show: function(color) {
@@ -1510,8 +1506,8 @@ function updateHtmlForMiddleBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_OT][C_inMiddleBkgrdClr] = color.toHexString();
-      updtLocalStorage();
-      createUlForOT();
+      cf.updtLocalStorage();
+      cf.createUlFor_OT();
     },
     show: function(color) {
       checkVerbClrInput();
@@ -1524,8 +1520,8 @@ function updateHtmlForMiddleBkgrdClr() {
     clickoutFiresChange: false,
     change: function(color) {
       c4[C_OT][C_inMiddleUlClr1] = color.toHexString();
-      updtLocalStorage();
-      createUlForOT();
+      cf.updtLocalStorage();
+      cf.createUlFor_OT();
     },
     show: function(color) {
       checkVerbClrInput();
@@ -1584,27 +1580,23 @@ function hideOrShowHtmlForPassiveBkgrdClr(passiveBkgrdName, otPrefix) {
 }
 
 function cancelClrChanges() {
-    if (typeof(Storage) !== 'undefined') {
-      var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
-      var tmp = window.localStorage.getItem('colorCode-PreviousSettings');
-      if (tmp) c4 = JSON.parse(tmp);
-      else c4 = createC4();
-      updtLocalStorage();
-      if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cgv[C_userTurnGenderNumberFromOffToOn] = true;
-      alert('Your color settings has been reset to your previous setting.');
-      updateAllSettingsAndInputFields();
-    }
+  var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
+  var tmp = window.localStorage.getItem('colorCode-PreviousSettings');
+  if (tmp) c4 = JSON.parse(tmp);
+  else c4 = cf.createC4();
+  cf.updtLocalStorage();
+  if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cv[C_userTurnGenderNumberFromOffToOn] = true;
+  alert('Your color settings has been reset to your previous setting.');
+  updateAllSettingsAndInputFields();
 }
 
 function resetClrConfig() {
-    if (typeof(Storage) !== 'undefined') {
-      var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
-      c4 = createC4();
-      updtLocalStorage();
-      if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cgv[C_userTurnGenderNumberFromOffToOn] = true;
-      alert('Your color settings has been reset to default setting.');
-      updateAllSettingsAndInputFields();
-    }
+  var previousEnableGenderNumberClr = c4[C_enableGenderNumberClr];
+  c4 = cf.createC4();
+  cf.updtLocalStorage();
+  if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cv[C_userTurnGenderNumberFromOffToOn] = true;
+  alert('Your color settings has been reset to default setting.');
+  updateAllSettingsAndInputFields();
 }
 
 function closeClrConfig() {
@@ -1618,14 +1610,14 @@ function closeClrConfig() {
 }
 
 function updateAllSettingsAndInputFields() {
-  cgv[C_animationIndexArray] = [];
-  cgv[C_copyOfPassiveIndexArray] = cgc[C_passiveIndexArray].slice(0);
-  cgv[C_copyOfMiddleIndexArray] = cgc[C_middleIndexArray].slice(0);
+  cv[C_animationIndexArray] = [];
+  cv[C_copyOfPassiveIndexArray] = cc[C_passiveIndexArray].slice(0);
+  cv[C_copyOfMiddleIndexArray] = cc[C_middleIndexArray].slice(0);
   updateVerbsBkgrd('active');
   updateVerbsBkgrd('passive');
   updateVerbsBkgrd('middle');
-  createUlForAllItemsInYAndX();
-  createUlForOT();
+  cf.createUlForAllItemsInYAndX();
+  cf.createUlFor_OT();
   $('#theGrammarClrModal').modal({
     show: 'false'
   });
@@ -1715,23 +1707,23 @@ function updateVerbInputFields(inputOnOff, ot) {
 function updateVerbsBkgrd(voice) {
   var selectedUnderline, selectedClr;
   var indexArray = [];
-  if (voice === 'passive') indexArray = cgc[C_passiveIndexArray];
-  else if (voice === 'middle') indexArray = cgc[C_middleIndexArray];
-  else if (voice === 'active') indexArray = cgc[C_activeIndexArray];
+  if (voice === 'passive') indexArray = cc[C_passiveIndexArray];
+  else if (voice === 'middle') indexArray = cc[C_middleIndexArray];
+  else if (voice === 'active') indexArray = cc[C_activeIndexArray];
   for (var counter = 0; counter < indexArray.length; counter += 1) {
     var indexToUlVerbCSS = indexArray[counter];
-    var orderOfXAxis = getAxisOrderOfCSS(cgv[C_ulVerbCSS][indexToUlVerbCSS].name, 'X');
-    var orderOfYAxis = getAxisOrderOfCSS(cgv[C_ulVerbCSS][indexToUlVerbCSS].name, 'Y');
+    var orderOfXAxis = getAxisOrderOfCSS(cv[C_ulVerbCSS][indexToUlVerbCSS].name, 'X');
+    var orderOfYAxis = getAxisOrderOfCSS(cv[C_ulVerbCSS][indexToUlVerbCSS].name, 'Y');
     if (c4[C_Greek][C_xAxisForMood]) {
-      selectedUnderline = cgc[C_underlineCanvasName][c4[C_Greek][C_slctUlVerbItem][orderOfYAxis]];
+      selectedUnderline = cc[C_underlineCanvasName][c4[C_Greek][C_slctUlVerbItem][orderOfYAxis]];
       selectedClr = c4[C_Greek][C_inClrVerbItem][orderOfXAxis];
     }
     else {
-      selectedUnderline = cgc[C_underlineCanvasName][c4[C_Greek][C_slctUlVerbItem][orderOfXAxis]];
+      selectedUnderline = cc[C_underlineCanvasName][c4[C_Greek][C_slctUlVerbItem][orderOfXAxis]];
       selectedClr = c4[C_Greek][C_inClrVerbItem][orderOfYAxis];
     }
-    var srcImgObj = _.find(cgv[C_uLBASEIMGS], function(obj) { return obj.name == selectedUnderline; });
-    updateUlForSpecificYAxis(cgv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, selectedClr, indexToUlVerbCSS);
+    var srcImgObj = _.find(cv[C_uLBASEIMGS], function(obj) { return obj.name == selectedUnderline; });
+    cf.updateUlForSpecificYAxis(cv[C_ulVerbCSS][indexToUlVerbCSS], srcImgObj, selectedClr, indexToUlVerbCSS);
   }
 }
 
@@ -1742,14 +1734,14 @@ function getVerbItemsCombinedWithCurrentItem(axis, itemNumber) {
         ((!c4[C_Greek][C_xAxisForMood]) && (axis == 'Y')) ) {
     orderOfItem = c4[C_Greek][C_orderOfMood];
     itemsCombinedWithPreviousItem = c4[C_Greek][C_moodToCombineWithPrevious];
-    robinsonCode = cgc[C_robinsonCodeOfMood];
+    robinsonCode = cc[C_robinsonCodeOfMood];
   }
   else {
     orderOfItem = c4[C_Greek][C_orderOfTense];
     itemsCombinedWithPreviousItem = c4[C_Greek][C_tenseToCombineWithPrevious];
-    robinsonCode = cgc[C_robinsonCodeOfTense];
+    robinsonCode = cc[C_robinsonCodeOfTense];
   }
-  var codeOfCurrentItem = getVariablesForVerbTable()['orderOf' + axis + 'AxisItems'][itemNumber];
+  var codeOfCurrentItem = cf.getVariablesForVerbTable()['orderOf' + axis + 'AxisItems'][itemNumber];
   var idxOfCurrentItem = orderOfItem.indexOf(codeOfCurrentItem);
   for (var i = idxOfCurrentItem; i < itemsCombinedWithPreviousItem.length; i ++) {
     if ((itemsCombinedWithPreviousItem[i]) || (i == idxOfCurrentItem) ) {
@@ -1775,5 +1767,5 @@ function getAxisOrderOfCSS(cssName, axis) {
     moodOrTense = 'mood';
     positionInOrderOfMoodOrTense = c4[C_Greek][C_orderOfMood].indexOf(cssName.substr(2, 1));
   }
-  return getAxisOrderOfItem(moodOrTense, positionInOrderOfMoodOrTense);
+  return cf.getAxisOrderOfItem(moodOrTense, positionInOrderOfMoodOrTense);
 }

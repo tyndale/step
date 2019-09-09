@@ -334,17 +334,17 @@
                                 <br>
                                 <search:sample_search explanation="kjv_verb_imperative_explanation" option1="KJV" option1type="version" option2="Col 3" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Col.3&options=HVGUNC', 'verb, imperative mood', 'kjv_verb_imperative_explanation')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=KJV|reference=Col.3&options=HVGUNC', 'verb, imperative mood', 'kjv_verb_imperative_explanation')" />
                                 <search:sample_search explanation="kjv_verb_main_supporting_explanation" option1="KJV" option1type="version" option2="Col 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Col.1&options=HVGUNC', 'verb, main vs supporting verbs', 'kjv_verb_main_supporting_explanation')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=KJV|reference=Col.1&options=HVGUNC', 'verb, main vs supporting verbs', 'kjv_verb_main_supporting_explanation')" />
                                 <search:sample_search explanation="kjv_verb_number_and_gender_explanation" option1="KJV" option1type="version" option2="Mat 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Mat.1&options=HVGUNC', 'gender and number', 'kjv_verb_number_and_gender_explanation')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=KJV|reference=Mat.1&options=HVGUNC', 'gender and number', 'kjv_verb_number_and_gender_explanation')" />
                                 <search:sample_search explanation="esv_word_frequency_explanation" option1="ESV" option1type="version" option2="1Jo 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Quick tryout links<span>&nbsp;<span class='hidenarrow glyphicon glyphicon-plus'>   </span></span><span class='hidenarrow glyphicon glyphicon-stats'></span></span>"
                                     option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=ESV|reference=1Jo.1&options=HVGUN', 'function:openStats', 'esv_word_frequency_explanation')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=ESV|reference=1Jo.1&options=HVGUN', 'function:openStats', 'esv_word_frequency_explanation')" />
                             </div>
                         </div>
                         <div class="parent-div">
@@ -353,20 +353,20 @@
                                 <br>
                                 <search:sample_search explanation="kjv_verb_color_explanation" option1="KJV" option1type="version" option2="Eph 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=KJV|reference=Eph.1&options=HVGUNC', 'verb, gender and number', 'look_at_color_table')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=KJV|reference=Eph.1&options=HVGUNC', 'verb, gender and number', 'look_at_color_table')" />
                                 <search:sample_search explanation="sblg_verb_color_explanation" option1="SBLG" option1type="version" option2="Rom 12" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN', 'verb, gender and number', 'look_at_color_table')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN', 'verb, gender and number', 'look_at_color_table')" />
                                 <search:sample_search explanation="ot_color_explanation" option1="THOT" option1type="version" option2="Gen 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=THOT|reference=Gen.1&options=HVLUNC', 'verb, gender and number', '')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=THOT|reference=Gen.1&options=HVLUNC', 'verb, gender and number', '')" />
                                 <search:sample_search explanation="cun_verb_color_explanation" option1="CUn" option1type="version" option2="Col 1" option2type="reference"
                                     option3="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>" option3type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=CUn|reference=Col.1&options=HVGUNC', 'verb, gender and number', 'look_at_color_table')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=CUn|reference=Col.1&options=HVGUNC', 'verb, gender and number', 'look_at_color_table')" />
                                 <search:sample_search explanation="interlinear_verb_color_explanation" option1="SBLG" option1type="version" option2="KJV" option2type="version" option3="CUN" option3type="version" option4="Eph 5" option4type="reference"
                                     option5="<span class='hidenarrow glyphicon glyphicon-plus'></span><span> Color code grammar <span class='hidenarrow glyphicon glyphicon-ok'></span></span>"
                                     option5type="other"
-                                    sampleURL="javascript:setupNextPageAndGotoUrl('/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED', 'verb, gender and number', 'look_at_color_table')" />
+                                    sampleURL="javascript:cf.setNextPageURL('/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED', 'verb, gender and number', 'look_at_color_table')" />
                                 <div id='colorCodeTableDiv'></div>
                             </div>
                         </div>
@@ -533,10 +533,10 @@
                 if (exPanelWidth < 365) $('.hidenarrow').hide();
                 else $('.hidenarrow').show();
             }
-            if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") {
+            if (typeof cv[C_displayQuickTryoutAccordion1] !== "undefined") {
                 var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion1');
-                if (tmp) cgv[C_displayQuickTryoutAccordion1] = JSON.parse(tmp);
-                if (cgv[C_displayQuickTryoutAccordion1] == true) {
+                if (tmp) cv[C_displayQuickTryoutAccordion1] = JSON.parse(tmp);
+                if (cv[C_displayQuickTryoutAccordion1] == true) {
                     $("#accordion-body1").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus1").text('-');  /* add minus sign */
                 }
@@ -545,10 +545,10 @@
                     $("#plusminus1").text('+');  /* add minus sign */
                 }
             }
-            if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") {
+            if (typeof cv[C_displayQuickTryoutAccordion2] !== "undefined") {
                 var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion2');
-                if (tmp) cgv[C_displayQuickTryoutAccordion2] = JSON.parse(tmp);
-                if (cgv[C_displayQuickTryoutAccordion2] == true) {
+                if (tmp) cv[C_displayQuickTryoutAccordion2] = JSON.parse(tmp);
+                if (cv[C_displayQuickTryoutAccordion2] == true) {
                     $("#accordion-body2").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus2").text('-');  /* add minus sign */
                 }
@@ -557,10 +557,10 @@
                     $("#plusminus2").text('+');  /* add minus sign */
                 }
             }
-            if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") {
+            if (typeof cv[C_displayQuickTryoutAccordion3] !== "undefined") {
                 var tmp = localStorage.getItem('stepBible-displayQuickTryoutAccordion3');
-                if (tmp) cgv[C_displayQuickTryoutAccordion3] = JSON.parse(tmp);
-                if (cgv[C_displayQuickTryoutAccordion3] == true) {
+                if (tmp) cv[C_displayQuickTryoutAccordion3] = JSON.parse(tmp);
+                if (cv[C_displayQuickTryoutAccordion3] == true) {
                     $("#accordion-body3").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus3").text('-');  /* add minus sign */
                 }
@@ -574,42 +574,42 @@
                 if($("#accordion-body1").is(':visible')) {  /* check the condition accordion-body is visible or not */
                     $("#accordion-body1").slideUp(300);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus1").text('+')    /* add plus sign */
-                    if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") cgv[C_displayQuickTryoutAccordion1] = false;
+                    if (typeof cv[C_displayQuickTryoutAccordion1] !== "undefined") cv[C_displayQuickTryoutAccordion1] = false;
                 }
                 else{
                     $("#accordion-body1").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus1").text('-');  /* add minus sign */
-                    if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") cgv[C_displayQuickTryoutAccordion1] = true;
+                    if (typeof cv[C_displayQuickTryoutAccordion1] !== "undefined") cv[C_displayQuickTryoutAccordion1] = true;
                 }
-                if (typeof cgv[C_displayQuickTryoutAccordion1] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion1', JSON.stringify(cgv[C_displayQuickTryoutAccordion1]));
+                if (typeof cv[C_displayQuickTryoutAccordion1] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion1', JSON.stringify(cv[C_displayQuickTryoutAccordion1]));
             });
 
             $("#accordion-heading2").click(function() {
                 if($("#accordion-body2").is(':visible')) {  /* check the condition accordion-body is visible or not */
                     $("#accordion-body2").slideUp(300);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus2").text('+')    /* add plus sign */
-                    if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") cgv[C_displayQuickTryoutAccordion2] = false;
+                    if (typeof cv[C_displayQuickTryoutAccordion2] !== "undefined") cv[C_displayQuickTryoutAccordion2] = false;
                 }
                 else{
                     $("#accordion-body2").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus2").text('-');  /* add minus sign */
-                    if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") cgv[C_displayQuickTryoutAccordion2] = true;
+                    if (typeof cv[C_displayQuickTryoutAccordion2] !== "undefined") cv[C_displayQuickTryoutAccordion2] = true;
                 }
-                if (typeof cgv[C_displayQuickTryoutAccordion2] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion2', JSON.stringify(cgv[C_displayQuickTryoutAccordion2]));
+                if (typeof cv[C_displayQuickTryoutAccordion2] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion2', JSON.stringify(cv[C_displayQuickTryoutAccordion2]));
             });
 
             $("#accordion-heading3").click(function(){
                 if($("#accordion-body3").is(':visible')){  /* check the condition accordion-body is visible or not */
                     $("#accordion-body3").slideUp(300);  /*if content is visible then close accordion-body with specific time duration */
                     $("#plusminus3").text('+')    /* add plus sign */
-                    if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") cgv[C_displayQuickTryoutAccordion3] = false;
+                    if (typeof cv[C_displayQuickTryoutAccordion3] !== "undefined") cv[C_displayQuickTryoutAccordion3] = false;
                 }
                 else{
                     $("#accordion-body3").slideDown(300); /*if content not visible then show the accordion-body */
                     $("#plusminus3").text('-');  /* add minus sign */
-                    if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") cgv[C_displayQuickTryoutAccordion3] = true;
+                    if (typeof cv[C_displayQuickTryoutAccordion3] !== "undefined") cv[C_displayQuickTryoutAccordion3] = true;
                 }
-                if (typeof cgv[C_displayQuickTryoutAccordion3] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion3', JSON.stringify(cgv[C_displayQuickTryoutAccordion3]));
+                if (typeof cv[C_displayQuickTryoutAccordion3] !== "undefined") localStorage.setItem('stepBible-displayQuickTryoutAccordion3', JSON.stringify(cv[C_displayQuickTryoutAccordion3]));
             });
 
         });

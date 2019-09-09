@@ -80,8 +80,8 @@ var SidebarView = Backbone.View.extend({
         }
         // added for colour code grammar
         const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
-        if ((cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
-            cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
+        if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
+            cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
@@ -148,7 +148,7 @@ var SidebarView = Backbone.View.extend({
                 this._createBriefWordPanel(panelBody, item);
 // need to handle multiple morphInfo (array)
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
-                    data.morphInfos = getTOSMorphologyInfo(lastMorphCode);
+                    data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
                 } 
                 if(i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
@@ -170,7 +170,7 @@ var SidebarView = Backbone.View.extend({
             this._createBriefWordPanel(this.lexicon, data.vocabInfos[0]);
             // need to handle multiple morphInfo (array)
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
-                data.morphInfos = getTOSMorphologyInfo(lastMorphCode);
+                data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
             }
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
@@ -253,27 +253,26 @@ var SidebarView = Backbone.View.extend({
     _createBriefMorphInfo: function (panel, info) {
         panel.append("(");
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_function, "ot_function");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_stem, "stem");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_form, "ot_form");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_person, "person");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_number, "number");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_state, "state");
-        this.renderBriefMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
+        this.renderBriefMorphItem(panel, info, "ot_function");
+        this.renderBriefMorphItem(panel, info, "tense");
+        this.renderBriefMorphItem(panel, info, "voice");
+        this.renderBriefMorphItem(panel, info, "mood");
+        this.renderBriefMorphItem(panel, info, "stem");
+        this.renderBriefMorphItem(panel, info, "ot_form");
+        this.renderBriefMorphItem(panel, info, "wordCase");
+        this.renderBriefMorphItem(panel, info, "person");
+        this.renderBriefMorphItem(panel, info, "number");
+        this.renderBriefMorphItem(panel, info, "gender");
+        this.renderBriefMorphItem(panel, info, "state");
+        this.renderBriefMorphItem(panel, info, "suffix");
         panel.append(")<br />");
     },
-    renderBriefMorphItem: function (panel, info, title, param) {
+    renderBriefMorphItem: function (panel, info, param) {
         if(info && param && info[param]) {
             var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
             panel.append(value);
             panel.append(" ");
         }
-
     },
     _createMorphInfo: function (panel, info) {
         // Updated the order of the display so that it matches the order of the robinson code - PT June 2019

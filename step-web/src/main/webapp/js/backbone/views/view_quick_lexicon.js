@@ -85,7 +85,7 @@ var QuickLexicon = Backbone.View.extend({
             if ((data.vocabInfos.length > 0) || (morphOnly)) {
                 var morph_information = [];
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
-                    data.morphInfos = getTOSMorphologyInfo(lastMorphCode);
+                    data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
                 } 
 				for (counter = 0; counter < data.morphInfos.length; counter ++) {
 					var item = data.morphInfos[counter];
@@ -125,8 +125,8 @@ var QuickLexicon = Backbone.View.extend({
         }
         // added for colour code grammar
         const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
-        if ((cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
-            cgv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
+        if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
+            cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
         return this;
     },
     displayQuickDef: function(lexicon) {
