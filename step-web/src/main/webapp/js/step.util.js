@@ -1171,7 +1171,10 @@ step.util = {
                                         '<a href="javascript:void(0)" class="bibleCount col-xs-2 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
                                         '</span><% }); %>' +
                                         '<% if(rows.length % 2 == 1) { %>' +
-                                        '<span class="even">&nbsp;</span>' +
+// The "&nbsp;" in the following line will cause the Chrome browser to run into an infinite loop.  This problem was discovered in Sept 2019. 
+//                                        '<span class="even">&nbsp;</span>' +
+// Removed the "&nbsp;" to resolve the Chrome browser issue
+                                        '<span class="even"></span>' +
                                         '<% } %>' +
                                         '</div>' +
                                         '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
