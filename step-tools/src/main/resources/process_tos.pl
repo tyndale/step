@@ -1,9 +1,9 @@
 # You will need to run this program when there is an updated tos_morphology.csv file.
-# After you run this program, you will need to copy the output (tos_morph.js) to 
-# \step\step-web\src\main\webapp\js folder in your development environment. 
+# After you run this program, you will need to copy the output (tos_morph.js) to
+# \step\step-web\src\main\webapp\js folder in your development environment.
 
 # Read the TOS csv file to create a summarized (smaller) version of the information.
-# The output information is a Javascript source file which is an object that is used 
+# The output information is a Javascript source file which is an object that is used
 # when the TOS morphology is needed.
 # This process reduce from 860KB to 27KB.  THe smaller size would reduce the download
 # from the web server to the browser.
@@ -91,7 +91,7 @@ sub analyze_hash {
             }
         }
         %current_hash = %result;
-    } 
+    }
     return %current_hash;
 }
 
@@ -139,7 +139,7 @@ sub print_array {
     print OUT $lineBreak;
     foreach my $i (0 .. $#$txtArrayRef) {
         print OUT $optionalSpace . $optionalSpace . "\"${ $txtArrayRef }[$i]\"";
-        if ($i < $#$txtArrayRef) { 
+        if ($i < $#$txtArrayRef) {
             print OUT "," . $lineBreak;
         }
         my $tmp = ${ $txtArrayRef }[$i];
@@ -253,6 +253,7 @@ $lineBreak = ''; $optionalSpace = '';$printError = 0;
 
 open (F, $input_file_name) || die ("Could not open $input_file_name!");
 open (OUT, ">$output_file_name");
+# utf8 is needed because of Internet Explorer.  If it is not for IE, take the following line out.
 binmode(OUT, ":utf8");
 
 push @txtArray, "Hebrew";
@@ -274,7 +275,7 @@ my $functionCd;
 
 use Text::CSV_XS;
 $sep_char = ",";
-my $csv = Text::CSV_XS->new({sep_char => $sep_char, auto_diag => 1, binary => 1});  
+my $csv = Text::CSV_XS->new({sep_char => $sep_char, auto_diag => 1, binary => 1});
 while ($line = <F>) {
     if ($count > 0) {
         $csv->parse(trim($line));
@@ -290,12 +291,12 @@ while ($line = <F>) {
         if (!exists($language{$languageCd})) {
             print "\'$languageCd\' \'$fields[0]\' is not Hebrew or Aramaic, line $count\n";
         }
-        ($functionCd, %function) = add_value_to_hash1('Function', 1, 2, $count, %function); 
+        ($functionCd, %function) = add_value_to_hash1('Function', 1, 2, $count, %function);
         if ($code_length > 2) {
             my $form_location = 2;
             my $stateCd = '';
             if ($functionCd eq 'V') {
-                ($stemExpandedCd, %stem) = add_value_to_hash1('Stem', '20', 3, $count, %stem); 
+                ($stemExpandedCd, %stem) = add_value_to_hash1('Stem', '20', 3, $count, %stem);
                 $form_location = 3;
                 # handle infinitives
                 if ( ($code_length == 5) && ((substr($fields[0], 3, 2) == 'aa') || (substr($fields[0], 3, 2) == 'cc')) ) {
@@ -365,11 +366,11 @@ while ($line = <F>) {
                 %mood_desc = add_value_to_hash('Mood desc', $moodCd, $fields[47], $count, %mood_desc);
             }
             my $tempFuncCode = $functionCd . $formCd . $numberCd;
-            %function_explain = add_value_to_hash('Function explain', $tempFuncCode, $fields[28], $count, %function_explain); 
+            %function_explain = add_value_to_hash('Function explain', $tempFuncCode, $fields[28], $count, %function_explain);
             %function_desc = add_value_to_hash('Function desc', $tempFuncCode, $fields[41], $count, %function_desc);
-            %form_desc = add_value_to_hash('Form desc', $formExpandedCd, $fields[45], $count, %form_desc); 
+            %form_desc = add_value_to_hash('Form desc', $formExpandedCd, $fields[45], $count, %form_desc);
 
-            %form_explain = add_value_to_hash('Form explain', $formExpandedCd, $fields[32], $count, %form_explain); 
+            %form_explain = add_value_to_hash('Form explain', $formExpandedCd, $fields[32], $count, %form_explain);
             if ($stateCd ne '') {
                 %state_explain = add_value_to_hash('State explain', $stateCd, $fields[38], $count, %state_explain);
                 %state_desc = add_value_to_hash('State desc', $stateCd, $fields[51], $count, %state_desc);

@@ -1,6 +1,7 @@
 <%@page import="com.tyndalehouse.step.core.models.ClientSession" trimDirectiveWhitespaces="true" %>
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
+<%@page import="java.net.URLEncoder"%>
 <%@ taglib prefix="search" tagdir="/WEB-INF/tags/search" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -378,16 +379,18 @@
         </div>
     </div>
 
-    <% if(request.getParameter("mobile") == null) { %>
-        <%
+    <% if (request.getParameter("mobile") == null) {
+            String langCode = "en";
             if(request.getParameter("lang") == null) {
-        %>
-        <script src="international/interactive.js?lang=<%= locale.getLanguage() %>&step.version=${project.version}" type="text/javascript"></script>
-        <% } else { %>
-        <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>&step.version=${project.version}" type="text/javascript"></script>
-        <% }
-       }
-     %>
+                langCode = locale.getLanguage();
+            }
+            else {
+                if ((request.getParameter("lang").length() >= 2) && (request.getParameter("lang").length() <= 5)) {
+                    langCode = URLEncoder.encode(request.getParameter("lang"));
+                }
+            } %>
+        <script src="international/interactive.js?lang=<%= langCode %>&step.version=${project.version}" type="text/javascript"></script>
+    <% } %>
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
