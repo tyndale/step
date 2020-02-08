@@ -60,6 +60,8 @@ public class VocabInfo implements Serializable {
     private List<LexiconSuggestion> relatedNos;
     private String shortDef;
     private String mediumDef;
+    private String tChineseDef;
+    private String sChineseDef;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
@@ -88,8 +90,10 @@ public class VocabInfo implements Serializable {
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
-
+        this.tChineseDef = d.get("tChineseDefinition");
+        this.sChineseDef = d.get("sChineseDefinition");
         final String popularity = d.get("popularity");
+        
         if(StringUtils.isNotBlank(popularity)) {
             this.count = Integer.parseInt(popularity);
         }
@@ -260,6 +264,34 @@ public class VocabInfo implements Serializable {
      */
     public void setMediumDef(final String mediumDef) {
         this.mediumDef = mediumDef;
+    }
+
+    /**
+     * @return the tChineseDef
+     */
+    public String getTChineseDef() {
+        return this.tChineseDef;
+    }
+
+    /**
+     * @param tChineseDef the tChineseDef to set
+     */
+    public void setTChineseDef(final String tChineseDef) {
+        this.tChineseDef = tChineseDef;
+    }
+
+    /**
+     * @return the sChineseDef
+     */
+    public String getSChineseDef() {
+        return this.sChineseDef;
+    }
+
+    /**
+     * @param sChineseDef the sChineseDef to set
+     */
+    public void setSChineseDef(final String sChineseDef) {
+        this.sChineseDef = sChineseDef;
     }
 
     /**
