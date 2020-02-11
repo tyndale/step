@@ -158,7 +158,10 @@ public class SearchPageController extends HttpServlet {
         //global settings
         //set the language attributes once
         final Locale userLocale = this.clientSessionProvider.get().getLocale();
-        req.setAttribute("languageCode", userLocale.getLanguage());
+        if  (userLocale.getLanguage().equalsIgnoreCase( "zh") && userLocale.getCountry().equalsIgnoreCase("tw")) {
+            req.setAttribute("languageCode", "zh_TW");
+        }
+        else req.setAttribute("languageCode", userLocale.getLanguage());
         req.setAttribute("languageName", ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
         req.setAttribute("languageComplete", this.languageService.isCompleted(userLocale.getLanguage()));

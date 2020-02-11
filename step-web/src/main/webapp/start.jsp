@@ -13,7 +13,7 @@
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
-    Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+    Config.set(session, Config.FMT_LOCALE, locale);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
 
@@ -28,7 +28,7 @@
     <script type="text/javascript">
         var _jipt = [];
         _jipt.push(['project', 'step']);
-    </script>
+    </script>((StandardSessionFacade)session).session
     <script type="text/javascript" src="//cdn.crowdin.net/jipt/jipt.js"></script>
     <%
         }
@@ -383,6 +383,7 @@
             String langCode = "en";
             if(request.getParameter("lang") == null) {
                 langCode = locale.getLanguage();
+                if ((langCode.equalsIgnoreCase("zh")) && locale.getCountry().equalsIgnoreCase("tw")) langCode = "zh_TW";
             }
             else {
                 if ((request.getParameter("lang").length() >= 2) && (request.getParameter("lang").length() <= 5)) {
