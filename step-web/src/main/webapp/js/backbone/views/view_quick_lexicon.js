@@ -39,10 +39,16 @@ var QuickLexicon = Backbone.View.extend({
     templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item, data_index) { %>' +
         '<div><h1>' +
-        '<%= item.stepGloss %> (<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
+        '<%= item.stepGloss %>' +
+        '<% var urlLang = $.getUrlVar("lang"); %>' +
+        '<% if (urlLang == null) { urlLang = ""; } else { urlLang = urlLang.toLowerCase(); } %>' +
+        '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
+        '<% if ((urlLang == "zh_tw") || (currentLang == "zh_tw")) { currentLang = "zh_tw"; } else if ((urlLang == "zh") || (currentLang == "zh")) { currentLang = "zh"; } %>' +
+        '<% if ( (currentLang == "zh_tw") && (item.tchineseGloss != undefined) ) { %><span>&nbsp;<%= item.tchineseGloss %></span> <% } else if ( (currentLang == "zh") && (item.schineseGloss != undefined) ) { %><span>&nbsp;<%= item.schineseGloss %></span> <% } %>' +
+        '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
-        '<% if (( (($.getUrlVar("lang") != null) && ($.getUrlVar("lang").toLowerCase() == "zh_tw")) || (step.userLanguageCode.toLowerCase() == "zh_tw")) && (item.tchineseDef != undefined)) { %><div class="mediumDef"><%= item.tchineseDef %></div> <% } else if(( (($.getUrlVar("lang") != null) && ($.getUrlVar("lang").toLowerCase() == "zh")) || (step.userLanguageCode.toLowerCase() == "zh")) && (item.schineseDef != undefined)) { %><div class="mediumDef"><%= item.schineseDef %></div> <% } %>' +
+        '<% if ( (currentLang == "zh_tw") && (item.tchineseDef != undefined) ) { %><div class="mediumDef"><%= item.tchineseDef %></div> <% } else if ( (currentLang == "zh") && (item.schineseDef != undefined) ) { %><div class="mediumDef"><%= item.schineseDef %></div> <% } %>' +
         '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
         '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
         '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +

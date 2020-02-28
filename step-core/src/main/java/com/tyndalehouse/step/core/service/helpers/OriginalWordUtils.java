@@ -52,7 +52,8 @@ public final class OriginalWordUtils {
         suggestion.setMatchingForm(def.get("accentedUnicode"));
         suggestion.setStepTransliteration(def.get("stepTransliteration"));
         suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-
+        suggestion.setTChineseGloss(def.get("tChineseGloss"));
+        suggestion.setSChineseGloss(def.get("sChineseGloss"));
         return suggestion;
     }
  

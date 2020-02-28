@@ -147,7 +147,9 @@ var PassageMenuView = Backbone.View.extend({
 
         var isPassage = this.model.get("searchType") == 'PASSAGE';
         var previousNext = this.$el.find(".nextPreviousChapterGroup");
-        previousNext.toggle(isPassage);
+        previousNext.toggle(true);
+        nextOnly = previousNext.find(".nextChapter");
+        nextOnly.toggle(isPassage);
         this.$el.find(".contextContainer").toggle(!isPassage);
 
     },
@@ -598,7 +600,27 @@ var PassageMenuView = Backbone.View.extend({
         step.util.activePassageId(this.model.get("passageId"));
 
         var args = this.model.get("args") || "";
-
+        var isPassage = this.model.get("searchType") == 'PASSAGE';
+        var reference = key.osisKeyId;
+        if (!isPassage) {
+            reference = key.osisKeyId = this.model.attributes.osisId;
+            var p1 = args.indexOf("strong=");
+            if (p1 > -1) {
+                var tempArgs = "";
+                var p2 = args.indexOf("|", p1 + 12);
+                if (p2 < 0) { 
+                    if (p1 > 0) {
+                        if (args.charAt(p1-1).match("|")) p1 = p1 - 1;
+                        tempArgs = args.substr(0, p1);
+                    }      
+                }
+                else {
+                    tempArgs = args.substr(0, p1);
+                    tempArgs = tempArgs + args.substr(p2+1);
+                }
+                args = tempArgs;
+            }
+        }
         //remove all references from the args
         args = args
             .replace(/reference=[0-9a-zA-Z :.;-]+/ig, "")
@@ -608,7 +630,7 @@ var PassageMenuView = Backbone.View.extend({
         if (args.length > 0 && args[args.length - 1] != '|') {
             args += "|";
         }
-        args += "reference=" + key.osisKeyId;
+        args += "reference=" + reference;
         step.router.navigateSearch(args);
     },
     /**

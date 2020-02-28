@@ -60,6 +60,8 @@ public class VocabInfo implements Serializable {
     private List<LexiconSuggestion> relatedNos;
     private String shortDef;
     private String mediumDef;
+    private String tChineseGloss;
+    private String sChineseGloss;
     private String tChineseDef;
     private String sChineseDef;
     private String stepGloss;
@@ -88,6 +90,8 @@ public class VocabInfo implements Serializable {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
         this.stepGloss = d.get("stepGloss");
+        this.tChineseGloss = d.get("tChineseGloss");
+        this.sChineseGloss = d.get("sChineseGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
         this.tChineseDef = d.get("tChineseDefinition");
@@ -292,6 +296,34 @@ public class VocabInfo implements Serializable {
      */
     public void setSChineseDef(final String sChineseDef) {
         this.sChineseDef = sChineseDef;
+    }
+
+    /**
+     * @return the traditional Chinese Gloss
+     */
+    public String getTChineseGloss() {
+        return this.tChineseGloss;
+    }
+
+    /**
+     * @param tChineseGloss the tChineseGless to set
+     */
+    public void setTChineseGloss(final String tChineseGloss) {
+        this.tChineseGloss = tChineseGloss;
+    }
+
+    /**
+     * @return the simplified Chinese Gloss
+     */
+    public String getSChineseGloss() {
+        return this.sChineseGloss;
+    }
+
+    /**
+     * @param sChineseGloss the sChineseGless to set
+     */
+    public void setSChineseGloss(final String sChineseGloss) {
+        this.sChineseGloss = sChineseGloss;
     }
 
     /**

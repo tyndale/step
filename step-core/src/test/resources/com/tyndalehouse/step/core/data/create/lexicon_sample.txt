@@ -2,7 +2,9 @@
 # CJB: All I've changed is href="#" to href="javascript:void(0)"
 $ ααρων=G0002 ============================
 @SChineseLexicon=	亚伦 这个阳性专有名词在希伯来文的意思是 "带来光的人"<br>摩西的兄弟。是第一位以色列的祭司，以及祭司阶级的首领。
-@TChineseLexicon	亞倫 这个陽性專有名詞在希伯來文的意思是 "帶來光的人"<br>摩西的兄弟。是第一位以色列的祭司，以及祭司階級的首領。
+@TChineseLexicon=	亞倫 这个陽性專有名詞在希伯來文的意思是 "帶來光的人"<br>摩西的兄弟。是第一位以色列的祭司，以及祭司階級的首領。
+@SChineseGloss=	亚伦
+@TChineseGloss=	亞倫
 @STEPUnicodeAccented=	Ἀαρών
 @FLsjType=	Proper Name (no entry from Full LSJ)  
 @FLsjNo=	

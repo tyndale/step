@@ -125,6 +125,12 @@ var SidebarView = Backbone.View.extend({
         if (data.vocabInfos.length == 0) {
             return;
         }
+        var urlLang = $.getUrlVar("lang");
+        if (urlLang == null) urlLang = "";
+        else urlLang = urlLang.toLowerCase();
+        var currentUserLang = step.userLanguageCode.toLowerCase();
+        if (urlLang == "zh_tw") currentUserLang = "zh_tw";
+        else if (urlLang == "zh") currentUserLang = "zh";
 
         if (data.vocabInfos.length > 1) {
             //multiple entries
@@ -145,7 +151,7 @@ var SidebarView = Backbone.View.extend({
                     panelContentContainer.addClass("in");
                 }
 
-                this._createBriefWordPanel(panelBody, item);
+                this._createBriefWordPanel(panelBody, item, currentUserLang);
 // need to handle multiple morphInfo (array)
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                     data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
@@ -153,7 +159,7 @@ var SidebarView = Backbone.View.extend({
                 if(i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
-                this._createWordPanel(panelBody, item);
+                this._createWordPanel(panelBody, item, currentUserLang);
                 if(i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
@@ -167,7 +173,7 @@ var SidebarView = Backbone.View.extend({
             this.lexicon.append(panelGroup);
 
         } else {
-            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0]);
+            this._createBriefWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
             // need to handle multiple morphInfo (array)
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                 data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
@@ -175,40 +181,125 @@ var SidebarView = Backbone.View.extend({
             if (data.morphInfos.length > 0) {
                 this._createBriefMorphInfo(this.lexicon, data.morphInfos[0]);
             }
-            this._createWordPanel(this.lexicon, data.vocabInfos[0]);
+            this._createWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
             if (data.morphInfos.length > 0) {
                 this._createMorphInfo(this.lexicon, data.morphInfos[0]);
             }
         }
         this.tabContainer.append(this.lexicon);
     },
-    _createBriefWordPanel: function (panel, mainWord) {
+    _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
+        var chineseGloss = "";
+        if ((currentUserLang == "zh_tw") && (mainWord.tchineseGloss != undefined)) chineseGloss = "&nbsp;" + mainWord.tchineseGloss + "&nbsp;";
+        else if ((currentUserLang == "zh") && (mainWord.schineseGloss != undefined)) chineseGloss = "&nbsp;" + mainWord.schineseGloss + "&nbsp;";
         panel.append(
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
                 .append(" (")
                 .append("<span class='transliteration'>" + mainWord.stepTransliteration + "</span>")
-                .append(") '")
-                                                                                                             .append(mainWord.stepGloss)
+                .append(") " + chineseGloss + "'")
+                .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
-        );
+            );
     },
 
-        _createWordPanel: function (panel, mainWord) {
-            panel.append(
-                $("<div>").append(mainWord.shortDef || "")
-            );
+    _addChineseDefinitions: function (panel, mainWord, currentUserLang) {
 
-        panel.append("<br />")
-            .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
-                var strongNumber = $(this).data("strongNumber");
-                var args = "strong=" + encodeURIComponent(strongNumber);
-                step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
-                step.router.navigatePreserveVersions(args);
-            }));
-        if(mainWord.count) {
-            panel.append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
+        var usagesLabel = "譯字彙編";
+        var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
+        $.ajaxSetup({async: false});
+        $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
+            panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
+            panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
+            var remainingText = chineseVars.definition;
+            var matchExpression = new RegExp(/\d{4}/g);
+            var matchResult = remainingText.match(matchExpression);
+            if (matchResult != null) {
+                for (var i = 0; i < matchResult.length; i++) {
+                    var pos = remainingText.search(matchResult[i]);
+                    var currentNumber = remainingText.substr(pos, 4);
+                    var currentStrongNumber = currentWordLangCode + currentNumber;
+                    if (pos > 0) {
+                        var charBeforeNum = remainingText.substr(pos-1, 1);
+                        if ((charBeforeNum == "G") || (charBeforeNum == "H")) currentStrongNumber = charBeforeNum + currentNumber;
+                    }
+                    panel.append(remainingText.substr(0, pos));  // text before the 4 character code
+                    panel.append($('<a href="javascript:void(0)">')
+                        .append(currentNumber)
+                        .data("strongNumber", currentStrongNumber));
+                    remainingText = remainingText.substr(pos+4);
+                }
+            }
+            panel.append(remainingText);
+            if(mainWord.count) {
+                panel.append('<h2>' + sprintf(__s.stats_occurs, mainWord.count) + '');
+            }
+            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
+                    var strongNumber = $(this).data("strongNumber");
+                    var args = "strong=" + encodeURIComponent(strongNumber);
+                    step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
+                    step.router.navigatePreserveVersions(args);
+                }));
+            panel.append($("<h2>").append(__s.lexicon_usage_for_zh + ":"));
+            var ul = $('<ul>');
+            for (var i = 0; i < chineseVars.usage.length; i = i+2) {
+                var li = $("<li></li>");
+                var displayTextOnUsage = chineseVars.usage[i];
+                var refArray1 = chineseVars.usage[i+1];
+                if (refArray1.length > 1) li.append("<span><abbr title=\"Over 100 usage of this word.  Each of the following link will display about 100 usage.\">" + displayTextOnUsage + "</abbr></span>");
+                for (var j = 0; j < refArray1.length; j++) {
+                    var refURLString = "";
+                    var refArray2 = refArray1[j];
+                    for (var k = 0; k < refArray2.length; k++) {
+                        refURLString += "|reference=" + refArray2[k];
+                    }
+                    if (refArray1.length > 1) {
+                        var displayGroupText = "";
+                        if ((j/26) >= 1) displayGroupText = String.fromCharCode(97 + Math.floor(j/26) - 1);
+                        displayGroupText += String.fromCharCode(97 + (j % 26));
+                        displayTextOnUsage = "&nbsp;<span title=\"Usage " + 
+                            (1 + (j * 100)) + " to " + 
+                            (100 + (j * 100)) + "\">(" + displayGroupText + ")</span>";
+                    }
+                    li.append($("<a></a>").attr("href", "javascript:void(0)")
+                        .data("strongNumber", mainWord.strongNumber)
+                        .data("refURLStr", refURLString)
+                        .append(displayTextOnUsage).click(function () {
+                            var strongNumber = $(this).data("strongNumber");
+                            var refURLStr = $(this).data("refURLStr");
+                            var args = "strong=" + encodeURIComponent(strongNumber) + refURLStr;
+                            step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
+                            step.router.navigatePreserveVersions(args);
+                    }));
+                }
+                ul.append(li);
+            }
+            panel.append(ul);
+        });
+        $.ajaxSetup({async: true});
+    },
+
+    _createWordPanel: function (panel, mainWord, currentUserLang) {
+        panel.append(
+            $("<div>").append(mainWord.shortDef || "")
+        );
+
+        if ((currentUserLang != "zh") && (currentUserLang != "zh_tw")) {
+            panel.append("<br />")
+                .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
+                    var strongNumber = $(this).data("strongNumber");
+                    var args = "strong=" + encodeURIComponent(strongNumber);
+                    step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
+                    step.router.navigatePreserveVersions(args);
+                }));
+            if(mainWord.count) {
+                panel.append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
+            }
+        }
+
+        if ((currentUserLang == "zh") || (currentUserLang == "zh_tw")) {
+            this._addChineseDefinitions(panel, mainWord, currentUserLang);
         }
 
         // append the meanings
@@ -229,7 +320,11 @@ var SidebarView = Backbone.View.extend({
             var matchingExpression = "";
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
                 if(mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
+                    var chineseGloss = "";
+                    if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i].tchineseGloss != undefined)) chineseGloss = mainWord.relatedNos[i].tchineseGloss + "&nbsp;";
+                    else if ((currentUserLang == "zh") && (mainWord.relatedNos[i].schineseGloss != undefined)) chineseGloss =  mainWord.relatedNos[i].schineseGloss + "&nbsp;";
                     var li = $("<li></li>").append($('<a href="javascript:void(0)">')
+                        .append(chineseGloss)
                         .append(mainWord.relatedNos[i].gloss)
                         .append(" (")
                         .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
