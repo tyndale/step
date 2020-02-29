@@ -205,8 +205,6 @@ var SidebarView = Backbone.View.extend({
     },
 
     _addChineseDefinitions: function (panel, mainWord, currentUserLang) {
-
-        var usagesLabel = "譯字彙編";
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
         $.ajaxSetup({async: false});
         $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {

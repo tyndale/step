@@ -600,37 +600,25 @@ var PassageMenuView = Backbone.View.extend({
         step.util.activePassageId(this.model.get("passageId"));
 
         var args = this.model.get("args") || "";
-        var isPassage = this.model.get("searchType") == 'PASSAGE';
-        var reference = key.osisKeyId;
-        if (!isPassage) {
-            reference = key.osisKeyId = this.model.attributes.osisId;
-            var p1 = args.indexOf("strong=");
-            if (p1 > -1) {
-                var tempArgs = "";
-                var p2 = args.indexOf("|", p1 + 12);
-                if (p2 < 0) { 
-                    if (p1 > 0) {
-                        if (args.charAt(p1-1).match("|")) p1 = p1 - 1;
-                        tempArgs = args.substr(0, p1);
-                    }      
-                }
-                else {
-                    tempArgs = args.substr(0, p1);
-                    tempArgs = tempArgs + args.substr(p2+1);
-                }
-                args = tempArgs;
-            }
+        console.log("args1: " + args);
+        var reference = "";
+        if (key.osisKeyId != null) reference = key.osisKeyId;
+        else alert("key.osisKeyId is null");
+        console.log("key.osisKeyId: " + reference);
+        args = args.replace(/reference=[^|]+\|?/ig, "")
+                   .replace(/&&/ig, "")
+                   .replace(/&$/ig, "");
+        var isPassageForChineseLexicon = (this.model.get("searchType") == 'ORIGINAL_GREEK_RELATED') || (this.model.get("searchType") == 'ORIGINAL_HEBREW_RELATED');
+        if (isPassageForChineseLexicon) {
+            args = args.replace(/strong=[GH]\d{3}[\dA-D][a-f]?\|?/i, "");
+            reference = this.model.attributes.osisId;
+            this.model.attributes.strongHighlights = "";
         }
-        //remove all references from the args
-        args = args
-            .replace(/reference=[0-9a-zA-Z :.;-]+/ig, "")
-            .replace(/&&/ig, "")
-            .replace(/&$/ig, "");
-
         if (args.length > 0 && args[args.length - 1] != '|') {
             args += "|";
         }
         args += "reference=" + reference;
+        console.log("args2: " + args);
         step.router.navigateSearch(args);
     },
     /**

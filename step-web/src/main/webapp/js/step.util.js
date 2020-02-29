@@ -738,6 +738,7 @@ step.util = {
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
+                    if (entry.item.shortName.length > 20) entry.item.shortName = entry.item.shortName.substr(0, 17) + '...';
                     return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
