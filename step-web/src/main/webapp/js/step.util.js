@@ -1183,12 +1183,22 @@ step.util = {
                                         '<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 
                                     var rows = [];
+                                    
+                                    // Check step.userLanguageCode and $.getURlvar
+                                    var urlLang = $.getUrlVar("lang");
+                                    if (urlLang == null) urlLang = "";
+                                    else urlLang = urlLang.toLowerCase();
+                                    var currentLang = step.userLanguageCode.toLowerCase();
+                                    if ((urlLang == "zh_tw") || (currentLang == "zh_tw")) currentLang = "zh_tw";
+                                    else if ((urlLang == "zh") || (currentLang == "zh")) currentLang = "zh";
                                     for (var key in data.strongData) {
                                         var verseData = data.strongData[key];
                                         for (var strong in verseData) {
                                             var strongData = verseData[strong];
                                             if (strongData && strongData.strongNumber) {
                                                 var counts = data.counts[strongData.strongNumber];
+                                                if ((currentLang == "zh") && (strongData.schineseGloss)) strongData.gloss = strongData.schineseGloss;
+                                                else if ((currentLang == "zh_tw") && (strongData.tchineseGloss)) strongData.gloss = strongData.tchineseGloss;
                                                 rows.push({
                                                     strongData: strongData,
                                                     counts: counts

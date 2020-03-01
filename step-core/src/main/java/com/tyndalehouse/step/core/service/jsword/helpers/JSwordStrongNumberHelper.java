@@ -274,6 +274,8 @@ public class JSwordStrongNumberHelper {
             final LexiconSuggestion ls = new LexiconSuggestion();
             ls.setStrongNumber(d.get("strongNumber"));
             ls.setGloss(d.get("stepGloss"));
+            ls.setTChineseGloss(d.get("tChineseGloss"));
+            ls.setSChineseGloss(d.get("sChineseGloss"));
             ls.setMatchingForm(d.get("accentedUnicode"));
             ls.setStepTransliteration(d.get("stepTransliteration"));
             suggestionsFromSearch.put(ls.getStrongNumber(), ls);
