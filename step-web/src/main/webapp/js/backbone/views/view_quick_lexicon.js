@@ -40,17 +40,21 @@ var QuickLexicon = Backbone.View.extend({
         '<% _.each(data, function(item, data_index) { %>' +
         '<div><h1>' +
         '<%= item.stepGloss %>' +
-        '<% var urlLang = $.getUrlVar("lang"); %>' +
-        '<% if (urlLang == null) { urlLang = ""; } else { urlLang = urlLang.toLowerCase(); } %>' +
+        '<% var urlLang = $.getUrlVar("lang") || ""; %>' +
+        '<% urlLang = urlLang.toLowerCase(); %>' +
         '<% var currentLang = step.userLanguageCode.toLowerCase(); %>' +
-        '<% if ((urlLang == "zh_tw") || (currentLang == "zh_tw")) { currentLang = "zh_tw"; } else if ((urlLang == "zh") || (currentLang == "zh")) { currentLang = "zh"; } %>' +
-        '<% if ( (currentLang == "zh_tw") && (item.tchineseGloss != undefined) ) { %><span>&nbsp;<%= item.tchineseGloss %></span> <% } else if ( (currentLang == "zh") && (item.schineseGloss != undefined) ) { %><span>&nbsp;<%= item.schineseGloss %></span> <% } %>' +
+        '<% if (urlLang == "zh_tw") { currentLang = "zh_tw"; } else if (urlLang == "zh") { currentLang = "zh"; } %>' +
+        '<% var currentEnWithZhLexiconSetting = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon"); %>' +
+        '<% if (currentEnWithZhLexiconSetting == undefined) currentEnWithZhLexiconSetting = false; %>' +
+        '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_tw_Gloss %></span> <% } else if ( (currentLang == "zh") && (item._zh_Gloss != undefined) ) { %><span>&nbsp;<%= item._zh_Gloss %></span> <% } %>' +
         '&nbsp;(<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
-        '<% if ( (currentLang == "zh_tw") && (item.tchineseDef != undefined) ) { %><div class="mediumDef"><%= item.tchineseDef %></div> <% } else if ( (currentLang == "zh") && (item.schineseDef != undefined) ) { %><div class="mediumDef"><%= item.schineseDef %></div> <% } %>' +
-        '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
-        '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
+        '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
+        '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.startsWith("zh"))) { %>' +
+            '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
+            '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
+        '<% } %>' +
         '<% if (item.count != null) { %><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>.) - <%= __s.more_info_on_click_of_word %></span><% } %>' +
         '</div>' +
         '<% if (brief_morph_info[data_index] != null) { %> ' +
@@ -83,7 +87,7 @@ var QuickLexicon = Backbone.View.extend({
         if ((this.morph != undefined) && (this.morph.startsWith('TOS:'))) {
             lastMorphCode = this.morph;
         }
-        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph], function (data) {
+        return $.getSafe(MODULE_GET_QUICK_INFO, [this.version, this.reference, this.strong, this.morph, step.userLanguageCode], function (data) {
             step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
             step.util.trackAnalytics("quickLexicon", "strong", self.strong);
             $("#quickLexicon").remove();

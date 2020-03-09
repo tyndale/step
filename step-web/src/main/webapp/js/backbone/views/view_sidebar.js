@@ -66,7 +66,7 @@ var SidebarView = Backbone.View.extend({
             if ((this.model.get("morph") != undefined) && (this.model.get("morph").startsWith('TOS:'))) {
                 lastMorphCode = this.model.get("morph");
             }
-            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph")], function (data) {
+            $.getSafe(MODULE_GET_INFO, [this.model.get("version"), this.model.get("ref"), this.model.get("strong"), this.model.get("morph"), step.userLanguageCode], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
                 self.createDefinition(data);
@@ -190,8 +190,8 @@ var SidebarView = Backbone.View.extend({
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var chineseGloss = "";
-        if ((currentUserLang == "zh_tw") && (mainWord.tchineseGloss != undefined)) chineseGloss = "&nbsp;" + mainWord.tchineseGloss + "&nbsp;";
-        else if ((currentUserLang == "zh") && (mainWord.schineseGloss != undefined)) chineseGloss = "&nbsp;" + mainWord.schineseGloss + "&nbsp;";
+        if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Gloss != undefined)) chineseGloss = "&nbsp;" + mainWord._zh_tw_Gloss + "&nbsp;";
+        else if ((currentUserLang == "zh") && (mainWord._zh_Gloss != undefined)) chineseGloss = "&nbsp;" + mainWord._zh_Gloss + "&nbsp;";
         panel.append(
             $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
                 .append(mainWord.accentedUnicode))
@@ -204,10 +204,12 @@ var SidebarView = Backbone.View.extend({
             );
     },
 
-    _addChineseDefinitions: function (panel, mainWord, currentUserLang) {
+    _addChineseDefinitions: function (panel, mainWord, currentUserLang, appendLexiconSearchFunction) {
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
+        var foundChineseJSON = false;
         $.ajaxSetup({async: false});
         $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
+            foundChineseJSON = true;
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
             var remainingText = chineseVars.definition;
@@ -229,16 +231,9 @@ var SidebarView = Backbone.View.extend({
                     remainingText = remainingText.substr(pos+4);
                 }
             }
-            panel.append(remainingText);
-            if(mainWord.count) {
-                panel.append('<h2>' + sprintf(__s.stats_occurs, mainWord.count) + '');
-            }
-            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
-                    var strongNumber = $(this).data("strongNumber");
-                    var args = "strong=" + encodeURIComponent(strongNumber);
-                    step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
-                    step.router.navigatePreserveVersions(args);
-                }));
+            panel.append(remainingText).append("<br />");
+            appendLexiconSearchFunction(panel, mainWord);
+
             panel.append($("<h2>").append(__s.lexicon_usage_for_zh + ":"));
             var ul = $('<ul>');
             for (var i = 0; i < chineseVars.usage.length; i = i+2) {
@@ -276,40 +271,45 @@ var SidebarView = Backbone.View.extend({
             panel.append(ul);
         });
         $.ajaxSetup({async: true});
+        return foundChineseJSON;
+    },
+
+    _appendLexiconSearch: function (panel, mainWord) {
+        panel.append("<br />").append(__s.lexicon_search_for_this_word);
+        if(mainWord.count) {
+            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
+                var strongNumber = $(this).data("strongNumber");
+                var args = "strong=" + encodeURIComponent(strongNumber);
+                step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
+                step.router.navigatePreserveVersions(args);
+            }));
+        }
+        panel.append().append('<br />');
     },
 
     _createWordPanel: function (panel, mainWord, currentUserLang) {
-        panel.append(
-            $("<div>").append(mainWord.shortDef || "")
-        );
+        if (mainWord.shortDef) {
+            panel.append(
+                $("<div>").append(mainWord.shortDef || "")
+            );
+        }
 
-        if ((currentUserLang != "zh") && (currentUserLang != "zh_tw")) {
-            panel.append("<br />")
-                .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
-                    var strongNumber = $(this).data("strongNumber");
-                    var args = "strong=" + encodeURIComponent(strongNumber);
-                    step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
-                    step.router.navigatePreserveVersions(args);
-                }));
-            if(mainWord.count) {
-                panel.append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
+        if (!currentUserLang.startsWith("zh")) this._appendLexiconSearch(panel, mainWord);
+        else var foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, this._appendLexiconSearch);
+        var isEnWithZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon");
+        if (isEnWithZhLexicon == undefined) isEnWithZhLexicon = false;
+        if ((!currentUserLang.startsWith("zh")) || (isEnWithZhLexicon)) {
+            // append the meanings
+            if (mainWord.mediumDef) {
+                panel.append($("<h2>").append(__s.lexicon_meaning));
+                panel.append(mainWord.mediumDef);
             }
-        }
 
-        if ((currentUserLang == "zh") || (currentUserLang == "zh_tw")) {
-            this._addChineseDefinitions(panel, mainWord, currentUserLang);
-        }
-
-        // append the meanings
-        if (mainWord.mediumDef) {
-            panel.append($("<h2>").append(__s.lexicon_meaning));
-            panel.append(mainWord.mediumDef);
-        }
-
-        //longer definitions
-        if (mainWord.lsjDefs ) {
-            panel.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-            panel.append(mainWord.lsjDefs);
+            //longer definitions
+            if (mainWord.lsjDefs ) {
+                panel.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+                panel.append(mainWord.lsjDefs);
+            }
         }
 
         if (mainWord.relatedNos) {
@@ -319,8 +319,8 @@ var SidebarView = Backbone.View.extend({
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
                 if(mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
                     var chineseGloss = "";
-                    if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i].tchineseGloss != undefined)) chineseGloss = mainWord.relatedNos[i].tchineseGloss + "&nbsp;";
-                    else if ((currentUserLang == "zh") && (mainWord.relatedNos[i].schineseGloss != undefined)) chineseGloss =  mainWord.relatedNos[i].schineseGloss + "&nbsp;";
+                    if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) chineseGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
+                    else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) chineseGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
                     var li = $("<li></li>").append($('<a href="javascript:void(0)">')
                         .append(chineseGloss)
                         .append(mainWord.relatedNos[i].gloss)
@@ -340,6 +340,12 @@ var SidebarView = Backbone.View.extend({
             panel.find("a").click(function () {
                 step.util.ui.showDef($(this).data("strongNumber"));
             });
+        }
+        if (currentUserLang.startsWith("zh") && (foundChineseJSON)) {
+            var tmpMsg = (currentUserLang == "zh") ? "关于中文字典的知料" : "關於中文字典的知料";
+            panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
+                "\" target=\"_blank\">" +
+                tmpMsg + "</a>");
         }
     },
     // for one-line morphology

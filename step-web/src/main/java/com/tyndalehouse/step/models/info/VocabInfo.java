@@ -60,10 +60,10 @@ public class VocabInfo implements Serializable {
     private List<LexiconSuggestion> relatedNos;
     private String shortDef;
     private String mediumDef;
-    private String tChineseGloss;
-    private String sChineseGloss;
-    private String tChineseDef;
-    private String sChineseDef;
+    private String zh_tw_Gloss;
+    private String zh_Gloss;
+    private String zh_tw_Definition;
+    private String zh_Definition;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
@@ -86,16 +86,21 @@ public class VocabInfo implements Serializable {
      * @param includeAllInfo true to include all information
      */
     public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
-                     final boolean includeAllInfo) {
+                     final boolean includeAllInfo, final String userLanguage) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
         this.stepGloss = d.get("stepGloss");
-        this.tChineseGloss = d.get("tChineseGloss");
-        this.sChineseGloss = d.get("sChineseGloss");
         this.stepTransliteration = d.get("stepTransliteration");
         this.mediumDef = d.get("mediumDefinition");
-        this.tChineseDef = d.get("tChineseDefinition");
-        this.sChineseDef = d.get("sChineseDefinition");
+        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh"))) {
+            this.zh_Gloss = d.get("zh_Gloss");
+            this.zh_Definition = d.get("zh_Definition");
+        }
+        if ((userLanguage == null) || (userLanguage == "") || (userLanguage.equalsIgnoreCase("zh_tw"))) {
+            this.zh_tw_Gloss = d.get("zh_tw_Gloss");
+            this.zh_tw_Definition = d.get("zh_tw_Definition");
+        }
+
         final String popularity = d.get("popularity");
         
         if(StringUtils.isNotBlank(popularity)) {
@@ -271,59 +276,59 @@ public class VocabInfo implements Serializable {
     }
 
     /**
-     * @return the tChineseDef
+     * @return the zh_tw_Def
      */
-    public String getTChineseDef() {
-        return this.tChineseDef;
+    public String get_zh_tw_Definition() {
+        return this.zh_tw_Definition;
     }
 
     /**
-     * @param tChineseDef the tChineseDef to set
+     * @param zh_tw_Definition the zh_tw_Def to set
      */
-    public void setTChineseDef(final String tChineseDef) {
-        this.tChineseDef = tChineseDef;
+    public void set_zh_tw_Definition(final String zh_tw_Definition) {
+        this.zh_tw_Definition = zh_tw_Definition;
     }
 
     /**
-     * @return the sChineseDef
+     * @return the zh_Definition
      */
-    public String getSChineseDef() {
-        return this.sChineseDef;
+    public String get_zh_Definition() {
+        return this.zh_Definition;
     }
 
     /**
-     * @param sChineseDef the sChineseDef to set
+     * @param zh_Definition the zh_Definition to set
      */
-    public void setSChineseDef(final String sChineseDef) {
-        this.sChineseDef = sChineseDef;
+    public void set_zh_Definition(final String zh_Definition) {
+        this.zh_Definition = zh_Definition;
     }
 
     /**
      * @return the traditional Chinese Gloss
      */
-    public String getTChineseGloss() {
-        return this.tChineseGloss;
+    public String get_zh_tw_Gloss() {
+        return this.zh_tw_Gloss;
     }
 
     /**
-     * @param tChineseGloss the tChineseGless to set
+     * @param zh_tw_Gloss the zh_tw_Gloss to set
      */
-    public void setTChineseGloss(final String tChineseGloss) {
-        this.tChineseGloss = tChineseGloss;
+    public void set_zh_tw_Gloss(final String zh_tw_Gloss) {
+        this.zh_tw_Gloss = zh_tw_Gloss;
     }
 
     /**
      * @return the simplified Chinese Gloss
      */
-    public String getSChineseGloss() {
-        return this.sChineseGloss;
+    public String get_zh_Gloss() {
+        return this.zh_Gloss;
     }
 
     /**
-     * @param sChineseGloss the sChineseGless to set
+     * @param zh_Gloss the zh_Gloss to set
      */
-    public void setSChineseGloss(final String sChineseGloss) {
-        this.sChineseGloss = sChineseGloss;
+    public void set_zh_Gloss(final String zh_Gloss) {
+        this.zh_Gloss = zh_Gloss;
     }
 
     /**

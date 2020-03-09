@@ -13,8 +13,8 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String matchingForm;
     private String stepTransliteration;
     private String gloss;
-    private String tChineseGloss;
-    private String sChineseGloss;
+    private String zh_tw_Gloss;
+    private String zh_Gloss;
 
     /**
      * @return the stepTransliteration
@@ -38,15 +38,19 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     }
 
     /**
-     * @return the Chinese gloss
+     * @return the traditional Chinese gloss
      */
 
-    public String getTChineseGloss() {
-        return this.tChineseGloss;
+    public String get_zh_tw_Gloss() {
+        return this.zh_tw_Gloss;
     }
 
-    public String getSChineseGloss() {
-        return this.sChineseGloss;
+    /**
+     * @return the simplified Chinese gloss
+     */
+
+    public String get_zh_Gloss() {
+        return this.zh_Gloss;
     }
 
     /**
@@ -59,12 +63,12 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     /**
      * @param chineseGloss the gloss to set
      */
-    public void setTChineseGloss(final String chineseGloss) {
-        this.tChineseGloss = chineseGloss;
+    public void set_zh_tw_Gloss(final String chineseGloss) {
+        this.zh_tw_Gloss = chineseGloss;
     }
 
-    public void setSChineseGloss(final String chineseGloss) {
-        this.sChineseGloss = chineseGloss;
+    public void set_zh_Gloss(final String chineseGloss) {
+        this.zh_Gloss = chineseGloss;
     }
 
 

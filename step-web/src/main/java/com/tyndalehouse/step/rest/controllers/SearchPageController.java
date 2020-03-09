@@ -96,8 +96,9 @@ public class SearchPageController extends HttpServlet {
                 doRedirect(response, oldReference, oldVersion);
                 return;
             }
-
-            text = doSearch(request);
+            String userLanguage = request.getParameter("lang");
+            if (userLanguage == null) userLanguage = this.clientSessionProvider.get().getLocale().toString();
+            text = doSearch(request, userLanguage);
             setupRequestContext(request, text);
             setupResponseContext(response);
         } catch (Exception exc) {
@@ -385,7 +386,7 @@ public class SearchPageController extends HttpServlet {
         return sb.toString();
     }
 
-    private AbstractComplexSearch doSearch(final HttpServletRequest req) {
+    private AbstractComplexSearch doSearch(final HttpServletRequest req, final String userLanguage) {
         AbstractComplexSearch text;
         try {
             text = this.search.masterSearch(
@@ -395,7 +396,8 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("page"),
                     req.getParameter("qFilter"),
                     req.getParameter("sort"),
-                    req.getParameter("context"));
+                    req.getParameter("context"),
+                    userLanguage);
         } catch (Exception ex) {
             LOGGER.warn(ex.getMessage(), ex);
             text = getDefaultPassage();

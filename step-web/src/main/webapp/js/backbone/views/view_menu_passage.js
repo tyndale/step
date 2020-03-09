@@ -14,7 +14,8 @@ var PassageMenuView = Backbone.View.extend({
         '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
         '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
-	quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -28,7 +29,8 @@ var PassageMenuView = Backbone.View.extend({
         { group: "display_vocab_options", items: [
             { initial: "E", key: "display_englishVocab" },
             { initial: "A", key: "display_greekVocab" },
-            { initial: "T", key: "display_transliteration" }
+            { initial: "T", key: "display_transliteration" },
+            { initial: "Z", key: "display_chineseVocab" }
         ]},
         { group: "original_language_options", items: [
             { initial: "O", key: "display_original_transliteration" },
@@ -395,6 +397,25 @@ var PassageMenuView = Backbone.View.extend({
             self._setVisible(this, quickLexicon);
         }));
 
+        if (step.userLanguageCode.toLowerCase().startsWith("zh")) {
+            var currentEnWithZhLexiconSetting = self.model.get("isEnWithZhLexicon");
+            if (currentEnWithZhLexiconSetting == null) {
+                this.model.save({ isEnWithZhLexicon: false });
+                currentEnWithZhLexiconSetting = false;
+            }
+            dropdown.append($(_.template(this.enWithZhLexicon)({ isEnWithZhLexicon: currentEnWithZhLexiconSetting })).click(function (e) {
+                //prevent the bubbling up
+                e.stopPropagation();
+
+                //set the setting
+                var enWithZhLexicon = !self.model.get("isEnWithZhLexicon");
+                self.model.save({ isEnWithZhLexicon: enWithZhLexicon });
+
+                //toggle the tick
+                self._setVisible(this, enWithZhLexicon);
+            }));
+        }
+
         var currentVerseVocabSetting = self.model.get("isVerseVocab");
         if (currentVerseVocabSetting == null) {
             this.model.save({ isVerseVocab: true });
@@ -447,18 +468,16 @@ var PassageMenuView = Backbone.View.extend({
                 var panelBody = $("<div class='panel-body'>");
                 collapseBody.append(panelBody);
                 this._createItemsInDropdown(panelBody, items[i].items || []);
-
                 panel.append(collapseHeader).append(collapseBody);
                 dropdown.append(panel);
             } else {
-                var keyText = __s[items[i].key];
-                var helpText = __s[items[i].help];
-                if ((items[i].initial == "C") && (keyText !== undefined) && (window.location.hostname.toLowerCase().indexOf('color.com') > -1)) {
-                    keyText = keyText.replace("olour", "olor");
-                    if (helpText !== undefined) helpText = helpText.replace("olour", "olor");
+                if ((items[i].initial == "Z") && (step.userLanguageCode.toLowerCase() == "zh")) items[i].initial = "S"; // Option code for Simplified Chinese is "S"
+                if ((items[i].initial != "Z") || ((items[i].initial == "Z") && (step.userLanguageCode.toLowerCase() == "zh_tw"))) {
+                    var keyText = __s[items[i].key];
+                    var helpText = __s[items[i].help];
+                    var link = this._createLink(items[i].initial, keyText, helpText);
+                    this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
                 }
-                var link = this._createLink(items[i].initial, keyText, helpText);
-                this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
             }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
@@ -602,8 +621,8 @@ var PassageMenuView = Backbone.View.extend({
         var args = this.model.get("args") || "";
         console.log("args1: " + args);
         var reference = "";
-        if (key.osisKeyId != null) reference = key.osisKeyId;
-        else alert("key.osisKeyId is null");
+        if ((key.osisKeyId != null) && (key.osisKeyId != undefined)) reference = key.osisKeyId;
+        else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
         console.log("key.osisKeyId: " + reference);
         args = args.replace(/reference=[^|]+\|?/ig, "")
                    .replace(/&&/ig, "")

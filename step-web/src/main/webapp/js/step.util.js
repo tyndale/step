@@ -685,7 +685,7 @@ step.util = {
             }
 
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
-                this.renderEnhancedToken(searchToken, isMasterVersion) +
+                this.renderEnhancedToken(searchToken, isMasterVersion, false) +
                 '</span>';
         },
         getSource: function (itemType, nowrap) {
@@ -733,18 +733,29 @@ step.util = {
             }
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
-        renderEnhancedToken: function (entry, isMasterVersion) {
+        renderEnhancedToken: function (entry, isMasterVersion, inMainSearch) {
+            var result;
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
-                    if (entry.item.shortName.length > 20) entry.item.shortName = entry.item.shortName.substr(0, 17) + '...';
-                    return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
+                    if (entry.item.shortName.length > 20) {
+                        var lastComma = entry.item.shortName.substr(0, 17).lastIndexOf(",");
+                        if (lastComma < 5) lastComma = 17;
+                        entry.item.shortName = entry.item.shortName.substr(0, lastComma) + '...';
+                    }
+                    result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
-                        entry.item.shortName + '</div>';
+                        entry.item.shortName;
+                    // Add a down arrow if in the main search select2 control.
+                    if (inMainSearch) {
+                        result = result + '&nbsp;&#9660;';
+                    }
+                    result = result + '</div>';
+                    return result;
                 case VERSION:
-                    // I have seen the code crashed at this point when entry.item.shortInitialis is not defined.  It might be caused by an old installation of the Bible modules.
+                    // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
 					var shortInitialsOfTranslation = ''; // added so it does not crash at startup
 					var nameOfTranslation = '';          //  added so it does not crash at startup
@@ -758,11 +769,17 @@ step.util = {
                             else if (step.keyedVersions[shortInitialsOfTranslation] !== undefined) nameOfTranslation = step.keyedVersions[shortInitialsOfTranslation].name;
                         }
 					}
-                    return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
+                    result = '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
                         '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
                         (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation + "</div>"; // added so it does not crash at startup
+                        'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
+                    // Add a down arrow if in the main search select2 control.
+                    if (inMainSearch) {
+                        result = result + "&nbsp;&#9660;";
+                    }
+                    result = result + "</div>";
+                    return result;
                 case GREEK:
                 case HEBREW:
                 case GREEK_MEANINGS:
@@ -1155,7 +1172,7 @@ step.util = {
                         content: {
                             text: function (event, api) {
                                 //otherwise, exciting new strong numbers to apply:
-                                $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
+                                $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference, step.userLanguageCode], function (data) {
                                     var template = '<div class="vocabTable">' +
 
                                         '<div class="col-xs-8 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
@@ -1189,16 +1206,16 @@ step.util = {
                                     if (urlLang == null) urlLang = "";
                                     else urlLang = urlLang.toLowerCase();
                                     var currentLang = step.userLanguageCode.toLowerCase();
-                                    if ((urlLang == "zh_tw") || (currentLang == "zh_tw")) currentLang = "zh_tw";
-                                    else if ((urlLang == "zh") || (currentLang == "zh")) currentLang = "zh";
+                                    if (urlLang == "zh_tw") currentLang = "zh_tw";
+                                    else if (urlLang == "zh") currentLang = "zh";
                                     for (var key in data.strongData) {
                                         var verseData = data.strongData[key];
                                         for (var strong in verseData) {
                                             var strongData = verseData[strong];
                                             if (strongData && strongData.strongNumber) {
                                                 var counts = data.counts[strongData.strongNumber];
-                                                if ((currentLang == "zh") && (strongData.schineseGloss)) strongData.gloss = strongData.schineseGloss;
-                                                else if ((currentLang == "zh_tw") && (strongData.tchineseGloss)) strongData.gloss = strongData.tchineseGloss;
+                                                if ((currentLang == "zh") && (strongData._zh_Gloss)) strongData.gloss = strongData._zh_Gloss;
+                                                else if ((currentLang == "zh_tw") && (strongData._zh_tw_Gloss)) strongData.gloss = strongData._zh_tw_Gloss;
                                                 rows.push({
                                                     strongData: strongData,
                                                     counts: counts

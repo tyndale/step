@@ -91,6 +91,18 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("stepGloss");
         }
     };
+    private final LexiconDataProvider zh_tw_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("zh_tw_Gloss");
+        }
+    };
+    private final LexiconDataProvider zh_VocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final EntityDoc l) {
+            return l.get("zh_Gloss");
+        }
+    };
     private final LexiconDataProvider greekVocabProvider = new LexiconDataProvider() {
         @Override
         public String getData(final EntityDoc l) {
@@ -144,16 +156,26 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers) {
+    public VocabResponse getDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
-            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber",
-                    strongList);
-
+            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
+            for (int i = 0; i < strongDefs.length; i ++) {
+                if ((userLanguage != null) && (userLanguage != "")) {
+                    if (!userLanguage.equalsIgnoreCase("zh")) {
+                        strongDefs[0].removeField("zh_Gloss");
+                        strongDefs[0].removeField("zh_Definition");
+                    }
+                    if (!userLanguage.equalsIgnoreCase("zh_tw")) {
+                        strongDefs[0].removeField("zh_tw_Gloss");
+                        strongDefs[0].removeField("zh_tw_Definition");
+                    }
+                }
+            }
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
-            final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions);
+            final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions, userLanguage);
             return new VocabResponse(definitions, relatedWords);
         }
 
@@ -167,7 +189,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @param defs the definitions that have been looked up.
      * @return the map
      */
-    private Map<String, List<LexiconSuggestion>> readRelatedWords(final EntityDoc[] defs) {
+    private Map<String, List<LexiconSuggestion>> readRelatedWords(final EntityDoc[] defs, final String userLanguage) {
         // this map keys the original word strong number to all the related codes
         final Map<String, SortedSet<LexiconSuggestion>> relatedWords = new HashMap<String, SortedSet<LexiconSuggestion>>(
                 defs.length * 2);
@@ -185,11 +207,10 @@ public class VocabularyServiceImpl implements VocabularyService {
 
                 // look up related word from index
                 if (shortLexiconDefinition == null) {
-                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber",
-                            relatedWord);
+                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, relatedWord);
                     // assume first doc
                     if (relatedDoc.length > 0) {
-                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0]);
+                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
                         lookedUpWords.put(relatedWord, shortLexiconDefinition);
                     }
                 }
@@ -251,12 +272,12 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers) {
+    public VocabResponse getQuickDefinitions(final String version, final String reference, final String vocabIdentifiers, final String userLanguage) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
-            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             return new VocabResponse(strongNumbers);
         }
         return new VocabResponse();
@@ -270,6 +291,16 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Override
     public String getEnglishVocab(final String version, final String reference, final String vocabIdentifiers) {
         return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.englishVocabProvider);
+    }
+
+    @Override
+    public String get_zh_tw_Vocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_tw_VocabProvider);
+    }
+
+    @Override
+    public String get_zh_Vocab(final String version, final String reference, final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(version, reference, vocabIdentifiers, this.zh_VocabProvider);
     }
 
     @Override
@@ -294,10 +325,18 @@ public class VocabularyServiceImpl implements VocabularyService {
                                                 final LexiconDataProvider provider) {
 
         // else we lookup and concatenate
-        final EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
+        EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
 
         if (lds.length == 0) {
-            return vocabIdentifiers;
+            String vocabIdentifiers2 = vocabIdentifiers;
+            if ((vocabIdentifiers2.length() >= 13) & (vocabIdentifiers2.substring(8,9).equals("0"))) {
+                vocabIdentifiers2 = vocabIdentifiers2.substring(0,8).concat(vocabIdentifiers2.substring(9));
+            }
+            vocabIdentifiers2 = vocabIdentifiers2.concat("a");
+            lds = getLexiconDefinitions(vocabIdentifiers2, version, reference);
+            if (lds.length == 0) {
+                return vocabIdentifiers;
+            }
         }
 
         if (lds.length == 1) {
@@ -333,7 +372,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             return entityDocs;
         }
 
-        final EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", keys);
+        final EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", null, keys);
         DEFINITIION_CACHE.put(cacheKey, strongNumbers);
         return strongNumbers;
     }
