@@ -229,7 +229,17 @@
                                                                         <li class="sortable" strongnumber="${ definition.strongNumber}">
                                                                             <a href="javascript:void(0)" strong="${ definition.strongNumber}">
                                                                                 <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
-                                                                                ${ definition.gloss}
+
+                                                                                <%  if (locale.getLanguage().equalsIgnoreCase("zh")) {
+                                                                                        if (locale.getCountry().equalsIgnoreCase("tw")) %>
+                                                                                            ${ definition._zh_tw_Gloss}
+                                                                                <%      else %>
+                                                                                            ${ definition._zh_Gloss}
+                                                                                <%  }
+                                                                                    else { %>
+                                                                                        ${ definition.gloss}
+                                                                                <%  } %>
+
                                                                                 (<span class="transliteration">${ definition.stepTransliteration }</span>
                                                                                 - <span class="${fn:substring(definition.strongNumber, 0,1) == 'H' ?'hbFontMini' : 'unicodeFontMini'}">
                                                                                     ${ definition.matchingForm })

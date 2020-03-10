@@ -621,7 +621,7 @@ var PassageMenuView = Backbone.View.extend({
         var args = this.model.get("args") || "";
         console.log("args1: " + args);
         var reference = "";
-        if ((key.osisKeyId != null) && (key.osisKeyId != undefined)) reference = key.osisKeyId;
+        if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
         else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
         console.log("key.osisKeyId: " + reference);
         args = args.replace(/reference=[^|]+\|?/ig, "")

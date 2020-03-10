@@ -106,7 +106,12 @@ public final class ValidateUtils {
     {
         String result = "en";
         if(inputLangCode == null) {
-            result = locale.getLanguage();
+            if (locale.getLanguage().equalsIgnoreCase( "zh") && locale.getCountry().equalsIgnoreCase("tw")) {
+                result = "zh_TW";
+            }
+            else {
+                result = locale.getLanguage();
+            }
         }
         else {
             if ((inputLangCode.length() >= 2) && (inputLangCode.length() <= 5)) {
