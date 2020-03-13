@@ -185,6 +185,12 @@ public class ModuleController {
 
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, vocabIdentifiers, userLanguage), true, userLanguage));
+            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
+                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
+                    i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), true, userLanguage));
+                }
+            }
         }
         return i;
     }
@@ -238,6 +244,12 @@ public class ModuleController {
 
         if (isNotBlank(vocabIdentifiers)) {
             i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, vocabIdentifiers, userLanguage), false, userLanguage));
+            if ((i.getMorphInfos().size() == 0) && (i.getVocabInfos().size() == 0)) {
+                if (!vocabIdentifiers.substring(vocabIdentifiers.length()).equalsIgnoreCase("a")) {
+                    String modifiedVocabIdentifiers = vocabIdentifiers.concat("a");
+                    i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(version, reference, modifiedVocabIdentifiers, userLanguage), false, userLanguage));
+                }
+            }
         }
         return i;
     }

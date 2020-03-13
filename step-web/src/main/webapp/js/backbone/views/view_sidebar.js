@@ -204,7 +204,31 @@ var SidebarView = Backbone.View.extend({
             );
     },
 
-    _addChineseDefinitions: function (panel, mainWord, currentUserLang, appendLexiconSearchFunction) {
+    _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode) {
+        var remainingText = textToAdd;
+        var matchExpression = new RegExp(/[GH]?\d{4,5}/g);
+        var matchResult = remainingText.match(matchExpression);
+        if (matchResult != null) {
+            for (var i = 0; i < matchResult.length; i++) {
+                var pos = remainingText.search(matchResult[i]);
+                var matchLength = matchResult[i].length;
+                var currentMatch = remainingText.substr(pos, matchLength);
+                var currentStrongNumber = currentMatch;
+                if ((currentStrongNumber.substr(0,1) != "G") && (currentStrongNumber.substr(0,1) != "H"))
+                    currentStrongNumber = currentWordLangCode + currentMatch;
+                if ((currentStrongNumber.length > 5) && (currentStrongNumber.substr(1,1) == "0"))
+                    currentStrongNumber = currentStrongNumber.substr(0,1) + currentStrongNumber.substr(2);
+                panel.append(remainingText.substr(0, pos));  // text before the 4 character code
+                panel.append($('<a href="javascript:void(0)">')
+                    .append(currentMatch)
+                    .data("strongNumber", currentStrongNumber));
+                remainingText = remainingText.substr(pos + matchLength);
+            }
+        }
+        panel.append(remainingText).append("<br />");        
+    },
+
+    _addChineseDefinitions: function (panel, mainWord, currentUserLang, appendLexiconSearchFunction, addLinkAndAppendFunction) {
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
         var foundChineseJSON = false;
         $.ajaxSetup({async: false});
@@ -212,26 +236,9 @@ var SidebarView = Backbone.View.extend({
             foundChineseJSON = true;
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
-            var remainingText = chineseVars.definition;
-            var matchExpression = new RegExp(/\d{4}/g);
-            var matchResult = remainingText.match(matchExpression);
-            if (matchResult != null) {
-                for (var i = 0; i < matchResult.length; i++) {
-                    var pos = remainingText.search(matchResult[i]);
-                    var currentNumber = remainingText.substr(pos, 4);
-                    var currentStrongNumber = currentWordLangCode + currentNumber;
-                    if (pos > 0) {
-                        var charBeforeNum = remainingText.substr(pos-1, 1);
-                        if ((charBeforeNum == "G") || (charBeforeNum == "H")) currentStrongNumber = charBeforeNum + currentNumber;
-                    }
-                    panel.append(remainingText.substr(0, pos));  // text before the 4 character code
-                    panel.append($('<a href="javascript:void(0)">')
-                        .append(currentNumber)
-                        .data("strongNumber", currentStrongNumber));
-                    remainingText = remainingText.substr(pos+4);
-                }
-            }
-            panel.append(remainingText).append("<br />");
+
+            addLinkAndAppendFunction(panel, chineseVars.definition, currentWordLangCode);
+
             appendLexiconSearchFunction(panel, mainWord);
 
             panel.append($("<h2>").append(__s.lexicon_usage_for_zh + ":"));
@@ -288,26 +295,27 @@ var SidebarView = Backbone.View.extend({
     },
 
     _createWordPanel: function (panel, mainWord, currentUserLang) {
+        var currentWordLanguageCode = mainWord.strongNumber[0];
         if (mainWord.shortDef) {
-            panel.append(
-                $("<div>").append(mainWord.shortDef || "")
-            );
+            this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode);
         }
 
-        if (!currentUserLang.startsWith("zh")) this._appendLexiconSearch(panel, mainWord);
-        else var foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, this._appendLexiconSearch);
+        var foundChineseJSON = false;
+        if (currentUserLang.startsWith("zh")) 
+            foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, this._appendLexiconSearch, this._addLinkAndAppend);
+        if (!foundChineseJSON) this._appendLexiconSearch(panel, mainWord); // Run this if it is not Chinese language or if Chinese language, but did not find the Chinese json files.
         var isEnWithZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon");
         if (isEnWithZhLexicon == undefined) isEnWithZhLexicon = false;
         if ((!currentUserLang.startsWith("zh")) || (isEnWithZhLexicon)) {
             // append the meanings
             if (mainWord.mediumDef) {
                 panel.append($("<h2>").append(__s.lexicon_meaning));
-                panel.append(mainWord.mediumDef);
+                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode);
             }
 
             //longer definitions
             if (mainWord.lsjDefs ) {
-                panel.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+                panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
                 panel.append(mainWord.lsjDefs);
             }
         }
