@@ -329,7 +329,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
         if (lds.length == 0) {
             String vocabIdentifiers2 = vocabIdentifiers;
-            if ((vocabIdentifiers2.length() >= 13) & (vocabIdentifiers2.substring(8,9).equals("0"))) {
+            if ((vocabIdentifiers2.length() >= 13) && (vocabIdentifiers2.substring(8,9).equals("0"))) {
                 vocabIdentifiers2 = vocabIdentifiers2.substring(0,8).concat(vocabIdentifiers2.substring(9));
             }
             vocabIdentifiers2 = vocabIdentifiers2.concat("a");
