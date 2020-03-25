@@ -328,12 +328,14 @@ public class VocabularyServiceImpl implements VocabularyService {
         EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
 
         if (lds.length == 0) {
-            String vocabIdentifiers2 = vocabIdentifiers;
-            if ((vocabIdentifiers2.length() >= 13) && (vocabIdentifiers2.substring(8,9).equals("0"))) {
-                vocabIdentifiers2 = vocabIdentifiers2.substring(0,8).concat(vocabIdentifiers2.substring(9));
+            if (vocabIdentifiers.length() >= 3) {
+                String vocabIdentifiers2 = vocabIdentifiers;
+                if ((vocabIdentifiers2.length() >= 13) && (vocabIdentifiers2.substring(8, 9).equals("0"))) {
+                    vocabIdentifiers2 = vocabIdentifiers2.substring(0, 8).concat(vocabIdentifiers2.substring(9));
+                }
+                vocabIdentifiers2 = vocabIdentifiers2.concat("a");
+                lds = getLexiconDefinitions(vocabIdentifiers2, version, reference);
             }
-            vocabIdentifiers2 = vocabIdentifiers2.concat("a");
-            lds = getLexiconDefinitions(vocabIdentifiers2, version, reference);
             if (lds.length == 0) {
                 return vocabIdentifiers;
             }

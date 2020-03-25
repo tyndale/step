@@ -38,8 +38,7 @@
       margin: 6px 0;
       border-left: 1px solid $text-color;
       letter-spacing: .5px;
-
-      &:first-child {
+      first-child {
         padding-left: 0;
         border-left: none;
       }

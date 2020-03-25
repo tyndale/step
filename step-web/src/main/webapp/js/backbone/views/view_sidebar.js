@@ -204,8 +204,46 @@ var SidebarView = Backbone.View.extend({
             );
     },
 
-    _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode) {
+    _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode, bibleVersion) {
+        // Find all ref tang and change
+        //        panel.append('<a sbRef=" PASSAGE1 " class="linkRef" href="?q=version= VERSION &amp;reference= PASSAGE1 "> PASSAGE2 </a>');
+        //        '<ref=\'' . PASSAGE1 . '\'>' . PASSAGE2 . '</ref>';
         var remainingText = textToAdd;
+        var textToAdd2 = remainingText;
+//        var pos1 = remainingText.indexOf("<ref='");
+        var pos1 = remainingText.search("<ref=['\"]");
+        if (pos1 > -1) {
+            textToAdd2 = "";
+            while (pos1 > -1) {
+                textToAdd2 += remainingText.substr(0, pos1);
+                var typeOfQuoteChar = remainingText.substr(pos1 + 5, 1);
+                remainingText = remainingText.substr(pos1 + 6);
+                var pos2 = remainingText.search(typeOfQuoteChar + ">");
+                if (pos2 > 2) {
+                    var passageRef = remainingText.substr(0, pos2);
+                    remainingText = remainingText.substr(pos2 + 2);
+                    var pos3 = remainingText.indexOf("</ref>");
+                    if (pos3 > -1) {
+                        textToAdd2 += '<a sbRef=' + typeOfQuoteChar + passageRef + typeOfQuoteChar +
+                            ' class="linkRef" href="?q=version=' + bibleVersion +
+                            '&amp;reference=' + passageRef + '">' + remainingText.substr(0, pos3) +
+                            '</a>';
+                        remainingText = remainingText.substr(pos3 + 6);
+                        pos1 = remainingText.search("<ref=['\"]"); // Search for the next iteration of while loop.
+                    } else {
+                        textToAdd2 += "<ref=" + typeOfQuoteChar + passageRef + typeOfQuoteChar + ">" + remainingText;
+                        remainingText = "";
+                        pos1 = -1; // Incomplete ref tag
+                    }
+                } else {
+                    textToAdd2 += "<ref=" + typeOfQuoteChar + remainingText;
+                    remainingText = "";
+                    pos1 = -1; // Incomplete <ref=' tag.  Cannot find the '> after that.
+                }
+            }
+            textToAdd2 += remainingText;
+        }
+        remainingText = textToAdd2;
         var matchExpression = new RegExp(/[GH]?\d{4,5}/g);
         var matchResult = remainingText.match(matchExpression);
         if (matchResult != null) {
@@ -219,7 +257,7 @@ var SidebarView = Backbone.View.extend({
                 if ((currentStrongNumber.length > 5) && (currentStrongNumber.substr(1,1) == "0"))
                     currentStrongNumber = currentStrongNumber.substr(0,1) + currentStrongNumber.substr(2);
                 panel.append(remainingText.substr(0, pos));  // text before the 4 character code
-                panel.append($('<a href="javascript:void(0)">')
+                panel.append($('<a sbstrong href="javascript:void(0)">')
                     .append(currentMatch)
                     .data("strongNumber", currentStrongNumber));
                 remainingText = remainingText.substr(pos + matchLength);
@@ -228,7 +266,7 @@ var SidebarView = Backbone.View.extend({
         panel.append(remainingText).append("<br />");        
     },
 
-    _addChineseDefinitions: function (panel, mainWord, currentUserLang, appendLexiconSearchFunction, addLinkAndAppendFunction) {
+    _addChineseDefinitions: function (panel, mainWord, currentUserLang, bibleVersion, appendLexiconSearchFunction, addLinkAndAppendFunction) {
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
         var foundChineseJSON = false;
         $.ajaxSetup({async: false});
@@ -237,7 +275,7 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
 
-            addLinkAndAppendFunction(panel, chineseVars.definition, currentWordLangCode);
+            addLinkAndAppendFunction(panel, chineseVars.definition, currentWordLangCode, bibleVersion);
 
             appendLexiconSearchFunction(panel, mainWord);
 
@@ -262,7 +300,7 @@ var SidebarView = Backbone.View.extend({
                             (1 + (j * 100)) + " to " + 
                             (100 + (j * 100)) + "\">(" + displayGroupText + ")</span>";
                     }
-                    li.append($("<a></a>").attr("href", "javascript:void(0)")
+                    li.append($("<a sbstrong></a>").attr("href", "javascript:void(0)")
                         .data("strongNumber", mainWord.strongNumber)
                         .data("refURLStr", refURLString)
                         .append(displayTextOnUsage).click(function () {
@@ -296,26 +334,26 @@ var SidebarView = Backbone.View.extend({
 
     _createWordPanel: function (panel, mainWord, currentUserLang) {
         var currentWordLanguageCode = mainWord.strongNumber[0];
+        var bibleVersion = this.model.get("version") || "ESV";
         if (mainWord.shortDef) {
-            this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode);
+            this._addLinkAndAppend(panel.append($("<div>")), mainWord.shortDef, currentWordLanguageCode, bibleVersion);
         }
-
         var foundChineseJSON = false;
         if (currentUserLang.startsWith("zh")) 
-            foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, this._appendLexiconSearch, this._addLinkAndAppend);
+            foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
         if (!foundChineseJSON) this._appendLexiconSearch(panel, mainWord); // Run this if it is not Chinese language or if Chinese language, but did not find the Chinese json files.
         var isEnWithZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isEnWithZhLexicon");
-        if (isEnWithZhLexicon == undefined) isEnWithZhLexicon = false;
+        if (isEnWithZhLexicon === undefined) isEnWithZhLexicon = false;
         if ((!currentUserLang.startsWith("zh")) || (isEnWithZhLexicon)) {
             // append the meanings
             if (mainWord.mediumDef) {
                 panel.append($("<h2>").append(__s.lexicon_meaning));
-                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode);
+                this._addLinkAndAppend(panel, mainWord.mediumDef, currentWordLanguageCode, bibleVersion);
             }
 
             //longer definitions
-            if (mainWord.lsjDefs ) {
-                panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+            if (mainWord.lsjDefs) {
+                panel.append($("<h2>").append(currentWordLanguageCode.toLowerCase() === 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
                 panel.append(mainWord.lsjDefs);
             }
         }
@@ -329,7 +367,7 @@ var SidebarView = Backbone.View.extend({
                     var chineseGloss = "";
                     if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) chineseGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) chineseGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
-                    var li = $("<li></li>").append($('<a href="javascript:void(0)">')
+                    var li = $("<li></li>").append($('<a sbstrong href="javascript:void(0)">')
                         .append(chineseGloss)
                         .append(mainWord.relatedNos[i].gloss)
                         .append(" (")
@@ -343,18 +381,19 @@ var SidebarView = Backbone.View.extend({
                     matchingExpression += mainWord.relatedNos[i].strongNumber + " ";
                 }
             }
-                step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
+            step.passage.highlightStrong(null, matchingExpression, "lexiconRelatedFocus");
             panel.append(ul);
-            panel.find("a").click(function () {
-                step.util.ui.showDef($(this).data("strongNumber"));
-            });
         }
+        panel.find("[sbstrong]").click(function () {
+            step.util.ui.showDef($(this).data("strongNumber"));
+        });
         if (currentUserLang.startsWith("zh") && (foundChineseJSON)) {
             var tmpMsg = (currentUserLang == "zh") ? "关于中文字典的知料" : "關於中文字典的知料";
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
                 tmpMsg + "</a>");
         }
+        this._doSideNotes(panel, bibleVersion);
     },
     // for one-line morphology
     _createBriefMorphInfo: function (panel, info) {
@@ -459,5 +498,107 @@ var SidebarView = Backbone.View.extend({
     closeSidebar: function () {
         this.sidebarButtonIcon.removeClass("active");
         this.$el.closest('.row-offcanvas').removeClass('active');
+    },
+    /**
+     * Creates a QTIP for a particular xref
+     * @param item the item which is targetted in the side note bar
+     * @param xref the actual cross-reference
+     * @param version the version to be used for lookups
+     * @private
+     */
+    _makeSideNoteQtip: function (item, xref, version) {
+        var self = this;
+        item.on("mouseover", function () {
+            self._makeSideNoteQtipHandler(item, xref, version, false);
+        }).on("touchstart", function () {
+            self._makeSideNoteQtipHandler(item, xref, version, true);
+        });
+    },
+
+    /**
+     * Sets up qtip on all side notes
+     * @param passageContent the html content
+     * @param version the current version
+     * @private
+     */
+    _doSideNotes: function (passageContent, version) {
+        var self = this;
+
+        //remove click functionality from verse headers...
+        $("[sbRef]", passageContent).click(function(e) { e.preventDefault(); })
+
+        var xrefs = $("[sbRef]", passageContent);
+        for (var i = 0; i < xrefs.length; i++) {
+            var item = xrefs.eq(i);
+            var xref = item.attr("sbRef");
+
+            item.click(function (e) {
+                e.preventDefault();
+            });
+
+            this._makeSideNoteQtip(item, xref, version);
+        }
+    },
+
+    _makeSideNoteQtipHandler: function (item, xref, version, touch) {
+        var self = this;
+        if (!$.data(item, "initialised")) {
+            require(["qtip", "drag"], function () {
+                item.qtip({
+                    position: { my: "top right", at: "top left", viewport: $(window) },
+                    style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: { min: 800, max: 800} },
+                    show: { event: 'click' }, hide: { event: 'click' },
+                    content: {
+                        text: function (event, api) {
+                            var chosenVersion = version;
+                            if (step.keyedVersions[version] && step.keyedVersions[version].category != 'BIBLE') {
+                                //get the first version in the current search that is non-commentary
+                                var allVersions = _.where(self.model.get("searchTokens"), {itemType: VERSION });
+                                chosenVersion = 'ESV';
+                                for (var i = 0; i < allVersions.length; i++) {
+                                    var keyedVersion = step.keyedVersions[(allVersions[i].item || {}).initials];
+                                    if (keyedVersion != null && keyedVersion.category == 'BIBLE') {
+                                        chosenVersion = keyedVersion.initials;
+                                    }
+                                }
+                            }
+
+                            $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
+                                api.set('content.title.text', data.longName);
+                                api.set('content.text', data.value.replace(/ strong=['"][GHabcdef\d\s]{5,30}['"]/g, "")); // Strip the strong tag
+                                api.set('content.osisId', data.osisId)
+                            });
+                        },
+                        title: { text: xref, button: false }
+                    },
+                    events: {
+                        render: function (event, api) {
+                            $(api.elements.titlebar).css("padding-right", "0px");
+                            $(api.elements.titlebar)
+                                .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
+                                    .click(function () {
+                                        step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
+                                    })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
+                                api.hide();
+                            }));
+                        },
+                        visible: function (event, api) {
+                            var tooltip = api.elements.tooltip;
+                            var selector = touch ? ".qtip-title" : ".qtip-titlebar";
+                            if (touch) {
+                                tooltip.find(".qtip-title").css("width", "90%");
+                            }
+                            new Draggabilly($(tooltip).get(0), {
+                                containment: 'body',
+                                handle: selector
+                            });
+                        }
+                    }
+                });
+                //set to initialized
+                $.data(item, "initialised", true);
+
+            });
+        }
     }
 });

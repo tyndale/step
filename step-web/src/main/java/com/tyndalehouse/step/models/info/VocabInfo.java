@@ -104,7 +104,10 @@ public class VocabInfo implements Serializable {
         final String popularity = d.get("popularity");
         
         if(StringUtils.isNotBlank(popularity)) {
-            this.count = Integer.parseInt(popularity);
+            if (popularity.matches("^\\d+")) {
+                this.count = Integer.parseInt(popularity);
+            }
+            else this.count = 0;
         }
 
         if (includeAllInfo) {
