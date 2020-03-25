@@ -1356,6 +1356,7 @@ var cf = {
   },
 // Do not shorten name, called by start.jsp
   setNextPageURL: function (url, configName, infoMsg) {
+
     if (configName.indexOf("function:") == 0){
       var functionName = configName.substr(9);
       if (functionName == "openStats") {

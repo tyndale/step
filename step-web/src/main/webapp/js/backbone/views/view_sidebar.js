@@ -23,9 +23,9 @@ var SidebarView = Backbone.View.extend({
         this.activate();
         this.$el.find('a[data-toggle="tab"]').on("shown.bs.tab", this._notifyTabPanes);
     },
-    _notifyTabPanes: function(ev) {
+    _notifyTabPanes: function (ev) {
         ev.stopPropagation();
-        this.$el.find(".tab-pane").trigger("tab-change", { newTab: ev.target });
+        this.$el.find(".tab-pane").trigger("tab-change", {newTab: ev.target});
     },
     changeMode: function (e) {
         var mode = null;
@@ -33,22 +33,20 @@ var SidebarView = Backbone.View.extend({
         var data = targetTab.data("target");
         if (data == '#lexicon') {
             mode = 'lexicon';
-        } else if (data == '#analysis') {
+        }
+        else if (data == '#analysis') {
             mode = 'analysis';
-        } else if (data == '#history') {
+        }
+        else if (data == '#history') {
             mode = 'history';
-        } else if (data == '#help') {
+        }
+        else if (data == '#help') {
             mode = 'help';
         }
 
         this.model.save({
             mode: mode
         });
-    },
-    createHelp: function () {
-        var examplesContainer = $(".examplesContainer");
-        examplesContainer.attr("id", "help").addClass("tab-pane");
-        $(".tab-content").append(examplesContainer);
     },
     activate: function () {
         var self = this;
@@ -71,11 +69,14 @@ var SidebarView = Backbone.View.extend({
                 step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
                 self.createDefinition(data);
             });
-        } else if (this.model.get("mode") == 'analysis') {
+        }
+        else if (this.model.get("mode") == 'analysis') {
             self.createAnalysis();
-        } else if (this.model.get("mode") == 'history') {
+        }
+        else if (this.model.get("mode") == 'history') {
             self.createHistory();
-        } else {
+        }
+        else {
             self.createHelp();
         }
         // added for colour code grammar
@@ -89,9 +90,11 @@ var SidebarView = Backbone.View.extend({
         this.lexicon = $("<div id='lexicon' class='tab-pane'></div>");
         this.analysis = $("<div id='analysis' class='tab-pane'></div>");
         this.history = $("<div id='history' class='tab-pane'></div>");
+        this.help = $("<div id='help' class='tab-pane'></div>");
         tabContent.append(this.lexicon);
         tabContent.append(this.analysis);
         tabContent.append(this.history);
+        tabContent.append(this.help);
         this.$el.append(tabContent);
         return tabContent;
     },
@@ -100,7 +103,8 @@ var SidebarView = Backbone.View.extend({
             this.historyView = new ViewHistory({
                 el: this.history
             });
-        } else {
+        }
+        else {
             this.historyView.refresh();
         }
     },
@@ -109,9 +113,13 @@ var SidebarView = Backbone.View.extend({
             this.analysisView = new ViewLexiconWordle({
                 el: this.analysis
             });
-        } else {
+        }
+        else {
             this.analysisView.refresh();
         }
+    },
+    createHelp: function () {
+        this.helpView = new ExamplesView({el: this.help});
     },
     createDefinition: function (data) {
         //get definition tab
@@ -156,11 +164,11 @@ var SidebarView = Backbone.View.extend({
                 if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
                     data.morphInfos = cf.getTOSMorphologyInfo(lastMorphCode);
                 } 
-                if(i < data.morphInfos.length) {
+                if (i < data.morphInfos.length) {
                     this._createBriefMorphInfo(panelBody, data.morphInfos[i]);
                 }
                 this._createWordPanel(panelBody, item, currentUserLang);
-                if(i < data.morphInfos.length) {
+                if (i < data.morphInfos.length) {
                     this._createMorphInfo(panelBody, data.morphInfos[i]);
                 }
 
@@ -172,7 +180,8 @@ var SidebarView = Backbone.View.extend({
             }
             this.lexicon.append(panelGroup);
 
-        } else {
+        }
+        else {
             this._createBriefWordPanel(this.lexicon, data.vocabInfos[0], currentUserLang);
             // need to handle multiple morphInfo (array)
             if ((lastMorphCode != '') && (data.morphInfos.length == 0)) {
@@ -201,7 +210,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.stepGloss)
                 .append("' ")
                 .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
-            );
+        );
     },
 
     _addLinkAndAppend: function (panel, textToAdd, currentWordLangCode, bibleVersion) {
@@ -210,7 +219,6 @@ var SidebarView = Backbone.View.extend({
         //        '<ref=\'' . PASSAGE1 . '\'>' . PASSAGE2 . '</ref>';
         var remainingText = textToAdd;
         var textToAdd2 = remainingText;
-//        var pos1 = remainingText.indexOf("<ref='");
         var pos1 = remainingText.search("<ref=['\"]");
         if (pos1 > -1) {
             textToAdd2 = "";
@@ -230,12 +238,14 @@ var SidebarView = Backbone.View.extend({
                             '</a>';
                         remainingText = remainingText.substr(pos3 + 6);
                         pos1 = remainingText.search("<ref=['\"]"); // Search for the next iteration of while loop.
-                    } else {
+                    }
+                    else {
                         textToAdd2 += "<ref=" + typeOfQuoteChar + passageRef + typeOfQuoteChar + ">" + remainingText;
                         remainingText = "";
                         pos1 = -1; // Incomplete ref tag
                     }
-                } else {
+                }
+                else {
                     textToAdd2 += "<ref=" + typeOfQuoteChar + remainingText;
                     remainingText = "";
                     pos1 = -1; // Incomplete <ref=' tag.  Cannot find the '> after that.
@@ -321,11 +331,11 @@ var SidebarView = Backbone.View.extend({
 
     _appendLexiconSearch: function (panel, mainWord) {
         panel.append("<br />").append(__s.lexicon_search_for_this_word);
-        if(mainWord.count) {
+        if (mainWord.count) {
             panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
                 var strongNumber = $(this).data("strongNumber");
                 var args = "strong=" + encodeURIComponent(strongNumber);
-                step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
+                step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                 step.router.navigatePreserveVersions(args);
             }));
         }
@@ -363,7 +373,7 @@ var SidebarView = Backbone.View.extend({
             var ul = $('<ul>');
             var matchingExpression = "";
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
-                if(mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
+                if (mainWord.relatedNos[i].strongNumber != mainWord.strongNumber) {
                     var chineseGloss = "";
                     if ((currentUserLang == "zh_tw") && (mainWord.relatedNos[i]._zh_tw_Gloss != undefined)) chineseGloss = mainWord.relatedNos[i]._zh_tw_Gloss + "&nbsp;";
                     else if ((currentUserLang == "zh") && (mainWord.relatedNos[i]._zh_Gloss != undefined)) chineseGloss =  mainWord.relatedNos[i]._zh_Gloss + "&nbsp;";
@@ -450,21 +460,21 @@ var SidebarView = Backbone.View.extend({
             panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
     },
     renderMorphItem: function (panel, info, title, param) {
-        if(info && param && info[param]) {
+        if (info && param && info[param]) {
             var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
             panel.append($("<h3>").append(title)).append(value);
 
-            if(info[param + "Explained"] || param == 'wordCase' && info["caseExplained"]) {
+            if (info[param + "Explained"] || param == 'wordCase' && info["caseExplained"]) {
                 var explanation = info[param + "Explained"] || param == 'wordCase' && info["caseExplained"];
                 value.attr("title", this.stripEmphasis(explanation));
             }
             panel.append("<br />");
         }
     },
-    replaceEmphasis: function(str) {
+    replaceEmphasis: function (str) {
         return (str || "").replace(/_([^_]*)_/g, "<em>$1</em>");
     },
-    stripEmphasis: function(str) {
+    stripEmphasis: function (str) {
         return (str || "").replace(/_([^_]*)_/g, "");
     },
     _createTabHeadersContainer: function () {
@@ -487,7 +497,8 @@ var SidebarView = Backbone.View.extend({
     toggleOpen: function () {
         if (!this.$el.closest('.row-offcanvas').hasClass("active")) {
             this.openSidebar();
-        } else {
+        }
+        else {
             this.closeSidebar();
         }
     },

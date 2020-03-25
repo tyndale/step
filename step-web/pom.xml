@@ -162,11 +162,11 @@
 									<include>step-template.scss</include>
 								</includes>
 							</configuration>
-								
+
 						</execution>
 					</executions>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>com.samaxes.maven</groupId>
 					<artifactId>minify-maven-plugin</artifactId>
@@ -217,6 +217,7 @@
 									<jsSourceFile>js/state/step.state.js</jsSourceFile>
 									<jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_feedback.js</jsSourceFile>
+									<jsSourceFile>js/backbone/views/view_examples.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_restore.js</jsSourceFile>
 									<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 									<jsSourceFile>js/step_ready.js</jsSourceFile>
@@ -238,7 +239,7 @@
 									<jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_history.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_sidebar.js</jsSourceFile>
-									
+
 								</jsSourceFiles>
 								<jsFinalFile>step.sidebar-${project.version}.js</jsFinalFile>
 							</configuration>
@@ -285,7 +286,6 @@
 									<jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
 									<jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
-									<jsSourceFile>js/passages/step.alternatives.js</jsSourceFile>
 								</jsSourceFiles>
 								<jsFinalFile>step.search-${project.version}.js</jsFinalFile>
 							</configuration>
@@ -358,7 +358,7 @@
 								<cssSourceFiles>
 									<cssSourceFile>css/color_code_grammar.css</cssSourceFile>
 								</cssSourceFiles>
-								<cssFinalFile>color_code_grammar.${project.version}.css</cssFinalFile>							
+								<cssFinalFile>color_code_grammar.${project.version}.css</cssFinalFile>
 								<jsSourceDir>.</jsSourceDir>
 								<jsSourceFiles>
 									<jsSourceFile>js/color_code_grammar.js</jsSourceFile>
@@ -381,7 +381,7 @@
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>				
+				</plugin>
 				<plugin>
 					<groupId>com.google.code.maven-replacer-plugin</groupId>
 					<artifactId>replacer</artifactId>
@@ -393,7 +393,7 @@
 							<goals>
 								<goal>replace</goal>
 							</goals>
-           					<configuration>
+         					<configuration>
                                 <includes>
                                     <include>${basedir}/target/**/step.*.js</include>
                                 </includes>
@@ -525,64 +525,64 @@
                                     <replacement><token>C_updatedGenderNumberCSS</token><value>19</value></replacement>
                                     <replacement><token>C_userTurnGenderNumberFromOffToOn</token><value>20</value></replacement>
                                     <replacement><token>C_c4Version</token><value>9</value></replacement>
-<replacement><token>createC4([:(])</token><value>A$1</value></replacement>
-<replacement><token>calcAnimationPixelIncrement([:(])</token><value>B$1</value></replacement>
-<replacement><token>createCanvas([:(])</token><value>C$1</value></replacement>
-<replacement><token>createUlFor_OT([:(])</token><value>D$1</value></replacement>
-<replacement><token>createUlForAllItemsInYAndX([:(])</token><value>E$1</value></replacement>
-<replacement><token>createUlForOneInstanceOfTense([:(])</token><value>F$1</value></replacement>
-<replacement><token>displayVerbUlOrNot([:(])</token><value>G$1</value></replacement>
-<replacement><token>displayOTVerbUlOrNot([:(])</token><value>H$1</value></replacement>
-<replacement><token>getRowColNum([:(])</token><value>I$1</value></replacement>
-<replacement><token>updateUlForSpecificYAxis([:(])</token><value>J$1</value></replacement>
-<replacement><token>animateCanvasBottomLine([:(])</token><value>K$1</value></replacement>
-<replacement><token>updateBottomLineOnly([:(])</token><value>L$1</value></replacement>
-<replacement><token>updtLocalStorage([:(])</token><value>M$1</value></replacement>
-<replacement><token>getVariablesForVerbTable([:(])</token><value>N$1</value></replacement>
-<replacement><token>getVariablesForOTVerbTable([:(])</token><value>O$1</value></replacement>
-<replacement><token>upCaseFirst([:(])</token><value>P$1</value></replacement>
-<replacement><token>getSpecificMorphologyInfo([:(])</token><value>Q$1</value></replacement>
-<replacement><token>assembleDescriptionsOfMorph([:(])</token><value>R$1</value></replacement>
-<replacement><token>createCopyOfClrSetting([:(])</token><value>S$1</value></replacement>
-<replacement><token>tableAxisSpan([:(])</token><value>T$1</value></replacement>
-<replacement><token>addVerbTable([:(])</token><value>U$1</value></replacement>
-<replacement><token>htmlToAdd1([:(])</token><value>V$1</value></replacement>
-<replacement><token>htmlToAdd2([:(])</token><value>W$1</value></replacement>
-<replacement><token>htmlToAdd3([:(])</token><value>X$1</value></replacement>
-<replacement><token>htmlToAdd4([:(])</token><value>Y$1</value></replacement>
-<replacement><token>htmlToAdd5([:(])</token><value>Z$1</value></replacement>
-<replacement><token>htmlToAdd6([:(])</token><value>a$1</value></replacement>
-<replacement><token>voicesInTenseAndMood([:(])</token><value>b$1</value></replacement>
-<replacement><token>updateCssForNumber([:(])</token><value>c$1</value></replacement>
-<replacement><token>getAxisOrderOfItem([:(])</token><value>d$1</value></replacement>
-<replacement><token>createUlForOTYAxis([:(])</token><value>e$1</value></replacement>
-<replacement><token>hex2Rgb([:(])</token><value>f$1</value></replacement>
-<replacement><token>addTitleToYAxis([:(])</token><value>g$1</value></replacement>
-<replacement><token>createUlArrow([:(])</token><value>h$1</value></replacement>
-<replacement><token>createUlShortArrow([:(])</token><value>i$1</value></replacement>
-<replacement><token>createUlReverseArrow([:(])</token><value>j$1</value></replacement>
-<replacement><token>createUlShortReverseArrow([:(])</token><value>k$1</value></replacement>
-<replacement><token>createUl_Dash([:(])</token><value>l$1</value></replacement>
-<replacement><token>createUlSolid([:(])</token><value>m$1</value></replacement>
-<replacement><token>createUlDash_Dot([:(])</token><value>n$1</value></replacement>
-<replacement><token>createUlDashDotDot([:(])</token><value>o$1</value></replacement>
-<replacement><token>createUlNone([:(])</token><value>p$1</value></replacement>
-<replacement><token>createUlDoubleSolid([:(])</token><value>q$1</value></replacement>
-<replacement><token>createUlDot([:(])</token><value>r$1</value></replacement>
-<replacement><token>createUlWave([:(])</token><value>s$1</value></replacement>
-<replacement><token>animateCanvas([:(])</token><value>t$1</value></replacement>
-<replacement><token>changeImageClr([:(])</token><value>u$1</value></replacement>
-<replacement><token>getC4([:(])</token><value>v$1</value></replacement>
-<replacement><token>getExplanationOfMorph([:(])</token><value>w$1</value></replacement>
-<replacement><token>morph2CSS([:(])</token><value>x$1</value></replacement>
-<replacement><token>addTitleToXAxis([:(])</token><value>y$1</value></replacement>
-<replacement><token>getAllTenseMoodForThisGroup([:(])</token><value>z$1</value></replacement>
-<replacement><token>c4VerbTenseMood([:(])</token><value>AA$1</value></replacement>
-<replacement><token>c4NounOnly([:(])</token><value>AB$1</value></replacement>
-<replacement><token>c4VerbMoodTense2([:(])</token><value>AC$1</value></replacement>
-<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>AD$1</value></replacement>
-<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>AE$1</value></replacement>
-<replacement><token>c4ImperativesOnly([:(])</token><value>AF$1</value></replacement>
+									<replacement><token>createC4([:(])</token><value>A$1</value></replacement>
+									<replacement><token>calcAnimationPixelIncrement([:(])</token><value>B$1</value></replacement>
+									<replacement><token>createCanvas([:(])</token><value>C$1</value></replacement>
+									<replacement><token>createUlFor_OT([:(])</token><value>D$1</value></replacement>
+									<replacement><token>createUlForAllItemsInYAndX([:(])</token><value>E$1</value></replacement>
+									<replacement><token>createUlForOneInstanceOfTense([:(])</token><value>F$1</value></replacement>
+									<replacement><token>displayVerbUlOrNot([:(])</token><value>G$1</value></replacement>
+									<replacement><token>displayOTVerbUlOrNot([:(])</token><value>H$1</value></replacement>
+									<replacement><token>getRowColNum([:(])</token><value>I$1</value></replacement>
+									<replacement><token>updateUlForSpecificYAxis([:(])</token><value>J$1</value></replacement>
+									<replacement><token>animateCanvasBottomLine([:(])</token><value>K$1</value></replacement>
+									<replacement><token>updateBottomLineOnly([:(])</token><value>L$1</value></replacement>
+									<replacement><token>updtLocalStorage([:(])</token><value>M$1</value></replacement>
+									<replacement><token>getVariablesForVerbTable([:(])</token><value>N$1</value></replacement>
+									<replacement><token>getVariablesForOTVerbTable([:(])</token><value>O$1</value></replacement>
+									<replacement><token>upCaseFirst([:(])</token><value>P$1</value></replacement>
+									<replacement><token>getSpecificMorphologyInfo([:(])</token><value>Q$1</value></replacement>
+									<replacement><token>assembleDescriptionsOfMorph([:(])</token><value>R$1</value></replacement>
+									<replacement><token>createCopyOfClrSetting([:(])</token><value>S$1</value></replacement>
+									<replacement><token>tableAxisSpan([:(])</token><value>T$1</value></replacement>
+									<replacement><token>addVerbTable([:(])</token><value>U$1</value></replacement>
+									<replacement><token>htmlToAdd1([:(])</token><value>V$1</value></replacement>
+									<replacement><token>htmlToAdd2([:(])</token><value>W$1</value></replacement>
+									<replacement><token>htmlToAdd3([:(])</token><value>X$1</value></replacement>
+									<replacement><token>htmlToAdd4([:(])</token><value>Y$1</value></replacement>
+									<replacement><token>htmlToAdd5([:(])</token><value>Z$1</value></replacement>
+									<replacement><token>htmlToAdd6([:(])</token><value>a$1</value></replacement>
+									<replacement><token>voicesInTenseAndMood([:(])</token><value>b$1</value></replacement>
+									<replacement><token>updateCssForNumber([:(])</token><value>c$1</value></replacement>
+									<replacement><token>getAxisOrderOfItem([:(])</token><value>d$1</value></replacement>
+									<replacement><token>createUlForOTYAxis([:(])</token><value>e$1</value></replacement>
+									<replacement><token>hex2Rgb([:(])</token><value>f$1</value></replacement>
+									<replacement><token>addTitleToYAxis([:(])</token><value>g$1</value></replacement>
+									<replacement><token>createUlArrow([:(])</token><value>h$1</value></replacement>
+									<replacement><token>createUlShortArrow([:(])</token><value>i$1</value></replacement>
+									<replacement><token>createUlReverseArrow([:(])</token><value>j$1</value></replacement>
+									<replacement><token>createUlShortReverseArrow([:(])</token><value>k$1</value></replacement>
+									<replacement><token>createUl_Dash([:(])</token><value>l$1</value></replacement>
+									<replacement><token>createUlSolid([:(])</token><value>m$1</value></replacement>
+									<replacement><token>createUlDash_Dot([:(])</token><value>n$1</value></replacement>
+									<replacement><token>createUlDashDotDot([:(])</token><value>o$1</value></replacement>
+									<replacement><token>createUlNone([:(])</token><value>p$1</value></replacement>
+									<replacement><token>createUlDoubleSolid([:(])</token><value>q$1</value></replacement>
+									<replacement><token>createUlDot([:(])</token><value>r$1</value></replacement>
+									<replacement><token>createUlWave([:(])</token><value>s$1</value></replacement>
+									<replacement><token>animateCanvas([:(])</token><value>t$1</value></replacement>
+									<replacement><token>changeImageClr([:(])</token><value>u$1</value></replacement>
+									<replacement><token>getC4([:(])</token><value>v$1</value></replacement>
+									<replacement><token>getExplanationOfMorph([:(])</token><value>w$1</value></replacement>
+									<replacement><token>morph2CSS([:(])</token><value>x$1</value></replacement>
+									<replacement><token>addTitleToXAxis([:(])</token><value>y$1</value></replacement>
+									<replacement><token>getAllTenseMoodForThisGroup([:(])</token><value>z$1</value></replacement>
+									<replacement><token>c4VerbTenseMood([:(])</token><value>AA$1</value></replacement>
+									<replacement><token>c4NounOnly([:(])</token><value>AB$1</value></replacement>
+									<replacement><token>c4VerbMoodTense2([:(])</token><value>AC$1</value></replacement>
+									<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>AD$1</value></replacement>
+									<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>AE$1</value></replacement>
+									<replacement><token>c4ImperativesOnly([:(])</token><value>AF$1</value></replacement>
                                     <replacement><token>^\s*const\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                     <replacement><token>\s*const\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
                                 </replacements>
@@ -591,6 +591,7 @@
 						</execution>
 					</executions>
 				</plugin>
+
 				<plugin>
 					<groupId>org.codehaus.cargo</groupId>
 					<artifactId>cargo-maven2-plugin</artifactId>
