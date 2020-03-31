@@ -398,10 +398,9 @@ var SidebarView = Backbone.View.extend({
             step.util.ui.showDef($(this).data("strongNumber"));
         });
         if (currentUserLang.startsWith("zh") && (foundChineseJSON)) {
-            var tmpMsg = (currentUserLang == "zh") ? "关于中文字典的知料" : "關於中文字典的知料";
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
-                tmpMsg + "</a>");
+                __s.additional_chinese_lexicon_info + "</a>");
         }
         this._doSideNotes(panel, bibleVersion);
     },
@@ -487,7 +486,7 @@ var SidebarView = Backbone.View.extend({
 
         var tabContainer = $(_.template(template)());
 
-        //add close button
+        //add close buttonx
         tabContainer.append(
             $("<li class='closeSidebar'><a class='glyphicon glyphicon-remove' /></li>")
                 .click(this.closeSidebar));

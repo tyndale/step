@@ -1,26 +1,28 @@
 var ExamplesView = Backbone.View.extend({
     events: {
+        'click .closeColumn': 'onClickClose',
         'click .accordion-heading': 'onClickHeading'
     },
     initialize: function () {
         this.render();
     },
     render: function () {
-        var exPanelWidth = $('.examplesContainer').width();
         this.$el.load("jsps/examples.jsp", null, _.bind(this.initAccordions, this));
-        if ((exPanelWidth != undefined) && (exPanelWidth != null) && (!isNaN(exPanelWidth))) {
-            if (exPanelWidth < 365) $('.hidenarrow').hide();
-            else $('.hidenarrow').show();
-        }
-     },
+    },
     initAccordions: function () {
         var count = this.$el.find(".accordion-row").length;
         var i;
+        var hasStoredState = false;
 
         for (i = 0; i < count; i++) {
             if (localStorage.getItem("stepBible-displayQuickTryoutAccordion" + i) === "true") {
+                hasStoredState = true;
                 this.toggleAccordion(i);
             }
+        }
+
+        if (!hasStoredState) {
+            this.toggleAccordion(0);
         }
     },
     toggleAccordion: function (index) {
@@ -30,12 +32,12 @@ var ExamplesView = Backbone.View.extend({
         var storageKey = "stepBible-displayQuickTryoutAccordion" + index;
 
         if ($accordionBody.is(":visible")) {
-            $accordionRow.find(".accordion-body").slideUp(400);
+            $accordionRow.find(".accordion-body").slideUp(600);
             $accordionRow.find(".plusminus").text("+");
             localStorage.setItem(storageKey, "false");
         }
         else {
-            $accordionRow.find(".accordion-body").slideDown(400);
+            $accordionRow.find(".accordion-body").slideDown(600);
             $accordionRow.find(".plusminus").text("-");
             localStorage.setItem(storageKey, "true");
         }
@@ -45,5 +47,8 @@ var ExamplesView = Backbone.View.extend({
         var $accordionRow = $target.parent();
         var index = $accordionRow.attr("data-row");
         this.toggleAccordion(index);
+    },
+    onClickClose: function () {
+        step.util.showOrHideTutorial(true);
     }
 });
