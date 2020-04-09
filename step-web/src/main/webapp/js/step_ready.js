@@ -192,7 +192,7 @@
         initSearchDropdown();
 
         Backbone.history.start({pushState: true, silent: true});
-
+        new HeaderView();
         new FeedbackView();
         if (step.passages.length > 1) {
             //delete all passages that are not passageId: 0

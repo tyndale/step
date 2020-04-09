@@ -1,9 +1,7 @@
 var MainSearchView = Backbone.View.extend({
     el: ".search-form",
     events: {
-        "click .find": "search",
-        "click .showStats": "showAnalysis",
-        "click .showBooks": "showBooks"
+        "click .find": "search"
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
@@ -11,7 +9,7 @@ var MainSearchView = Backbone.View.extend({
         var self = this;
         this.ignoreOpeningEvent = false;
         this.clearContextAfterSearch = false;
-        this.masterSearch = this.$el.find("#masterSearch");
+        this.masterSearch = this.$el.find(".master-search");
         this.specificContext = [];
         this.startTimes = {};
         this.allContexts = [REFERENCE, VERSION, LIMIT, EXAMPLE_DATA];
@@ -1018,14 +1016,6 @@ var MainSearchView = Backbone.View.extend({
             this.search();
         }
     },
-    showAnalysis: function () {
-        console.log("Showing stats");
-        //trigger side bar
-        require(["sidebar"], function (module) {
-            //read up on requirejs to see if init can form part of download call
-            step.util.ui.initSidebar();
-        });
-    },
     _reEvaluateMasterVersion: function () {
         var versions = this.$el.find(".versionItem");
         var masterVersion = versions.eq(0);
@@ -1038,21 +1028,5 @@ var MainSearchView = Backbone.View.extend({
         else {
             this.masterVersion = null;
         }
-    },
-    showBooks: function () {
-        console.log("Triggering book selection");
-
-        var dropdownOfBooks = $("<select>");
-        var versions = _.template(
-            "<% _.each(versions, function(version, i) { %> <option value='<%= version.item.initials %>'><%= version.item.name %></option> <% }) %>")(
-            {versions: step.itemisedVersions});
-        dropdownOfBooks.append(versions);
-        $("body").append(dropdownOfBooks);
-        dropdownOfBooks.click();
-        dropdownOfBooks.css("left", "30");
-        dropdownOfBooks.css("top", "50");
-        dropdownOfBooks.css("position", "absolute");
-
-        //we could add an Advanced... option.
     }
 });
