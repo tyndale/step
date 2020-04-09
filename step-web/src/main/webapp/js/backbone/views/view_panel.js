@@ -2,6 +2,9 @@ var PanelView = Backbone.View.extend({
     initialize: function () {
         this.render();
     },
+    el: function () {
+        return step.util.getPassageContainer(this.model.get("passageId"));
+    },
     render: function () {
         var self = this;
         var searchType = this.model.get("searchType");
@@ -13,11 +16,13 @@ var PanelView = Backbone.View.extend({
                 model: this.model,
                 partRendered: partRendered
             });
-        } else {
-            require(["search"], function() {
+        }
+        else {
+            require(["search"], function () {
                 if (self.model.get("pageNumber") > 1) {
                     self.model.trigger("newPage");
-                } else {
+                }
+                else {
                     self.model.trigger("destroyViews");
                     switch (searchType) {
                         case "TEXT":
@@ -53,6 +58,17 @@ var PanelView = Backbone.View.extend({
             });
         }
 
+        this.renderHeader();
+
         return this;
+    },
+    renderHeader: function () {
+        var searchTokens = this.model.get("searchTokens");
+        var $container = $('<span class="argSummary"></span>');
+        step.util.ui.renderArgs(searchTokens, $container);
+
+        var $header = this.$(".passageOptionsGroup");
+        $header.find(".argSummary").remove();
+        $header.append($container);
     }
 });
