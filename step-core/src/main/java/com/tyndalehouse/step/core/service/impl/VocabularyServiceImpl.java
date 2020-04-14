@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +59,7 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.StringUtils.*;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
@@ -75,7 +75,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
-    private static final LRUMap<String, EntityDoc[]> DEFINITIION_CACHE = new LRUMap<>(128, 256);
+    private static final LRUMap<String, EntityDoc[]> DEFINITION_CACHE = new LRUMap<>(512, 1024);
     private final EntityIndexReader definitions;
 
     // define a few extraction methods
@@ -328,20 +328,9 @@ public class VocabularyServiceImpl implements VocabularyService {
         EntityDoc[] lds = getLexiconDefinitions(vocabIdentifiers, version, reference);
 
         if (lds.length == 0) {
-            if (vocabIdentifiers.length() >= 3) {
-                String vocabIdentifiers2 = vocabIdentifiers;
-                if ((vocabIdentifiers2.length() >= 13) && (vocabIdentifiers2.substring(8, 9).equals("0"))) {
-                    vocabIdentifiers2 = vocabIdentifiers2.substring(0, 8).concat(vocabIdentifiers2.substring(9));
-                }
-                vocabIdentifiers2 = vocabIdentifiers2.concat("a");
-                lds = getLexiconDefinitions(vocabIdentifiers2, version, reference);
-            }
-            if (lds.length == 0) {
-                return vocabIdentifiers;
-            }
+            return vocabIdentifiers;
         }
-
-        if (lds.length == 1) {
+        else if (lds.length == 1) {
             return provider.getData(lds[0]);
         }
 
@@ -361,22 +350,49 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
+    public synchronized EntityDoc[] getLexiconDefinitions(final String vocabIdentifiers, final String version, final String reference) {
         final String[] keys = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
         if (keys.length == 0) {
             return new EntityDoc[0];
         }
 
-        final String cacheKey = getCacheKey(version, reference, vocabIdentifiers);
-
-        final EntityDoc[] entityDocs = DEFINITIION_CACHE.get(cacheKey);
-        if (entityDocs != null) {
-            return entityDocs;
+        EntityDoc[] entityDocsResults = new EntityDoc[keys.length];
+        int resultArrayIndex = 0;
+        for (int counter = 0; counter < keys.length; counter ++) {
+            EntityDoc[] strongNumber = DEFINITION_CACHE.get(keys[counter]);
+            if (strongNumber != null) {
+                entityDocsResults[resultArrayIndex] = strongNumber[0];
+                resultArrayIndex ++;
+            }
+            else {
+                String[] tmpKeys = {keys[counter]};
+                while (tmpKeys[0].length() > 0) {
+                    strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
+                    if ((strongNumber != null) && (strongNumber.length > 0)) {
+                        DEFINITION_CACHE.put(keys[counter], strongNumber);
+                        entityDocsResults[counter] = strongNumber[0];
+                        resultArrayIndex ++;
+                        tmpKeys[0] = "";
+                    } else {
+                        if ((tmpKeys[0].substring(0, 1).equalsIgnoreCase("h")) && (tmpKeys[0].length() == 5) && (!tmpKeys[0].endsWith("a"))) { // check for start with H, do not append if already ends with letter "a"
+                            tmpKeys[0] = tmpKeys[0].concat("a");
+                        }
+                        else tmpKeys[0] = "";
+                    }
+                }
+            }
         }
 
-        final EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", null, keys);
-        DEFINITIION_CACHE.put(cacheKey, strongNumbers);
-        return strongNumbers;
+        if (resultArrayIndex == keys.length) return entityDocsResults;
+        else if (resultArrayIndex == 0) return new EntityDoc[0];
+        else if (resultArrayIndex < keys.length) {
+            EntityDoc[] entityDocsResults2 = new EntityDoc[resultArrayIndex];
+            for (int counter = 0; counter < resultArrayIndex; counter ++) {
+                entityDocsResults2[counter] = entityDocsResults[counter];
+            }
+            return entityDocsResults2;
+        }
+        return new EntityDoc[0]; // Something wrong (resultArrayIndex > keys.length)
     }
 
     /**
