@@ -111,7 +111,7 @@
         <div>
             <div class="navbar-header">
                 <div class="navbar-brand col-xs-12">
-                    <span class="hidden-xs title">
+                    <span class="title">
                             <a href="/" id="logo">
                                 <svg width="90px" height="22px" viewBox="0 0 90 22" version="1.1"
                                      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -140,16 +140,6 @@
                             </span>
                         </span>
                     <span class="help"><jsp:include page="jsps/menu.jsp"/></span>
-                    <form role="form" class="search-form">
-                        <div class="input-group">
-                            <input type="text" class="form-control input-sm master-search"
-                                   placeholder="<fmt:message key="search_placeholder" />">
-                            <span class="input-group-btn findButton">
-                                    <span>Search</span>
-                                    <i class="find glyphicon glyphicon-search"></i>
-                                </span>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -162,49 +152,53 @@
                     <span class="activeMarker"></span>
                     <div class="passageText ui-widget">
                         <div class="passageOptionsGroup">
-                            <div class="pull-right">
-                                    <span class="nextPreviousChapterGroup"
-                                          style="${ 'PASSAGE' ne searchType ? 'display: none' : '' }">
-                                        <a class="previousChapter" href="/?q=${previousChapter}"
-                                           title="<fmt:message key="passage_previous_chapter" />">
-                                            <i class="glyphicon glyphicon-arrow-left"></i></a>
-                                        <a class="nextChapter" href="/?q=${nextChapter}"
-                                           title='<fmt:message key="passage_next_chapter" />'>
-                                            <i class="glyphicon glyphicon-arrow-right"></i>
-                                        </a>
-                                    </span>
-                                <%
-                                    if (!appManager.isLocal()) {
-                                %>
-                                <span class="dropdown">
-                                        <a class="dropdown-share" data-toggle="dropdown"
-                                           title="<fmt:message key="share" />">
-                                            <i class="glyphicon glyphicon-thumbs-up"></i>
-                                        </a>
-                                    </span>
-                                <%
-                                    }
-                                %>
-                                <span class="dropdown settingsDropdown">
-                                        <a class="dropdown-toggle showSettings" data-toggle="dropdown"
-                                           title="<fmt:message key="view" />">
-                                            <i class="glyphicon glyphicon-cog"></i>
-                                        </a>
-                                    </span>
-
-                                <%--  this button starts hidden as there is only 1 column showing --%>
-                                <a class="openNewPanel" title="<fmt:message key="open_in_new_panel" />">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                </a>
-                                <a class="closeColumn disabled" title="<fmt:message key="close" />">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                </a>
+                            <div class="searchContainer">
+                                <jsp:include page="jsps/search.jsp"/>
                             </div>
-                            <div class="resultsLabel pull-right" style="margin-right: 5px">
+                            <div class="resultsLabel">
                                 <c:if test="${'PASSAGE' ne searchType}">
                                     <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing"/></c:set>
                                     <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
                                 </c:if>
+                            </div>
+                            <div class="panelActions">
+                                <span class="nextPreviousChapterGroup"
+                                      style="${ 'PASSAGE' ne searchType ? 'display: none' : '' }">
+                                    <a class="previousChapter" href="/?q=${previousChapter}"
+                                       title="<fmt:message key="passage_previous_chapter" />">
+                                        <i class="glyphicon glyphicon-arrow-left"></i></a>
+                                    <a class="nextChapter" href="/?q=${nextChapter}"
+                                       title='<fmt:message key="passage_next_chapter" />'>
+                                        <i class="glyphicon glyphicon-arrow-right"></i>
+                                    </a>
+                                </span>
+                                <%--<%--%>
+                                    <%--if (!appManager.isLocal()) {--%>
+                                <%--%>--%>
+                                <%--<span class="dropdown">--%>
+                                    <%--<a class="dropdown-share" data-toggle="dropdown"--%>
+                                       <%--title="<fmt:message key="share" />">--%>
+                                        <%--<i class="glyphicon glyphicon-thumbs-up"></i>--%>
+                                    <%--</a>--%>
+                                <%--</span>--%>
+                                <%--<%--%>
+                                    <%--}--%>
+                                <%--%>--%>
+                                <span class="dropdown settingsDropdown">
+                                    <a class="dropdown-toggle showSettings" data-toggle="dropdown"
+                                       title="<fmt:message key="view" />">
+                                        <i class="glyphicon glyphicon-option-vertical"></i>
+                                    </a>
+                                </span>
+
+                                <%--  this button starts hidden as there is only 1 column showing --%>
+                                <%--<a class="openNewPanel" title="<fmt:message key="open_in_new_panel" />">--%>
+                                    <%--<i class="glyphicon glyphicon-plus"></i>--%>
+                                <%--</a>--%>
+
+                                <a class="closeColumn disabled" title="<fmt:message key="close" />">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="passageContent" itemprop="text">
@@ -379,6 +373,10 @@
     <script src="international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
 <% } %>
 <%@include file="jsps/initLib.jsp" %>
+
+<script type="text/template" id="search-template">
+    <jsp:include page="jsps/search.jsp"/>
+</script>
 
 <%-- Now do javascript --%>
 <script type="text/javascript">

@@ -189,7 +189,6 @@
         initDataSources();
         patchBackboneHistory();
         initCoreModelsAndRouter();
-        initSearchDropdown();
 
         Backbone.history.start({pushState: true, silent: true});
         new HeaderView();

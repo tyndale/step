@@ -63,12 +63,12 @@ var PanelView = Backbone.View.extend({
         return this;
     },
     renderHeader: function () {
-        var searchTokens = this.model.get("searchTokens");
-        var $container = $('<span class="argSummary"></span>');
-        step.util.ui.renderArgs(searchTokens, $container);
+        this.search = new MainSearchView({
+           el: this.$(".searchContainer")
+        });
 
         var $header = this.$(".passageOptionsGroup");
-        $header.find(".argSummary").remove();
-        $header.append($container);
+        $header.find(".searchContainer").remove();
+        $header.prepend(this.search.render().$el);
     }
 });

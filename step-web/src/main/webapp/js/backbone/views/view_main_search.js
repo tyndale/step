@@ -1,5 +1,5 @@
 var MainSearchView = Backbone.View.extend({
-    el: ".search-form",
+    template: _.template($('#search-template').html()),
     events: {
         "click .find": "search"
     },
@@ -9,7 +9,6 @@ var MainSearchView = Backbone.View.extend({
         var self = this;
         this.ignoreOpeningEvent = false;
         this.clearContextAfterSearch = false;
-        this.masterSearch = this.$el.find(".master-search");
         this.specificContext = [];
         this.startTimes = {};
         this.allContexts = [REFERENCE, VERSION, LIMIT, EXAMPLE_DATA];
@@ -20,7 +19,15 @@ var MainSearchView = Backbone.View.extend({
         this.listenTo(step.passages, "sync-update", this.syncWithUrl);
         this.listenTo(Backbone.Events, "search:add", this._appendVersions);
         this.listenTo(Backbone.Events, "search:remove", this._removeVersion);
-
+        this.render();
+    },
+    render: function () {
+        var self = this;
+        var view = this;
+        _.bindAll(this);
+        _.bindAll(view);
+        this.$el.html(this.template());
+        this.masterSearch = this.$el.find(".master-search");
         this.masterSearch.select2({
             minimumInputLength: 2,
             openOnEnter: false,
@@ -264,10 +271,14 @@ var MainSearchView = Backbone.View.extend({
             self.masterSearch.select2("onSortEnd");
             self._reEvaluateMasterVersion();
         });
+
         this.masterSearch.on('change', function () {
             self.masterSearch.html(self.masterSearch.val());
         });
 
+        this.syncWithUrl(this.model);
+
+        return this;
     },
     _setData: function (values) {
         this.masterSearch.select2("data", values, true);

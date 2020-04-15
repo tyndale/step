@@ -2,6 +2,52 @@
 @import 'mixins';
 @import 'multi_columns';
 
+.searchContainer {
+  flex-grow: 1;
+  position: relative;
+  margin-right: 5px;
+
+  form {
+    margin: 0;
+  }
+}
+
+// Search form
+.search-form {
+  font-size: x-small;
+
+  a {
+    color: $topHeaderLinkColour;
+  }
+
+  .findButton {
+    padding: 0 8px;
+    position: inherit;
+  }
+
+  i.find {
+    position: absolute;
+    right: 0;
+    top: -1px;
+    z-index: 2;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 6px 12px;
+  }
+}
+.searchLinks {
+  float: right;
+  margin-top: 4px;
+  color: $topHeaderLinkColour;
+  a, label {
+    vertical-align: top;
+    margin-left: 20px;
+  }
+  input {
+    margin: 2px 0 0 0;
+  }
+}
+
 .select2-results {
   @media screen and (min-width: $stepXSBootstrap) {
     @include multi-column(2);

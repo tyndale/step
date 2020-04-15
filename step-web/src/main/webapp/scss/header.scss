@@ -108,41 +108,6 @@
     }
   }
 
-  // Search form
-  .search-form {
-    font-size: x-small;
-
-    a {
-      color: $topHeaderLinkColour;
-    }
-
-    .findButton {
-      padding: 0 8px;
-    }
-
-    i.find {
-      position: absolute;
-      right: 16px;
-      top: -1px;
-      z-index: 2;
-      cursor: pointer;
-      font-size: 16px;
-      padding: 8px 12px;
-    }
-  }
-  .searchLinks {
-    float: right;
-    margin-top: 4px;
-    color: $topHeaderLinkColour;
-    a, label {
-      vertical-align: top;
-      margin-left: 20px;
-    }
-    input {
-      margin: 2px 0 0 0;
-    }
-  }
-
   // Help menu
   .help {
     margin-top: 5px;
