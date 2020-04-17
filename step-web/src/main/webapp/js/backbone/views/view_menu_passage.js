@@ -343,10 +343,6 @@ var PassageMenuView = Backbone.View.extend({
 
         dropdown.append(li);
 
-        if ((window.location.hostname.toLowerCase().indexOf('color.com') > -1)) {
-            __s.config_color_grammar = __s.config_color_grammar.replace("olour", "olor");
-            __s.config_color_grammar_explain = __s.config_color_grammar_explain.replace("olour", "olor");
-        }
         colorCodeGrammarButton = '<li id=grammar_list_item class="noHighlight grammarContainer"><%= __s.config_color_grammar %>' +
             '<span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group">' +
             '<button class="btn btn-default btn-xs grammarColor" type="button" title="<%= __s.config_color_grammar_explain %>">' +
