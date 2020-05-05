@@ -1311,7 +1311,7 @@
                     </xsl:call-template>
                 </span>
             </xsl:if>
-            
+
             <!-- output a filling gap for morphs -->
             <xsl:if test="$Morph = 'true'">
                 <span class="morphs">
@@ -1560,7 +1560,7 @@
                     </xsl:call-template>
                 </span>
             </xsl:if>
-            
+
 			<!-- output a filling gap for morphs -->
 			<xsl:if test="$Morph = 'true'">
 				<span class="morphs">
@@ -1893,7 +1893,7 @@
                     <xsl:if test="$zh_Vocab = 'true'">
                         <span class="text">&#160;</span>
                     </xsl:if>
-                    
+
 					<!-- output a filling gap for morphs -->
 					<xsl:if test="$Morph = 'true'">
 						<span class="text">&#160;</span>

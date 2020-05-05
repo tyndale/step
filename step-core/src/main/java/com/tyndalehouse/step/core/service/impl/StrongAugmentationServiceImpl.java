@@ -104,7 +104,6 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
 
             //run the query for the hebrew words and add them to the list
             docs = this.augmentedStrongs.search("augmentedStrong", query.toString());
-
             for (EntityDoc d : docs) {
                 final String augmentedStrong = d.get("augmentedStrong");
                 augmentedStrongs.put(augmentedStrong.substring(0, augmentedStrong.length() - 1).toLowerCase(), augmentedStrong);

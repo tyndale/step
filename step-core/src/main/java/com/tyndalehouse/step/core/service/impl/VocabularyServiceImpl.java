@@ -59,7 +59,8 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.*;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
