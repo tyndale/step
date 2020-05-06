@@ -162,7 +162,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
-            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             for (int i = 0; i < strongDefs.length; i ++) {
                 if ((userLanguage != null) && (userLanguage != "")) {
                     if (!userLanguage.equalsIgnoreCase("zh")) {
@@ -208,7 +208,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
                 // look up related word from index
                 if (shortLexiconDefinition == null) {
-                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", relatedWord);
+                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, relatedWord);
                     // assume first doc
                     if (relatedDoc.length > 0) {
                         shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0], userLanguage);
@@ -278,7 +278,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         final String[] strongList = this.strongAugmentationService.augment(version, reference, getKeys(vocabIdentifiers)).getStrongList();
 
         if (strongList.length != 0) {
-            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", userLanguage, strongList);
             return new VocabResponse(strongNumbers);
         }
         return new VocabResponse();
@@ -368,7 +368,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             else {
                 String[] tmpKeys = {keys[counter]};
                 while (tmpKeys[0].length() > 0) {
-                    strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", tmpKeys);
+                    strongNumber = this.definitions.searchUniqueBySingleField("strongNumber", null, tmpKeys);
                     if ((strongNumber != null) && (strongNumber.length > 0)) {
                         DEFINITION_CACHE.put(keys[counter], strongNumber);
                         entityDocsResults[counter] = strongNumber[0];

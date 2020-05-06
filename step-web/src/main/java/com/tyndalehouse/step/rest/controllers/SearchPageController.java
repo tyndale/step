@@ -396,7 +396,8 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("page"),
                     req.getParameter("qFilter"),
                     req.getParameter("sort"),
-                    req.getParameter("context"));
+                    req.getParameter("context"),
+                    userLanguage);
         } catch (Exception ex) {
             LOGGER.warn(ex.getMessage(), ex);
             text = getDefaultPassage();
