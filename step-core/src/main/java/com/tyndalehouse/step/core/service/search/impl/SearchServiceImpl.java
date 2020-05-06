@@ -203,7 +203,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
                                           final String display, final int page, final String filter,
-                                          final String sort, int context, final String originalItems, final String userLanguage) {
+                                          final String sort, int context, final String originalItems) {
         final long timeStart = System.currentTimeMillis();
         boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
