@@ -1,7 +1,7 @@
+<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!-- The following 5 lines are needed so that the traditional Chinese, instead of Simplified Chinese will be used -->
-<%@ page import="java.util.Locale" %>
+<!-- The following 4 lines are needed so that the traditional Chinese, instead of Simplified Chinese will be used -->
 <% Locale locale = injector.getInstance(ClientSession.class).getLocale(); %>
 <% if (locale.getLanguage().equalsIgnoreCase("zh") && locale.getCountry().equalsIgnoreCase("tw")) { %>
     <fmt:setLocale value="zh_TW"/>
