@@ -1,3 +1,4 @@
+<%@page import="com.google.inject.Injector"%>
 <%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
