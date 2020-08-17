@@ -406,6 +406,10 @@ var MainSearchView = Backbone.View.extend({
                 //for a reference that is a whole book, we push an extra one in
                 text = termSuggestion.suggestion.fullName;
                 item = termSuggestion;
+                // Some of the shortname of the books in the Bible does not work in Chinese.  PT 4/21/2020
+                if (step.state.language().startsWith("zh")) {
+                    item.suggestion.shortName = item.suggestion.fullName;
+                }
                 break;
             case SUBJECT_SEARCH:
                 text = termSuggestion.suggestion.value;
@@ -855,13 +859,12 @@ var MainSearchView = Backbone.View.extend({
                     internationalisedSectionName = __s.bible_whole_book_section;
                 }
                 else {
-                    var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
-                    if (internationalName == null) {
-                        internationalName = __s[v.item.sectionType.toLowerCase()];
-                    }
-                    internationalisedSectionName = internationalName;
+					var internationalName = __s[v.item.sectionType.toLowerCase() + "_section"];
+					if (internationalName == null) {
+						internationalName = __s[v.item.sectionType.toLowerCase()];
+					}
+					internationalisedSectionName = internationalName;
                 }
-
                 row = ['<span class="source">[' + internationalisedSectionName + ']</span>',
                     this._markMatch(v.item.fullName, query.term)
                 ].join('');
