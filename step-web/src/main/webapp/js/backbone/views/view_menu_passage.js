@@ -397,7 +397,7 @@ var PassageMenuView = Backbone.View.extend({
             this.model.save({isQuickLexicon: true});
             currentQuickLexiconSetting = true;
         }
-        dropdown.append($(_.template(this.quickLexicon)({isQuickLexicon: currentQuickLexiconSetting})).click(function (e) {
+        dropdown.append($(_.template(this.currentQuickLexiconSetting)({isQuickLexicon: currentQuickLexiconSetting})).click(function (e) {
             //prevent the bubbling up
             e.stopPropagation();
 
@@ -414,18 +414,18 @@ var PassageMenuView = Backbone.View.extend({
                 this.model.save({ isEnWithZhLexicon: false });
                 currentEnWithZhLexiconSetting = false;
             }
-            dropdown.append($(_.template(this.enWithZhLexicon)({ isEnWithZhLexicon: currentEnWithZhLexiconSetting })).click(function (e) {
+            dropdown.append($(_.template(this.currentEnWithZhLexiconSetting)({ isEnWithZhLexicon: currentEnWithZhLexiconSetting })).click(function (e) {
                 e.stopPropagation(); //prevent the bubbling up
                 var enWithZhLexicon = !self.model.get("isEnWithZhLexicon");
                 self.model.save({ isEnWithZhLexicon: enWithZhLexicon });
                 self._setVisible(this, enWithZhLexicon); // toggle the tick
             }));
-            var useExperimentalZhLexicon = self.model.get("isExperimentalZhLexicon");
-            if (useExperimentalZhLexicon == null) {
+            var currentExperimentalZhLexiconSetting = self.model.get("isExperimentalZhLexicon");
+            if (currentExperimentalZhLexiconSetting == null) {
                 this.model.save({ isExperimentalZhLexicon: true });
-                useExperimentalZhLexicon = true;
+                currentExperimentalZhLexiconSetting = true;
             }
-            dropdown.append($(_.template(this.experimentalZhLexicon)({ isExperimentalZhLexicon: useExperimentalZhLexiconSetting })).click(function (e) {
+            dropdown.append($(_.template(this.currentExperimentalZhLexiconSetting)({ isExperimentalZhLexicon: currentExperimentalZhLexiconSetting })).click(function (e) {
                 e.stopPropagation(); //prevent the bubbling up
                 var experimentalZhLexicon = !self.model.get("isExperimentalZhLexicon");  // reverse true or false
                 self.model.save({ isExperimentalZhLexicon: experimentalZhLexicon }); // toggle the tick
