@@ -1,0 +1,54 @@
+body td {font-family: Arial,Helvetica,sans-serif; font-size:14px; margin: 3px;}
+h1 {color:#FF8000; text-align:center;}
+h2 {color:blue; font-size:14px; text-align:center;font-family: SimHei,Arial,Helvetica,sans-serif;}
+p {margin-left: 10px;}
+a {font-size:12px; text-decoration: underline; color: #FF8000;}
+a:hover { text-decoration: underline; color: #ffffff; background-color:#0404B4;}
+
+.st1 td {font-size:12px; white-space: nowrap; padding: 2px; text-align: left;}
+.st2 {font-size:12px; color: blue;
+    white-space: nowrap; padding: 4px; text-align: left;
+    vertical-align: top;
+}
+.st3 {float:left; font-size:12px; padding: 2px;
+     text-align: left;white-space: nowrap; }
+.sp1 {font-size:12px; padding: 1px; color: #ffffff; background-color:#0404B4;border: 1px solid red;}
+.sp2 {font-size:12px; padding: 1px; color: #ffffff; background-color:#610B0B;border: 1px solid red;}
+.hd1 {color:blue; font-size:16px;
+      font-family: SimHei,Arial,Helvetica,sans-serif;
+      border-bottom: 2px solid #003B62;
+}
+.hd2 {color:blue; font-size:12px;
+    border-bottom: 1px dotted #006666;
+}
+
+.hd3 {color:#000000; border-bottom: 1px dotted #006666;}
+
+.gk {font-family: Greek; color:red; font-size:18px; font-weight:bond;}
+.hb {font-family: bwhebb; color:red; font-size:18px; font-weight:bond;}
+.bd {border-left: 2px solid #003B62;}
+ul#nav {
+list-style-type: none;
+margin: 0;
+padding: .5em 0;
+}
+
+ul#nav li a{
+display: block;
+width: 90px;
+color: #FFF;
+padding: 1px;
+background-color: #003B62;
+text-align: center;
+text-decoration: none;
+border: 2px outset;
+}
+
+ul#nav li a:hover{
+color: #FFF;
+background-color: #87AEC5;
+border: 2px inset;
+}
+
+ul#nav .back { float: left; }
+ul#nav .cont { float: right; }
