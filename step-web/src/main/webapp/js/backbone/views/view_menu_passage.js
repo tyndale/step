@@ -16,7 +16,7 @@ var PassageMenuView = Backbone.View.extend({
         '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    experimentalZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.experimental_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isExperimentalZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -397,7 +397,7 @@ var PassageMenuView = Backbone.View.extend({
             this.model.save({isQuickLexicon: true});
             currentQuickLexiconSetting = true;
         }
-        dropdown.append($(_.template(this.currentQuickLexiconSetting)({isQuickLexicon: currentQuickLexiconSetting})).click(function (e) {
+        dropdown.append($(_.template(this.quickLexicon)({isQuickLexicon: currentQuickLexiconSetting})).click(function (e) {
             //prevent the bubbling up
             e.stopPropagation();
 
@@ -414,25 +414,24 @@ var PassageMenuView = Backbone.View.extend({
                 this.model.save({ isEnWithZhLexicon: false });
                 currentEnWithZhLexiconSetting = false;
             }
-            dropdown.append($(_.template(this.currentEnWithZhLexiconSetting)({ isEnWithZhLexicon: currentEnWithZhLexiconSetting })).click(function (e) {
+            dropdown.append($(_.template(this.enWithZhLexicon)({ isEnWithZhLexicon: currentEnWithZhLexiconSetting })).click(function (e) {
                 e.stopPropagation(); //prevent the bubbling up
                 var enWithZhLexicon = !self.model.get("isEnWithZhLexicon");
                 self.model.save({ isEnWithZhLexicon: enWithZhLexicon });
                 self._setVisible(this, enWithZhLexicon); // toggle the tick
             }));
-            var currentExperimentalZhLexiconSetting = self.model.get("isExperimentalZhLexicon");
-            if (currentExperimentalZhLexiconSetting == null) {
-                this.model.save({ isExperimentalZhLexicon: true });
-                currentExperimentalZhLexiconSetting = true;
+            var currentSecondZhLexiconSetting = self.model.get("isSecondZhLexicon");
+            if (currentSecondZhLexiconSetting == null) {
+                this.model.save({ isSecondZhLexicon: true });
+                currentSecondZhLexiconSetting = true;
             }
-            dropdown.append($(_.template(this.currentExperimentalZhLexiconSetting)({ isExperimentalZhLexicon: currentExperimentalZhLexiconSetting })).click(function (e) {
+            dropdown.append($(_.template(this.secondZhLexicon)({ isSecondZhLexicon: currentSecondZhLexiconSetting })).click(function (e) {
                 e.stopPropagation(); //prevent the bubbling up
-                var experimentalZhLexicon = !self.model.get("isExperimentalZhLexicon");  // reverse true or false
-                self.model.save({ isExperimentalZhLexicon: experimentalZhLexicon }); // toggle the tick
-                self._setVisible(this, experimentalZhLexicon);
+                var secondZhLexicon = !self.model.get("isSecondZhLexicon");  // reverse true or false
+                self.model.save({ isSecondZhLexicon: secondZhLexicon }); // toggle the tick
+                self._setVisible(this, secondZhLexicon);
             }));
         }
-
         var currentVerseVocabSetting = self.model.get("isVerseVocab");
         if (currentVerseVocabSetting == null) {
             this.model.save({isVerseVocab: true});

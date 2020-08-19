@@ -360,8 +360,8 @@ var SidebarView = Backbone.View.extend({
                 panel.append($("<h2>").append(__s.lexicon_meaning_fhl));
                 this._addLinkAndAppend(panel, chineseDef, currentWordLanguageCode, bibleVersion);
             }
-            var useExperimentalZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isExperimentalZhLexicon");
-            if ((useExperimentalZhLexicon == null) || (useExperimentalZhLexicon))
+            var useSecondZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSecondZhLexicon");
+            if ((useSecondZhLexicon == null) || (useSecondZhLexicon))
                 foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
         }
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
