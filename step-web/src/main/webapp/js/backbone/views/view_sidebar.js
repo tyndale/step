@@ -404,11 +404,11 @@ var SidebarView = Backbone.View.extend({
         panel.find("[sbstrong]").click(function () {
             step.util.ui.showDef($(this).data("strongNumber"));
         });
-        if (foundChineseJSON) {
+        /* if (foundChineseJSON) {
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
                 __s.additional_chinese_lexicon_info + "</a>");
-        }
+        } */
         this._doSideNotes(panel, bibleVersion);
     },
     // for one-line morphology
