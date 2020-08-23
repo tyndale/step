@@ -50,7 +50,7 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <installDir></installDir>
+                            <installDir>/opt/install4j6</installDir>
                             <projectFile>${project.basedir}/src/main/assembly/step.install4j</projectFile>
                             <macKeystorePassword>password</macKeystorePassword>
                         </configuration>
