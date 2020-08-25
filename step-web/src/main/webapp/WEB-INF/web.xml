@@ -21,14 +21,18 @@
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 
-<filter>
-   <filter-name>Remote Address Filter</filter-name>
-   <filter-class>org.apache.catalina.filters.RemoteAddrFilter</filter-class>
-   <init-param>
-      <param-name>allow</param-name>
-      <param-value>127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1</param-value>
-   </init-param>
-</filter>
+	<filter>
+	   <filter-name>Remote Address Filter</filter-name>
+	   <filter-class>org.apache.catalina.filters.RemoteAddrFilter</filter-class>
+	   <init-param>
+		  <param-name>allow</param-name>
+		  <param-value>127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1</param-value>
+	   </init-param>
+	</filter>
+    <filter-mapping>
+      <filter-name>Remote Address Filter</filter-name>
+      <url-pattern>*</url-pattern>
+    </filter-mapping>
 
 	<filter>
 		<filter-name>guiceFilter</filter-name>
