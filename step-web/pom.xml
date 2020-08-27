@@ -631,7 +631,7 @@
                                     <include>${basedir}/target/step-web/color_code_grammar.min.html</include>
                                 </includes>
                                 <replacements>
-                                    <replacement><token>color_code_config\.js</token><value>>color_code_config.${project.version}.min.js</value></replacement>
+                                    <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
                             </configuration>
