@@ -133,17 +133,25 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<configuration>
-						<webResources>
-							<resource>
-								<directory>${basedir}/src/main/webapp</directory>
-								<filtering>true</filtering>
-								<includes>
-									<include>start.jsp</include>
-								</includes>
-							</resource>
-						</webResources>
-					</configuration>
+					<version>2.0.1</version>
+					<executions>
+						<execution>
+							<id>prepare-war</id>
+							<phase>prepare-package</phase>
+							<goals> <goal>exploded</goal> </goals>
+							<configuration>
+								<webResources>
+									<resource>
+										<directory>${basedir}/src/main/webapp</directory>
+										<filtering>true</filtering>
+										<includes>
+											<include>start.jsp</include>
+										</includes>
+									</resource>
+								</webResources>
+							</configuration>
+						</execution> 
+					</executions> 
 				</plugin>
 
 				<plugin>
@@ -595,7 +603,7 @@
 						
 						<execution>
                             <id>change-acl</id>
-							<phase>install</phase>
+							<phase>prepare-package</phase>
 							<goals>
 								<goal>replace</goal>
 							</goals>
@@ -614,7 +622,7 @@
 
 						<execution>
                             <id>update-color_code-html</id>
-							<phase>install</phase>
+							<phase>prepare-package</phase>
 							<goals>
 								<goal>replace</goal>
 							</goals>
