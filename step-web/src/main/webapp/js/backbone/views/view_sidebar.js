@@ -428,10 +428,13 @@ var SidebarView = Backbone.View.extend({
         this.renderBriefMorphItem(panel, info, "suffix");
         panel.append(")<br />");
     },
-    renderBriefMorphItem: function (panel, info, param) {
-        if(info && param && info[param]) {
-            var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
-            panel.append(value);
+    renderBriefMorphItem: function (panel, morphInfo, param) {
+        if(morphInfo && param && morphInfo[param]) {
+            var morphValue = this.replaceEmphasis(morphInfo[param]);
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
+            var htmlValue = $("<span>" + morphValue + "</span>");
+            panel.append(htmlValue);
             panel.append(" ");
         }
     },
@@ -464,14 +467,16 @@ var SidebarView = Backbone.View.extend({
         if (info["description"] != undefined)
             panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
     },
-    renderMorphItem: function (panel, info, title, param) {
-        if (info && param && info[param]) {
-            var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
-            panel.append($("<h3>").append(title)).append(value);
-
-            if (info[param + "Explained"] || param == 'wordCase' && info["caseExplained"]) {
-                var explanation = info[param + "Explained"] || param == 'wordCase' && info["caseExplained"];
-                value.attr("title", this.stripEmphasis(explanation));
+    renderMorphItem: function (panel, morphInfo, title, param) {
+        if (morphInfo && param && morphInfo[param]) {
+			var morphValue = this.replaceEmphasis(morphInfo[param]);
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(" ", "_");
+			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
+            var htmlValue = $("<span>" + morphValue + "</span>");
+            panel.append($("<h3>").append(title)).append(htmlValue);
+            if (morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"]) {
+                var explanation = morphInfo[param + "Explained"] || param == 'wordCase' && morphInfo["caseExplained"];
+                htmlValue.attr("title", this.stripEmphasis(explanation));
             }
             panel.append("<br />");
         }
