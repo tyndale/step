@@ -77,12 +77,12 @@ public class StrongAugmentationServiceImpl implements StrongAugmentationService 
             String[] individualVerses;
             final int len = reference.length();
             int i;
-            for (i = 1; i < len; i++) { // Check to see if there are chapter or verse number
+            for (i = len - 1; i > 2; i--) { // Check to see if there are chapter or verse number
                 if (Character.isDigit(reference.charAt(i))) {
                     break;
                 }
             }
-            if (i >= len) {  // If there are no chapter or verse number, the query does not need to list all the verses in the book.
+            if (i <= 2) {  // If there are no chapter or verse number, the query does not need to list all the verses in the book.
                 individualVerses = new String[1];
                 individualVerses[0] = reference;
             }
