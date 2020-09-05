@@ -172,7 +172,10 @@ var QuickLexicon = Backbone.View.extend({
     },
 	// for one-line morphology
     _createBriefMorphInfo: function (morphInfo) {
-		var grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "ot_function");
+		// Added following two lines. Accidentally delected the info["function'] 2019 - PT Sept 2020.
+		var grammar_function;
+		if (morphInfo["ot_function"] === undefined) grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "function");
+		else grammar_function = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_function, "ot_function");
 		var tense = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_tense, "tense");
 		var voice = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_tense, "voice");
 		var mood = this._renderBriefMorphItem(morphInfo, __s.lexicon_grammar_mood, "mood");
