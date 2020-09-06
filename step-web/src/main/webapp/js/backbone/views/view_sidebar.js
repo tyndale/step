@@ -436,7 +436,8 @@ var SidebarView = Backbone.View.extend({
     renderBriefMorphItem: function (panel, morphInfo, param) {
         if(morphInfo && param && morphInfo[param]) {
             var morphValue = this.replaceEmphasis(morphInfo[param]);
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(/ /g, "_");
+		 // var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append(htmlValue);
@@ -477,7 +478,8 @@ var SidebarView = Backbone.View.extend({
     renderMorphItem: function (panel, morphInfo, title, param) {
         if (morphInfo && param && morphInfo[param]) {
 			var morphValue = this.replaceEmphasis(morphInfo[param]);
-			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
+		//  var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replaceAll(" ", "_");
+			var local_var_name = param.toLowerCase() + "_" + morphValue.toLowerCase().replace(/ /g, "_");
 			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append($("<h3>").append(title)).append(htmlValue);
