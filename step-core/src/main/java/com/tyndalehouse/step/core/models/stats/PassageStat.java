@@ -99,15 +99,24 @@ public class PassageStat {
     /**
      * Trims from the bottom up, leaving the more frequent words there until we have < maxWords
      */
-    public void trim(final int maxWords) {
-        trimWords(maxWords, 1);
+    public void trim(int maxWords, boolean mostOccurrences) {
+        int startOccurrences = 1;
+        mostOccurrences = true; // Temporary set to true.  Waiting for David's response PT 09/14/2020
+        if (!mostOccurrences) {
+            final Iterator<Map.Entry<String, Integer>> iterator = this.stats.entrySet().iterator();
+            while (iterator.hasNext()) {
+                final Map.Entry<String, Integer> next = iterator.next();
+                if (next.getValue() > startOccurrences) startOccurrences = next.getValue();
+            }
+        }
+        trimWords(maxWords, startOccurrences, mostOccurrences);
     }
 
     /**
      * @param maxWords the number of words to keep
      * @param trimOutOccurrences the number for which we won't keep
      */
-    private void trimWords(final int maxWords, final int trimOutOccurrences) {
+    private void trimWords(final int maxWords, final int trimOutOccurrences, final boolean mostOccurrences) {
         if(this.stats.size() < maxWords) {
             return;
         }
@@ -119,7 +128,8 @@ public class PassageStat {
                 iterator.remove();
             }
         }
-        trimWords(maxWords, trimOutOccurrences+1);
+        int nextTrimOutOccurrences = (mostOccurrences) ? trimOutOccurrences + 1 : trimOutOccurrences - 1;
+        trimWords(maxWords, nextTrimOutOccurrences, mostOccurrences);
     }
 
     /**

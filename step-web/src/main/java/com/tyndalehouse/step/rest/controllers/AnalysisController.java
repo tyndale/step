@@ -71,6 +71,6 @@ public class AnalysisController {
      */
     @Timed(name = "word-cloud", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope, String considerNextChapter, String userLanguage) {
-        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope), Boolean.parseBoolean(considerNextChapter), userLanguage);
+        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope), Boolean.parseBoolean(considerNextChapter), userLanguage, true);
     }
 }
