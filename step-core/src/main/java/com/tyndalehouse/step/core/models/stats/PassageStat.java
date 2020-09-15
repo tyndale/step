@@ -101,7 +101,7 @@ public class PassageStat {
      */
     public void trim(int maxWords, boolean mostOccurrences) {
         int startOccurrences = 1;
-        mostOccurrences = true; // Temporary set to true.  Waiting for David's response PT 09/14/2020
+//        mostOccurrences = false; // Temporary set to true.  Waiting for David's response PT 09/14/2020
         if (!mostOccurrences) {
             final Iterator<Map.Entry<String, Integer>> iterator = this.stats.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -120,6 +120,7 @@ public class PassageStat {
         if(this.stats.size() < maxWords) {
             return;
         }
+        if ((!mostOccurrences) && (trimOutOccurrences == 1)) return;
 
         final Iterator<Map.Entry<String, Integer>> iterator = this.stats.entrySet().iterator();
         while (iterator.hasNext()) {

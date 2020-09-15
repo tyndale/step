@@ -168,7 +168,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         return step.util.getPassageContainer(model.get("passageId")).find(".verseNumber").closest("a[name]").attr("name")
     },
 
-    _getStats: function (statType, scope, callback) {
+    _getStats: function (statType, scope, sortType, callback) {
         var self = this;
         var model = step.util.activePassage();
 
@@ -180,7 +180,8 @@ var ViewLexiconWordle = Backbone.View.extend({
         if(scopeTypes.indexOf(scope) == -1) {
             scope = scopeTypes[0];
         }
-        
+
+        var mostOccurences = (sortType == "SORT_BY_REVERSED_FREQUENCY") ? false : true;
 //        if (!animate) {
         this.statsContainer.empty();
 //        }
@@ -188,7 +189,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         var lastTime = new Date().getTime();
         console.log(new Date().getTime(), reference, "Wordle server call");
         var currentUserLang = (step.userLanguageCode) ? step.userLanguageCode.toLowerCase() : "en";
-        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isAnimating || this.isNextChapter), currentUserLang], function (data) {
+        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, (this.isAnimating || this.isNextChapter), currentUserLang, mostOccurences], function (data) {
             console.log(new Date().getTime(), "Wordle server data received");
             step.util.trackAnalyticsTime('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);
@@ -240,7 +241,7 @@ var ViewLexiconWordle = Backbone.View.extend({
     doStats: function () {
         console.log(new Date().getTime(), "Doing stats");
 
-        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), function (key, statType) {
+        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"),  this.sortCloud.find(".selected").data("value"),  function (key, statType) {
             if (statType == 'WORD') {
                 var args = "strong=" + encodeURIComponent(key);
                 step.router.navigatePreserveVersions(args);
@@ -333,12 +334,16 @@ var ViewLexiconWordle = Backbone.View.extend({
             strongs.push(key);
         });
 
-        var shouldSort = this.sortCloud.find(".selected").data("value") === step.defaults.analysis.sortType[0];
-        if (shouldSort) {
+        if (this.sortCloud.find(".selected").data("value") === step.defaults.analysis.sortType[0]) {
             strongs.sort(function (a, b) {
                 return wordleData.stats[b] - wordleData.stats[a];
             });
-        } else {
+        } else if (this.sortCloud.find(".selected").data("value") === step.defaults.analysis.sortType[1]) {
+            strongs.sort(function (b, a) {
+                return wordleData.stats[b] - wordleData.stats[a];
+            });
+        }
+        else {
             strongs.sort(function (a, b) {
                 return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
             });
