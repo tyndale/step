@@ -284,7 +284,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                 if (this.resultWithLineBreak.prop('checked')) {
                     var transliteration = $("<i>" + lexiconWords[key].stepTransliteration + "</i>");
                     wordLink.append(transliteration);
-                    wordLink.append(" ) ");
+                    wordLink.append(") ");
                     wordLink.append(lexiconWords[key].gloss);
                     wordLink.append(' - ');
                     wordLink.append(value);
