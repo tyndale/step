@@ -282,12 +282,11 @@ var ViewLexiconWordle = Backbone.View.extend({
                 wordLink.append(ancientVocab);
                 wordLink.append(' (');
                 if (this.resultWithLineBreak.prop('checked')) {
-                    wordLink.append(lexiconWords[key].stepTransliteration);
-                    wordLink.append(') ');
+                    var transliteration = $("<i>" + lexiconWords[key].stepTransliteration + "</i>");
+                    wordLink.append(transliteration);
+                    wordLink.append(" ) ");
                     wordLink.append(lexiconWords[key].gloss);
-                    wordLink.append(' (');
-                    wordLink.append(key);
-                    wordLink.append(') - ');
+                    wordLink.append(' - ');
                     wordLink.append(value);
                     wordLink.append(' ');
                     wordLink.append(__s.analyse_times);
