@@ -293,15 +293,23 @@ var ViewLexiconWordle = Backbone.View.extend({
                     wordLink.append(__s.analyse_times);
                 }
                 else {
-                    wordLink.append(lexiconWords[key].gloss);
-                    wordLink.append(')');
+                        wordLink.append(lexiconWords[key].gloss);
+                        wordLink.append(')');
                 }
                 wordLink.prop("strong", key);
             } else {
-                wordLink.append(lexiconWords[key].gloss);
+                    wordLink.append(lexiconWords[key].gloss);
+                    wordLink.append(' - ');
+                    wordLink.append(value);
+                    wordLink.append(' ');
+                    wordLink.append(__s.analyse_times);
             }
         } else {
-            wordLink.html(key)
+            wordLink.html(key);
+            wordLink.append(' - ');
+            wordLink.append(value);
+            wordLink.append(' ');
+            wordLink.append(__s.analyse_times);
         }
 
         wordLink.attr("key", key);
