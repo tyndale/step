@@ -32,7 +32,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         scopeContainer.append(
             $('<div id="nextChapterInputLine" class="form-group"><label for="nextChapterWordle">' + __s.analyse_update + ':</label></div>').append(this.nextChapter).append(this.animateCloud));
-        scopeContainer.append($('<br>'));
+//        scopeContainer.append($('<br>'));
 
         this.$el.append(scopeContainer);
         this.$el.append(this.statsContainer);
@@ -336,7 +336,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         //create order of strong numbers
         var strongs = [];
 //        container.empty();
-        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + passageScope + ":</span><br>");
+        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + passageScope + ":</span><br><br>");
         $.each(wordleData.stats, function (key, value) {
             strongs.push(key);
         });
