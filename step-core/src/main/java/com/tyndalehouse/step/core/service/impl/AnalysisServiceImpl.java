@@ -102,8 +102,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Override
     public CombinedPassageStats getStatsForPassage(
             final String version, final String reference,
-            final StatType statType, final ScopeType scopeType, boolean nextChapter, final String userLanguage) {
-        
+            final StatType statType, final ScopeType scopeType, boolean nextChapter, final String userLanguage, final boolean mostOccurrences) {
         
         final String keyResolutionVersion = statType == StatType.TEXT ? version : JSwordPassageService.REFERENCE_BOOK;
         final KeyWrapper centralReference = nextChapter ? 
@@ -115,16 +114,16 @@ public class AnalysisServiceImpl implements AnalysisService {
         switch (statType) {
             case WORD:
                 stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType);
-                stat.trim(maxWords);
+                stat.trim(maxWords, mostOccurrences);
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat, userLanguage));
                 break;
             case TEXT:
                 stat = this.jswordAnalysis.getTextStats(version, centralReference.getKey(), scopeType);
-                stat.trim(maxWords);
+                stat.trim(maxWords, mostOccurrences);
                 break;
             case SUBJECT:
                 stat = getSubjectStats(version, centralReference.getName(), scopeType);
-                stat.trim(maxWords);
+                stat.trim(maxWords, mostOccurrences);
                 break;
             default:
                 throw new StepInternalException("Unsupported type of stat asked for.");
