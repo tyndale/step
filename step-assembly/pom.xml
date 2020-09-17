@@ -59,27 +59,5 @@
             </plugin>
          
             
-<!--            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>/opt/bitnami/apache2/htdocs/downloads/nightly</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}/media</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build> -->
 
 </project>
