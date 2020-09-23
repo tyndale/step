@@ -31,7 +31,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +59,7 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Verse;
+import com.tyndalehouse.step.core.service.BibleInformationService;
 
 /**
  * A service able to retrieve various kinds of statistics, delegates to {@link JSwordAnalysisServiceImpl} for
@@ -76,6 +76,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     private final LexiconDefinitionService definitions;
     private JSwordPassageService jSwordPassageService;
     private final JSwordAnalysisService jswordAnalysis;
+    private final BibleInformationService bibleInformation;
 
     /**
      * Creates a service able to retrieve various stats.
@@ -90,13 +91,16 @@ public class AnalysisServiceImpl implements AnalysisService {
                                @Named("analysis.stopSubjects") String stopSubjects,
                                final SubjectSearchService subjects,
                                final LexiconDefinitionService definitions,
-                               JSwordPassageService jSwordPassageService) {
+                               JSwordPassageService jSwordPassageService,
+                               final BibleInformationService bibleInformation
+                               ) {
         this.jswordAnalysis = jswordAnalysis;
         this.maxWords = maxWords;
         this.subjects = subjects;
         this.definitions = definitions;
         this.jSwordPassageService = jSwordPassageService;
         this.stopSubjects = StringUtils.createSet(stopSubjects);
+        this.bibleInformation = bibleInformation;
     }
 
     @Override
@@ -113,9 +117,10 @@ public class AnalysisServiceImpl implements AnalysisService {
         PassageStat stat;
         switch (statType) {
             case WORD:
-                stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType);
+                stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType, userLanguage);
                 stat.trim(maxWords, mostOccurrences);
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat, userLanguage));
+                stat = this.bibleInformation.getArrayOfStrongNumbers(version, reference, stat, userLanguage);
                 break;
             case TEXT:
                 stat = this.jswordAnalysis.getTextStats(version, centralReference.getKey(), scopeType);
