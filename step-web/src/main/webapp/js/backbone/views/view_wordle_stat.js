@@ -285,10 +285,12 @@ var ViewLexiconWordle = Backbone.View.extend({
     _createWordleTab: function (container, scope, wordleData, statType, callback, lexiconWords, isNextChapter, passageScope) {
         var self = this;
 
-        //create order of strong numbers
-        var strongs = [];
-//        container.empty();
-        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + passageScope + ":</span><br><br>");
+        var strongs = []; //create order of strong numbers
+		var displayScope = passageScope;
+		if (scope == "BOOK") {
+			displayScope = displayScope.replace(/\d+$/, "");
+		}
+        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + displayScope + " (" + scope + "):</span><br><br>");
         $.each(wordleData.stats, function (key, value) {
             strongs.push(key);
         });
