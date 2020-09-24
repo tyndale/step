@@ -222,7 +222,10 @@ var ViewLexiconWordle = Backbone.View.extend({
         var wordLink = $("<a></a>")
             .attr('href', 'javascript:void(0)')
             .attr('rel', relativeSize);
-        if (!isLineBreakSelected) wordLink.attr('title', sprintf(__s.stats_occurs_times, value[0], scopeText));
+        if (isLineBreakSelected) {
+            if (statType == "WORD") wordLink.attr('title', sprintf(__s.stats_occurs_times_in_book_bible, value[1], value[2]));
+        }
+        else wordLink.attr('title', sprintf(__s.stats_occurs_times, value[0], scopeText));
 
         if (lexiconWords && lexiconWords[key]) {
             //assume key is a strong number
@@ -239,9 +242,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                     wordLink.append(lexiconWords[key].gloss);
                     wordLink.append(' - ');
                     wordLink.append(value[0]);
-                    wordLink.append(' ');
-                    wordLink.append(__s.analyse_times);
-                    if (statType == "WORD") wordLink.append(', book: ' + value[1] + ' Bible: ' + value[2]);
+                    wordLink.append('x');
                 }
                 else {
                         wordLink.append(lexiconWords[key].gloss);
