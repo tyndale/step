@@ -51,6 +51,7 @@ var QuickLexicon = Backbone.View.extend({
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1> ' +
         '<% if ( (currentLang == "zh_tw") && (item._zh_tw_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_tw_Definition %></div> <% } else if ( (currentLang == "zh") && (item._zh_Definition != undefined) ) { %><div class="mediumDef"><%= item._zh_Definition %></div> <% } %>' +
+        '<% if ( (currentLang == "vi") && (item._vi_Definition != undefined) ) { %><div class="mediumDef"><%= item._vi_Definition %></div> <% } %>' +
         '<% if ((currentEnWithZhLexiconSetting) || (!currentLang.startsWith("zh"))) { %>' +
             '<span class="shortDef"><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
             '<% if (item.shortDef == null || item.shortDef.length < 150) { %><div class="mediumDef"><%= item.mediumDef == undefined ? "" : item.mediumDef %></div> <% } %>' +
