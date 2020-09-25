@@ -367,6 +367,14 @@ var SidebarView = Backbone.View.extend({
             if ((useSecondZhLexicon == null) || (useSecondZhLexicon))
                 foundChineseJSON = this._addChineseDefinitions(panel, mainWord, currentUserLang, bibleVersion, this._appendLexiconSearch, this._addLinkAndAppend);
         }
+		if (currentUserLang == "vi") {
+			var vietnameseDef = mainWord._vi_Definition;
+			if (vietnameseDef) {
+				panel.append($("<h2>").append("Vietnamese lexicon"));
+                this._addLinkAndAppend(panel, vietnameseDef, currentWordLanguageCode, bibleVersion);
+            }
+
+		}
         if (displayEnglishLexicon) { // This might be false if Chinese lexicon is displayed and isEnWithZhLexicon is false append the meanings
             if (mainWord.mediumDef) {
                 panel.append($("<h2>").append(__s.lexicon_meaning));

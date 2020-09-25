@@ -309,7 +309,7 @@ public class WebStepRequest {
             return "";
         }
 
-        Map<String, Integer> passageStats = stats.getPassageStat().getStats();
+        Map<String, Integer[]> passageStats = stats.getPassageStat().getStats();
         int max = 0;
         TreeMap<Integer, List<String>> orderedStats = new TreeMap<Integer, List<String>>(new Comparator<Integer>() {
 
@@ -319,11 +319,12 @@ public class WebStepRequest {
             }
         });
 
-        for (Map.Entry<String, Integer> stat : passageStats.entrySet()) {
-            List<String> words = orderedStats.get(stat.getValue());
+        for (Map.Entry<String, Integer[]> stat : passageStats.entrySet()) {
+            Integer curValue = stat.getValue()[0];
+            List<String> words = orderedStats.get(curValue);
             if (words == null) {
                 words = new ArrayList<String>();
-                orderedStats.put(stat.getValue(), words);
+                orderedStats.put(curValue, words);
             }
             words.add(stat.getKey());
         }

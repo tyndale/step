@@ -335,9 +335,9 @@ var StepRouter = Backbone.Router.extend({
                 if (!quiet) {
                     step.router.overwriteUrl();
                 }
-                $("#animateWordle").text(text.reference);
+                $("#newLineWordle").text(text.reference);
                 $("#nextChapterWordle").hide();
-                $("#animateWordle").show();
+                $("#newLineWordle").show();
                 $("#nextChapterInputLine").show();
                 self.handleRenderModel(passageModel, false, query, totalSoFar);
             },
