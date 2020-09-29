@@ -94,7 +94,10 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     public PassageStat getWordStats(final Key reference, final ScopeType scopeType, final String userLanguage) {
         try {
             //change the reference to match what we need
-            final BookData expandedBook = getExpandedBookData(reference, scopeType, strongsV11n, strongsBook);
+            Book currentBook = this.versification.getBookFromVersion("OHB");
+            Versification currentV11n = this.versification.getVersificationForVersion(currentBook);
+
+            final BookData expandedBook = getExpandedBookData(reference, scopeType, currentV11n, currentBook);
             return getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), expandedBook.getKey(), split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())), userLanguage);
         } catch (final BookException e) {
             throw new StepInternalException("Unable to read passage text", e);
