@@ -94,6 +94,9 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     public PassageStat getWordStats(final Key reference, final ScopeType scopeType, final String userLanguage) {
         try {
             //change the reference to match what we need
+//            Book currentBook = this.versification.getBookFromVersion("OHB");
+//            Versification currentV11n = this.versification.getVersificationForVersion(currentBook);
+
             final BookData expandedBook = getExpandedBookData(reference, scopeType, strongsV11n, strongsBook);
             return getStatsFromStrongArray(expandedBook.getFirstBook().getInitials(), expandedBook.getKey(), split(OSISUtil.getStrongsNumbers(expandedBook.getOsisFragment())), userLanguage);
         } catch (final BookException e) {

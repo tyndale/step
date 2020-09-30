@@ -60,6 +60,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Verse;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import org.codehaus.jackson.map.util.LRUMap;
 
 /**
  * A service able to retrieve various kinds of statistics, delegates to {@link JSwordAnalysisServiceImpl} for
@@ -77,6 +78,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     private JSwordPassageService jSwordPassageService;
     private final JSwordAnalysisService jswordAnalysis;
     private final BibleInformationService bibleInformation;
+    private static final LRUMap<String, PassageStat> BOOK_ANALYSIS_CACHE = new LRUMap<>(100, 140);
 
     /**
      * Creates a service able to retrieve various stats.
@@ -114,11 +116,28 @@ public class AnalysisServiceImpl implements AnalysisService {
                 jSwordPassageService.getKeyInfo(reference, keyResolutionVersion, keyResolutionVersion);
         
         final CombinedPassageStats statsForPassage = new CombinedPassageStats();
-        PassageStat stat;
+        PassageStat stat = null;
         switch (statType) {
             case WORD:
-                stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType, userLanguage);
-                stat.trim(maxWords, mostOccurrences);
+                String curBookKey = "";
+                if (scopeType == ScopeType.BOOK) {
+                    String origBookKey = centralReference.getKey().getOsisID();
+                    final int len = origBookKey.length();
+                    for (int i = 1; i < len; i++) { // Check to see if there are chapter or verse number
+                        char curChar = origBookKey.charAt(i);
+                        if ((Character.isDigit(curChar)) || (curChar == '.') || (curChar == ' '))  {
+                            curBookKey = origBookKey.substring(0, i);
+                            break;
+                        }
+                    }
+                    if (!curBookKey.equals("")) stat = getPutBookAnalysisCache("GET", curBookKey.concat(String.valueOf(mostOccurrences)), stat);
+                }
+                if (stat == null) {
+                    stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType, userLanguage);
+                    stat.trim(maxWords, mostOccurrences);
+                    if ((scopeType == ScopeType.BOOK) && (!curBookKey.equals("")))
+                        getPutBookAnalysisCache("PUT", curBookKey.concat(String.valueOf(mostOccurrences)), stat);
+                }
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat, userLanguage));
                 stat = this.bibleInformation.getArrayOfStrongNumbers(version, reference, stat, userLanguage);
                 break;
@@ -136,6 +155,12 @@ public class AnalysisServiceImpl implements AnalysisService {
         stat.setReference(centralReference);
         statsForPassage.setPassageStat(stat);
         return statsForPassage;
+    }
+
+    private synchronized PassageStat getPutBookAnalysisCache(final String command, final String key, final PassageStat stat) {
+        if (command.equals("GET")) return BOOK_ANALYSIS_CACHE.get(key);
+        else BOOK_ANALYSIS_CACHE.put(key, stat);
+        return stat;
     }
 
     /**
