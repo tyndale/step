@@ -130,13 +130,13 @@ public class AnalysisServiceImpl implements AnalysisService {
                             break;
                         }
                     }
-                    if (!curBookKey.equals("")) stat = getBookAnalysisCache(curBookKey.concat(String.valueOf(mostOccurrences)));
+                    if (!curBookKey.equals("")) stat = getPutBookAnalysisCache("GET", curBookKey.concat(String.valueOf(mostOccurrences)), stat);
                 }
                 if (stat == null) {
                     stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType, userLanguage);
                     stat.trim(maxWords, mostOccurrences);
                     if ((scopeType == ScopeType.BOOK) && (!curBookKey.equals("")))
-                        putBookAnalysisCache(curBookKey.concat(String.valueOf(mostOccurrences)), stat);
+                        getPutBookAnalysisCache("PUT", curBookKey.concat(String.valueOf(mostOccurrences)), stat);
                 }
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat, userLanguage));
                 stat = this.bibleInformation.getArrayOfStrongNumbers(version, reference, stat, userLanguage);
@@ -157,14 +157,12 @@ public class AnalysisServiceImpl implements AnalysisService {
         return statsForPassage;
     }
 
-    private synchronized PassageStat getBookAnalysisCache(final String key) {
-        return BOOK_ANALYSIS_CACHE.get(key);
+    private synchronized PassageStat getPutBookAnalysisCache(final String command, final String key, final PassageStat stat) {
+        if (command.equals("GET")) return BOOK_ANALYSIS_CACHE.get(key);
+        else BOOK_ANALYSIS_CACHE.put(key, stat);
+        return stat;
     }
 
-    private synchronized void putBookAnalysisCache(final String key, final PassageStat stat) {
-        BOOK_ANALYSIS_CACHE.put(key, stat);
-        return;
-    }
     /**
      * Converts the stats from numbers to their equivalent definition
      *
