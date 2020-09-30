@@ -302,7 +302,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 					diff = wordleData.stats[b][1] - wordleData.stats[a][1];
 					if (diff == 0) {
 					    diff = wordleData.stats[b][2] - wordleData.stats[a][2];
-                        if (diff == 0) diff = lexiconWords[a].stepTransliteration < lexiconWords[b].stepTransliteration ? -1 : 1;
+                        if (diff == 0) diff = a.toLowerCase() < b.toLowerCase() ? -1 : 1;
                     }
 				}
                 return diff;
@@ -314,7 +314,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 					diff = wordleData.stats[b][1] - wordleData.stats[a][1];
 					if (diff == 0) {
 					    diff = wordleData.stats[b][2] - wordleData.stats[a][2];
-                        if (diff == 0) diff = lexiconWords[b].stepTransliteration < lexiconWords[a].stepTransliteration ? -1 : 1;
+                        if (diff == 0) diff = b.toLowerCase() < a.toLowerCase() ? -1 : 1;
                     }
 				}
                 return diff;
@@ -322,7 +322,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         }
         else {
             strongs.sort(function (a, b) {
-                return lexiconWords[a].stepTransliteration < lexiconWords[b].stepTransliteration ? -1 : 1;
+                return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
             });
         }
 
