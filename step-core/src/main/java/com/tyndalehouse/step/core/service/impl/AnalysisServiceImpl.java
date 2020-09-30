@@ -31,10 +31,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -60,7 +57,6 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Verse;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import org.codehaus.jackson.map.util.LRUMap;
 
 /**
  * A service able to retrieve various kinds of statistics, delegates to {@link JSwordAnalysisServiceImpl} for
@@ -78,7 +74,17 @@ public class AnalysisServiceImpl implements AnalysisService {
     private JSwordPassageService jSwordPassageService;
     private final JSwordAnalysisService jswordAnalysis;
     private final BibleInformationService bibleInformation;
-    private static final LRUMap<String, PassageStat> BOOK_ANALYSIS_CACHE = new LRUMap<>(100, 140);
+    // The bookNames variable must be sorted because a binary search will be performed
+    String bookNames[] = {"1Chr", "1Cor", "1John", "1Kgs", "1Pet", "1Sam",
+            "1Thess", "1Tim", "2Chr", "2Cor", "2John", "2Kgs", "2Pet", "2Sam",
+            "2Thess", "2Tim", "3John", "Acts", "Amos", "Col", "Dan", "Deut",
+            "Eccl", "Eph", "Esth", "Exod", "Ezek", "Ezra", "Gal", "Gen",
+            "Hab", "Hag", "Heb", "Hos", "Isa", "Jas", "Jer", "Job", "Joel",
+            "John", "Jonah", "Josh", "Jude", "Judg", "Lam", "Lev", "Luke",
+            "Mal", "Mark", "Matt", "Mic", "Nah", "Neh", "Num", "Obad", "Phil",
+            "Phlm", "Prov", "Ps", "Rev", "Rom", "Ruth", "Song", "Titus", "Zech",
+            "Zeph"};
+    CombinedPassageStats[] bookAnalysisCache = new CombinedPassageStats[bookNames.length * 2];
 
     /**
      * Creates a service able to retrieve various stats.
@@ -117,26 +123,22 @@ public class AnalysisServiceImpl implements AnalysisService {
         
         final CombinedPassageStats statsForPassage = new CombinedPassageStats();
         PassageStat stat = null;
+        String curBookName = "";
         switch (statType) {
             case WORD:
-                String curBookKey = "";
                 if (scopeType == ScopeType.BOOK) {
-                    String origBookKey = centralReference.getKey().getOsisID();
-                    final int len = origBookKey.length();
-                    for (int i = 1; i < len; i++) { // Check to see if there are chapter or verse number
-                        char curChar = origBookKey.charAt(i);
-                        if ((Character.isDigit(curChar)) || (curChar == '.') || (curChar == ' '))  {
-                            curBookKey = origBookKey.substring(0, i);
-                            break;
+                    curBookName = getBookName(centralReference.getKey().getOsisID());
+                    if (!curBookName.equals("")) {
+                        CombinedPassageStats cachedStatsForPassage = getPutBookAnalysisCache(curBookName, mostOccurrences, null);
+                        if (cachedStatsForPassage != null) {
+                            if (!userLanguage.toLowerCase().startsWith("zh")) return cachedStatsForPassage;
+                            stat = cachedStatsForPassage.getPassageStat();
                         }
                     }
-                    if (!curBookKey.equals("")) stat = getPutBookAnalysisCache("GET", curBookKey.concat(String.valueOf(mostOccurrences)), stat);
                 }
                 if (stat == null) {
                     stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType, userLanguage);
                     stat.trim(maxWords, mostOccurrences);
-                    if ((scopeType == ScopeType.BOOK) && (!curBookKey.equals("")))
-                        getPutBookAnalysisCache("PUT", curBookKey.concat(String.valueOf(mostOccurrences)), stat);
                 }
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat, userLanguage));
                 stat = this.bibleInformation.getArrayOfStrongNumbers(version, reference, stat, userLanguage);
@@ -154,13 +156,27 @@ public class AnalysisServiceImpl implements AnalysisService {
         }
         stat.setReference(centralReference);
         statsForPassage.setPassageStat(stat);
+        if ((scopeType == ScopeType.BOOK) && (!curBookName.equals("")) && (!userLanguage.toLowerCase().startsWith("zh")))
+            getPutBookAnalysisCache(curBookName, mostOccurrences, statsForPassage);
         return statsForPassage;
     }
 
-    private synchronized PassageStat getPutBookAnalysisCache(final String command, final String key, final PassageStat stat) {
-        if (command.equals("GET")) return BOOK_ANALYSIS_CACHE.get(key);
-        else BOOK_ANALYSIS_CACHE.put(key, stat);
-        return stat;
+    private CombinedPassageStats getPutBookAnalysisCache(final String key, final boolean mostOccurrences, final CombinedPassageStats stat) {
+        int index = Arrays.binarySearch(bookNames, key);
+        if (index < 0) return null;
+        if (!mostOccurrences) index += bookNames.length;
+        if (stat == null) return bookAnalysisCache[index];
+        else bookAnalysisCache[index] = stat;
+        return null;
+    }
+
+    private String getBookName(final String key) {
+        for (int i = 1; i < key.length(); i++) { // Check to see if there are chapter or verse number
+            char curChar = key.charAt(i);
+            if ((Character.isDigit(curChar)) || (curChar == '.') || (curChar == ' '))
+                return key.substring(0, i);
+        }
+        return "";
     }
 
     /**
@@ -209,7 +225,6 @@ public class AnalysisServiceImpl implements AnalysisService {
         }
         return stat;
     }
-
 
     /**
      * Creates a lucene query to allow search for multiple chapters/entire books, without generating
