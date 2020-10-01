@@ -267,6 +267,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         wordLink.attr("key", key);
 
         wordLink.click(function () {
+            step.util.activePassage().save({strongHighlights: ""})
             callback(key, statType);
         });
         return wordLink;
