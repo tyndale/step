@@ -145,9 +145,6 @@
                 linked: null,
                 value: pageValue
             }, {silent: true});
-            new PassageMenuView({
-                model: modelZero
-            });
 
             step.router.handleRenderPanel(modelZero, true, $.getUrlVar('q'), -1);
 

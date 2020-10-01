@@ -58,7 +58,7 @@
     }
 
     a, .subtitle, .subtitle:hover {
-      color: $header_title;
+      color: $header-text-color;
     }
 
     &.form-group, form {
@@ -75,6 +75,9 @@
   }
 
   .navbar-brand {
+    display: flex;
+    align-items: center;
+
     @media screen and (min-width: $stepXSBootstrap) {
       padding-left: $page-padding;
     }
@@ -91,7 +94,7 @@
 
     .title {
       line-height: 25px;
-      margin-right: 20px;
+      margin-right: 15px;
       float: left;
       & > a {
         color: white !important;
@@ -105,6 +108,36 @@
       white-space: nowrap;
       font-size: 11px;
       line-height: 1;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+    font-weight: 500;
+
+    > li {
+      display: flex;
+      border-left: 1px solid #ddd;
+
+      &:first-child {
+        border-left: none;
+      }
+
+      > a {
+        cursor: pointer;
+        padding: 4px 14px;
+
+        &:hover,
+        &:focus,
+        &:active {
+          color: #4a4a4a;
+          text-decoration: none;
+        }
+      }
     }
   }
 

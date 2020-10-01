@@ -1,6 +1,7 @@
 var HeaderView = Backbone.View.extend({
     events: {
-        "click .showStats": "toggleSidebar"
+        "click .toggleSidebar": "toggleSidebar",
+        "click .openNewTab": "openNewTab"
     },
     el: $(".navbar-fixed-top"),
     initialize: function () {
@@ -14,5 +15,9 @@ var HeaderView = Backbone.View.extend({
         require(["sidebar"], function (module) {
             step.util.ui.initSidebar();
         });
+    },
+    openNewTab: function (ev) {
+        step.util.createNewColumn();
+        ev.stopPropagation();
     }
 });

@@ -250,7 +250,7 @@ step.util = {
         //are we going to set a different passage
         if ((val !== null && val !== undefined && val != currentActivePassageId) || force) {
             var columns = $(".passageContainer");
-            columns.filter(".active").removeClass("active").find(".activeMarker").remove();
+            columns.filter(".active").removeClass("active");
 
             //do we need to create a new passage model? only if no others exists with the same passageId.
             var existingModel = step.passages.findWhere({ passageId: val });
@@ -273,7 +273,7 @@ step.util = {
 
 
             //make the new panel active
-            step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
+            step.util.getPassageContainer(val).addClass("active");
             return val;
         }
 
@@ -445,6 +445,8 @@ step.util = {
      */
     createNewColumn: function (linked, model) {
         //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
+        console.log(step.passages);
+
         var activePassageModel = this.activePassage();
         if (linked) {
             if (activePassageModel.get("linked") !== null) {
@@ -463,16 +465,15 @@ step.util = {
         var columns = columnHolder.find(".column").not(".examplesColumn");
         var activeColumn = columns.has(".passageContainer.active");
         var newColumn = activeColumn.clone();
-
-        var passageId;
         var newPassageId;
+
         if (!model) {
-            //create new
+            // create new
             newPassageId = parseInt(step.passages.max(function (p) {
                 return parseInt(p.get("passageId"))
             }).get("passageId")) + 1;
         } else {
-            //use existing
+            // use existing
             newPassageId = model.get("passageId");
         }
 
@@ -487,6 +488,7 @@ step.util = {
         var allColumns = columns.add(newColumn);
         this.refreshColumnSize(allColumns);
         newColumn.insertAfter(activeColumn);
+
         if (linked) {
             //add a link
             var link = $("<span class='glyphicon glyphicon-arrow-right linkPanel'></span>").attr("title", __s.panels_linked).click(function () {
@@ -500,9 +502,10 @@ step.util = {
         this.showOrHideTutorial();
         step.util.activePassageId(newPassageId);
 
-        //create the click handlers for the passage menu
-        new PassageMenuView({
-            model: step.util.activePassage()
+        var newModel = model || step.passages.findWhere({ passageId: newPassageId });
+
+        new PanelView({
+            model: newModel
         });
 
         Backbone.Events.trigger("columnsChanged", {});

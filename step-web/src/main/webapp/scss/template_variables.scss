@@ -1,10 +1,17 @@
+// colours
+$brand-primary: #17758F;
+$brand-secondary: #9D0025;
+$text-color: #5D5D5D;
+$border-color: #C8C8C8;
+$highlight-color: $brand-primary;
+
 $header_height: 50px;
 $summaryHeight: 25px;
 $topSectionPadding: 5px;
 $topSectionMarginBottom: 5px;
 $topSectionHeight: $topSectionPadding + $topSectionMarginBottom + $summaryHeight;
 $searchDropdownHeight: 300px;
-$header_title: lightgrey;
+$header-text-color: $text-color;
 
 //grid points
 $gridPoints: 12;
@@ -12,14 +19,6 @@ $stepXS: 767px;
 $stepXSBootstrap: $stepXS + 1;
 $stepMD: 991px;
 $stepLG: 1120px;
-
-// colours
-$brand-primary: #17758F;
-$brand-secondary: #9D0025;
-$text-color: #5D5D5D;
-$border-color: #C8C8C8;
-
-$highlight-color: $brand-primary;
 
 // lexicon
 $quickLexiconFontColour: white;

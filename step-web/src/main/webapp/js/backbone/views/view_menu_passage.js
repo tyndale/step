@@ -7,7 +7,6 @@ var PassageMenuView = Backbone.View.extend({
         "click .previousChapter": "goToPreviousChapter",
         "click .nextChapter": "goToNextChapter",
         "click .closeColumn": "closeColumn",
-        "click .openNewPanel": "openNewPanel",
         "show.bs.dropdown *": "handleDropdownMenu"
     },
     fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="<%= step.state.isLtR() ? "pull-right" : "pull-left" %> btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
@@ -18,9 +17,6 @@ var PassageMenuView = Backbone.View.extend({
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
-    el: function () {
-        return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
-    },
     items: [
         {initial: "H", key: "display_headings"},
         {initial: "V", key: "display_verseNumbers"},
@@ -708,22 +704,9 @@ var PassageMenuView = Backbone.View.extend({
         var passageId = this.column.find("[passage-id]").attr("passage-id");
         step.util.activePassageId(passageId);
     },
-    openNewPanel: function (ev) {
-        //if we're wanting a new column, then create it right now
-        step.util.activePassageId(this.model.get("passageId"));
-        step.util.createNewColumn();
-        ev.stopPropagation();
-    },
     updateVisibleCloseButton: function () {
         var shouldShow = $(".column").not(".examplesColumn").length > 1;
         this.$el.find(".closeColumn").toggleClass("disabled", !shouldShow);
-//        if (!shouldShow) {
-//            make sure it's not the last button
-//            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
-//        } else {
-//            ensure last element
-//            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
-//        }
     },
 
     showConfigGrammarColor: function (e) {
