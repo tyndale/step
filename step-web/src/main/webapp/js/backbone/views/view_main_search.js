@@ -1004,7 +1004,11 @@ var MainSearchView = Backbone.View.extend({
         return {item: item, itemType: tokenType};
     },
     syncWithUrl: function (model) {
-        if (model == null) {
+        if (this.model && model && this.model.get("passageId") !== model.get("passageId")) {
+            return;
+        }
+
+        if (!model) {
             model = step.util.activePassage();
         }
 

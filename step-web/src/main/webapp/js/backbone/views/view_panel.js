@@ -66,7 +66,8 @@ var PanelView = Backbone.View.extend({
         var $header = this.$(".passageOptionsGroup");
 
         this.search = new MainSearchView({
-           el: this.$(".searchContainer")
+            model: this.model,
+            el: this.$(".searchContainer")
         });
 
         this.menu = new PassageMenuView({

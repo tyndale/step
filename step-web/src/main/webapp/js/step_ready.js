@@ -32,7 +32,7 @@
 
         //save 100k of space
         window.tempVersions = null;
-    };
+    }
 
     function markAsRecommended(version) {
         var v = step.keyedVersions[version];
@@ -54,14 +54,6 @@
         //override some particular settings to avoid UI shifting on load:
         //we never open up a related words section
         step.settings.save({relatedWordsOpen: false});
-    };
-
-    function initSearchDropdown() {
-        //setup search view
-        window.searchView = new MainSearchView();
-        //we will sync the URL on load, if and only if there are arguments, i.e. not the home page...
-        //to be firmed up
-        searchView.syncWithUrl(step.util.activePassage());
     }
 
     function patchBackboneHistory() {
