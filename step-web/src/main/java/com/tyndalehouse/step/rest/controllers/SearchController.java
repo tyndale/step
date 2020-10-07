@@ -85,7 +85,20 @@ public class SearchController {
      *                in the box
      * @return
      */
-    public List<AutoSuggestion> suggest(final String input, final String context) {
+    public List<AutoSuggestion> suggest(String input, final String context) {
+        if (input.length() > 33) {
+            int posOfChar = input.indexOf(' ');
+            if ((posOfChar == -1) || (posOfChar > 32)) {
+                posOfChar = input.indexOf('.');
+                if ((posOfChar == -1) || (posOfChar > 32)) {
+                    posOfChar = input.indexOf(':');
+                    if ((posOfChar == -1) || (posOfChar > 32)) {
+                        posOfChar = input.indexOf(';');
+                        if ((posOfChar == -1) || (posOfChar > 32)) input = input.substring(0, 33);
+                    }
+                }
+            }
+        }
         return suggest(input, context, null);
     }
 
