@@ -441,7 +441,7 @@ public final class StringConversionUtils {
                     leftBehind.setNextValidPosition(ii + 1);
                 }
             }
-            if (options.size() > (MAX_TRANSLITERATIONS + 50)) break;
+            if (options.size() > (MAX_TRANSLITERATIONS * 10)) break;
         }
 
         //trim the empty options off
