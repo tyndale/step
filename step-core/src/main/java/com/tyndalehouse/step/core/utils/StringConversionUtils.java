@@ -441,6 +441,7 @@ public final class StringConversionUtils {
                     leftBehind.setNextValidPosition(ii + 1);
                 }
             }
+            if (options.size() > (MAX_TRANSLITERATIONS + 50)) break;
         }
 
         //trim the empty options off
@@ -450,7 +451,9 @@ public final class StringConversionUtils {
                 iterator.remove();
             }
         }
-
+        if (options.size() > MAX_TRANSLITERATIONS) {
+            LOGGER.error("multipleTranslitOpions over 512 final size: [{}]", options.size());
+        }
         return options;
     }
 
