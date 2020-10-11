@@ -452,7 +452,7 @@ public final class StringConversionUtils {
             }
         }
         if (options.size() > MAX_TRANSLITERATIONS) {
-            LOGGER.error("multipleTranslitOpions over 512 final size: [{}]", options.size());
+            LOGGER.error("multipleTranslitOpions over 512 final size: [{}] input [{}]", options.size(), baseString);
         }
         return options;
     }
