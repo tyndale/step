@@ -24,14 +24,6 @@
 <head>
 
     <%
-        if ( (request.getQueryString() == null) && (locale.getLanguage().equals("enxx")) )  {
-    %>
-
-    <%
-        }
-        else {
-    %>
-    <%
         if (request.getParameter("translate") != null) {
     %>
 
@@ -385,7 +377,7 @@
 
 <% if (request.getParameter("mobile") == null) {
     String langCode = ValidateUtils.checkLangCode(request.getParameter("lang"), locale); %>
-    <script src="international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
+    <script src="/international/interactive.js?lang=<%= URLEncoder.encode(langCode, "UTF-8") %>&step.version=${project.version}" type="text/javascript"></script>
 <% } %>
 <%@include file="/jsps/initLib.jsp" %>
 
@@ -528,7 +520,6 @@
     }(window, document, 'script'));
 </script>
 <% }
-   }
 %>
 </body>
 </html>
