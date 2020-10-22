@@ -135,8 +135,8 @@ var QuickLexicon = Backbone.View.extend({
             var time = new Date().getTime();
             this.loadDefinition(time);
         }
-        // added for colour code grammar
-        const C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+        // added for colour code grammar  Should be const instead of var, but older browser does not work
+        var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
         if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
         return this;
