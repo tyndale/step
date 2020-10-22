@@ -4,6 +4,7 @@
 // The maven process will replace the constant with number so the minify code is small.
 // For the color_code_grammar.js and color_code_config.js, it reduced the size of the minify two files by almost 20k bytes.
 // Each line starts with "const" and ends with "; // TBRBMR".
+// Do not take away the TBRMBR comment (to be removed by maven replacer)
 // The maven replacer look for these patterns and remove them from the minify code.
 // should use const instead of var, but older browser does not support const
 var C_Greek = 0; // TBRBMR

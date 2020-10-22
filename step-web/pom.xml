@@ -594,8 +594,7 @@
 									<replacement><token>c4VerbWithMiddlePassive([:(])</token><value>AD$1</value></replacement>
 									<replacement><token>c4MainVsSupporingVerbs([:(])</token><value>AE$1</value></replacement>
 									<replacement><token>c4ImperativesOnly([:(])</token><value>AF$1</value></replacement>
-                                    <replacement><token>^\s*const\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
-                                    <replacement><token>\s*const\s+\d+\s*=\s*\d+\s*\;</token><value></value></replacement>
+                                    <replacement><token>^\s*var\s+\d+\s*=\s*\d+\s*\;\s*\/\/\s*TBRBMR\s*\n</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
                             </configuration>

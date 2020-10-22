@@ -80,7 +80,9 @@ var SidebarView = Backbone.View.extend({
             self.createHelp();
         }
         // added for colour code grammar.  Should be const instead of var, but does not work with older browser
-        var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // This must match the definition in the color_code_grammar.js
+        // This must match the definition in the color_code_grammar.js
+        // Do not take away the TBRMBR comment (to be removed by maven replacer)
+        var C_numOfAnimationsAlreadyPerformedOnSamePage = 16; // TBRBMR
         if ((cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== undefined) && (cv[C_numOfAnimationsAlreadyPerformedOnSamePage] !== null))
             cv[C_numOfAnimationsAlreadyPerformedOnSamePage] = 0;
     },
