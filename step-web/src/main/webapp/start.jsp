@@ -23,48 +23,7 @@
 <html>
 <head>
     <%
-        if (request.getQueryString() == null) {
-    %>
-</head>
-<body>
-<h2>Welcome to STEP Bible!</h2>
-<p>Checking your language preference...</p>
-<script>
-    var language = window.navigator.userLanguage || window.navigator.language;
-    language = language.toLowerCase();
-    var pos = -1;
-    if (language.indexOf("en") == 0) {
-        pos = 0;
-        language = "en";
-    }
-    else if (language.indexOf("es") == 0) {
-        pos = 0;
-        language = "es";
-    }
-    else if (language.indexOf("zh") == 0) {
-        pos = 0;
-        if ((language == "zh-hk") || (language == "zh_hk") || (language == "zh-tw")) language = "zh_tw";
-        if (language != "zh_tw") language = "zh";
-    }
-    else if (language.indexOf("fr") == 0) {
-        pos = 0;
-        language = "fr";
-    }
-
-    else {
-        var cc2 = "es aa af ar az be bg bn cs cy da de el et fa fi fil fr ga gl gu hi hr hu id in is it iw ja ka ko lt lv mk ml ms mt nl no pl pt ro ru ry sk sl sq sr sv sw ta te th tr uk ur uz vi";
-        pos = cc2.search(language)
-    }
-    if (pos > -1) location.replace("/html/" + language + ".html");
-    else location.replace("/?q=reference=Gen.1");
-</script>
-</body>
-</html>
-
-<%
-        }
-        else {
-            if (request.getParameter("translate") != null) {
+        if (request.getParameter("translate") != null) {
     %>
 
 <script type="text/javascript">
@@ -72,7 +31,7 @@
     _jipt.push(['project', 'step']);
 </script>
 <script type="text/javascript" src="//cdn.crowdin.net/jipt/jipt.js"></script>
-<%
+    <%
         }
     %>
 
@@ -560,7 +519,6 @@
     }(window, document, 'script'));
 </script>
 <% }
-    }
 %>
 </body>
 </html>
