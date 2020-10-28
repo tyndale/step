@@ -98,7 +98,7 @@ public class InternationalJsonController extends HttpServlet {
 
         response.setCharacterEncoding(FrontController.UTF_8_ENCODING);
         response.setLocale(locale);
-        response.setContentType("application/json");
+        response.setContentType("text/js");
         response.getOutputStream().write(qualifiedResponse.getBytes(FrontController.UTF_8_ENCODING));
         response.flushBuffer();
         response.getOutputStream().close();
