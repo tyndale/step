@@ -68,7 +68,7 @@ public class SearchPageController extends HttpServlet {
         this.appManagerService = appManagerService;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
-        loadLanguageCacheInfo();
+        loadFirstPageCacheInfo();
     }
 
     @Override
