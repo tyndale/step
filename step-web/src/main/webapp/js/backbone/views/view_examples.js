@@ -45,7 +45,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 
-					'<div class="explanationText"><%= __s.interlinear_versions_explanation %></div><span class="input-group" style="overflow: hidden">' +
+					'<div class="explanationText"><%= __s.chained_searches_explanation %></div><span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=KJV|version=THGNT|reference=John.1&options=HVLUNM&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
 					'<span class="argSelect select-version">KJV</span><span class="argSelect select-version">THGNT</span><span class="argSelect select-reference">John 1</span></span>' +
@@ -56,7 +56,7 @@ var ExamplesView = Backbone.View.extend({
 					'&amp;' +
 					'<a href=\'?q=version=THGNT|version=ESV|reference=John.1&options=HLVGUN&display=INTERLINEAR\'><%= __s.greek_interlin %></a>' +
 					'</div>' +
-					'<div class="explanationText"><%= interlinear_versions_explanation %></div>' +
+					'<div class="explanationText"><%= __s.interlinear_versions_explanation %></div>' +
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="1">' +
