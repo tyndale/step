@@ -45,7 +45,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 
-					'<div class="explanationText"><%= __s.chained_searches_explanation %></div><span class="input-group" style="overflow: hidden">' +
+					'<div class="explanationText"><%= __s.chained_searches_explanation_subject %></div><span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=KJV|version=THGNT|reference=John.1&options=HVLUNM&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
 					'<span class="argSelect select-version">KJV</span><span class="argSelect select-version">THGNT</span><span class="argSelect select-reference">John 1</span></span>' +
