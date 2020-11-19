@@ -8,8 +8,7 @@ var ExamplesView = Backbone.View.extend({
 			'<h4><%= __s.simple_intro_tyndale_house_project %></h4>' +
 			'<p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
-				'<h5 class="accordion-heading">' +
-					'Examples to use the search box to find Bibles, passages, search terms, etc.' +
+				'<h5 class="accordion-heading"><%= __s.quick_tutorial_header1 %>' +
 					'<span class="plusminus">+</span>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -60,7 +59,7 @@ var ExamplesView = Backbone.View.extend({
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="1">' +
-				'<h5 class="accordion-heading">Examples to use the search box to find Bibles, passages, search terms, etc.' +
+				'<h5 class="accordion-heading"><%= __s.quick_tutorial_header2 %>' +
 					'<span class="plusminus">+</span>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -68,32 +67,47 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.3&options=HVGUNC\', \'verb, imperative mood\', \'kjv_verb_imperative_explanation\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Col 3</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Col 3</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.kjv_verb_imperative_explanation %></div><span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.1&options=HVGUNC\', \'verb, main vs supporting verbs\', \'kjv_verb_main_supporting_explanation\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Col 1</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Col 1</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.kjv_verb_main_supporting_explanation %></div><span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Mat.1&options=HVGUNC\', \'gender and number\', \'kjv_verb_number_and_gender_explanation\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Mat 1</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Mat 1</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="explanationText"><%= __s.kjv_verb_number_and_gender_explanation %></div><span class="input-group" style="overflow: hidden">' +
-					'<a href="javascript:cf.setNextPageURL(\'/?q=version=ESV|reference=1Jo.1&options=HVGUN\', \'function:openStats\', \'esv_word_frequency_explanation\')" title="<%= __s.click_to_try_this %>">' +
-					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">ESV</span><span class="argSelect select-reference">1Jo 1</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Quick tryout links<span>&nbsp;<span class=\'hidenarrow glyphicon glyphicon-plus\'></span></span><span class=\'hidenarrow glyphicon glyphicon-stats\'></span></span></span></span>' +
-					'</a>' +
-					'</span>' +
+					'<div class="explanationText"><%= __s.kjv_verb_number_and_gender_explanation %></div>' +
+						'<span class="input-group" style="overflow: hidden">' +
+						'<a href="javascript:cf.setNextPageURL(\'/?q=version=ESV|reference=1Jo.1&options=HVGUN\', \'function:openStats\', \'esv_word_frequency_explanation\')" title="<%= __s.click_to_try_this %>">' +
+							'<span class="form-control input-sm argSummary">' +
+							'<span class="argSelect select-version">ESV</span><span class="argSelect select-reference">1Jo 1</span>' +
+							'<span class="argSelect select-other hidenarrow">' +
+								'<svg width="19px" height="13px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+								'<g fill="white">' +
+								'<path d="M0,6.00638655 C0,2.68915086 2.68113741,0 6.00212389,0 L51.9978761,0 C55.3127576,0 58,2.68354127 58,6.00638655 L58,41.9936134 C58,45.3108491 55.3188626,48 51.9978761,48 L6.00212389,48 C2.6872424,48 0,45.3164587 0,41.9936134 L0,6.00638655 Z M5,6.00638655 L5,41.9936134 C5,42.5531699 5.44680121,43 6.00212389,43 L51.9978761,43 C52.5537478,43 53,42.5531169 53,41.9936134 L53,6.00638655 C53,5.44683008 52.5531988,5 51.9978761,5 L6.00212389,5 C5.44625218,5 5,5.44688308 5,6.00638655 Z M33,5 L33,43 L37,43 L37,5 L33,5 Z"></path>' +
+									'<g transform="translate(39.000000, 11.000000)">' +
+									'<polygon points="0.5 4 11.5 4 11.5 0 0.5 0"></polygon>' +
+									'<polygon points="0.5 15 11.5 15 11.5 11 0.5 11"></polygon>' +
+									'<polygon points="0.5 26 11.5 26 11.5 22 0.5 22"></polygon>' +
+									'</g>' +
+								'</g>' +
+								'</svg>' +
+								'<i>(sidebar)&nbsp;</i>' +
+								'<span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span class=\'glyphicon glyphicon-stats\'></span>' +
+		'					</span>' +
+						'</a>' +
+						'</span>' +
 					'<div class="explanationText"><%= __s.esv_word_frequency_explanation %></div>' +
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="2">' +
-				'<h5 class="accordion-heading">Examples to use the search box to find Bibles, passages, search terms, etc.' +
+				'<h5 class="accordion-heading"><%= __s.quick_tutorial_header3 %>' +
 					'<span class="plusminus">+</span>' +
 				'</h5>' +
 				'<div class="accordion-body">' +
@@ -101,34 +115,34 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Eph.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Eph 1</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">KJV</span><span class="argSelect select-reference">Eph 1</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.kjv_verb_colour_explanation %></div><span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|reference=Rom.12&options=CEMVALHUN\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">SBLG</span><span class="argSelect select-reference">Rom 12</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">SBLG</span><span class="argSelect select-reference">Rom 12</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText">Look at Greek New Testament with color code grammar, Greek root word and English vocabulary</div><span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=THOT|reference=Gen.1&options=HVLUNC\', \'verb, gender and number\', \'\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">THOT</span><span class="argSelect select-reference">Gen 1</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">THOT</span><span class="argSelect select-reference">Gen 1</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText">Look at Hebrew Testament with color code grammar and morphology information in the lexicon</div><span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=CUn|reference=Col.1&options=HVGUNC\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">CUn</span><span class="argSelect select-reference">Col 1</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">CUn</span><span class="argSelect select-reference">Col 1</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
 					'<div class="explanationText">Look at Chinese Union New Testament with color highlighted verbs</div><span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=SBLG|version=KJV|version=CUn|reference=Eph.5&options=CVLHUVNEAM&display=INTERLEAVED\', \'verb, gender and number\', \'look_at_color_table\')" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary">' +
-					'<span class="argSelect select-version">SBLG</span><span class="argSelect select-version">KJV</span><span class="argSelect select-version">CUN</span><span class="argSelect select-reference">Eph 5</span><span class="argSelect select-other"><span class=\'hidenarrow glyphicon glyphicon-plus\'></span><span> Color code grammar <span class=\'hidenarrow glyphicon glyphicon-ok\'></span></span></span></span>' +
+					'<span class="argSelect select-version">SBLG</span><span class="argSelect select-version">KJV</span><span class="argSelect select-version">CUN</span><span class="argSelect select-reference">Eph 5</span><span class="argSelect select-other hidenarrow"><span class=\'glyphicon glyphicon-cog\'>&nbsp;</span><span class=\'glyphicon glyphicon-plus\'>&nbsp;</span><span><%= __s.display_grammarColor %></span></span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="explanationText">Look at Greek, English and Chinese New Testament with color code grammar</div><div id=\'colorCodeTableDiv\'></div>' +
+					'<div class="explanationText"><%= __s.interlinear_verb_color_explanation %></div><div id=\'colorCodeTableDiv\'></div>' +
 				'</div>' +
 			'</div>' +
 			'<div class="text-muted step-copyright">' +
