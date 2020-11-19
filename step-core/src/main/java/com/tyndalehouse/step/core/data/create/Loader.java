@@ -54,9 +54,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.ProvisionException;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
+// This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
+//import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
-import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -245,8 +246,8 @@ public class Loader {
         this.totalProgress += 1;
         loadAlternativeTranslations();
         this.totalProgress += 1;
+// The following 3 lines wer never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
         //loadOpenBibleGeography();
-
         //loadHotSpots();
         //loadTimeline();
         loadAugmentedStrongs();
@@ -320,16 +321,17 @@ public class Loader {
      *
      * @return number of records loaded
      */
-    int loadHotSpots() {
-        this.addUpdate("install_timeline_periods");
-
-        LOGGER.debug("Loading hotspots");
-
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("hotspot");
-        new StreamingCsvModuleLoader(writer,
-                this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init(this);
-        return writer.close();
-    }
+// This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//    int loadHotSpots() {
+//        this.addUpdate("install_timeline_periods");
+//
+//        LOGGER.debug("Loading hotspots");
+//
+//        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("hotspot");
+//        new StreamingCsvModuleLoader(writer,
+//                this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init(this);
+//        return writer.close();
+//    }
 
     /**
      * Loads all of robinson's morphological data
@@ -376,42 +378,44 @@ public class Loader {
      *
      * @return number of records loaded
      */
-    int loadTimeline() {
-        this.addUpdate("install_timeline");
-
-        LOGGER.debug("Loading timeline");
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("timelineEvent");
-
-        new TimelineStreamingCsvModuleLoader(writer,
-                this.coreProperties.getProperty("test.data.path.timeline.events.directory"), this.jsword)
-                .init(this);
-        final int close = writer.close();
-
-        this.addUpdate("intall_timeline_complete", close);
-
-        return close;
-    }
+// This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//    int loadTimeline() {
+//        this.addUpdate("install_timeline");
+//
+//        LOGGER.debug("Loading timeline");
+//        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("timelineEvent");
+//
+//        new TimelineStreamingCsvModuleLoader(writer,
+//                this.coreProperties.getProperty("test.data.path.timeline.events.directory"), this.jsword)
+//                .init(this);
+//        final int close = writer.close();
+//
+//        this.addUpdate("intall_timeline_complete", close);
+//
+//        return close;
+//    }
 
     /**
      * loads the open bible geography data
      *
      * @return the number of records loaded
      */
-    int loadOpenBibleGeography() {
-        this.addUpdate("install_maps");
-
-        LOGGER.debug("Loading Open Bible geography");
-
-        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("obplace");
-        new GeoStreamingCsvModuleLoader(writer,
-                this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword)
-                .init(this);
-
-        final int close = writer.close();
-
-        this.addUpdate("install_maps_complete", close);
-        return close;
-    }
+// This code was never used so Patrick Tang commented it out on November 19, 2020.  Search for the "November 19, 2020" string to find all the related changes in the Java code.
+//    int loadOpenBibleGeography() {
+//        this.addUpdate("install_maps");
+//
+//        LOGGER.debug("Loading Open Bible geography");
+//
+//        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("obplace");
+//        new GeoStreamingCsvModuleLoader(writer,
+//                this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword)
+//                .init(this);
+//
+//        final int close = writer.close();
+//
+//        this.addUpdate("install_maps_complete", close);
+//        return close;
+//    }
 
     /**
      * Loads lexicon definitions
