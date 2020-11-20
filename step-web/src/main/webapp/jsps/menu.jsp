@@ -54,7 +54,7 @@
                             <c:when test="${language.partial and not language.complete}"><fmt:message key="partially_translated" /></c:when>
                         </c:choose>
                     </c:set>
-                    <li class="${ language.code eq languageCode or languageCode eq 'iw' and language.code eq 'he' or languageCode eq 'in' and language.code eq 'id' ? 'active' : '' }" title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '${language.code}')" lang="${language.code}" href="./?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
+                    <li class="${ language.code eq languageCode or languageCode eq 'iw' and language.code eq 'he' or languageCode eq 'in' and language.code eq 'id' ? 'active' : '' }" title="${machineTranslatedWarning}"><a onclick="window.localStorage.clear(); $.cookie('lang', '${language.code}')" lang="${language.code}" href="/?lang=${language.code}${param.debug eq null ? "" : "&debug" }">
                           ${ language.originalLanguageName } - ${ language.userLocaleLanguageName }<c:if test="${not language.complete}">*</c:if>
                     </a></li>
                 </c:forEach>
@@ -114,7 +114,7 @@
                 %>
                 <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
                 <!-- # Privacy policy -->
-                <li><a href="https://academic.tyndalehouse.com/privacy-policy" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
+                <li><a href="/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
                 <!-- # Copyright & licences -->
                 <li><a target="_new" href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" name="COPYRIGHT"><fmt:message key="copyright_info_link"/></a></li>
