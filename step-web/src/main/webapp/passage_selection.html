@@ -4,7 +4,7 @@
 <div class="modal-body">
 <h4>Books</h4>
 	<h5 style="background-color:#dcdcdc;">Old Testament</h5>
-	<table style="width:90%; margin-left: auto; margin-right: auto;">
+	<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">
 		<colgroup>
 			<col span="1" style="width: 13%;">
 			<col span="1" style="width: 13%;">
@@ -67,7 +67,7 @@
 		</tr>
 	</table>
 	<h5 style="background-color:#dcdcdc;">New Testament</h5>
-	<table style="width:90%; margin-left: auto; margin-right: auto;">
+	<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">
 		<colgroup>
 			<col span="1" style="width: 13%;">
 			<col span="1" style="width: 13%;">
@@ -182,7 +182,7 @@
 							'<h4 class="modal-title">Chapters</h4>' +
 						'</div>' +
 						'<div class="modal-body">' +
-							'<table style="width:90%; margin-left: auto; margin-right: auto;">' +
+							'<table style="width:95%;margin-left:auto;margin-right:auto;">' +
 							'<colgroup>' +
 									'<col span="1" style="width: 10%;">' +
 									'<col span="1" style="width: 10%;">' +
@@ -200,7 +200,7 @@
 			var chpCounter = 0;
 			for (var i = 0; i < data.length; i++) {
 				if (data[i].suggestion.sectionType == "PASSAGE") {
-					html += '<td><a href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\');">' + i + '</a></td>'
+					html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\');">' + i + '</a></td>'
 					chpCounter ++;
 					if ((chpCounter > 9) && ((chpCounter % 10) == 0)) {
 						html += '</tr><tr>';
