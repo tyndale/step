@@ -62,7 +62,7 @@
         //we will sync the URL on load, if and only if there are arguments, i.e. not the home page...
         //to be firmed up
         searchView.syncWithUrl(step.util.activePassage());
-        if ($(window).width() < 769) {
+        if ($(window).width() < 1200) {
             $('.select2-choices .select-reference').hide();
             $('.select2-choices .select-version').hide()
         }
