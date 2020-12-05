@@ -220,6 +220,19 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".glyphicon-info-sign").click(function (ev) {
             ev.stopPropagation();
         });
+        var versionsSelected = [];
+        if (typeof self.searchView._getCurrentInitials === "undefined") {
+            var activePassageData = step.util.activePassage().get("searchTokens") || [];
+            for (var i = 0; i < activePassageData.length; i++) {
+                if (activePassageData[i].itemType == "version") {
+                    versionsSelected.push(activePassageData[i].item.shortInitials);
+                }
+            }
+        }
+        else {
+            versionsSelected = self.searchView._getCurrentInitials();
+        }
+
 
         this.$el.find(".list-group-item").click(function () {
             var target = $(this);
@@ -236,7 +249,7 @@ var PickBibleView = Backbone.View.extend({
             }
         }).each(function (i, item) {
             var el = $(this);
-            if (self.searchView._getCurrentInitials().indexOf(el.data("initials")) != -1) {
+            if (versionsSelected.indexOf(el.data("initials")) != -1) {
                 el.addClass("active");
             }
         });

@@ -663,13 +663,27 @@ step.util = {
             }
 
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
+            var allSelectedBibleVersions = "";
             for (var i = 0; i < searchTokens.length; i++) {
-                container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
-                if (searchTokens[i].itemType == VERSION) {
+                if ((searchTokens[i].tokenType == VERSION) || (searchTokens[i].itemType == VERSION)) {
+                    searchTokens[i].itemType = searchTokens[i].tokenType;
+                    searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
+                    if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
+                    allSelectedBibleVersions +=  step.util.safeEscapeQuote(searchTokens[i].token);
                     isMasterVersion = false;
                 }
             }
-
+            if (allSelectedBibleVersions.length > 0) {
+                allSelectedBibleVersions += "&nbsp;&#9662;";
+                container.append('<button type="button" onclick="step.util.startPickBible()" class="argSelect select-' + VERSION + ' select2-search-choice" '+
+                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                    allSelectedBibleVersions + '</button>&nbsp;');
+            }
+            for (var i = 0; i < searchTokens.length; i++) {
+                if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION)) {
+                    container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
+                }
+            }
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {
@@ -683,11 +697,20 @@ step.util = {
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
             } else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
                 searchToken.itemType = SUBJECT_SEARCH;
+            } else if (searchToken.itemType == REFERENCE) {
+                return '<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + searchToken.itemType + ' select2-search-choice" '+
+						'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+						this.renderEnhancedToken(searchToken, isMasterVersion) +
+						'</button>';
             }
-
-            return '<span class="argSelect select-' + searchToken.itemType + '">' +
-                this.renderEnhancedToken(searchToken, isMasterVersion) +
-                '</span>';
+            else if (searchToken.itemType == VERSION) {
+                return this.renderEnhancedToken(searchToken, isMasterVersion);
+            }
+            else {
+                return '<span class="argSelect select-' + searchToken.itemType + '">' +
+                    this.renderEnhancedToken(searchToken, isMasterVersion) +
+                    '</span>';
+            }
         },
         getSource: function (itemType, nowrap) {
             var source;
@@ -769,12 +792,13 @@ step.util = {
                         }
 					}
 					result = '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") +
-                    '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
-                    (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
-                    'data-item-type="' + entry.itemType + '" ' +
-                    'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
+                      '" title="' + source + util.safeEscapeQuote(shortInitialsOfTranslation + ' - ' + nameOfTranslation) + // added so it does not crash at startup
+                      (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
+                      'data-item-type="' + entry.itemType + '" ' +
+                      'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
 
 					result = result + "</div>";
+
                     return result;
                 case GREEK:
                 case HEBREW:
@@ -1310,6 +1334,28 @@ step.util = {
             var regex = new RegExp(regexPattern, "ig");
             doHighlight(nonJqElement, cssClasses, regex);
         }
+    },
+    passageSelectionModal: function () {
+        var bookSelectDiv = $('<div id="bookSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">');
+        if (document.getElementById("bookSelectionModal")) {
+            var element = document.getElementById('bookSelectionModal');
+            element.parentNode.removeChild(element);
+        }
+        bookSelectDiv.appendTo("body");
+        if ($.getUrlVars().indexOf("debug") == -1) {
+            $.ajaxSetup({ cache: true });
+//                $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
+        }
+        //else
+            $('#bookSelectionModal').modal('show').find('.modal-content').load('/passage_selection.html');
+    },
+    startPickBible: function () {
+//        debugger;
+        require(["menu_extras"], function () {
+            new PickBibleView({model: step.settings, searchView: self});
+        });
     }
 }
 ;

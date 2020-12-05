@@ -1,0 +1,242 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" onclick=closeBookSelect()>X</button>
+</div>
+<div class="modal-body">
+<h4>Books</h4>
+	<h5 style="background-color:#dcdcdc;">Old Testament</h5>
+	<table style="width:90%; margin-left: auto; margin-right: auto;">
+		<colgroup>
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+		</colgroup>
+		<tr>
+			<td id="pass_sel_ot_0"></td>
+			<td id="pass_sel_ot_1"></td>
+			<td id="pass_sel_ot_2"></td>
+			<td id="pass_sel_ot_3"></td>
+			<td id="pass_sel_ot_4"></td>
+			<td id="pass_sel_ot_5"></td>
+			<td id="pass_sel_ot_6"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_ot_7"></td>
+			<td id="pass_sel_ot_8"></td>
+			<td id="pass_sel_ot_9"></td>
+			<td id="pass_sel_ot_10"></td>
+			<td id="pass_sel_ot_11"></td>
+			<td id="pass_sel_ot_12"></td>
+			<td id="pass_sel_ot_13"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_ot_14"></td>
+			<td id="pass_sel_ot_15"></td>
+			<td id="pass_sel_ot_16"></td>
+			<td id="pass_sel_ot_17"></td>
+			<td id="pass_sel_ot_18"></td>
+			<td id="pass_sel_ot_19"></td>
+			<td id="pass_sel_ot_20"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_ot_21"></td>
+			<td id="pass_sel_ot_22"></td>
+			<td id="pass_sel_ot_23"></td>
+			<td id="pass_sel_ot_24"></td>
+			<td id="pass_sel_ot_25"></td>
+			<td id="pass_sel_ot_26"></td>
+			<td id="pass_sel_ot_27"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_ot_28"></td>
+			<td id="pass_sel_ot_29"></td>
+			<td id="pass_sel_ot_30"></td>
+			<td id="pass_sel_ot_31"></td>
+			<td id="pass_sel_ot_32"></td>
+			<td id="pass_sel_ot_33"></td>
+			<td id="pass_sel_ot_34"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_ot_35"></td>
+			<td id="pass_sel_ot_36"></td>
+			<td id="pass_sel_ot_37"></td>
+			<td id="pass_sel_ot_38"></td>
+		</tr>
+	</table>
+	<h5 style="background-color:#dcdcdc;">New Testament</h5>
+	<table style="width:90%; margin-left: auto; margin-right: auto;">
+		<colgroup>
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+			<col span="1" style="width: 13%;">
+		</colgroup>
+		<tr>
+			<td id="pass_sel_nt_0"></td>
+			<td id="pass_sel_nt_1"></td>
+			<td id="pass_sel_nt_2"></td>
+			<td id="pass_sel_nt_3"></td>
+			<td id="pass_sel_nt_4"></td>
+			<td id="pass_sel_nt_5"></td>
+			<td id="pass_sel_nt_6"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_nt_7"></td>
+			<td id="pass_sel_nt_8"></td>
+			<td id="pass_sel_nt_9"></td>
+			<td id="pass_sel_nt_10"></td>
+			<td id="pass_sel_nt_11"></td>
+			<td id="pass_sel_nt_12"></td>
+			<td id="pass_sel_nt_13"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_nt_14"></td>
+			<td id="pass_sel_nt_15"></td>
+			<td id="pass_sel_nt_16"></td>
+			<td id="pass_sel_nt_17"></td>
+			<td id="pass_sel_nt_18"></td>
+			<td id="pass_sel_nt_19"></td>
+			<td id="pass_sel_nt_20"></td>
+		</tr>
+		<tr>
+			<td id="pass_sel_nt_21"></td>
+			<td id="pass_sel_nt_22"></td>
+			<td id="pass_sel_nt_23"></td>
+			<td id="pass_sel_nt_24"></td>
+			<td id="pass_sel_nt_25"></td>
+			<td id="pass_sel_nt_26"></td>
+		</tr>
+	</table>
+</div>
+</div>
+<script>
+	$( document ).ready(function() {
+		var data = step.util.activePassage().get("searchTokens") || [];
+		var version = "ESV_th";
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].itemType == "version") {
+				version = data[i].item.initials;
+				break;
+			}
+		}
+		var userLang = step.state.language() || "en-US";
+		var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/examples%3Dreference%7Climit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
+		$.getJSON(url, function( data ) {
+			var counterOT = 0; var counterNT = 0;
+			$.each( data, function( key, val ) {
+				//var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
+				var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
+				var newTestament = false;
+				var idName = "";
+				if (nt.indexOf(val.suggestion.osisID) > -1) {
+					newTestament = true;
+					idName = "#pass_sel_nt_" + counterNT;
+					counterNT ++;
+				}
+				else {
+					idName = "#pass_sel_ot_" + counterOT;
+					counterOT ++;
+				}
+				$(idName).text(val.suggestion.shortName);
+				$(idName).click({osis: val.suggestion.osisID, version: version, userLang: userLang}, getChapters);
+			});
+		});
+	});
+
+	function goToPassage(osisID) {
+		var activePassageData = step.util.activePassage().get("searchTokens") || [];
+		var allVersions = "";
+		debugger;
+		for (var i = 0; i < activePassageData.length; i++) {
+			if (activePassageData[i].itemType == "version") {
+				if (allVersions.length > 0) allVersions += "|version=";
+				allVersions += activePassageData[i].item.shortInitials;
+			}
+		}
+		var options = step.util.activePassage().get("selectedOptions");
+		var interlinear = step.util.activePassage().get("interlinearMode");
+		var url = 'q=version=' + allVersions + '|reference=' + osisID + '&options=' + options + "&display=" + interlinear;
+		closeChapterSelect();
+		step.router.doMasterSearch(url);
+	}
+
+	function getChapters(event) {
+		var url = SEARCH_AUTO_SUGGESTIONS + event.data.osis + "/limit%3Dreference%7Cversion%3D" + event.data.version + "%7Creference%3D" + event.data.osis + "%7C?lang=" + event.data.userLang;
+		$.getJSON(url, function( data ) {
+			closeBookSelect();
+			if (document.getElementById("chapterSelectionModal")) {
+				var element = document.getElementById('chapterSelectionModal');
+				element.parentNode.removeChild(element);
+			}
+			var html =
+			'<div id="chapterSelectionModal" class="modal fade" role="dialog" data-id="my_id_value">' +
+				'<div class="modal-dialog">' +
+					'<div class="modal-content">' +
+						'<div class="modal-header">' +
+							'<button type="button" class="close" data-dismiss="modal">X</button>' +
+							'<h4 class="modal-title">Chapters</h4>' +
+						'</div>' +
+						'<div class="modal-body">' +
+							'<table style="width:90%; margin-left: auto; margin-right: auto;">' +
+							'<colgroup>' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+									'<col span="1" style="width: 10%;">' +
+								'</colgroup>' +
+								'<tr>';
+
+			var chpCounter = 0;
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].suggestion.sectionType == "PASSAGE") {
+					html += '<td><a href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\');">' + i + '</a></td>'
+					chpCounter ++;
+					if ((chpCounter > 9) && ((chpCounter % 10) == 0)) {
+						html += '</tr><tr>';
+					}
+				}
+			}
+			html +=
+						'</tr></table>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
+
+			var chapterSelectDiv = $(html);
+			chapterSelectDiv.appendTo("body");
+			$('#chapterSelectionModal').modal('show');
+		});
+	}
+
+	function closeBookSelect() {
+		$('#bookSelectionModal').modal('hide');
+		$('#bookSelectionModal').modal({
+			show: false
+		});
+		var element = document.getElementById('bookSelectionModal');
+		element.parentNode.removeChild(element);
+	}
+
+	function closeChapterSelect() {
+		$('#chapterSelectionModal').modal('hide');
+		$('#chapterSelectionModal').modal({
+			show: false
+		});
+		var element = document.getElementById('chapterSelectionModal');
+		element.parentNode.removeChild(element);
+	}
+
+</script>

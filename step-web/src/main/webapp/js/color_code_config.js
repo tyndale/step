@@ -1602,7 +1602,7 @@ function resetClrConfig() {
 function closeClrConfig() {
   $('#theGrammarClrModal').modal('hide');
   $('#theGrammarClrModal').modal({
-    show: 'false'
+    show: false
   });
   var element = document.getElementById('theGrammarClrModal');
   element.parentNode.removeChild(element);
@@ -1619,7 +1619,7 @@ function updateAllSettingsAndInputFields() {
   cf.createUlForAllItemsInYAndX();
   cf.createUlFor_OT();
   $('#theGrammarClrModal').modal({
-    show: 'false'
+    show: false
   });
   if ($.getUrlVars().indexOf("debug") == -1)
     $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
