@@ -233,6 +233,7 @@ public class SearchServiceImpl implements SearchService {
             String defaultVersion = JSwordPassageService.REFERENCE_BOOK;
             if (userLanguage.equalsIgnoreCase("zh")) defaultVersion = "CUns";
             else if (userLanguage.equalsIgnoreCase("zh_tw")) defaultVersion = "CUn";
+			else if (userLanguage.toLowerCase().startsWith("es")) defaultVersion = "SpaRV1909";
             versions.add(defaultVersion);
             searchTokens.add(new SearchToken("version", defaultVersion));
         }
