@@ -152,7 +152,6 @@
 	function goToPassage(osisID) {
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
-		debugger;
 		for (var i = 0; i < activePassageData.length; i++) {
 			if (activePassageData[i].itemType == "version") {
 				if (allVersions.length > 0) allVersions += "|version=";
