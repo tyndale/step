@@ -160,9 +160,12 @@
 		}
 		var options = step.util.activePassage().get("selectedOptions");
 		var interlinear = step.util.activePassage().get("interlinearMode");
-		var url = 'q=version=' + allVersions + '|reference=' + osisID + '&options=' + options + "&display=" + interlinear;
+		//var url = 'q=version=' + allVersions + '|reference=' + osisID + '&options=' + options + "&display=" + interlinear;
+		var url = 'version=' + allVersions + '|reference=' + osisID;
 		closeChapterSelect();
-		step.router.doMasterSearch(url);
+//		step.router.doMasterSearch(url);
+		console.log("navigateSearch: " + url)
+		step.router.navigateSearch(url);
 	}
 
 	function getChapters(event) {

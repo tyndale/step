@@ -649,6 +649,7 @@ var PassageMenuView = Backbone.View.extend({
             args += "|";
         }
         args += "reference=" + reference;
+        console.log("navigateSearch: " + args);
         step.router.navigateSearch(args);
     },
     /**

@@ -1011,6 +1011,14 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
+        if ($(window).width() < 1200) {
+            $('.select2-choices .select-reference').hide();
+            $('.select2-choices .select-version').hide()
+        }
+        else {
+            $('.select2-choices .select-reference').show();
+            $('.select2-choices .select-version').show()
+        }
     },
     _handleKeyPressInSearch: function (ev) {
         if (ev.keyCode == 13 && !ev.isPropagationStopped()) {
