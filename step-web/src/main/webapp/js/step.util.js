@@ -1359,7 +1359,7 @@ step.util = {
     },
     updateSelection: function() {
         var data = step.util.activePassage().get("searchTokens") || [];
-        debugger;
+        //debugger;
         for (var i = 0; i < data.length; i++) {
             if (data[i].itemType == "version") {
                 version = data[i].item.initials;
