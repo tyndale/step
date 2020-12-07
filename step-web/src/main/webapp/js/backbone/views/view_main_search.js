@@ -611,7 +611,7 @@ var MainSearchView = Backbone.View.extend({
 
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
-        console.log("Arguments are: ", args);
+        console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
     },
     getCurrentInput: function () {

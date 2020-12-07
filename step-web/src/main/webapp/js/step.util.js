@@ -1367,7 +1367,6 @@ step.util = {
                 alert("version: "+ version);
             }
         }
-
     }
 }
 ;
