@@ -1356,6 +1356,18 @@ step.util = {
         require(["menu_extras"], function () {
             new PickBibleView({model: step.settings, searchView: self});
         });
+    },
+    updateSelection: function() {
+        var data = step.util.activePassage().get("searchTokens") || [];
+        debugger;
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].itemType == "version") {
+                version = data[i].item.initials;
+                alert("version: "+ version);
+                alert("version: "+ version);
+            }
+        }
+
     }
 }
 ;
