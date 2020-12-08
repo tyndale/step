@@ -14,7 +14,7 @@
 			<col span="1" style="width: 13%;">
 			<col span="1" style="width: 13%;">
 		</colgroup>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_ot_0"></td>
 			<td id="pass_sel_ot_1"></td>
 			<td id="pass_sel_ot_2"></td>
@@ -23,7 +23,7 @@
 			<td id="pass_sel_ot_5"></td>
 			<td id="pass_sel_ot_6"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_ot_7"></td>
 			<td id="pass_sel_ot_8"></td>
 			<td id="pass_sel_ot_9"></td>
@@ -32,7 +32,7 @@
 			<td id="pass_sel_ot_12"></td>
 			<td id="pass_sel_ot_13"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_ot_14"></td>
 			<td id="pass_sel_ot_15"></td>
 			<td id="pass_sel_ot_16"></td>
@@ -41,7 +41,7 @@
 			<td id="pass_sel_ot_19"></td>
 			<td id="pass_sel_ot_20"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_ot_21"></td>
 			<td id="pass_sel_ot_22"></td>
 			<td id="pass_sel_ot_23"></td>
@@ -50,7 +50,7 @@
 			<td id="pass_sel_ot_26"></td>
 			<td id="pass_sel_ot_27"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_ot_28"></td>
 			<td id="pass_sel_ot_29"></td>
 			<td id="pass_sel_ot_30"></td>
@@ -59,7 +59,7 @@
 			<td id="pass_sel_ot_33"></td>
 			<td id="pass_sel_ot_34"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_ot_35"></td>
 			<td id="pass_sel_ot_36"></td>
 			<td id="pass_sel_ot_37"></td>
@@ -77,7 +77,7 @@
 			<col span="1" style="width: 13%;">
 			<col span="1" style="width: 13%;">
 		</colgroup>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_nt_0"></td>
 			<td id="pass_sel_nt_1"></td>
 			<td id="pass_sel_nt_2"></td>
@@ -86,7 +86,7 @@
 			<td id="pass_sel_nt_5"></td>
 			<td id="pass_sel_nt_6"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_nt_7"></td>
 			<td id="pass_sel_nt_8"></td>
 			<td id="pass_sel_nt_9"></td>
@@ -95,7 +95,7 @@
 			<td id="pass_sel_nt_12"></td>
 			<td id="pass_sel_nt_13"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_nt_14"></td>
 			<td id="pass_sel_nt_15"></td>
 			<td id="pass_sel_nt_16"></td>
@@ -104,7 +104,7 @@
 			<td id="pass_sel_nt_19"></td>
 			<td id="pass_sel_nt_20"></td>
 		</tr>
-		<tr>
+		<tr style="height:25px">
 			<td id="pass_sel_nt_21"></td>
 			<td id="pass_sel_nt_22"></td>
 			<td id="pass_sel_nt_23"></td>
@@ -143,7 +143,8 @@
 					idName = "#pass_sel_ot_" + counterOT;
 					counterOT ++;
 				}
-				$(idName).text(val.suggestion.shortName);
+				$(idName).text(val.suggestion.shortName.replaceAll(" ", "").substr(0, 4)); // If it is over 8 characters, we need to shorten it
+				$(idName).attr('title', val.suggestion.fullName);
 				$(idName).click({osis: val.suggestion.osisID, version: version, userLang: userLang}, getChapters);
 			});
 		});
@@ -198,7 +199,7 @@
 									'<col span="1" style="width: 10%;">' +
 									'<col span="1" style="width: 10%;">' +
 								'</colgroup>' +
-								'<tr>';
+								'<tr style="height:25px">';
 
 			var chpCounter = 0;
 			for (var i = 0; i < data.length; i++) {
@@ -206,7 +207,7 @@
 					html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\');">' + i + '</a></td>'
 					chpCounter ++;
 					if ((chpCounter > 9) && ((chpCounter % 10) == 0)) {
-						html += '</tr><tr>';
+						html += '</tr><tr style="height:25px">';
 					}
 				}
 			}

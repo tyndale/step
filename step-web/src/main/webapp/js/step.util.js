@@ -669,7 +669,8 @@ step.util = {
                     searchTokens[i].itemType = searchTokens[i].tokenType;
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
                     if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
-                    allSelectedBibleVersions +=  step.util.safeEscapeQuote(searchTokens[i].token);
+					allSelectedBibleVersions += (searchTokens[i].item.shortInitials.length > 0) ?
+						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
                     isMasterVersion = false;
                 }
             }
@@ -1358,15 +1359,16 @@ step.util = {
         });
     },
     updateSelection: function() {
-        var data = step.util.activePassage().get("searchTokens") || [];
-        //debugger;
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].itemType == "version") {
-                version = data[i].item.initials;
-                alert("version: "+ version);
-                alert("version: "+ version);
-            }
-        }
+		window.searchView.search();
+//        var data = step.util.activePassage().get("searchTokens") || [];
+//        debugger;
+//        for (var i = 0; i < data.length; i++) {
+//            if (data[i].itemType == "version") {
+//                version = data[i].item.initials;
+//                alert("version: "+ version);
+//                alert("version: "+ version);
+//            }
+//        }
     }
 }
 ;

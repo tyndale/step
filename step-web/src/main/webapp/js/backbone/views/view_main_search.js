@@ -1013,11 +1013,19 @@ var MainSearchView = Backbone.View.extend({
         this._reEvaluateMasterVersion();
         if ($(window).width() < 1200) {
             $('.select2-choices .select-reference').hide();
-            $('.select2-choices .select-version').hide()
+            $('.select2-choices .select-version').hide();
+			$('.passageOptionsGroup .pull-right .dropdown').hide();
+			$('.passageOptionsGroup .pull-right .openNewPanel').hide();
+			$('.passageOptionsGroup .pull-right .closeColumn').hide();
+			
         }
         else {
             $('.select2-choices .select-reference').show();
-            $('.select2-choices .select-version').show()
+            $('.select2-choices .select-version').show();
+			$('.passageOptionsGroup .pull-right .dropdown').show();
+			$('.passageOptionsGroup .pull-right .openNewPanel').show();
+			$('.passageOptionsGroup .pull-right .closeColumn').show();
+
         }
     },
     _handleKeyPressInSearch: function (ev) {
