@@ -1346,29 +1346,14 @@ step.util = {
         }
         bookSelectDiv.appendTo("body");
         if ($.getUrlVars().indexOf("debug") == -1) {
-            $.ajaxSetup({ cache: true });
-//                $('#theGrammarClrModal').modal('show').find('.modal-content').load('/color_code_grammar.min.html');
+            $.ajaxSetup({ cache: true }); // PT is this needed?
         }
-        //else
-            $('#bookSelectionModal').modal('show').find('.modal-content').load('/passage_selection.html');
+        $('#bookSelectionModal').modal('show').find('.modal-content').load('/passage_selection.html');
     },
     startPickBible: function () {
-//        debugger;
         require(["menu_extras"], function () {
             new PickBibleView({model: step.settings, searchView: self});
         });
-    },
-    updateSelection: function() {
-		window.searchView.search();
-//        var data = step.util.activePassage().get("searchTokens") || [];
-//        debugger;
-//        for (var i = 0; i < data.length; i++) {
-//            if (data[i].itemType == "version") {
-//                version = data[i].item.initials;
-//                alert("version: "+ version);
-//                alert("version: "+ version);
-//            }
-//        }
     }
 }
 ;

@@ -2,7 +2,13 @@
 	<button type="button" class="close" data-dismiss="modal" onclick=closeBookSelect()>X</button>
 </div>
 <div class="modal-body">
-<h4>Books</h4>
+	<form>
+		<select name="add_or_replace" id="add_or_replace">
+			<option value="replace">Select new passage</option>
+			<option value="add">Add a passage to current selection</option>
+		</select>
+	</form>
+	<h4>Books</h4>
 	<h5 style="background-color:#dcdcdc;">Old Testament</h5>
 	<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">
 		<colgroup>
@@ -150,27 +156,28 @@
 		});
 	});
 
-	function goToPassage(osisID) {
+	function goToPassage(osisID, addToSelection) {
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
+		var existingReferences = "";
 		for (var i = 0; i < activePassageData.length; i++) {
 			if (activePassageData[i].itemType == "version") {
 				if (allVersions.length > 0) allVersions += "|version=";
 				allVersions += activePassageData[i].item.shortInitials;
 			}
+			else if ((addToSelection) && (activePassageData[i].itemType == "reference")) {
+				existingReferences += "|reference=" + activePassageData[i].item.osisID;
+			}
 		}
-		var options = step.util.activePassage().get("selectedOptions");
-		var interlinear = step.util.activePassage().get("interlinearMode");
-		//var url = 'q=version=' + allVersions + '|reference=' + osisID + '&options=' + options + "&display=" + interlinear;
-		var url = 'version=' + allVersions + '|reference=' + osisID;
+		var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
 		closeChapterSelect();
-//		step.router.doMasterSearch(url);
-		console.log("navigateSearch: " + url)
+		console.log("navigateSearch from passage_selection.html: " + url)
 		step.router.navigateSearch(url);
 	}
 
 	function getChapters(event) {
 		var url = SEARCH_AUTO_SUGGESTIONS + event.data.osis + "/limit%3Dreference%7Cversion%3D" + event.data.version + "%7Creference%3D" + event.data.osis + "%7C?lang=" + event.data.userLang;
+		var addPassagetoCurrentSelection = ($('#add_or_replace').val() === "add");
 		$.getJSON(url, function( data ) {
 			closeBookSelect();
 			if (document.getElementById("chapterSelectionModal")) {
@@ -204,7 +211,7 @@
 			var chpCounter = 0;
 			for (var i = 0; i < data.length; i++) {
 				if (data[i].suggestion.sectionType == "PASSAGE") {
-					html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\');">' + i + '</a></td>'
+					html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\', ' + addPassagetoCurrentSelection + ');">' + i + '</a></td>'
 					chpCounter ++;
 					if ((chpCounter > 9) && ((chpCounter % 10) == 0)) {
 						html += '</tr><tr style="height:25px">';

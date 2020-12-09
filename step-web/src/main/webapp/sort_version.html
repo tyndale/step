@@ -1,0 +1,68 @@
+<style>
+    #nestedVersion div, .nested-1 {
+        margin-top: 5px;
+    }
+    .nested-1 {
+        background-color: #e6e6e6;
+    }
+</style>  
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">X</button>
+</div>
+<div class="modal-body">
+<div id="sortVersionArea"></div>
+<div class="footer">
+<button id="saveButton" class="btn btn-default btn-xs closeModal" onclick=saveSortOrder()><label>Save</label></button>
+<button id="resetButton" class="btn btn-default btn-xs" onclick=resetSortOrder()><label>Reset</label></button>
+</div>
+</div>
+</div>
+</div>
+<script src="/libs/Sortable.min.js"></script>
+<script>
+	$( document ).ready(function() {
+	  var sortOrder = [];
+	  var s += '<p class="col-12">The selected books (bible or commentary) are listed in the following selected order.<br>' +
+		'Click and drag a book to can change the display order.<br>' +
+		'When you are finished, click on "Save" at the bottom.<br>' +
+		'<div id="nestedVersion" class="list-group col nested-sortable">';
+	  var skipDiv = false;
+	  var nameOfAllItems = window.searchView._getCurrentInitials();
+	  for (var i = 0; i < nameOfAllItems.length; i++) {
+		if (namesOfAllItems[i] !== undefined) {
+			s += '<div class="list-group-item nested-1">' + cf.upCaseFirst(nameOfAllItems[i]) +
+			'<div class="list-group nested-sortable">';
+			if ((i >= nameOfAllItems.length - 1) || (!itemsToCombineWithPrevious[i + 1])) {
+			  s += '</div></div>';
+			  if (skipDiv) {
+				s += '</div></div>';
+				skipDiv = false;
+			  }
+			}
+			else {
+			  if (skipDiv) {
+				s += '</div></div>';
+			  }
+			  skipDiv = true;
+			}
+		}
+	  }
+	  s += '</div>';
+	  $('#sortVersionArea').append($(s));
+
+	  var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
+	  for (var j = 0; j < nestedSortables.length; j++) {
+		new Sortable(nestedSortables[j], {
+		  group: 'nested',
+		  animation: 150,
+		  onEnd: function(/**Event*/evt) {
+			afterSort = [];
+			for (var j = 0; j < $('#nestedVersion')[0].children.length; j ++) {
+			  afterSort.push($('#nestedVersion')[0].children[j].innerText);
+			}
+			console.log(afterSort);
+		  }
+		});
+	  }
+  });
+</script>

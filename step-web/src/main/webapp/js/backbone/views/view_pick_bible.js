@@ -37,7 +37,8 @@ var PickBibleView = Backbone.View.extend({
         '<div class="tab-pane" id="commentaryList">' +
         '</div>' +
         '</div>' + //end body
-        '<div class="modal-footer"><button class="btn btn-default btn-sm" data-dismiss="modal" onclick=step.util.updateSelection()><label><%= __s.ok %></label></button></div>' +
+        '<div class="modal-footer"><button id ="sort_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label>Order selected Bibles</label></button>' +
+                                  '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
         '</div>' +
@@ -56,6 +57,8 @@ var PickBibleView = Backbone.View.extend({
         [__s.alternative_samaritan, ["SP", "SPMT", "SPVar", "SPDSS", "SPE"]],
         [__s.uncategorized_resources, []]
     ],
+    userHasUpdated: false,
+    numberOfVersionsSelected: 0,
     el: function () {
         var el = $("<div>");
         $("body").append(el);
@@ -101,6 +104,7 @@ var PickBibleView = Backbone.View.extend({
 
         //make the right button active
         var language = this._getLanguage();
+        userHasUpdated = false;
         this.$el.find(".btn").has("input[data-lang='" + language + "']").addClass("active");
 
         var navTabsLi = $(".nav-tabs li");
@@ -115,12 +119,33 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find("input[type='text']").focus();
         this.$el.find(".btn").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);
+        this.$el.find("#sort_button_bible_modal").click(this.sortButton);
+        this.$el.find("#ok_button_bible_modal").click(this.okButton);
+        $('#bibleVersions').on('hidden.bs.modal', function (ev) {
+            $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
+        });
         this._filter();
     },
     closeModal: function (ev) {
         ev.preventDefault();
         this.bibleVersions.modal("hide");
         this.remove();
+    },
+    sortButton: function (ev) {
+        this.closeModal(ev);
+        if (userHasUpdated) {
+            userHasUpdated = false;
+            window.searchView.search();
+            return;
+        }
+    },
+    okButton: function (ev) {
+        this.closeModal(ev);
+        if (userHasUpdated) {
+            userHasUpdated = false;
+            window.searchView.search();
+            return;
+        }
     },
     handleLanguageButton: function (ev) {
         var target = $(ev.target).find("input");
@@ -220,20 +245,14 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find(".glyphicon-info-sign").click(function (ev) {
             ev.stopPropagation();
         });
-        var versionsSelected = [];
-        if (typeof self.searchView._getCurrentInitials === "undefined") {
-            var activePassageData = step.util.activePassage().get("searchTokens") || [];
-            for (var i = 0; i < activePassageData.length; i++) {
-                if (activePassageData[i].itemType == "version") {
-                    versionsSelected.push(activePassageData[i].item.shortInitials);
-                }
-            }
+        var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
+			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
+        numberOfVersionsSelected = 0;
+        for (i = 0; ((i < versionsSelected.length) && (numberOfVersionsSelected < 1)); i ++) {
+            if (versionsSelected[i] !== undefined) numberOfVersionsSelected ++;
         }
-        else {
-            versionsSelected = self.searchView._getCurrentInitials();
-        }
-
-
+        if (numberOfVersionsSelected > 1) $('#sort_button_bible_modal').show();
+        else $('#sort_button_bible_modal').hide();
         this.$el.find(".list-group-item").click(function () {
             var target = $(this);
             var version = step.keyedVersions[target.data("initials")];
@@ -241,12 +260,16 @@ var PickBibleView = Backbone.View.extend({
             //also look for the item in the rest of the list and mark that
             self.$el.find("[data-initials='" + version.shortInitials + "']").toggleClass("active");
             var added = target.hasClass("active");
-            
+            userHasUpdated = true;
             if (added) {
                 Backbone.Events.trigger("search:add", { value: version, itemType: VERSION });
+                numberOfVersionsSelected ++;
             } else {
                 Backbone.Events.trigger("search:remove", { value: version, itemType: VERSION});
+                numberOfVersionsSelected --;
             }
+            if (numberOfVersionsSelected > 1) $('#sort_button_bible_modal').show();
+            else $('#sort_button_bible_modal').hide();
         }).each(function (i, item) {
             var el = $(this);
             if (versionsSelected.indexOf(el.data("initials")) != -1) {
