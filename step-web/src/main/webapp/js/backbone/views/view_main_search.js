@@ -1011,20 +1011,25 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
-        if ($(window).width() < 1100) {
+        var showClassicalRefButton = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isClassicalRefButton");
+        if (showClassicalRefButton) {
+            $('.select2-choices .select-reference').show();
+		}
+		else {
             $('.select2-choices .select-reference').hide();
-            $('.select2-choices .select-version').hide();
+		}
+
+        if ($(window).width() < 1000) {
 			$('.dropdown-share').hide();
 			$('.openNewPanel').hide();
 			$('.passageOptionsGroup .closeColumn').hide();
         }
         else {
-            $('.select2-choices .select-reference').show();
-            $('.select2-choices .select-version').show();
 			$('.dropdown-share').show();
 			$('.openNewPanel').show();
-			$('.closeColumn').show();
+			$('.passageOptionsGroup .closeColumn').show();
         }
+		$('.select2-choices .select-version').hide();
     },
     _handleKeyPressInSearch: function (ev) {
         if (ev.keyCode == 13 && !ev.isPropagationStopped()) {

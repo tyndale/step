@@ -17,6 +17,7 @@ var PassageMenuView = Backbone.View.extend({
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
+    classicalReferenceButton: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.display_classical_reference_button %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isClassicalRefButton ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -421,17 +422,29 @@ var PassageMenuView = Backbone.View.extend({
                 self._setVisible(this, enWithZhLexicon); // toggle the tick
             }));
             var currentSecondZhLexiconSetting = self.model.get("isSecondZhLexicon");
-            if (currentSecondZhLexiconSetting == null) {
+            if (currentSecondZhLexiconSetting === null) {
                 this.model.save({ isSecondZhLexicon: true });
                 currentSecondZhLexiconSetting = true;
             }
             dropdown.append($(_.template(this.secondZhLexicon)({ isSecondZhLexicon: currentSecondZhLexiconSetting })).click(function (e) {
                 e.stopPropagation(); //prevent the bubbling up
-                var secondZhLexicon = !self.model.get("isSecondZhLexicon");  // reverse true or false
-                self.model.save({ isSecondZhLexicon: secondZhLexicon }); // toggle the tick
-                self._setVisible(this, secondZhLexicon);
+                var newSecondZhLexicon = !self.model.get("isSecondZhLexicon");  // reverse true or false
+                self.model.save({ isSecondZhLexicon: newSecondZhLexicon }); // toggle the tick
+                self._setVisible(this, newSecondZhLexicon);
             }));
         }
+		var currentClassicalRefButtonSetting = self.model.get("isClassicalRefButton");
+		if (currentClassicalRefButtonSetting === null) {
+			this.model.save({ isClassicalRefButton: true });
+			currentClassicalRefButtonSetting = true;
+		}
+		dropdown.append($(_.template(this.classicalReferenceButton)({ isClassicalRefButton: currentClassicalRefButtonSetting })).click(function (e) {
+			e.stopPropagation(); //prevent the bubbling up
+			var newClassicalReference = !self.model.get("isClassicalRefButton");  // reverse true or false
+			self.model.save({ isClassicalRefButton: newClassicalReference }); // toggle the tick
+			self._setVisible(this, newClassicalReference);
+            $('.select2-choices .select-reference').show();
+		}));
         var currentVerseVocabSetting = self.model.get("isVerseVocab");
         if (currentVerseVocabSetting == null) {
             this.model.save({isVerseVocab: true});

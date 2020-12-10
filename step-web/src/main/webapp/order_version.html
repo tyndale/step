@@ -28,8 +28,8 @@
 	  beforeSort = [];
 	  for (var i = 0; i < intialsOfAllVersions.length; i++) {
 		if (intialsOfAllVersions[i] !== undefined) {
-			s += '<div class="list-group-item nested-1">' + intialsOfAllVersions[i] +
-			'<div class="list-group nested-sortable"></div></div>';
+			s += '<div style="color:#FFFFFF;background-color:#3071A9;font-size:14px;padding:10px 5px 10px 15px;border-style:solid;" class="list-group-item nested-1">' + intialsOfAllVersions[i] +
+			  '<div style="visibility: hidden" class="list-group nested-sortable"></div></div>';
 			beforeSort.push(intialsOfAllVersions[i]);
 		}
 	  }
@@ -44,7 +44,7 @@
 		  onEnd: function(/**Event*/evt) {
 			afterSort = [];
 			for (var j = 0; j < $('#nestedVersion')[0].children.length; j ++) {
-			  afterSort.push($('#nestedVersion')[0].children[j].innerText);
+			  afterSort.push($('#nestedVersion')[0].children[j].innerText.replace(/(\r\n|\n|\r)/gm,"")); // Dec 2020.  Safari browser on iPhone has an extra 0A character at the end of the string.
 			}
 		  }
 		});
@@ -55,8 +55,7 @@
 			var allVersions = "version=";
 			for (var i = 0; i < afterSort.length; i++) {
 				if (i > 0) allVersions += '|version=';
-				debugger;
-				allVersions += afterSort[i].replace(/(\r\n|\n|\r)/gm,"");
+				allVersions += afterSort[i];
 			}
 			var activePassageData = step.util.activePassage().get("searchTokens") || [];
 			var allReferences = '|reference=';
