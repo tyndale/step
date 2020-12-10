@@ -88,7 +88,7 @@ var MainSearchView = Backbone.View.extend({
                     .append($("<a>").append(__s.search_advanced).on('click', function () {
                         view.openAdvancedSearch();
                     }));
-                var container = $("<span>").append(labels).append($('<span class="message">').append(message));
+                var container = $('<span style="width: 50%">').append(labels).append($('<span class="message">').append(message));
                 return container;
             },
             ajax: {
