@@ -1,0 +1,84 @@
+<style>
+    #nestedVersion div, .nested-1 {
+        margin-top: 5px;
+    }
+    .nested-1 {
+        background-color: #e6e6e6;
+    }
+</style>  
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">X</button>
+</div>
+<div class="modal-body">
+<div id="sortVersionModal"></div>
+<div class="footer">
+<button id="saveButton" class="btn btn-default btn-xs closeModal" onclick=saveVersionOrder()><label>Update display</label></button>
+</div>
+</div>
+</div>
+</div>
+<script src="/libs/Sortable.min.js"></script>
+<script>
+	$( document ).ready(function() {
+	  var s = '<p class="col-12">The selected books (bible or commentary) are in the following selected order.<br>' +
+		'Click and drag a book to can change the display order.<br>' +
+		'When you are finished, click on "Update display".<br>' +
+		'<div id="nestedVersion" class="list-group col nested-sortable">';
+	  var intialsOfAllVersions = window.searchView._getCurrentInitials();
+	  beforeSort = [];
+	  for (var i = 0; i < intialsOfAllVersions.length; i++) {
+		if (intialsOfAllVersions[i] !== undefined) {
+			s += '<div class="list-group-item nested-1">' + intialsOfAllVersions[i] +
+			'<div class="list-group nested-sortable"></div></div>';
+			beforeSort.push(intialsOfAllVersions[i]);
+		}
+	  }
+	  s += '</div>';
+	  $('#sortVersionModal').append($(s));
+
+	  var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
+	  for (var j = 0; j < nestedSortables.length; j++) {
+		new Sortable(nestedSortables[j], {
+		  group: 'nested',
+		  animation: 150,
+		  onEnd: function(/**Event*/evt) {
+			afterSort = [];
+			for (var j = 0; j < $('#nestedVersion')[0].children.length; j ++) {
+			  afterSort.push($('#nestedVersion')[0].children[j].innerText);
+			}
+		  }
+		});
+	  }
+	});
+	function saveVersionOrder() {
+		if (JSON.stringify(beforeSort) !== JSON.stringify(afterSort)) {
+			var allVersions = "version=";
+			for (var i = 0; i < afterSort.length; i++) {
+				if (i > 0) allVersions += '|version=';
+				allVersions += afterSort[i];
+			}
+			var activePassageData = step.util.activePassage().get("searchTokens") || [];
+			var allReferences = '|reference=';
+			numOfReferences = 0;
+			for (var i = 0; i < activePassageData.length; i++) {
+				if (activePassageData[i].itemType == 'reference') {
+					if (numOfReferences > 0) allReferences += '|reference=';
+					allReferences += activePassageData[i].item.osisID;
+					numOfReferences ++;
+				}
+			}
+			var url = allVersions + allReferences;
+			closeVersionOrder();
+			console.log("navigateSearch from order_version.html: " + url)
+			step.router.navigateSearch(url);
+		}
+	}
+	function closeVersionOrder() {
+		$('#orderVersionModal').modal('hide');
+		$('#orderVersionModal').modal({
+			show: false
+		});
+		var element = document.getElementById('orderVersionModal');
+		element.parentNode.removeChild(element);
+	}
+</script>

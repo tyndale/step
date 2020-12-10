@@ -10,115 +10,9 @@
 	</form>
 	<h4>Books</h4>
 	<h5 style="background-color:#dcdcdc;">Old Testament</h5>
-	<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">
-		<colgroup>
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-		</colgroup>
-		<tr style="height:25px">
-			<td id="pass_sel_ot_0"></td>
-			<td id="pass_sel_ot_1"></td>
-			<td id="pass_sel_ot_2"></td>
-			<td id="pass_sel_ot_3"></td>
-			<td id="pass_sel_ot_4"></td>
-			<td id="pass_sel_ot_5"></td>
-			<td id="pass_sel_ot_6"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_ot_7"></td>
-			<td id="pass_sel_ot_8"></td>
-			<td id="pass_sel_ot_9"></td>
-			<td id="pass_sel_ot_10"></td>
-			<td id="pass_sel_ot_11"></td>
-			<td id="pass_sel_ot_12"></td>
-			<td id="pass_sel_ot_13"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_ot_14"></td>
-			<td id="pass_sel_ot_15"></td>
-			<td id="pass_sel_ot_16"></td>
-			<td id="pass_sel_ot_17"></td>
-			<td id="pass_sel_ot_18"></td>
-			<td id="pass_sel_ot_19"></td>
-			<td id="pass_sel_ot_20"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_ot_21"></td>
-			<td id="pass_sel_ot_22"></td>
-			<td id="pass_sel_ot_23"></td>
-			<td id="pass_sel_ot_24"></td>
-			<td id="pass_sel_ot_25"></td>
-			<td id="pass_sel_ot_26"></td>
-			<td id="pass_sel_ot_27"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_ot_28"></td>
-			<td id="pass_sel_ot_29"></td>
-			<td id="pass_sel_ot_30"></td>
-			<td id="pass_sel_ot_31"></td>
-			<td id="pass_sel_ot_32"></td>
-			<td id="pass_sel_ot_33"></td>
-			<td id="pass_sel_ot_34"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_ot_35"></td>
-			<td id="pass_sel_ot_36"></td>
-			<td id="pass_sel_ot_37"></td>
-			<td id="pass_sel_ot_38"></td>
-		</tr>
-	</table>
+	<div id="ot_table"/>
 	<h5 style="background-color:#dcdcdc;">New Testament</h5>
-	<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">
-		<colgroup>
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-			<col span="1" style="width: 13%;">
-		</colgroup>
-		<tr style="height:25px">
-			<td id="pass_sel_nt_0"></td>
-			<td id="pass_sel_nt_1"></td>
-			<td id="pass_sel_nt_2"></td>
-			<td id="pass_sel_nt_3"></td>
-			<td id="pass_sel_nt_4"></td>
-			<td id="pass_sel_nt_5"></td>
-			<td id="pass_sel_nt_6"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_nt_7"></td>
-			<td id="pass_sel_nt_8"></td>
-			<td id="pass_sel_nt_9"></td>
-			<td id="pass_sel_nt_10"></td>
-			<td id="pass_sel_nt_11"></td>
-			<td id="pass_sel_nt_12"></td>
-			<td id="pass_sel_nt_13"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_nt_14"></td>
-			<td id="pass_sel_nt_15"></td>
-			<td id="pass_sel_nt_16"></td>
-			<td id="pass_sel_nt_17"></td>
-			<td id="pass_sel_nt_18"></td>
-			<td id="pass_sel_nt_19"></td>
-			<td id="pass_sel_nt_20"></td>
-		</tr>
-		<tr style="height:25px">
-			<td id="pass_sel_nt_21"></td>
-			<td id="pass_sel_nt_22"></td>
-			<td id="pass_sel_nt_23"></td>
-			<td id="pass_sel_nt_24"></td>
-			<td id="pass_sel_nt_25"></td>
-			<td id="pass_sel_nt_26"></td>
-		</tr>
-	</table>
+	<div id="nt_table"/>
 </div>
 </div>
 <script>
@@ -134,28 +28,51 @@
 		var userLang = step.state.language() || "en-US";
 		var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/examples%3Dreference%7Climit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
 		$.getJSON(url, function( data ) {
-			var counterOT = 0; var counterNT = 0;
-			$.each( data, function( key, val ) {
-				//var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
-				var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
-				var newTestament = false;
-				var idName = "";
-				if (nt.indexOf(val.suggestion.osisID) > -1) {
-					newTestament = true;
-					idName = "#pass_sel_nt_" + counterNT;
-					counterNT ++;
+			var counter = 0;
+			var notSeenNT = true;
+			var browserWidth = $(window).width();
+			var columns = 7;
+			if (browserWidth < 1100) {
+				columns = 6;
+				if (browserWidth < 800) columns = 5;
+			}
+			var tableHTML = _buildTableHeader(columns);
+			//var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
+			var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
+			for (var i = 0; i < data.length; i++) {
+				currentOsisID = data[i].suggestion.osisID;
+				newTestament = (nt.indexOf(currentOsisID) > -1);
+				if ((newTestament) && (notSeenNT)) {
+					notSeenNT = false;
+					counter = 0; // reset counter for NT table
+					tableHTML += '</tr></table>';
+					$('#ot_table').append(tableHTML);
+					tableHTML = _buildTableHeader(columns);
 				}
-				else {
-					idName = "#pass_sel_ot_" + counterOT;
-					counterOT ++;
+				tableHTML += '<td title="' + data[i].suggestion.fullName + '">' +
+						'<a style="color:blue;font-size:14px;" href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\');">' +
+						data[i].suggestion.shortName.replaceAll(" ", "").substr(0, 4) + '</a></td>';
+				counter ++;
+				if ((counter % columns) == 0) {
+					tableHTML += '</tr><tr style="height:25px">';
 				}
-				$(idName).text(val.suggestion.shortName.replaceAll(" ", "").substr(0, 4)); // If it is over 8 characters, we need to shorten it
-				$(idName).attr('title', val.suggestion.fullName);
-				$(idName).click({osis: val.suggestion.osisID, version: version, userLang: userLang}, getChapters);
-			});
+			}
+			tableHTML += '</tr></table>';
+			$('#nt_table').append(tableHTML);
 		});
 	});
 
+	function _buildTableHeader(columns) {
+		var columnPercent = Math.floor(100 / columns);
+		var tableHtml = '<table style="width:95%;margin-left:auto;margin-right:auto;color:blue;font-size:14px;">' +
+				'<colgroup>';
+		for (var i = 0; i < columns; i++) {
+			tableHtml += '<col span="1" style="width:' + columnPercent + '%;">';
+		}
+		tableHtml += '</colgroup>';
+		tableHtml += '<tr style="height:28px">';
+		return tableHtml;
+	}
 	function goToPassage(osisID, addToSelection) {
 		var activePassageData = step.util.activePassage().get("searchTokens") || [];
 		var allVersions = "";
@@ -175,8 +92,8 @@
 		step.router.navigateSearch(url);
 	}
 
-	function getChapters(event) {
-		var url = SEARCH_AUTO_SUGGESTIONS + event.data.osis + "/limit%3Dreference%7Cversion%3D" + event.data.version + "%7Creference%3D" + event.data.osis + "%7C?lang=" + event.data.userLang;
+	function getChapters(osisID, version, userLang) {
+		var url = SEARCH_AUTO_SUGGESTIONS + osisID + "/limit%3Dreference%7Cversion%3D" + version + "%7Creference%3D" + osisID + "%7C?lang=" + userLang;
 		var addPassagetoCurrentSelection = ($('#add_or_replace').val() === "add");
 		$.getJSON(url, function( data ) {
 			closeBookSelect();

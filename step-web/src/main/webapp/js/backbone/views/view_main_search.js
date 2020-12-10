@@ -1011,12 +1011,12 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
-        if ($(window).width() < 1200) {
+        if ($(window).width() < 1100) {
             $('.select2-choices .select-reference').hide();
             $('.select2-choices .select-version').hide();
 			$('.dropdown-share').hide();
 			$('.openNewPanel').hide();
-			$('.closeColumn').hide();
+			$('.passageOptionsGroup .closeColumn').hide();
         }
         else {
             $('.select2-choices .select-reference').show();

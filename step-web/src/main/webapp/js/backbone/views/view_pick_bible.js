@@ -37,7 +37,7 @@ var PickBibleView = Backbone.View.extend({
         '<div class="tab-pane" id="commentaryList">' +
         '</div>' +
         '</div>' + //end body
-        '<div class="modal-footer"><button id ="sort_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label>Order selected Bibles</label></button>' +
+        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label>Display order</label></button>' +
                                   '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
@@ -119,7 +119,7 @@ var PickBibleView = Backbone.View.extend({
         this.$el.find("input[type='text']").focus();
         this.$el.find(".btn").click(this.handleLanguageButton);
         this.$el.find(".closeModal").click(this.closeModal);
-        this.$el.find("#sort_button_bible_modal").click(this.sortButton);
+        this.$el.find("#order_button_bible_modal").click(this.orderButton);
         this.$el.find("#ok_button_bible_modal").click(this.okButton);
         $('#bibleVersions').on('hidden.bs.modal', function (ev) {
             $('#bibleVersions').remove(); // Need to be removed, if not the next call to this routine will display an empty tab (Bible or Commentary).
@@ -131,13 +131,17 @@ var PickBibleView = Backbone.View.extend({
         this.bibleVersions.modal("hide");
         this.remove();
     },
-    sortButton: function (ev) {
+    orderButton: function (ev) {
         this.closeModal(ev);
-        if (userHasUpdated) {
-            userHasUpdated = false;
-            window.searchView.search();
-            return;
+        var orderVersionDiv = $('<div id="orderVersionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">');
+        if (document.getElementById('orderVersionModal')) {
+            var element = document.getElementById('orderVersionModal');
+            element.parentNode.removeChild(element);
         }
+        orderVersionDiv.appendTo("body");
+        $('#orderVersionModal').modal('show').find('.modal-content').load('/order_version.html');
     },
     okButton: function (ev) {
         this.closeModal(ev);
