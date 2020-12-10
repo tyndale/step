@@ -764,9 +764,9 @@ step.util = {
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
                 case REFERENCE:
-                    if (entry.item.shortName.length > 25) {
-                        var lastComma = entry.item.shortName.substr(0, 23).lastIndexOf(",");
-                        if (lastComma < 5) lastComma = 23;
+                    if (entry.item.shortName.length > 30) {
+                        var lastComma = entry.item.shortName.substr(0, 28).lastIndexOf(",");
+                        if (lastComma < 5) lastComma = 28;
                         entry.item.shortName = entry.item.shortName.substr(0, lastComma) + '...';
                     }
                     result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +

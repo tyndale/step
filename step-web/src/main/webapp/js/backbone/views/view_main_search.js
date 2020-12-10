@@ -73,7 +73,6 @@ var MainSearchView = Backbone.View.extend({
                             break;
                     }
                 }
-
                 return id;
             },
             formatInputTooShort: function (input, min) {
@@ -81,10 +80,12 @@ var MainSearchView = Backbone.View.extend({
                 var n = min - input.length;
                 var message = sprintf(__s.x_more_characters, n);
                 var labels = $("<span>").addClass("searchLabel")
-                    .append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
-                        .on("click", function () {
-                            view.pickBible();
-                        })).append("&nbsp;|&nbsp;").append($("<a>").append(__s.search_advanced).on('click', function () {
+                    //.append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
+                    //    .on("click", function () {
+                    //        view.pickBible();
+                    //    }))
+                    //.append("&nbsp;|&nbsp;")
+                    .append($("<a>").append(__s.search_advanced).on('click', function () {
                         view.openAdvancedSearch();
                     }));
                 var container = $("<span>").append(labels).append($('<span class="message">').append(message));
