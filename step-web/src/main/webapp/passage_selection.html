@@ -54,7 +54,7 @@
 						data[i].suggestion.shortName.replaceAll(" ", "").substr(0, 4) + '</a></td>';
 				counter ++;
 				if ((counter % columns) == 0) {
-					tableHTML += '</tr><tr style="height:25px">';
+					tableHTML += '</tr><tr style="height:30px">';
 				}
 			}
 			tableHTML += '</tr></table>';
@@ -70,7 +70,7 @@
 			tableHtml += '<col span="1" style="width:' + columnPercent + '%;">';
 		}
 		tableHtml += '</colgroup>';
-		tableHtml += '<tr style="height:28px">';
+		tableHtml += '<tr style="height:30px">';
 		return tableHtml;
 	}
 	function goToPassage(osisID, addToSelection) {
@@ -123,7 +123,7 @@
 									'<col span="1" style="width: 10%;">' +
 									'<col span="1" style="width: 10%;">' +
 								'</colgroup>' +
-								'<tr style="height:25px">';
+								'<tr style="height:30px">';
 
 			var chpCounter = 0;
 			for (var i = 0; i < data.length; i++) {
@@ -131,7 +131,7 @@
 					html += '<td><a style="color:blue;font-size:14px;" href="javascript:goToPassage(\'' + data[i].suggestion.osisID + '\', ' + addPassagetoCurrentSelection + ');">' + i + '</a></td>'
 					chpCounter ++;
 					if ((chpCounter > 9) && ((chpCounter % 10) == 0)) {
-						html += '</tr><tr style="height:25px">';
+						html += '</tr><tr style="height:30px">';
 					}
 				}
 			}

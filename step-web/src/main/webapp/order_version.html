@@ -55,7 +55,8 @@
 			var allVersions = "version=";
 			for (var i = 0; i < afterSort.length; i++) {
 				if (i > 0) allVersions += '|version=';
-				allVersions += afterSort[i];
+				debugger;
+				allVersions += afterSort[i].replace(/(\r\n|\n|\r)/gm,"");
 			}
 			var activePassageData = step.util.activePassage().get("searchTokens") || [];
 			var allReferences = '|reference=';
