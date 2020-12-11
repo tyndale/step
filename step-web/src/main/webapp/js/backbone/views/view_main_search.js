@@ -637,18 +637,19 @@ var MainSearchView = Backbone.View.extend({
         else if (limit == VERSION) {
             staticResources = this._getData(limit, term);
         }
+// Dec 2020.  David requested to put the references at the end.
+//        //find last version and re-order that section
+//        var i = 0;
+//        for (i = 0; i < results.length; i++) {
+//            if (results[i].itemType != REFERENCE) {
+//                break;
+//            }
+//        }
 
-        //find last version and re-order that section
-        var i = 0;
-        for (i = 0; i < results.length; i++) {
-            if (results[i].itemType != REFERENCE) {
-                break;
-            }
-        }
-
-        var firstPart = results.slice(0, i);
-        var secondPart = results.slice(i);
-        return firstPart.concat(staticResources).concat(secondPart);
+//        var firstPart = results.slice(0, i);
+//        var secondPart = results.slice(i);
+//        return firstPart.concat(staticResources).concat(secondPart);
+		return results.concat(staticResources);
     },
     _getData: function (limit, term) {
         return this.filterLocalData(limit, term);
