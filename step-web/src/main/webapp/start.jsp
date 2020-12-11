@@ -141,7 +141,7 @@
                     <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">
                         <div class="input-group">
-                            <input id="masterSearch" type="text" class="form-control input-sm"
+                            <input id="masterSearch" type="text" class="form-control input-lg"
                                    placeholder="<fmt:message key="search_placeholder" />">
                             <span class="input-group-btn findButton">
                                     <span>Search</span>
