@@ -12,7 +12,7 @@
 <div class="modal-body">
 <div id="sortVersionModal"></div>
 <div class="footer">
-<button id="saveButton" class="btn btn-default btn-xs closeModal" onclick=saveVersionOrder()><label>Update display</label></button>
+<button id="updateVersionOrderButton" class="btn btn-default btn-xs closeModal" onclick=saveVersionOrder()><label>Update order</label></button>
 </div>
 </div>
 </div>
@@ -21,15 +21,15 @@
 <script>
 	$( document ).ready(function() {
 	  var s = '<p class="col-12">The selected books (bible or commentary) are in the following selected order.<br>' +
-		'Click and drag a book to can change the display order.<br>' +
-		'When you are finished, click on "Update display".<br>' +
+		'Click and drag a book to can change the display order.  After you change the display order,<br>' +
+		'click on "Update order".<br>' +
 		'<div id="nestedVersion" class="list-group col nested-sortable">';
 	  var intialsOfAllVersions = window.searchView._getCurrentInitials();
 	  beforeSort = [];
 	  for (var i = 0; i < intialsOfAllVersions.length; i++) {
 		if (intialsOfAllVersions[i] !== undefined) {
 			s += '<div style="color:#FFFFFF;background-color:#3071A9;font-size:14px;padding:10px 5px 10px 15px;border-style:solid;" class="list-group-item nested-1">' + intialsOfAllVersions[i] +
-			  '<div style="visibility: hidden" class="list-group nested-sortable"></div></div>';
+			  '<div class="list-group nested-sortable"></div></div>';
 			beforeSort.push(intialsOfAllVersions[i]);
 		}
 	  }
@@ -45,13 +45,15 @@
 			afterSort = [];
 			for (var j = 0; j < $('#nestedVersion')[0].children.length; j ++) {
 			  afterSort.push($('#nestedVersion')[0].children[j].innerText.replace(/(\r\n|\n|\r)/gm,"")); // Dec 2020.  Safari browser on iPhone has an extra 0A character at the end of the string.
+              $('#updateVersionOrderButton').show();
 			}
 		  }
 		});
 	  }
+      $('#updateVersionOrderButton').hide();
 	});
 	function saveVersionOrder() {
-		if (JSON.stringify(beforeSort) !== JSON.stringify(afterSort)) {
+	    if ((afterSort !== undefined) && (JSON.stringify(beforeSort) !== JSON.stringify(afterSort))) {
 			var allVersions = "version=";
 			for (var i = 0; i < afterSort.length; i++) {
 				if (i > 0) allVersions += '|version=';

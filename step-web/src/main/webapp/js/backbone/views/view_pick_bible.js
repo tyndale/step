@@ -37,7 +37,7 @@ var PickBibleView = Backbone.View.extend({
         '<div class="tab-pane" id="commentaryList">' +
         '</div>' +
         '</div>' + //end body
-        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label>Display order</label></button>' +
+        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label>Update display order</label></button>' +
                                   '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
@@ -252,11 +252,11 @@ var PickBibleView = Backbone.View.extend({
         var versionsSelected = (typeof self.searchView._getCurrentInitials === "undefined") ?
 			window.searchView._getCurrentInitials() : self.searchView._getCurrentInitials();
         numberOfVersionsSelected = 0;
-        for (i = 0; ((i < versionsSelected.length) && (numberOfVersionsSelected < 1)); i ++) {
+        for (i = 0; ((i < versionsSelected.length) && (numberOfVersionsSelected <= 1)); i ++) {
             if (versionsSelected[i] !== undefined) numberOfVersionsSelected ++;
         }
-        if (numberOfVersionsSelected > 1) $('#sort_button_bible_modal').show();
-        else $('#sort_button_bible_modal').hide();
+        if (numberOfVersionsSelected > 1) $('#order_button_bible_modal').show();
+        else $('#order_button_bible_modal').hide();
         this.$el.find(".list-group-item").click(function () {
             var target = $(this);
             var version = step.keyedVersions[target.data("initials")];
@@ -272,8 +272,8 @@ var PickBibleView = Backbone.View.extend({
                 Backbone.Events.trigger("search:remove", { value: version, itemType: VERSION});
                 numberOfVersionsSelected --;
             }
-            if (numberOfVersionsSelected > 1) $('#sort_button_bible_modal').show();
-            else $('#sort_button_bible_modal').hide();
+            if (numberOfVersionsSelected > 1) $('#order_button_bible_modal').show();
+            else $('#order_button_bible_modal').hide();
         }).each(function (i, item) {
             var el = $(this);
             if (versionsSelected.indexOf(el.data("initials")) != -1) {
