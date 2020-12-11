@@ -28,9 +28,11 @@
 	  beforeSort = [];
 	  for (var i = 0; i < intialsOfAllVersions.length; i++) {
 		if (intialsOfAllVersions[i] !== undefined) {
-			s += '<div style="color:#FFFFFF;background-color:#3071A9;font-size:14px;padding:10px 5px 10px 15px;border-style:solid;" class="list-group-item nested-1">' + intialsOfAllVersions[i] +
+			var curVersion = intialsOfAllVersions[i];
+			if (step.keyedVersions[curVersion].name !== undefined) curVersion += ' - ' + step.keyedVersions[curVersion].name;
+			s += '<div style="color:#FFFFFF;background-color:#3071A9;font-size:14px;padding:10px 5px 10px 15px;border-style:solid;" class="list-group-item nested-1">' + curVersion +
 			  '<div class="list-group nested-sortable"></div></div>';
-			beforeSort.push(intialsOfAllVersions[i]);
+			beforeSort.push(curVersion);
 		}
 	  }
 	  s += '</div>';
@@ -39,7 +41,6 @@
 	  var nestedSortables = [].slice.call(document.querySelectorAll('.nested-sortable'));
 	  for (var j = 0; j < nestedSortables.length; j++) {
 		new Sortable(nestedSortables[j], {
-		  group: 'nested',
 		  animation: 150,
 		  onEnd: function(/**Event*/evt) {
 			afterSort = [];
@@ -57,7 +58,10 @@
 			var allVersions = "version=";
 			for (var i = 0; i < afterSort.length; i++) {
 				if (i > 0) allVersions += '|version=';
-				allVersions += afterSort[i];
+				var curVersion = afterSort[i];
+				var pos = curVersion.indexOf(' - ');
+				if (pos > 1) curVersion = curVersion.substr(0, pos);
+				allVersions += curVersion;
 			}
 			var activePassageData = step.util.activePassage().get("searchTokens") || [];
 			var allReferences = '|reference=';
