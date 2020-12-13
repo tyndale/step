@@ -1021,7 +1021,7 @@ var MainSearchView = Backbone.View.extend({
             $('.select2-choices .select-reference').hide();
 		}
 
-        if ($(window).width() < 1000) {
+        if ($(window).width() < 900) {
 			$('.dropdown-share').hide();
 			$('.openNewPanel').hide();
 			$('.passageOptionsGroup .closeColumn').hide();
