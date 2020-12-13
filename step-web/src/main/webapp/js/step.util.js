@@ -680,11 +680,21 @@ step.util = {
                     'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
                     allSelectedBibleVersions + '</button>&nbsp;');
             }
+			var referenceButtonRendered = false;
             for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION)) {
                     container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
+					if ((searchTokens[i].tokenType === REFERENCE) || (searchTokens[i].itemType === REFERENCE)) {
+						referenceButtonRendered = true;
+					}
                 }
             }
+			if (!referenceButtonRendered) {
+				container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
+						'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+						'<div class="referenceItem" title="Select passage" data-item-type="reference" data-select-id="Gen.1">Select passage</div>' +
+						'</button>');
+			}
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {
@@ -699,7 +709,7 @@ step.util = {
             } else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
                 searchToken.itemType = SUBJECT_SEARCH;
             } else if (searchToken.itemType == REFERENCE) {
-                return '<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + searchToken.itemType + ' select2-search-choice" '+
+                return '<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
 						'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
 						this.renderEnhancedToken(searchToken, isMasterVersion) +
 						'</button>';
@@ -769,13 +779,10 @@ step.util = {
                         if (lastComma < 5) lastComma = 28;
                         entry.item.shortName = entry.item.shortName.substr(0, lastComma) + '...';
                     }
-                    result = '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
+                    return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
-                        entry.item.shortName;
-
-                    result = result + '</div>';
-                    return result;
+                        entry.item.shortName + '</div>';
 
                 case VERSION:
                     // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
