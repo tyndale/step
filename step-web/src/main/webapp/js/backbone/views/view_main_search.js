@@ -1013,13 +1013,13 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
-        var showClassicalRefButton = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isClassicalRefButton");
-        if (showClassicalRefButton) {
-            $('.select2-choices .select-reference').show();
-		}
-		else {
-            $('.select2-choices .select-reference').hide();
-		}
+//        var showClassicalRefButton = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isClassicalRefButton");
+//        if (showClassicalRefButton) {
+//            $('.select2-choices .select-reference').show();
+//		}
+//		else {
+//            $('.select2-choices .select-reference').hide();
+//		}
 
         if ($(window).width() < 900) {
 			$('.dropdown-share').hide();

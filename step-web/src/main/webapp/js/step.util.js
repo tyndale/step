@@ -676,23 +676,30 @@ step.util = {
             }
             if (allSelectedBibleVersions.length > 0) {
                 allSelectedBibleVersions += "&nbsp;&#9662;";
-                container.append('<button type="button" onclick="step.util.startPickBible()" class="argSelect select-' + VERSION + ' select2-search-choice" '+
+                container.append('<button type="button" onclick="step.util.startPickBible()" ' + //class="argSelect select-' + VERSION + ' select2-search-choice" '+
                     'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
                     allSelectedBibleVersions + '</button>&nbsp;');
+//                container.append('<button type="button" onclick="step.util.startPickBible()" class="argSelect select-' + VERSION + ' select2-search-choice" '+
+//                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+//                    allSelectedBibleVersions + '</button>&nbsp;');
             }
 			var referenceButtonRendered = false;
             for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION)) {
-                    container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
+                    //debugger;
+                    var tmp = step.util.ui.renderArg(searchTokens[i], isMasterVersion);
+                    container.append(tmp);
 					if ((searchTokens[i].tokenType === REFERENCE) || (searchTokens[i].itemType === REFERENCE)) {
 						referenceButtonRendered = true;
 					}
                 }
             }
 			if (!referenceButtonRendered) {
-				container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
+//                container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
+				container.append('<button type="button" onclick="step.util.passageSelectionModal()" ' + //class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
 						'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-						'<div class="referenceItem" title="Select passage" data-item-type="reference" data-select-id="Gen.1">Select passage</div>' +
+//						'<div class="referenceItem" title="Select passage" data-item-type="reference" data-select-id="Gen.1">Select passage</div>' +
+                        '<div>Select passage</div>' +
 						'</button>');
 			}
             return container.html();
