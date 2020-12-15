@@ -154,6 +154,7 @@
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
+	showClassicalButtons: false,
     timers: {},
     unaugmentStrong : function(strong) {
         var result = (strong || "");
@@ -479,7 +480,8 @@ step.util = {
         newColumn
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
-        newColumn.find(".argSummary").remove();
+        newColumn.find(".argSelect").remove();
+        newColumn.find(".select-reference").text("Select passage \u25BE");  // There is an upside triangle at the end of the string.
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
         newColumn.find(".popover").remove();
@@ -664,7 +666,8 @@ step.util = {
 
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var allSelectedBibleVersions = "";
-            for (var i = 0; i < searchTokens.length; i++) {
+            var allSelectedReferences = "";
+            for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
                 if ((searchTokens[i].tokenType == VERSION) || (searchTokens[i].itemType == VERSION)) {
                     searchTokens[i].itemType = searchTokens[i].tokenType;
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
@@ -673,35 +676,33 @@ step.util = {
 						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
                     isMasterVersion = false;
                 }
-            }
-            if (allSelectedBibleVersions.length > 0) {
-                allSelectedBibleVersions += "&nbsp;&#9662;";
-                container.append('<button type="button" onclick="step.util.startPickBible()" ' + //class="argSelect select-' + VERSION + ' select2-search-choice" '+
-                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-                    allSelectedBibleVersions + '</button>&nbsp;');
-//                container.append('<button type="button" onclick="step.util.startPickBible()" class="argSelect select-' + VERSION + ' select2-search-choice" '+
-//                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-//                    allSelectedBibleVersions + '</button>&nbsp;');
-            }
-			var referenceButtonRendered = false;
-            for (var i = 0; i < searchTokens.length; i++) {
-                if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION)) {
-                    //debugger;
-                    var tmp = step.util.ui.renderArg(searchTokens[i], isMasterVersion);
-                    container.append(tmp);
-					if ((searchTokens[i].tokenType === REFERENCE) || (searchTokens[i].itemType === REFERENCE)) {
-						referenceButtonRendered = true;
-					}
+                else if ((searchTokens[i].tokenType == REFERENCE) || (searchTokens[i].itemType == REFERENCE)) {
+                    searchTokens[i].itemType = searchTokens[i].tokenType;
+                    searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
+                    if (allSelectedReferences.length > 0) allSelectedReferences += ", ";
+                    allSelectedReferences += (searchTokens[i].item.shortName.length > 0) ?
+                        step.util.safeEscapeQuote(searchTokens[i].item.shortName) : step.util.safeEscapeQuote(searchTokens[i].token);
                 }
             }
-			if (!referenceButtonRendered) {
-//                container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
-				container.append('<button type="button" onclick="step.util.passageSelectionModal()" ' + //class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
-						'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-//						'<div class="referenceItem" title="Select passage" data-item-type="reference" data-select-id="Gen.1">Select passage</div>' +
-                        '<div>Select passage</div>' +
-						'</button>');
-			}
+            if (allSelectedBibleVersions.length > 0)
+                container.append('<button type="button" onclick="step.util.startPickBible()" class="select-' + VERSION + ' select2-search-choice" ' +
+                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                    allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
+            if (allSelectedReferences.length === 0) allSelectedReferences = "Select passage";
+            else if (allSelectedReferences.length > 30) {
+                var lastComma = allSelectedReferences.substr(0, 28).lastIndexOf(",");
+                if (lastComma < 5) lastComma = 28;
+                allSelectedReferences = allSelectedReferences.substr(0, lastComma) + '...';
+            }
+            console.log("all selected ref: " + allSelectedReferences);
+            container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
+                'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
+            for (var i = 0; i < searchTokens.length; i++) {
+                if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
+                    (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) // VERSION and REFERENCE buttons are already created a few lines above.
+                    container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
+            }
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {
@@ -715,13 +716,15 @@ step.util = {
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
             } else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
                 searchToken.itemType = SUBJECT_SEARCH;
-            } else if (searchToken.itemType == REFERENCE) {
-                return '<button type="button" onclick="step.util.passageSelectionModal()" class="argSelect select-' + REFERENCE + ' select2-search-choice" '+
-						'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-						this.renderEnhancedToken(searchToken, isMasterVersion) +
-						'</button>';
+            } else if (searchToken.itemType == REFERENCE) {  // PT: This probably can be deleted but leaving it here just in case
+                console.log("reached code which should not be used?  loc 1");
+                return '<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" '+
+                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                    this.renderEnhancedToken(searchToken, isMasterVersion) +
+                    '</button>';
             }
-            else if (searchToken.itemType == VERSION) {
+            else if (searchToken.itemType == VERSION) {   // PT: This probably can be deleted but leaving it here just in case
+                console.log("reached code which should not be used?  loc 2");
                 return this.renderEnhancedToken(searchToken, isMasterVersion);
             }
             else {
@@ -780,18 +783,15 @@ step.util = {
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
-                case REFERENCE:
-                    if (entry.item.shortName.length > 30) {
-                        var lastComma = entry.item.shortName.substr(0, 28).lastIndexOf(",");
-                        if (lastComma < 5) lastComma = 28;
-                        entry.item.shortName = entry.item.shortName.substr(0, lastComma) + '...';
-                    }
+                case REFERENCE:   // PT: This probably can be deleted but leaving it here just in case
+                    console.log("reached code which should not be used?  loc 3");
                     return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
                         entry.item.shortName + '</div>';
 
-                case VERSION:
+                case VERSION:   // PT: This probably can be deleted but leaving it here just in case
+                    console.log("reached code which should not be used?  loc 4");
                     // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
 					var shortInitialsOfTranslation = ''; // added so it does not crash at startup
@@ -811,9 +811,7 @@ step.util = {
                       (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                       'data-item-type="' + entry.itemType + '" ' +
                       'data-select-id="' + util.safeEscapeQuote(shortInitialsOfTranslation) + '">' + shortInitialsOfTranslation;  // added so it does not crash at startup
-
 					result = result + "</div>";
-
                     return result;
                 case GREEK:
                 case HEBREW:
