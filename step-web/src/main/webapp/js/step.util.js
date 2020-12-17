@@ -783,15 +783,12 @@ step.util = {
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
-                case REFERENCE:   // PT: This probably can be deleted but leaving it here just in case
-                    console.log("reached code which should not be used?  loc 3");
+                case REFERENCE:
                     return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.osisID) + '">' +
                         entry.item.shortName + '</div>';
-
-                case VERSION:   // PT: This probably can be deleted but leaving it here just in case
-                    console.log("reached code which should not be used?  loc 4");
+                case VERSION:
                     // I have seen the code crashed at this point when entry.item.shortInitials is not defined.  It might be caused by an old installation of the Bible modules.
                     // I added the following code to reduce the chance of crash.
 					var shortInitialsOfTranslation = ''; // added so it does not crash at startup
@@ -1357,10 +1354,8 @@ step.util = {
             element.parentNode.removeChild(element);
         }
         bookSelectDiv.appendTo("body");
-        if ($.getUrlVars().indexOf("debug") == -1) {
-            $.ajaxSetup({ cache: true }); // PT is this needed?
-        }
-        $('#bookSelectionModal').modal('show').find('.modal-content').load('/passage_selection.html');
+        //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
+        $('#bookSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
     },
     startPickBible: function () {
         require(["menu_extras"], function () {
