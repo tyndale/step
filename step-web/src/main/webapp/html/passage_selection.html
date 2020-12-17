@@ -95,7 +95,7 @@
 		}
 	}
 	function buildBookTable(data) {
-		//var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
+		var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
 		var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
 		var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
             ["Gen",50],
@@ -190,6 +190,7 @@
         else {
             end = data.length;
         }
+		var additionalBooks = false;
 		for (var i = start; i < end; i++) {
 		    var currentOsisID; var shortNameToDisplay; var longNameToDisplay; var numOfChapters; var jSwordName;
 		    if (typlicalBooksChapters) {
@@ -204,7 +205,13 @@
                 longNameToDisplay = data[i].suggestion.fullName;
                 shortNameToDisplay = (userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replaceAll(" ", "").substr(0, 6);
             }
+            var newTestament; var oldTestment = false;
             newTestament = (nt.indexOf(currentOsisID) > -1);
+            if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
+            if (!newTestament && !oldTestament) {
+                shortNameToDisplay += " *";
+                additionalBooks = true;
+            }
 			if ((newTestament) && (notSeenNT)) {
 				notSeenNT = false;
 				counter = 0; // reset counter for NT table
@@ -222,6 +229,7 @@
 			}
 		}
 		tableHTML += '</tr></table>';
+		if (additionalBooks) tableHTML += "<p>* Deuterocanonical or other books</p>";
 		if (notSeenNT) $('#ot_table').append(tableHTML);
 		else $('#nt_table').append(tableHTML);
 	}
