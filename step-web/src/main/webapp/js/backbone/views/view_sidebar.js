@@ -225,7 +225,7 @@ var SidebarView = Backbone.View.extend({
 			$('#lexiconModal').modal('show');
 		}
     },
-    _closeLexiconModal() {
+    _closeLexiconModal: function() {
         var element = document.getElementById('lexiconModal');
         if (element) {
 			$('#lexiconModal').modal('hide');
