@@ -209,7 +209,7 @@
             newTestament = (nt.indexOf(currentOsisID) > -1);
             if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
             if (!newTestament && !oldTestament) {
-                shortNameToDisplay += " *";
+                shortNameToDisplay += '<span style="color:brown">*</span>';
                 additionalBooks = true;
             }
 			if ((newTestament) && (notSeenNT)) {
@@ -229,7 +229,7 @@
 			}
 		}
 		tableHTML += '</tr></table>';
-		if (additionalBooks) tableHTML += "<p>* Deuterocanonical or other books</p>";
+		if (additionalBooks) tableHTML += "<p style="color:brown">* Deuterocanonical or other books</p>";
 		if (notSeenNT) $('#ot_table').append(tableHTML);
 		else $('#nt_table').append(tableHTML);
 	}
