@@ -441,6 +441,7 @@ var PassageDisplayView = DisplayView.extend({
                         },
                         events: {
                             render: function (event, api) {
+                            	$(api.elements.titlebar).css("padding-right", "0px");
                                 $(api.elements.titlebar).prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
                                         .on('click touchstart', function() {
                                             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
