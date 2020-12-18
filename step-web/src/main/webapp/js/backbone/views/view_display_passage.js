@@ -442,9 +442,9 @@ var PassageDisplayView = DisplayView.extend({
                         events: {
                             render: function (event, api) {
                                 $(api.elements.titlebar).css("padding-right", "0px");
-								$(api.elements.titlebar).css("height", "40px");
+								$(api.elements.titlebar).css("height", "48px");
                                 $(api.elements.titlebar)
-                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn" style="font-size:20"></span>')
+                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn" style="font-size:24;paddingTop:5px"></span>')
                                         .click(function () {
                                             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
                                         })).prepend($('<button type="button" class="close" style="font-size:40px;height:40px;width:40px" aria-hidden="true">&times;</button>').click(function () {
