@@ -448,7 +448,7 @@ var PassageDisplayView = DisplayView.extend({
                                     .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn" style="font-size:24;padding-top:8px"></span>')
                                         .click(function () {
                                             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
-                                        })).prepend($('<button type="button" class="close" style="font-size:48x;height:48px;width:48px" aria-hidden="true">&times;</button>').click(function () {
+                                        })).prepend($('<button type="button" class="close" style="height:48px;width:48px;font-size:48x!important;" aria-hidden="true">&nbsp;&times;&nbsp;</button>').click(function () {
                                         api.hide();
                                     }));
                             },
