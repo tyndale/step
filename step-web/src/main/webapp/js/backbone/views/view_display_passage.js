@@ -440,17 +440,28 @@ var PassageDisplayView = DisplayView.extend({
                             title: { text: xref, button: false }
                         },
                         events: {
-                            render: function (event, api) {
-                                $(api.elements.titlebar).css("padding-right", "0px");
+                    render: function (event, api) {
+                        var closeText = "X";
+                        var style1 = "";
+                        var style2 = "";
+                        if ($(window).width() < 1130) {
+                            closeText = "Close";
+                            style1 = 'style="font-size:24px"';
+                            style2 = 'style="height:24px;width:60px;"';
+                        }
+                        $(api.elements.titlebar).css("padding-right", "0px");
 								$(api.elements.titlebar).css("height", "48px");
 								$(api.elements.titlebar).css("font-size", "18px");
                                 $(api.elements.titlebar)
-                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn" style="font-size:24;padding-top:8px"></span>')
+                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn" ' + style1 + '></span>')
                                         .click(function () {
                                             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
-                                        })).prepend($('<button type="button" class="close" style="height:48px;width:48px;font-size:48x!important;" aria-hidden="true">&nbsp;&times;&nbsp;</button>').click(function () {
-                                        api.hide();
-                                    }));
+                                        }));
+                                $(api.elements.titlebar)
+                                    .prepend($('<button type="button" class="close" aria-hidden="true" ' + style2 + '>' + closeText + '</button>')
+                                        .click(function () {
+                                            api.hide();
+                                        }));
                             },
                             visible: function (event, api) {
                                 var tooltip = api.elements.tooltip;

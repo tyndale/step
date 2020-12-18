@@ -948,7 +948,7 @@ step.util = {
                 }
 
                 //need to initialise sidebar, which will open it.
-                if (!step.sidebar) {
+                if ((!step.sidebar) || ($(window).width() < 1130)) {
                     step.sidebar = {};
                     step.sidebar = new SidebarModel({
                         strong: data.strong,

@@ -565,10 +565,10 @@ var SidebarView = Backbone.View.extend({
         }
     },
     openSidebar: function () {
-        if ($(window).width() >= 1130) {
+        //if ($(window).width() >= 1130) {
             this.sidebarButtonIcon.addClass("active");
             this.$el.closest('.row-offcanvas').addClass("active");
-        }
+        //}
     },
     closeSidebar: function () {
         this.sidebarButtonIcon.removeClass("active");
