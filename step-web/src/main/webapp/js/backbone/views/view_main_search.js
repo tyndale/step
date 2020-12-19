@@ -95,6 +95,10 @@ var MainSearchView = Backbone.View.extend({
                 url: function (term, page) {
                     var lang = step.state.language();
 					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().startsWith("zh")))) {
+						if (!step.util.showClassicalButtons) {
+							//alert('Searches often require the classical buttons, we are turning them on.');
+							step.util.showClassicalButtons = true;
+						}
 						var url = SEARCH_AUTO_SUGGESTIONS + term;
 						var contextArgs = "";
 						if (self.specificContext.length != 0) {
