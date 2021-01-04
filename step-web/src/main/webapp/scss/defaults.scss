@@ -66,6 +66,10 @@ ul .glyphicon-ok {
   transition: background-color 200ms;
 }
 
+.btn > label {
+  margin: 0;
+}
+
 .btn-default {
   background-image: none;
   background-color: #f3f3f3;
