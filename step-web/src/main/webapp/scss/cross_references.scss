@@ -4,7 +4,7 @@
   font-size: 13px;
   line-height:18px;
   overflow: hidden;
-  max-width: 360px;
+  width: 280px;
 }
 
 .qtip-titlebar {
@@ -13,8 +13,9 @@
   .close {
     color: white;
     opacity: 1;
-    line-height: 12px;
-    margin: 0 5px;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 0 8px 0 5px;
   }
 
   button, .glyphicon {
