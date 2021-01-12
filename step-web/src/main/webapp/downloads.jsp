@@ -114,7 +114,7 @@
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.exe" data-os="windows">Asia Pacific</a>
                     </p>
                 </td>
-                <td WIDTH="33%"><img src="images/apple_zh.png"/><br />
+                <td WIDTH="33%"><img src="images/apple_zh.jpg"/><br />
                     <fmt:message key="download_macos_zh"/>&reg;
                     <br />
                     <p>Download from a server at:
@@ -123,7 +123,7 @@
                     <a href="https://stepbible-ap.s3-ap-southeast-1.amazonaws.com/STEP_zh.dmg" data-os="mac">Asia Pacific</a>
                     </p>
                 </td>
-                <td WIDTH="33%"><img src="images/linux_zh.png"/><br />
+                <td WIDTH="33%"><img src="images/linux_zh.jpg"/><br />
                     <fmt:message key="download_linux_zh"/>&reg;
                     <br />
                     <p>Download DEB installation file from:
