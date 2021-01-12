@@ -5,6 +5,10 @@
   line-height:18px;
   overflow: hidden;
   max-width: 360px;
+
+  &.xrefPopup {
+    width: 280px;
+  }
 }
 
 .qtip-titlebar {
