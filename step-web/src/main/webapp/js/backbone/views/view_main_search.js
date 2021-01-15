@@ -7,6 +7,7 @@ var MainSearchView = Backbone.View.extend({
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
+    previousReference: "",
     initialize: function () {
         var self = this;
         this.ignoreOpeningEvent = false;
@@ -95,10 +96,10 @@ var MainSearchView = Backbone.View.extend({
                 url: function (term, page) {
                     var lang = step.state.language();
 					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().startsWith("zh")))) {
-						if (!step.util.showClassicalButtons) {
+						//if (!step.util.showClassicalButtons) {
 							//alert('Searches often require the classical buttons, we are turning them on.');
-							step.util.showClassicalButtons = true;
-						}
+						//	step.util.showClassicalButtons = true;
+						//}
 						var url = SEARCH_AUTO_SUGGESTIONS + term;
 						var contextArgs = "";
 						if (self.specificContext.length != 0) {
@@ -544,8 +545,10 @@ var MainSearchView = Backbone.View.extend({
         var options = this.masterSearch.select2("data");
         this._trackSearch(options);
         var args = "";
+        var refArgs = "";
+        var searchFound = false;
         for (var ii = 0; ii < options.length; ii++) {
-            if (args.length != 0) {
+            if ((args.length != 0) && (options[ii].itemType !== REFERENCE)) {
                 args += "|";
             }
 
@@ -555,19 +558,27 @@ var MainSearchView = Backbone.View.extend({
                     args += encodeURIComponent(options[ii].item.shortInitials);
                     break;
                 case REFERENCE:
-                    args += options[ii].itemType + "=";
-                    args += encodeURIComponent(options[ii].item.osisID);
+                    //args += options[ii].itemType + "=";
+                    if (refArgs.length != 0) {
+                        refArgs += "|";
+                    }
+                    refArgs += options[ii].itemType + "=";
+                    //args += encodeURIComponent(options[ii].item.osisID);
+                    refArgs += encodeURIComponent(options[ii].item.osisID);
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
                 case HEBREW:
                 case HEBREW_MEANINGS:
+                    searchFound = true;
                     args += STRONG_NUMBER + "=" + encodeURIComponent(options[ii].item.strongNumber);
                     break;
                 case MEANINGS:
+                    searchFound = true;
                     args += MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
                     break;
                 case SUBJECT_SEARCH:
+                    searchFound = true;
                     var lastSelection = step.util.activePassage().get("subjectSearchType");
                     var selectedSubjectSearchType = "";
                     var previouslySelectedIndex = options[ii].item.searchTypes.indexOf(lastSelection);
@@ -597,15 +608,19 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 case TOPIC_BY_REF:
                 case RELATED_VERSES:
+                    searchFound = true;
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case SYNTAX:
+                    searchFound = true;
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TEXT_SEARCH:
+                    searchFound = true;
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case EXACT_FORM:
+                    searchFound = true;
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 default:
@@ -616,6 +631,11 @@ var MainSearchView = Backbone.View.extend({
 
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
+        if ((refArgs.length > 0) &&
+            (    (!searchFound) ||
+                 ((this.previousReference !== "") && (this.previousReference !== refArgs)) ) )
+               args += '|' + refArgs;
+        this.previousReference = refArgs;
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
     },
