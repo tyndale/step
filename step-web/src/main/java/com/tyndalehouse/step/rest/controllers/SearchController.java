@@ -86,6 +86,20 @@ public class SearchController {
      * @return
      */
     public List<AutoSuggestion> suggest(String input, final String context) {
+        /* Patrick added and commented out this code because it is probably not needed.  The fix is in StringConversionUtils.java.
+        if (input.length() > 33) {
+            int posOfChar = input.indexOf(' ');
+            if ((posOfChar == -1) || (posOfChar > 32)) {
+                posOfChar = input.indexOf('.');
+                if ((posOfChar == -1) || (posOfChar > 32)) {
+                    posOfChar = input.indexOf(':');
+                    if ((posOfChar == -1) || (posOfChar > 32)) {
+                        posOfChar = input.indexOf(';');
+                        if ((posOfChar == -1) || (posOfChar > 32)) input = input.substring(0, 33);
+                    }
+                }
+            }
+        } */
         return suggest(input, context, null);
     }
 

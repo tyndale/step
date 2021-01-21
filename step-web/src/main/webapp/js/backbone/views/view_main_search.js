@@ -8,6 +8,7 @@ var MainSearchView = Backbone.View.extend({
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
     previousReference: "",
+    previousSearch: "",
     initialize: function () {
         var self = this;
         this.ignoreOpeningEvent = false;
@@ -546,39 +547,27 @@ var MainSearchView = Backbone.View.extend({
         this._trackSearch(options);
         var args = "";
         var refArgs = "";
+        var searchArgs = "";
         var searchFound = false;
         for (var ii = 0; ii < options.length; ii++) {
-            if ((args.length != 0) && (options[ii].itemType !== REFERENCE)) {
-                args += "|";
-            }
-
-            switch (options[ii].itemType) {
+              switch (options[ii].itemType) {
                 case VERSION:
-                    args += options[ii].itemType + "=";
+                    args += "|" + options[ii].itemType + "=";
                     args += encodeURIComponent(options[ii].item.shortInitials);
                     break;
                 case REFERENCE:
-                    //args += options[ii].itemType + "=";
-                    if (refArgs.length != 0) {
-                        refArgs += "|";
-                    }
-                    refArgs += options[ii].itemType + "=";
-                    //args += encodeURIComponent(options[ii].item.osisID);
-                    refArgs += encodeURIComponent(options[ii].item.osisID);
+                    refArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.osisID);
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
                 case HEBREW:
                 case HEBREW_MEANINGS:
-                    searchFound = true;
-                    args += STRONG_NUMBER + "=" + encodeURIComponent(options[ii].item.strongNumber);
+                    searchArgs += "|" + STRONG_NUMBER + "=" + encodeURIComponent(options[ii].item.strongNumber);
                     break;
                 case MEANINGS:
-                    searchFound = true;
-                    args += MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
+                    searchArgs += "|" + MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
                     break;
                 case SUBJECT_SEARCH:
-                    searchFound = true;
                     var lastSelection = step.util.activePassage().get("subjectSearchType");
                     var selectedSubjectSearchType = "";
                     var previouslySelectedIndex = options[ii].item.searchTypes.indexOf(lastSelection);
@@ -593,49 +582,60 @@ var MainSearchView = Backbone.View.extend({
 
                     switch (selectedSubjectSearchType) {
                         case "SUBJECT_SIMPLE":
-                            args += SUBJECT_SEARCH;
+                            searchArgs += "|" + SUBJECT_SEARCH;
                             break;
                         case "SUBJECT_EXTENDED":
-                            args += NAVE_SEARCH;
+                            searchArgs += "|" + NAVE_SEARCH;
                             break;
                         case "SUBJECT_FULL":
-                            args += NAVE_SEARCH_EXTENDED;
+                            searchArgs += "|" + NAVE_SEARCH_EXTENDED;
                             break;
-                        default:
-                            args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                        default: // The following line probably should not have "+ encodeURIComponent(options[ii].item)" because it is repeated two lines later
+                            searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+							console.log("Check view_main_search.js line 603 " + options[ii].itemType + "=" + encodeURIComponent(options[ii].item));
                     }
-                    args += "=" + encodeURIComponent(options[ii].item.value);
+                    searchArgs += "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TOPIC_BY_REF:
                 case RELATED_VERSES:
-                    searchFound = true;
-                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case SYNTAX:
-                    searchFound = true;
-                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
+                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TEXT_SEARCH:
-                    searchFound = true;
-                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case EXACT_FORM:
-                    searchFound = true;
-                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    searchArgs += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 default:
-                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                    args += "|" + options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                    console.log("default search: " + options[ii].itemType + "=" + encodeURIComponent(options[ii].item));
                     break;
             }
         }
 
         //reset defaults:
         step.util.activePassage().save({pageNumber: 1, filter: null, strongHighlights: null}, {silent: true});
-        if ((refArgs.length > 0) &&
-            (    (!searchFound) ||
-                 ((this.previousReference !== "") && (this.previousReference !== refArgs)) ) )
-               args += '|' + refArgs;
+		args = args.replace(/^\|/g, '');
+		searchArgs = searchArgs.replace(/^\|/g, '');
+		refArgs = refArgs.replace(/^\|/g, '');
+		if (searchArgs.length > 0) {
+			args += (args.length > 0) ? "|" : "";
+			args += searchArgs;
+		}
+        if (refArgs.length > 0) {
+			var addRefs = true;
+			if (searchArgs.length > 0) {
+				if (this.previousSearch === "") addRefs = false; // New 1st search
+//				else if ((this.previousSearch === searchArgs) && (this.previousReference !== refArgs)) addRefs = true;
+//				else if ((this.previousSearch !== searchArgs) && (this.previousReference === refArgs)) addRefs = false;
+			}
+			if (addRefs) args += '|' + refArgs;
+		}
         this.previousReference = refArgs;
+        this.previousSearch = searchArgs;
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
     },

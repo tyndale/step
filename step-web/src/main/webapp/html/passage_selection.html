@@ -13,6 +13,8 @@
     var version = "ESV_th";
     var userLang = "en";
     var addInsteadOfReplace = false;
+	var lastInput = "";
+	var lastInputChecked = "";
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
         var html = _buildBookHeaderAndSkeleton();
@@ -270,23 +272,34 @@
         }
     }
 
-	function _handleEnteredPassage() {
+	function _handleEnteredPassage(verifyOnly) {
 		var userInput = $('textarea#enterYourPassage').val();
-		userInput.replace(/[\n\r]/g, ',').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',');
-        var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
-        $.getJSON(url, function (data) {
+		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',');
+		lastInput = userInput;
+		if (verifyOnly) {
+			var pos = userInput.lastIndexOf(",");
+			if (pos > -1) userInput = userInput.substring(pos + 1);
+		}
+		userInput = userInput.replace(/^\s+/g, '');
+		lastInputChecked = userInput;
+		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
+		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {
 					console.log(data);
 					$('#userEnterPassageError').text("Program error: 1st element not false");
 				}
-				else goToPassage(data[0].suggestion.osisID);
+				else if (!verifyOnly) goToPassage(data[0].suggestion.osisID);
 			}
 			else {
-				$('#userEnterPassageError').text("No match, please update the passage you entered.");
+				var errorText = (lastInputChecked != "") ? errorText = ' for "' + lastInputChecked + '"' : "";
+				$('#userEnterPassageError').text("No match" + errorText + ", please update the passage you entered.");
+				$('textarea#enterYourPassage').focus();
+				$('textarea#enterYourPassage').val(lastInput);
 			}
-        });
+		});
 	}
+
 	function _userEnterPassage() {
 		$('#keyboardEntry').hide();
 		var html = '<h4>Type in your passage</h4>' +
@@ -304,12 +317,26 @@
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
 			'<p>Enter passage(s):</p>' +
-			'<textarea id="enterYourPassage" rows="4" cols="50"></textarea>' +
+			'<textarea id="enterYourPassage" rows="1" cols="75" style="font-size:16px"></textarea>' + // size 16px so the mobile devices will not expand
 			'<br><br>' +
-			'<button type="button" onclick=_handleEnteredPassage()>Go to passage</button>&nbsp;' +
+			'<button type="button" onclick=_handleEnteredPassage(false)>Go to passage</button>&nbsp;' +
 			'<span id="userEnterPassageError" style="color: red;"></span>';
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append(html);
+		$(function(){
+			$("#bookchaptermodalbody").keypress(function(e){
+				var code = (e.keyCode ? e.keyCode : e.which);
+				if (code == 13) _handleEnteredPassage(false);
+				else if (code == 44) _handleEnteredPassage(true);
+			});
+		});
+		$(function(){
+			$("#bookchaptermodalbody").keyup(function(e){
+				var code = (e.keyCode ? e.keyCode : e.which);
+				if ((code == 8) || (code == 46)) $('#userEnterPassageError').text("");
+			});
+		});
+		$('textarea#enterYourPassage').focus();
 	}
 
     function _buildChapterTable(data, bookOsisID, numOfChapters) {
