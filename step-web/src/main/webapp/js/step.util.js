@@ -703,6 +703,14 @@ step.util = {
                     (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) // VERSION and REFERENCE buttons are already created a few lines above.
                     container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
             }
+
+//            container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
+//                'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+//                '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
+//			container.append('<span class="findButton" ' +
+//								'onclick="step.util.searchSelectionModal()">' +
+//								'<i class="find glyphicon glyphicon-search"></i>' +
+//								'</span>');
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {
@@ -1346,16 +1354,23 @@ step.util = {
         }
     },
     passageSelectionModal: function () {
-        var bookSelectDiv = $('<div id="bookSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">');
-        if (document.getElementById("bookSelectionModal")) {
-            var element = document.getElementById('bookSelectionModal');
-            element.parentNode.removeChild(element);
-        }
-        bookSelectDiv.appendTo("body");
+		var element = document.getElementById('passageSelectionModal');
+        if (element) element.parentNode.removeChild(element);
+        passageSelectDiv.appendTo("body");
         //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
-        $('#bookSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+        $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+    },
+	searchSelectionModal: function () {
+        var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">');
+        var element = document.getElementById('searchSelectionModal');
+        if (element) element.parentNode.removeChild(element);
+        searchSelectDiv.appendTo("body");
+        $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/selection_selection.html');
     },
     startPickBible: function () {
         require(["menu_extras"], function () {

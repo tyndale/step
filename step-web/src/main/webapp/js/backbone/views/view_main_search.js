@@ -7,8 +7,6 @@ var MainSearchView = Backbone.View.extend({
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
-    previousReference: "",
-    previousSearch: "",
     initialize: function () {
         var self = this;
         this.ignoreOpeningEvent = false;
@@ -628,14 +626,14 @@ var MainSearchView = Backbone.View.extend({
         if (refArgs.length > 0) {
 			var addRefs = true;
 			if (searchArgs.length > 0) {
-				if (this.previousSearch === "") addRefs = false; // New 1st search
+				if (step.previousUserSearch === "") addRefs = false; // New 1st search
 //				else if ((this.previousSearch === searchArgs) && (this.previousReference !== refArgs)) addRefs = true;
 //				else if ((this.previousSearch !== searchArgs) && (this.previousReference === refArgs)) addRefs = false;
 			}
 			if (addRefs) args += '|' + refArgs;
 		}
-        this.previousReference = refArgs;
-        this.previousSearch = searchArgs;
+        //this.previousReference = refArgs;
+        step.previousUserSearch = searchArgs;
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
     },

@@ -392,6 +392,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
     step.userLanguage = "${ languageName }";
     step.userLanguageCode = "${ languageCode }";
     step.userCountryCode = "<%=userCountry%>";
+	step.previousUserSearch = "";
 </script>
 <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="/libs/bootstrap.min.js" type="text/javascript"></script>

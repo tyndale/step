@@ -256,7 +256,6 @@
         var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
-		step.previousUserSearch = "";
         step.router.navigateSearch(url);
     }
 
@@ -318,7 +317,7 @@
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
 			'<p>Enter passage(s):</p>' +
-			'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>' + // size 16px so the mobile devices will not expand
+			'<textarea id="enterYourPassage" rows="1" cols="75" style="font-size:16px"></textarea>' + // size 16px so the mobile devices will not expand
 			'<br><br>' +
 			'<button type="button" onclick=_handleEnteredPassage(false)>Go to passage</button>&nbsp;' +
 			'<span id="userEnterPassageError" style="color: red;"></span>';
@@ -329,7 +328,10 @@
 				var code = (e.keyCode ? e.keyCode : e.which);
 				if (code == 13) _handleEnteredPassage(false);
 				else if (code == 44) _handleEnteredPassage(true);
-			}).keyup(function(e){
+			});
+		});
+		$(function(){
+			$("#bookchaptermodalbody").keyup(function(e){
 				var code = (e.keyCode ? e.keyCode : e.which);
 				if ((code == 8) || (code == 46)) $('#userEnterPassageError').text("");
 			});
@@ -387,12 +389,12 @@
     }
 
     function closeChapterSelect() {
-        $('#passageSelectionModal').modal('hide');
-        $('#passageSelectionModal').modal({
+        $('#bookSelectionModal').modal('hide');
+        $('#bookSelectionModal').modal({
             show: false
         });
-        var element = document.getElementById('passageSelectionModal');
-        if (element) element.parentNode.removeChild(element);
+        var element = document.getElementById('bookSelectionModal');
+        element.parentNode.removeChild(element);
     }
 
 </script>

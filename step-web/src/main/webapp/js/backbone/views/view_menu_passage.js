@@ -633,6 +633,7 @@ var PassageMenuView = Backbone.View.extend({
         this.goToSiblingChapter(this.model.get("nextChapter"), ev);
     },
     goToSiblingChapter: function (key, ev) {
+		step.previousUserSearch = "";
         if (ev) {
             ev.preventDefault();
         }
