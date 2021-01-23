@@ -114,7 +114,6 @@ var StepRouter = Backbone.Router.extend({
         } else {
             this.navigate(urlStub, historyOptions);
         }
-		debugger;
     },
     getShareableColumnUrl: function (passageId) {
         var shareableUrl = "http://" + step.state.getDomain() + "/";
