@@ -623,17 +623,20 @@ var MainSearchView = Backbone.View.extend({
 			args += (args.length > 0) ? "|" : "";
 			args += searchArgs;
 		}
+		var curPassageID = step.util.activePassageId();
         if (refArgs.length > 0) {
 			var addRefs = true;
 			if (searchArgs.length > 0) {
-				if (step.previousUserSearch === "") addRefs = false; // New 1st search
+				if ( ((curPassageID > -1) && (curPassageID < step.previousUserSearch.length)) &&
+					 (step.previousUserSearch[curPassageID] === "") ) addRefs = false; // New 1st search
+				if (refArgs.toLowerCase === "reference=gen.1") addRefs = false; 
 //				else if ((this.previousSearch === searchArgs) && (this.previousReference !== refArgs)) addRefs = true;
 //				else if ((this.previousSearch !== searchArgs) && (this.previousReference === refArgs)) addRefs = false;
 			}
 			if (addRefs) args += '|' + refArgs;
 		}
         //this.previousReference = refArgs;
-        step.previousUserSearch = searchArgs;
+        step.previousUserSearch[curPassageID] = searchArgs;
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
     },

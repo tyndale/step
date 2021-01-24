@@ -256,7 +256,8 @@
         var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
-		step.previousUserSearch = "";
+		var curPassageID = step.util.activePassageId();
+		if ((curPassageID > -1) && (curPassageID < step.previousUserSearch.length)) step.previousUserSearch[curPassageID] = "";
         step.router.navigateSearch(url);
     }
 
