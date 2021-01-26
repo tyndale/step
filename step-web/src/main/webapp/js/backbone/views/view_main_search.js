@@ -625,17 +625,12 @@ var MainSearchView = Backbone.View.extend({
 		}
 		var curPassageID = step.util.activePassageId();
         if (refArgs.length > 0) {
-			var addRefs = true;
-			if (searchArgs.length > 0) {
-				if ( ((curPassageID > -1) && (curPassageID < step.previousUserSearch.length)) &&
-					 (step.previousUserSearch[curPassageID] === "") ) addRefs = false; // New 1st search
-				if (refArgs.toLowerCase === "reference=gen.1") addRefs = false; 
-//				else if ((this.previousSearch === searchArgs) && (this.previousReference !== refArgs)) addRefs = true;
-//				else if ((this.previousSearch !== searchArgs) && (this.previousReference === refArgs)) addRefs = false;
-			}
-			if (addRefs) args += '|' + refArgs;
+			if (!( (searchArgs.length > 0) && // There must be a search
+				 ( ((typeof step.previousUserSearch[curPassageID] === "undefined") || (step.previousUserSearch[curPassageID] === "")) || // undefined when the user first land on the Gen 1 page.  Blank if the last user action was to change passage.
+				    (refArgs.toLowerCase === "reference=gen.1") // If it is gen.1, all the gen.1 results will show first 
+				 ) 
+			   )) args += '|' + refArgs;
 		}
-        //this.previousReference = refArgs;
         step.previousUserSearch[curPassageID] = searchArgs;
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
@@ -662,19 +657,18 @@ var MainSearchView = Backbone.View.extend({
         else if (limit == VERSION) {
             staticResources = this._getData(limit, term);
         }
-// Dec 2020.  David requested to put the references at the end.
-//        //find last version and re-order that section
-//        var i = 0;
-//        for (i = 0; i < results.length; i++) {
-//            if (results[i].itemType != REFERENCE) {
-//                break;
-//            }
-//        }
 
-//        var firstPart = results.slice(0, i);
-//        var secondPart = results.slice(i);
-//        return firstPart.concat(staticResources).concat(secondPart);
-		return results.concat(staticResources);
+        //find last version and re-order that section
+        var i = 0;
+        for (i = 0; i < results.length; i++) {
+            if (results[i].itemType != REFERENCE) {
+                break;
+            }
+        }
+
+        var firstPart = results.slice(0, i);
+        var secondPart = results.slice(i);
+        return firstPart.concat(staticResources).concat(secondPart);
     },
     _getData: function (limit, term) {
         return this.filterLocalData(limit, term);
