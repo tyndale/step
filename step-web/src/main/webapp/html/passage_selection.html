@@ -42,7 +42,7 @@
             buildBookTable(translationType);
         }
         else {
-            var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/examples%3Dreference%7Climit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
+            var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
             $.getJSON(url, function (data) {
                 buildBookTable(data);
             });
@@ -253,7 +253,7 @@
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
-        var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
+        var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
 		step.previousUserSearch[step.util.activePassageId()] = "";
@@ -261,7 +261,7 @@
     }
 
     function getChapters(bookOsisID, version, userLang, numOfChapters) {
-        var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3Dreference%7Cversion%3D" + version + "%7Creference%3D" + bookOsisID + "%7C?lang=" + userLang;
+        var url = SEARCH_AUTO_SUGGESTIONS + bookOsisID + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C" + REFERENCE + "%3D" + bookOsisID + "%7C?lang=" + userLang;
         console.log('num of chapters: ' + numOfChapters);
         if (numOfChapters > 0) {
             _buildChapterTable(null, bookOsisID, numOfChapters);
@@ -283,7 +283,8 @@
 		}
 		userInput = userInput.replace(/^\s+/g, '');
 		lastInputChecked = userInput;
-		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3Dreference%7Cversion%3D" + version + "%7C?lang=" + userLang;
+		
+		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
 		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {

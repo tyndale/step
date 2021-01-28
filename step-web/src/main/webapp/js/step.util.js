@@ -698,19 +698,14 @@ step.util = {
             container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
                 'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
+            container.append('<button type="button" onclick="step.util.searchSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
+                'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                '<span>Search &nbsp;</span><i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
             for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
                     (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) // VERSION and REFERENCE buttons are already created a few lines above.
                     container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
             }
-
-//            container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
-//                'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-//                '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
-//			container.append('<span class="findButton" ' +
-//								'onclick="step.util.searchSelectionModal()">' +
-//								'<i class="find glyphicon glyphicon-search"></i>' +
-//								'</span>');
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {
@@ -1370,7 +1365,7 @@ step.util = {
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
         searchSelectDiv.appendTo("body");
-        $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/selection_selection.html');
+        $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },
     startPickBible: function () {
         require(["menu_extras"], function () {

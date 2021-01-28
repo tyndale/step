@@ -69,7 +69,7 @@
 
         <p><fmt:message key="download_intro"/></p>
 
-        <table  border="1" style="width: 100%; max-width: 800px;">
+        <table border="1" style="width: 100%; max-width: 800px;">
             <tr VALIGN="TOP">
                 <td WIDTH="33%"><img src="images/WindowsCyan_Web.jpg"/><br />
                     <fmt:message key="download_windows_edition"/>&reg;
