@@ -45,7 +45,8 @@ var StepRouter = Backbone.Router.extend({
         }
         this.navigateSearch(extra);
     },
-    navigateSearch: function (args, historyOptions) {
+    navigateSearch: function (args, skipQFilter) { // historyOptions) { -- PT: I don't think history Options is used.
+		var historyOptions;
         var activePassageId = step.util.activePassageId();
         var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
@@ -62,7 +63,7 @@ var StepRouter = Backbone.Router.extend({
         }
         var urlStub = "";
 
-        if (step.util.isBlank(args) && (!historyOptions || !historyOptions.replace)) {
+        if (step.util.isBlank(args)) { // && (!historyOptions || !historyOptions.replace)) { -- PT: I don't think history Options is used.
             var modelArgs = activePassageModel.get("args") || "";
             urlStub = this._addArg(urlStub, "q", modelArgs);
         } else {
@@ -81,7 +82,7 @@ var StepRouter = Backbone.Router.extend({
         if (context != 0) {
             urlStub = this._addArg(urlStub, "context", context);
         }
-        if (!step.util.isBlank(filter)) {
+        if (!step.util.isBlank(filter) && (!skipQFilter)) {
             urlStub = this._addArg(urlStub, "qFilter", filter);
         }
         if (!step.util.isBlank(sort)) {

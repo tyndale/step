@@ -9,9 +9,8 @@
     var version = "ESV_th";
     var userLang = "en";
     var addInsteadOfReplace = false;
+	var userInput;
 	var searchTypeCode = [TEXT_SEARCH, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, SUBJECT_SEARCH, MEANINGS];
-	var searchColorLigthen = ["9e508d", "43b29d", "43b29d", "50669e", "50669e", "68509e", "e1c752"];
-	var searchColorDarken = ["753b68", "328374", "328374", "3b4b75", "3b4b75", "4d3b75", "c2a520"];
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
         var html = _buildSearchHeaderAndSkeleton();
@@ -37,9 +36,6 @@
 
     function _buildSearchHeaderAndSkeleton() {
 		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
-		var searchColor = ["8a467b", "3b9b89", "3b9b89", "46598a", "46598a", "5b468a", "dcbd30"];
-		var searchColorLigthen = ["9e508d", "43b29d", "43b29d", "50669e", "50669e", "68509e", "e1c752"];
-		var searchColorDarken = ["753b68", "328374", "328374", "3b4b75", "3b4b75", "4d3b75", "c2a520"];
 		var searchTypeTitle = ["Search the Bible with the text you entered", "Search as a Greek word", "Search as a Hebrew word", "Search the subjects in the Bible", "Search definition of words with the text you entered"];
 		var html = '<div class="header">' +
             '<h4>Enter search word</h4>' + // should internationalize this
@@ -68,166 +64,100 @@
 			'<th scope="col">Possible search word(s)</th>' +
 			'</tr>';
 		for (var i = 0; i < typeDesc.length; i ++) {
-			html += '<tr style="height:30px;background-color:#' + searchColor[i] + ';color:#ffffff" class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '">' +
-				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '" title="' + searchTypeTitle[i] + '" style="font-size:12px; text-align: left">' + typeDesc[i] + '</td>' +
-				'<td id="searchResults' + searchTypeCode[i] + '" style="font-size:12px; text-align:left;background-color:#' + searchColorLigthen[i] + '"></td>' +
+			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '">' +
+				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '" title="' + searchTypeTitle[i] + '" style="font-size:12px;text-align:left">' + typeDesc[i] + '</td>' +
+				'<td id="searchResults' + searchTypeCode[i] + '" style="font-size:12px;text-align:left"></td>' +
 				'</tr>';
-//                '<a href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\', ' + numOfChapters + ');">' +
 		}
 		html += '</table>' +
             '</div>';
 		return html;
     }
 
-	function _handleEnteredPassage() {
-		var userInput = $('textarea#enterYourSearch').val();
+	function _handleEnteredPassage(limitType) {
+		userInput = $('textarea#enterYourSearch').val();
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',');
 		if ((userInput.length > 1) || ((userLang.toLowerCase().startsWith("zh")) && (userInput.length > 0))) {
-		//	debugger;
 			userInput = userInput.replace(/^\s+/g, '');
-			var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
+			var url;
+			if (typeof limitType === "undefined")
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
+			else url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + userLang;
 			$.getJSON(url, function (data) {
-				var searchResultsToDisplay = ["", "", "", "", "", "", ""];
+				var searchResultsToDisplay = [];
+				for (var i = 0; i < searchTypeCode.length; i++) {
+					searchResultsToDisplay.push("");
+				}
 				for (var i = 0; i < data.length; i++) {
-					var searchResultIndex = searchTypeCode.indexOf(data[i].itemType);
-					switch(data[i].itemType) {
+					var searchType = data[i].itemType;
+					var searchResultIndex = searchTypeCode.indexOf(searchType);
+					switch(searchType) {
                         case GREEK:
 						case GREEK_MEANINGS:
                         case HEBREW:
                         case HEBREW_MEANINGS:
                         case MEANINGS:
                         case SUBJECT_SEARCH:
-							if (searchResultsToDisplay[searchResultIndex].length > 0) searchResultsToDisplay[searchResultIndex] +=  ", ";
+						case TEXT_SEARCH:
+							var text2Display = "";
 							if (data[i].grouped) {
-								searchResultsToDisplay[searchResultIndex] += "More like ";
-								for (var k = 0; k < data[i].extraExamples.length; k++) {
-									if (k > 0) searchResultsToDisplay[searchResultIndex] += ", ";
-									if ((data[i].itemType === GREEK) || (data[i].itemType === HEBREW))
-										searchResultsToDisplay[searchResultIndex] += data[i].extraExamples[k].stepTransliteration;
-									else if ((data[i].itemType === GREEK_MEANINGS) || (data[i].itemType === HEBREW_MEANINGS) || (data[i].itemType === MEANINGS))
-										searchResultsToDisplay[searchResultIndex] += data[i].extraExamples[k].gloss;
-									else if (data[i].itemType === SUBJECT_SEARCH)
-										searchResultsToDisplay[searchResultIndex] += data[i].extraExamples[k].value;
+								if (typeof data[i].extraExamples !== "undefined") {
+									for (var k = 0; k < data[i].extraExamples.length; k++) {
+										if (k > 0) text2Display += ", ";
+										if ((searchType === GREEK) || (searchType === HEBREW))
+											text2Display += data[i].extraExamples[k].stepTransliteration;
+										else if ((searchType === GREEK_MEANINGS) || (searchType === HEBREW_MEANINGS) || (searchType === MEANINGS))
+											text2Display += data[i].extraExamples[k].gloss;
+										else if (searchType === SUBJECT_SEARCH)
+											text2Display += data[i].extraExamples[k].value;
+									}
+									text2Display += ", etc...";
+									searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:_handleEnteredPassage(\'' + searchType + '\')">' + text2Display + "</a>";
 								}
+								else searchResultsToDisplay[searchResultIndex] += '<br>There are ' + data[i].count + ' options. Please keep typing to see them.';
 							}
 							else {
-								if (data[i].itemType === SUBJECT_SEARCH) searchResultsToDisplay[searchResultIndex] += data[i].suggestion.value;
-								else if (data[i].itemType === MEANINGS) searchResultsToDisplay[searchResultIndex] += data[i].suggestion.gloss;
-								else searchResultsToDisplay[searchResultIndex] += data[i].suggestion.gloss + " (" + data[i].suggestion.stepTransliteration +
-									" - " + data[i].suggestion.matchingForm + ")";
+								var str2Search = "";
+								if (searchType === SUBJECT_SEARCH) {
+									text2Display = data[i].suggestion.value;
+									str2Search = text2Display;
+								}
+								else if (searchType === MEANINGS) {
+									text2Display = data[i].suggestion.gloss;
+									str2Search = text2Display;
+								}
+								else if (searchType === TEXT_SEARCH) {
+									text2Display = data[i].suggestion.text;
+									str2Search = text2Display;
+								}
+								else {
+									text2Display = data[i].suggestion.gloss + ' (' + data[i].suggestion.stepTransliteration +
+										' - ' + data[i].suggestion.matchingForm + ')';
+									str2Search = data[i].suggestion.strongNumber;
+									searchType = 'strong';
+								}
+								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:goSearch(\'' + searchType + '\',\'' + str2Search + '\')">' + text2Display + "</a>";
 							}
 							break;
-                        case TEXT_SEARCH:
-							if (searchResultsToDisplay[searchResultIndex].length > 0) searchResultsToDisplay[searchResultIndex] +=  ", ";
-							searchResultsToDisplay[searchResultIndex] += data[i].suggestion.text;
-                            break;
 						case REFERENCE:
 							break;
                         default:
-                            alert("Unknown result: " + data[i].itemType);
+                            alert("Unknown result: " + searchType);
 							console.log(data[i]);
                             break;
 					}
 				}
 				for (l = 0; l < searchResultsToDisplay.length; l++) {
-					$('#searchResults' + searchTypeCode[l]).text(searchResultsToDisplay[l]);
-					if (searchResultsToDisplay[l].length > 0) $('#searchResults' + searchTypeCode[l]).css("background-color", searchColorDarken[l]);
-					else $('#searchResults' + searchTypeCode[l]).css("background-color", searchColorLigthen[l]);
+					$('#searchResults' + searchTypeCode[l]).html(searchResultsToDisplay[l]);
 				}
 			});
 		}
 		else {
-			for (l = 0; l < searchColorLigthen.length; l++) {
+			for (l = 0; l < searchTypeCode.length; l++) {
 				$('#searchResults' + searchTypeCode[l]).text("");
-				$('#searchResults' + searchTypeCode[l]).css("background-color", searchColorLigthen[l]);
 			}
 		}
 	}
-
-	function _userEnterPassage() {
-		var html = '<h4>Type in your passage</h4>' +
-			'<div class="append">' +
-			'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-			'<div class="onoffswitch2">' +
-			'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-			'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-			'<span class="onoffswitch2-inner"></span>' +
-			'<span class="onoffswitch2-switch"></span>' +
-			'</label>' +
-			'</div>' +
-			'</div><br>' +
-			'<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
-			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
-			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
-			'<p>Enter passage(s):</p>' +
-			'<textarea id="enterYourSearch" rows="1" cols="75" style="font-size:16px"></textarea>' + // size 16px so the mobile devices will not expand
-			'<br><br>' +
-			'<span id="userEnterPassageError" style="color: red;"></span>';
-		$('#bookchaptermodalbody').empty();
-		$('#bookchaptermodalbody').append(html);
-		$(function(){
-			$("#bookchaptermodalbody").keypress(function(e){
-				//var code = (e.keyCode ? e.keyCode : e.which);
-				_handleEnteredPassage();
-			});
-		});
-		$(function(){
-			$("#bookchaptermodalbody").keyup(function(e){
-				//var code = (e.keyCode ? e.keyCode : e.which);
-				_handleEnteredPassage();
-			});
-		});
-		$('textarea#enterYourSearch').focus();
-	}
-
-    function _buildChapterTable(data, bookOsisID, numOfChapters) {
-        var html = '<h4>' + __s.chapters_in_book + '</h4>' +
-            '<table>' +
-            '<colgroup>' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '<col span="1" style="width: 10%;">' +
-            '</colgroup>' +
-            '<tr style="height:30px">';
-
-        var chapterNum = 0;
-        var osisIDLink = "";
-        if (numOfChapters > 0) {
-            for (var i = 0; i < numOfChapters; i++) {
-                chapterNum++;
-                osisIDLink = (numOfChapters === 1) ? bookOsisID : bookOsisID + '.' + chapterNum;
-                html += '<td><a href="javascript:goToPassage(\'' + osisIDLink + '\');">' + chapterNum + '</a></td>'
-                if ((chapterNum > 9) && ((chapterNum % 10) == 0)) {
-                    html += '</tr><tr style="height:30px">';
-                }
-            }
-        }
-        else {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].suggestion.sectionType == "PASSAGE") {
-                    chapterNum++;
-                    osisIDLink = data[i].suggestion.osisID;
-                    html += '<td><a href="javascript:goToPassage(\'' + osisIDLink + '\');">' + chapterNum + '</a></td>'
-                    if ((chapterNum > 9) && ((chapterNum % 10) == 0)) {
-                        html += '</tr><tr style="height:30px">';
-                    }
-                }
-            }
-        }
-        if (chapterNum === 1) goToPassage(osisIDLink); // If there is only one chapter, just go to it.
-        html +=
-            '</tr></table>' +
-            '</div>';
-        $('#bookchaptermodalbody').empty();
-        $('#bookchaptermodalbody').append(html);
-    }
 
     function closeChapterSelect() {
         $('#searchSelectionModal').modal('hide');
@@ -238,7 +168,7 @@
         element.parentNode.removeChild(element);
     }
 
-    function goToPassage(osisID) {
+    function goSearch(searchType, searchWord) {
         var activePassageData = step.util.activePassage().get("searchTokens") || [];
         var allVersions = "";
         var existingReferences = "";
@@ -248,13 +178,13 @@
                 allVersions += activePassageData[i].item.shortInitials;
             }
             else if ((addInsteadOfReplace) && (activePassageData[i].itemType == "reference")) {
-                existingReferences += "|reference=" + activePassageData[i].item.osisID;
+//                existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
-        var url = 'version=' + allVersions + existingReferences + '|reference=' + osisID;
+        var url = 'version=' + allVersions + existingReferences + '|' + searchType + '=' + searchWord;
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
-        step.router.navigateSearch(url);
+        step.router.navigateSearch(url, true);
     }
 
     function getChapters(bookOsisID, version, userLang, numOfChapters) {
