@@ -111,7 +111,7 @@ var QuickLexicon = Backbone.View.extend({
 					fontClass: step.util.ui.getFontForStrong(self.strong),
 					view: self }));
                 if (self.position > 0.66) {
-                    lexicon.css({"top": "0", "bottom": "auto"});
+                    lexicon.css({"top": "32", "bottom": "auto"});
                 }
                 self.displayQuickDef(lexicon);
             }
