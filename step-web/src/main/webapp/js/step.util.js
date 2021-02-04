@@ -700,7 +700,8 @@ step.util = {
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
             container.append('<button type="button" onclick="step.util.searchSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
                 'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-                '<span>Search &nbsp;</span><i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
+				// <span>Search &nbsp;</span> +
+                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
             for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
                     (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) // VERSION and REFERENCE buttons are already created a few lines above.
