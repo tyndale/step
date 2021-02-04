@@ -1,4 +1,5 @@
 <div class="modal-header">
+	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackTo1stPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
@@ -9,12 +10,13 @@
     var version = "ESV_th";
     var userLang = "en";
     var addInsteadOfReplace = false;
-	var userInput;
+	var searchOnASpecificType = "";
 	var searchTypeCode = [TEXT_SEARCH, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, SUBJECT_SEARCH, MEANINGS];
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
         var html = _buildSearchHeaderAndSkeleton();
         $('#bookchaptermodalbody').append(html);
+		$('#srchModalBackButton').hide();
 		$(function(){
 			$("#bookchaptermodalbody").keyup(function(e){
 				_handleEnteredPassage();
@@ -22,6 +24,12 @@
 		});
 		$('textarea#enterYourSearch').focus();
     });
+
+    function goBackTo1stPage() {
+		searchOnASpecificType = "";
+		$('#srchModalBackButton').hide();
+		_handleEnteredPassage();
+    }
 
     function addPassage() {
         if (document.getElementById('addpassageonoffswitch').checked) {
@@ -75,14 +83,18 @@
     }
 
 	function _handleEnteredPassage(limitType) {
-		userInput = $('textarea#enterYourSearch').val();
-		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',');
+		var userInput = $('textarea#enterYourSearch').val();
+		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 		if ((userInput.length > 1) || ((userLang.toLowerCase().startsWith("zh")) && (userInput.length > 0))) {
-			userInput = userInput.replace(/^\s+/g, '');
 			var url;
-			if (typeof limitType === "undefined")
+			if ((typeof limitType === "undefined") && (searchOnASpecificType == ""))
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
-			else url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + userLang;
+			else {
+				if (typeof limitType !== "undefined") searchOnASpecificType = limitType;
+				else limitType = searchOnASpecificType;
+				$('#srchModalBackButton').show();
+				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + userLang;
+			}
 			$.getJSON(url, function (data) {
 				var searchResultsToDisplay = [];
 				for (var i = 0; i < searchTypeCode.length; i++) {
@@ -149,6 +161,9 @@
 				}
 				for (l = 0; l < searchResultsToDisplay.length; l++) {
 					$('#searchResults' + searchTypeCode[l]).html(searchResultsToDisplay[l]);
+					if (typeof limitType === "undefined") $('.select-' + searchTypeCode[l]).show()
+					else if (searchResultsToDisplay[l].length > 0) $('.select-' + searchTypeCode[l]).show()
+					else $('.select-' + searchTypeCode[l]).hide()
 				}
 			});
 		}
