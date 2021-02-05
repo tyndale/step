@@ -236,8 +236,8 @@ public class SearchPageController extends HttpServlet {
             req.setAttribute("filter", results.getStrongHighlights());
             req.setAttribute("numResults", results.getTotal());
             req.setAttribute("sort", results.getOrder());
-            results.setResults(null);
             req.setAttribute("passageModel", objectMapper.get().writeValueAsString(results));
+            results.setResults(null);
             populateMetaSearch(req, results);
         }
 

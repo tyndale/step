@@ -114,12 +114,20 @@
         for (var ii = 0; ii < step.passages.length; ii++) {
             //start at 1, and go onwards from then
             var p = step.passages.at(ii);
-            p.save({
+            var firstPageResults = p.get("firstPageResults");
+            var saveData = {
                 passageId: ii + 1,
                 pageNumber: 1,
-                results: p.get("firstPageResults"),
                 linked: null
-            }, {
+            };
+
+            if (firstPageResults) {
+                saveData = _.extend(saveData, {
+                    results: firstPageResults
+                });
+            }
+
+            p.save(saveData, {
                 silent: true
             });
         }
@@ -141,7 +149,6 @@
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
                 isEnWithZhLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isEnWithZhLexicon") : false,
                 isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
-                results: null,
                 linked: null,
                 value: pageValue
             }, {silent: true});
@@ -162,7 +169,7 @@
             step.passages.add(new PassageModel({passageId: 0}));
         }
 
-        new ExamplesView({ el: $(".examplesColumn") });
+        new ExamplesView({el: $(".examplesColumn")});
 
         $("#stepDisclaimer").popover();
     }
@@ -195,19 +202,14 @@
 
         new FeedbackView();
         if (step.passages.length > 1) {
-            //delete all passages that are not passageId: 0
-            _.each(step.passages.reject(function (m) {
-                return m.get("passageId") == 0
-            }), function (m) {
-                m.destroy();
-            });
-
             //we restore previous passages
-//            new RestorePassageView({ callback: function() {
-//                registerColumnChangeEvents();
-//            }});
-//        } else {
-//            registerColumnChangeEvents();
+            new RestorePassageView({
+                callback: function () {
+                    registerColumnChangeEvents();
+                }
+            });
+        } else {
+           registerColumnChangeEvents();
         }
 
         //do cookie notification
