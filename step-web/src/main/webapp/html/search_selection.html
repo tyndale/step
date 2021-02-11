@@ -369,7 +369,6 @@
 
 	function _userClickedTestament(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
-		debugger;
 		if ($(clicked_id2).hasClass('pressedButton')) {
 			$(clicked_id2).removeClass('pressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
