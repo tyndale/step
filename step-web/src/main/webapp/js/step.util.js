@@ -685,7 +685,7 @@ step.util = {
                 }
             }
             if (allSelectedBibleVersions.length > 0)
-                container.append('<button type="button" onclick="step.util.startPickBible()" class="select-' + VERSION + ' select2-search-choice" ' +
+                container.append('<button type="button" onclick="step.util.startPickBible()" class="select-' + VERSION + '" ' +
                     'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
                     allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
             if (allSelectedReferences.length === 0) allSelectedReferences = "Select passage";
@@ -695,10 +695,10 @@ step.util = {
                 allSelectedReferences = allSelectedReferences.substr(0, lastComma) + '...';
             }
             console.log("all selected ref: " + allSelectedReferences);
-            container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
+            container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + '" ' +
                 'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
-            container.append('<button type="button" onclick="step.util.searchSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" ' +
+            container.append('<button type="button" onclick="step.util.searchSelectionModal()" ' +
                 'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
 				// <span>Search &nbsp;</span> +
                 '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
@@ -1359,10 +1359,11 @@ step.util = {
         //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
         $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
     },
-	searchSelectionModal: function () {
+	searchSelectionModal: function (searchRangeOnly) {
+		var searchRangeID = (searchRangeOnly) ? 'id="searchSelectionRangeOnly" ': '';
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content">');
+            '<div ' + searchRangeID + 'class="modal-content">');
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
         searchSelectDiv.appendTo("body");
