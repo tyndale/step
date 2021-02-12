@@ -191,7 +191,7 @@
                 $('#ot_table').append(tableHTML);
                 tableHTML = __buildBookTableHeader(columns);
             }
-            if (shortNameToDisplay === "Ps") shortNameToDisplay = "Psalm";
+			if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < 6)) shortNameToDisplay = longNameToDisplay;
             tableHTML += '<td title="' + longNameToDisplay + '">' +
                 '<a href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\', ' + numOfChapters + ');">' +
                 shortNameToDisplay + '</a></td>';
