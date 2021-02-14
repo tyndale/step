@@ -107,15 +107,29 @@
 			{groupName: 'Other NT', show: false, books: [57, 58, 59, 60, 61, 62, 63, 64, 65],
 				inCurrentTranslation: [false, false, false, false, false, false, false, false, false]}
 		];
-	 var groupsOther = [{groupName: 'Other', show: false, books: [], inCurrentTranslation: []}];
+	var groupsOther = [{groupName: 'Other', show: false, books: [], inCurrentTranslation: []}];
 
     $(document).ready(function () {
 		searchSelectionRangeOnly = ($("#searchSelectionRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
+//        if ($('.resultsLabel').text() !== "") {
+        if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
+            var activePassageData = step.util.activePassage().get("searchTokens") || [];
+            var existingReferences = "";
+            for (var i = 0; i < activePassageData.length; i++) {
+                if (activePassageData[i].itemType == "reference") {
+                    if (existingReferences !== "") existingReferences += ",";
+                    existingReferences += activePassageData[i].item.osisID.replaceAll(' ', ',');
+                }
+            }
+            if (existingReferences !== "") searchRange = existingReferences;
+        }
+
         $('#bookchaptermodalbody').append(_buildSearchHeaderAndTable());
 		$('#srchModalBackButton').hide();
 		$(function(){
-			$("#bookchaptermodalbody").keyup(function(e){
+			//$("#bookchaptermodalbody").keyup(function(e){
+			$('textarea#userTextInput').keyup(function(e){
 				_handleEnteredSearchWord();
 			});
 		});
@@ -126,6 +140,13 @@
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#bookchaptermodalbody').empty().append(_buildSearchHeaderAndTable());
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
+            $(function(){
+                //$("#bookchaptermodalbody").keyup(function(e){
+                $('textarea#userTextInput').keyup(function(e){
+                    _handleEnteredSearchWord();
+                });
+            });
+            $('textarea#userTextInput').focus();
 			_handleEnteredSearchWord(null, searchUserInput);
 		}
 		else if (searchModalCurrentPage === 2) {
@@ -150,7 +171,7 @@
 
     function _buildSearchHeaderAndTable() {
 		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
-		var searchTypeTitle = ["Search the Bible with the text you entered", "Search as a Greek word", "Search as a Hebrew word", "Search the subjects in the Bible", "Search definition of words with the text you entered"];
+		var searchTypeTitle = ["Search the Bible with the text you entered", "Search as a Greek word", "Search as a Hebrew word", "Search the subjects in the Bible", "Search definition of words with the text you entered"];        
 		var html = '<div class="header">' +
             '<h4>Enter search word</h4>' + // should internationalize this
 //            '<div class="append">' +
@@ -195,8 +216,75 @@
 		if (searchSelectionRangeOnly) $('#srchModalBackButton').hide();
 		else $('#srchModalBackButton').show();
 		_buildBookTable();
-        
+        if (searchRange !== 'Gen-Rev') {
+            var bookSelected = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,       
+                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+                                false, false, false, false, false, false];
+            var tmpSearchRange = searchRange + ',';
+            var posOfComma = tmpSearchRange.indexOf(',');
+            var curRange = tmpSearchRange.substring(0, posOfComma);
+            tmpSearchRange = tmpSearchRange.substring(posOfComma + 1);
+            while (curRange !== '') {
+                var posOfDash = curRange.indexOf('-');
+                if (posOfDash == -1) {
+                    var posOfBook = _getPosOfBookInBible(curRange);
+                    if (posOfBook > -1) bookSelected[posOfBook] = true;
+                }
+                else if (posOfDash > 1) {
+                    var firstBook = curRange.substring(0, posOfDash);
+                    var secondBook = curRange.substring(posOfDash + 1);
+                    var posOfBook1 = _getPosOfBookInBible(firstBook);
+                    var posOfBook2 = _getPosOfBookInBible(secondBook);
+                    if (posOfBook1 > -1) bookSelected[posOfBook1] = true;
+                    if (posOfBook2 > -1) {
+                        bookSelected[posOfBook2] = true;
+                        if ((posOfBook1 > -1) && (posOfBook1 < posOfBook2)) {
+                            for (var i = posOfBook1 + 1; i < posOfBook2; i ++) bookSelected[i] = true; 
+                        }
+                    }
+                }
+                var posOfComma = tmpSearchRange.indexOf(',');
+                if (posOfComma === -1) {
+                    curRange = '';
+                    tmpSearchRange = '';
+                }
+                else {
+                    curRange = tmpSearchRange.substring(0, posOfComma);
+                    tmpSearchRange = tmpSearchRange.substring(posOfComma + 1);
+                }
+            }
+            for (var i = 0; i < 2; i++) {
+                var curGroup;
+                var idPrefix;
+                if (i == 0) {
+                    curGroup = groupsOT;
+                    idPrefix = 'ot_tableg';
+                }
+                else if (i == 1) {
+                    curGroup = groupsNT;
+                    idPrefix = 'nt_tableg';
+                }
+                for (var j = 0; j < curGroup.length; j++) {
+                    for (var k = 0; k < curGroup[j].books.length; k++) {
+                        if (!(bookSelected[curGroup[j].books[k]])) {
+                            _userClickedBook(idPrefix + j + 'b' + k);
+                        }
+                    }
+                }
+            }
+
+        }
 	}
+
+    function _getPosOfBookInBible(bookName) {
+        for (var i = 0; i < osisChapterJsword.length; i ++) {
+            if ((typeof osisChapterJsword[i][2] !== "undefined") && (osisChapterJsword[i][2] === bookName)) return i;
+            else if (osisChapterJsword[i][0] === bookName) return i;
+        }
+        return -1;
+    }
 
     function _buildRangeHeaderAndSkeleton() {
 		var html = '<div class="header">' +
@@ -529,11 +617,10 @@
 
     function _buildBookTableHeader(columns, htmlID) {
 		var modalWidth = $('#' + htmlID).width();
-		var firstColumnSize = 186;
+		var firstColumnSize = 145;
         var columnSize = Math.floor((modalWidth - firstColumnSize) / columns);
 		
 		columnSize = Math.floor((modalWidth - firstColumnSize) / (columns - 1));
-		console.log('first col ' + firstColumnSize + ' other col ' + columnSize);
         html = '<table>' +
 		     '<colgroup>' +
 			 '<col span="1" style="width:' + firstColumnSize + 'px;">';

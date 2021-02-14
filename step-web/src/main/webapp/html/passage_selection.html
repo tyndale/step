@@ -267,7 +267,7 @@
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
 		step.previousUserSearch[step.util.activePassageId()] = "";
-        step.router.navigateSearch(url);
+        step.router.navigateSearch(url, true); // skip QFilter
     }
 
     function getChapters(bookOsisID, version, userLang, numOfChapters) {

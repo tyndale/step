@@ -5,10 +5,13 @@
     <parent>
         <artifactId>step-mvn</artifactId>
         <groupId>com.tyndalehouse.step</groupId>
-        <version>2.0.29a-SNAPSHOT</version>
+        <version>2.0.29-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <properties>
+        <install4j.folder>/opt/install4j6</install4j.folder>
+        <install4j.config>step.install4j</install4j.config>
+    </properties>
     <artifactId>step-assembly</artifactId>
 
     <build>
@@ -50,8 +53,8 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <installDir>/opt/install4j6</installDir>
-                            <projectFile>${project.basedir}/src/main/assembly/step.install4j</projectFile>
+                            <installDir>${install4j.folder}</installDir>
+                            <projectFile>${project.basedir}/src/main/assembly/${install4j.config}</projectFile>
                             <macKeystorePassword>password</macKeystorePassword>
                         </configuration>
                     </execution>
