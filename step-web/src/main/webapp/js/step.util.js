@@ -154,7 +154,7 @@
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
-	showClassicalButtons: false,
+	showClassicalUI: false,
     timers: {},
     unaugmentStrong : function(strong) {
         var result = (strong || "");
@@ -667,8 +667,9 @@ step.util = {
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var allSelectedBibleVersions = "";
             var allSelectedReferences = "";
+			var foundSearch = false;
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
-                if ((searchTokens[i].tokenType == VERSION) || (searchTokens[i].itemType == VERSION)) {
+                if ((searchTokens[i].tokenType === VERSION) || (searchTokens[i].itemType == VERSION)) {
                     searchTokens[i].itemType = searchTokens[i].tokenType;
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
                     if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
@@ -676,19 +677,32 @@ step.util = {
 						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
                     isMasterVersion = false;
                 }
-                else if ((searchTokens[i].tokenType == REFERENCE) || (searchTokens[i].itemType == REFERENCE)) {
+                else if ((searchTokens[i].tokenType === REFERENCE) || (searchTokens[i].itemType === REFERENCE)) {
                     searchTokens[i].itemType = searchTokens[i].tokenType;
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
                     if (allSelectedReferences.length > 0) allSelectedReferences += ", ";
                     allSelectedReferences += (searchTokens[i].item.shortName.length > 0) ?
                         step.util.safeEscapeQuote(searchTokens[i].item.shortName) : step.util.safeEscapeQuote(searchTokens[i].token);
                 }
+				else if ((searchTokens[i].tokenType === STRONG_NUMBER) || (searchTokens[i].itemType === STRONG_NUMBER) ||
+						 (searchTokens[i].tokenType === TEXT_SEARCH) || (searchTokens[i].itemType === TEXT_SEARCH) ||
+						 (searchTokens[i].tokenType === SUBJECT_SEARCH) || (searchTokens[i].itemType === SUBJECT_SEARCH) ||
+						 (searchTokens[i].tokenType === GREEK) || (searchTokens[i].itemType === GREEK) ||
+						 (searchTokens[i].tokenType === HEBREW) || (searchTokens[i].itemType === HEBREW) ||
+						 (searchTokens[i].tokenType === GREEK_MEANINGS) || (searchTokens[i].itemType === GREEK_MEANINGS) ||
+						 (searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS) ||
+						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
             }
             if (allSelectedBibleVersions.length > 0)
                 container.append('<button type="button" onclick="step.util.startPickBible()" class="select-' + VERSION + '" ' +
-                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                    'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                     allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
-            if (allSelectedReferences.length === 0) allSelectedReferences = "Select passage";
+            if (allSelectedReferences.length === 0) {
+		        if (foundSearch)
+					allSelectedReferences = "Gen-Rev";
+				else allSelectedReferences = "Select passage";
+			}
+			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
             else if (allSelectedReferences.length > 30) {
                 var lastComma = allSelectedReferences.substr(0, 28).lastIndexOf(",");
                 if (lastComma < 5) lastComma = 28;
@@ -696,11 +710,10 @@ step.util = {
             }
             console.log("all selected ref: " + allSelectedReferences);
             container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + '" ' +
-                'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
+                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
             container.append('<button type="button" onclick="step.util.searchSelectionModal()" ' +
-                'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-				// <span>Search &nbsp;</span> +
+                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
             for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
@@ -1349,18 +1362,29 @@ step.util = {
             doHighlight(nonJqElement, cssClasses, regex);
         }
     },
-    passageSelectionModal: function () {
-        var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">');
-		var element = document.getElementById('passageSelectionModal');
-        if (element) element.parentNode.removeChild(element);
-        passageSelectDiv.appendTo("body");
-        //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
-        $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+    passageSelectionModal: function (passageSelectionConfirmed) {
+        if ((!passageSelectionConfirmed) && (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")) {
+            var passageSelectConfirmDiv = $('<div id="passageSelectionConfirmModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                '<div class="modal-dialog">' +
+                '<div class="modal-content">');
+            var element = document.getElementById('passageSelectionConfirmModal');
+            if (element) element.parentNode.removeChild(element);
+            passageSelectConfirmDiv.appendTo("body");
+            $('#passageSelectionConfirmModal').modal('show').find('.modal-content').load('/html/passage_selection_confirm.html');            
+        }
+        else {
+            var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                '<div class="modal-dialog">' +
+                '<div class="modal-content">');
+            var element = document.getElementById('passageSelectionModal');
+            if (element) element.parentNode.removeChild(element);
+            passageSelectDiv.appendTo("body");
+            //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
+            $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+        }
     },
 	searchSelectionModal: function (searchRangeOnly) {
-		var searchRangeID = (searchRangeOnly) ? 'id="searchSelectionRangeOnly" ': '';
+		var searchRangeID = (searchRangeOnly) ? 'id="searchRangeOnly" ': '';
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div ' + searchRangeID + 'class="modal-content">');

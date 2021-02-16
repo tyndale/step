@@ -95,9 +95,9 @@ var MainSearchView = Backbone.View.extend({
                 url: function (term, page) {
                     var lang = step.state.language();
 					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().startsWith("zh")))) {
-						//if (!step.util.showClassicalButtons) {
+						//if (!step.util.showClassicalUI) {
 							//alert('Searches often require the classical buttons, we are turning them on.');
-						//	step.util.showClassicalButtons = true;
+						//	step.util.showClassicalUI = true;
 						//}
 						var url = SEARCH_AUTO_SUGGESTIONS + term;
 						var contextArgs = "";
@@ -257,8 +257,15 @@ var MainSearchView = Backbone.View.extend({
                 }
             }
         });
-
         var container = this.masterSearch.select2("container");
+		if (step.util.showClassicalUI) {
+			$('#s2id_masterSearch').show();
+			$('.findButton').show();
+		}
+		else {
+			$('#s2id_masterSearch').hide();
+			$('.findButton').hide();
+		}
 		if (step.state.language().startsWith("zh"))
 			container.data("select2").opts.minimumInputLength = 1; // Chinese Bible short names and search words can be 1 character 1 long
         container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
@@ -1032,15 +1039,14 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
-        if (step.util.showClassicalButtons) {
-            $('.select2-choices .select-reference').show();
-            $('.select2-choices .select-version').show();
+        if (step.util.showClassicalUI) {
+			$('#s2id_masterSearch').show();
+			$('.findButton').show();
 		}
 		else {
-            $('.select2-choices .select-reference').hide();
-            $('.select2-choices .select-version').hide();
-        }
-
+			$('#s2id_masterSearch').hide();
+			$('.findButton').hide();
+		}
         if ($(window).width() < 900) {
 			// $('.dropdown-share').hide();  PT:  We should consider hiding it.  I am not a fan of social media
 			$('.openNewPanel').hide();

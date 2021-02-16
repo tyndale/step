@@ -1,5 +1,5 @@
 var PassageMenuView = Backbone.View.extend({
-    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="bottom">' +
+    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="top">' +
         '<span class="glyphicon glyphicon-info-sign"></span>' +
         '</a>',
     events: {
@@ -17,7 +17,7 @@ var PassageMenuView = Backbone.View.extend({
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    classicalReferenceButton: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.display_classical_reference_button %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= step.util.showClassicalButtons ? "visible" : "hidden" %>;"></span></a></li>',
+    classicalReferenceButton: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.display_classical_ui %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= step.util.showClassicalUI ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -435,10 +435,16 @@ var PassageMenuView = Backbone.View.extend({
         }
 		dropdown.append($(_.template(this.classicalReferenceButton)()).click(function (e) {
 			e.stopPropagation(); //prevent the bubbling up
-			step.util.showClassicalButtons = !step.util.showClassicalButtons;  // reverse true or false
-			self._setVisible(this, step.util.showClassicalButtons);
-            if (step.util.showClassicalButtons) $('.select2-choices .select-reference').show();
-			else $('.select2-choices .select-reference').hide();
+			step.util.showClassicalUI = !step.util.showClassicalUI;  // reverse true or false
+			self._setVisible(this, step.util.showClassicalUI);
+            if (step.util.showClassicalUI) {
+				$('#s2id_masterSearch').show();
+				$('.findButton').show();
+			}
+			else {
+				$('#s2id_masterSearch').hide();
+				$('.findButton').hide();
+			}
 		}));
         var currentVerseVocabSetting = self.model.get("isVerseVocab");
         if (currentVerseVocabSetting == null) {

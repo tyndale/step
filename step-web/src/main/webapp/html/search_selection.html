@@ -1,6 +1,6 @@
 ﻿<div class="modal-header">
 	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
-	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
+	<button type="button" class="close" data-dismiss="modal" onclick=closeSearchSelect()>X</button>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
@@ -19,7 +19,7 @@
     var addInsteadOfReplace = false;
 	var searchOnSpecificType = "";
 	var searchTypeCode = [TEXT_SEARCH, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, SUBJECT_SEARCH, MEANINGS];
-	var searchSelectionRangeOnly;
+	var searchRangeOnly;
 	var searchModalCurrentPage = 1;
 	var searchUserInput = "";
     var searchRange = "Gen-Rev";
@@ -110,30 +110,31 @@
 	var groupsOther = [{groupName: 'Other', show: false, books: [], inCurrentTranslation: []}];
 
     $(document).ready(function () {
-		searchSelectionRangeOnly = ($("#searchSelectionRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
+		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
-//        if ($('.resultsLabel').text() !== "") {
         if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
             var activePassageData = step.util.activePassage().get("searchTokens") || [];
             var existingReferences = "";
             for (var i = 0; i < activePassageData.length; i++) {
-                if (activePassageData[i].itemType == "reference") {
+                if (activePassageData[i].itemType == REFERENCE) {
                     if (existingReferences !== "") existingReferences += ",";
                     existingReferences += activePassageData[i].item.osisID.replaceAll(' ', ',');
                 }
             }
             if (existingReferences !== "") searchRange = existingReferences;
         }
-
-        $('#bookchaptermodalbody').append(_buildSearchHeaderAndTable());
-		$('#srchModalBackButton').hide();
-		$(function(){
-			//$("#bookchaptermodalbody").keyup(function(e){
-			$('textarea#userTextInput').keyup(function(e){
-				_handleEnteredSearchWord();
-			});
-		});
-		$('textarea#userTextInput').focus();
+        if (searchRangeOnly) _buildRangeHeaderAndTable()
+        else {
+            $('#bookchaptermodalbody').append(_buildSearchHeaderAndTable());
+            $('#srchModalBackButton').hide();
+            $(function(){
+                //$("#bookchaptermodalbody").keyup(function(e){
+                $('textarea#userTextInput').keyup(function(e){
+                    _handleEnteredSearchWord();
+                });
+            });
+            $('textarea#userTextInput').focus();
+        }
     });
 
     function goBackToPreviousPage() {
@@ -158,8 +159,8 @@
 		else alert('Unknown state goBackToPreviousPage');
     }
 
-    function addPassage() {
-        if (document.getElementById('addpassageonoffswitch').checked) {
+    function addSearch() {
+        if (document.getElementById('addsearchonoffswitch').checked) {
             addInsteadOfReplace = true;
             $('#appendMsg').addClass('checked');
         }
@@ -173,21 +174,21 @@
 		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
 		var searchTypeTitle = ["Search the Bible with the text you entered", "Search as a Greek word", "Search as a Hebrew word", "Search the subjects in the Bible", "Search definition of words with the text you entered"];        
 		var html = '<div class="header">' +
-            '<h4>Enter search word</h4>' + // should internationalize this
-//            '<div class="append">' +
-//            '<h6 id="appendMsg">Append to the search</h6>' +
-//            '<div class="onoffswitch2">' +
-//            '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-//            '<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-//            '<span class="onoffswitch2-inner"></span>' +
-//            '<span class="onoffswitch2-switch"></span>' +
-//            '</label>' +
-//            '</div>' +
-//            '</div>' +
-			'<button id="searchRangeButton" type="button" style="float:right;font-size:16px" onclick=_buildRangeHeaderAndTable()>Range: ' + searchRange + '&nbsp;&#9662;</button>' +
+            '<h4>Enter search word</h4>'; // should internationalize this
+        if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")
+			html +=	'<span class="append">' +
+				'<span id="appendMsg">Append to the search</span>' +
+				'<div class="onoffswitch2">' +
+				'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/>' +
+				'<label class="onoffswitch2-label" for="addsearchonoffswitch">' +
+				'<span class="onoffswitch2-inner"></span>' +
+				'<span class="onoffswitch2-switch"></span>' +
+				'</label>' +
+				'</div>' +
+				'</span><br>';			
+		html +=	'<button id="searchRangeButton" type="button" style="color:#498090;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
             '</div><br>' +
-			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea>' + // size 16px so the mobile devices will not expand
-            '<h4 id=promptusertoselectsearch></h4>' +
+			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
             '<div id="search_table">' +
 			'<table border="1">' +
             '<colgroup>' +
@@ -213,7 +214,7 @@
     function _buildRangeHeaderAndTable() {
 		var html = _buildRangeHeaderAndSkeleton()
 		$('#bookchaptermodalbody').empty().append(html);
-		if (searchSelectionRangeOnly) $('#srchModalBackButton').hide();
+		if (searchRangeOnly) $('#srchModalBackButton').hide();
 		else $('#srchModalBackButton').show();
 		_buildBookTable();
         if (searchRange !== 'Gen-Rev') {
@@ -291,15 +292,15 @@
             '<h4>Select your search range:</h4>' + // should internationalize this
             '</div>' +
             '<div id="search_range_table">' +
-			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;" ' +
+			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;border:1px solid #498090" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)>Old Testament</button>' +
             '<div id="ot_table"/>' +
-			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;" ' +
+			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;border:1px solid #498090" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)>New Testament</button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
    			'<br><br>' +
-			'<button type="button" style="float:right;border: 3px solid green;" onclick=_updateRange()><b>Update search range</b></button><br>';
+			'<button type="button" style="font-size:16px;color:#498090;float:right;border:1px solid #498090" onclick=_updateRange()><b>Update search range</b></button><br>';
 
         var browserWidth = $(window).width();
         var columns = 7;
@@ -356,9 +357,12 @@
 				result += (typeof osisChapterJsword[end][2] !== "undefined") ? osisChapterJsword[end][2] : osisChapterJsword[end][0];
 			}
 		}
-        if (result.length > 0) searchRange = result;
+        if (result.length > 0) searchRange = result.replace(/,$/, '');
         else searchRange = "Gen-Rev";
-        goBackToPreviousPage();
+        if (searchRangeOnly) {
+            goSearch();
+        }
+        else goBackToPreviousPage();
     }
 	
 	function _buildBookTable() {
@@ -502,7 +506,7 @@
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="pressedButton" style="color:#498090;width:97%;height:' +  rowHeight + 'px" ' +
+					'type="button" class="pressedButton" style="color:#498090;width:97%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
 					'</td>'; 
@@ -517,7 +521,7 @@
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
 							'title="' + displayName[0] + '" ' +
-							'type="button" class="pressedButton" style="color:#498090;width:95%;height:95%" ' + 'onclick=_userClickedBook(this.id)>' + 
+							'type="button" class="pressedButton" style="color:#498090;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +
 							'</td>';
@@ -732,7 +736,7 @@
 		}
 	}
 
-    function closeChapterSelect() {
+    function closeSearchSelect() {
         $('#searchSelectionModal').modal('hide');
         $('#searchSelectionModal').modal({
             show: false
@@ -745,18 +749,35 @@
         var activePassageData = step.util.activePassage().get("searchTokens") || [];
         var allVersions = "";
         var range = (searchRange === "Gen-Rev") ? "" : "|reference=" + searchRange;
+        var previousSearch = "";
+        var currentSearch = (typeof searchType === "undefined") ? "" : '|' + searchType + '=' + searchWord;
         for (var i = 0; i < activePassageData.length; i++) {
-            if (activePassageData[i].itemType == "version") {
-                if (allVersions.length > 0) allVersions += "|version=";
-                allVersions += activePassageData[i].item.shortInitials;
-            }
-            else if ((addInsteadOfReplace) && (activePassageData[i].itemType == "reference")) {
-//                existingReferences += "|reference=" + activePassageData[i].item.osisID;
+			switch(activePassageData[i].itemType) {
+				case GREEK:
+				case GREEK_MEANINGS:
+				case HEBREW:
+				case HEBREW_MEANINGS:
+					previousSearch += '|strong=' + activePassageData[i].token;
+					break;
+				case TEXT_SEARCH:
+				case MEANINGS:
+				case SUBJECT_SEARCH:
+					previousSearch += '|' + activePassageData[i].itemType + '=' + activePassageData[i].token;
+					break;
+				case VERSION:
+					if (allVersions.length > 0) allVersions += '|';
+					allVersions += 'version=' + activePassageData[i].item.shortInitials;
+					break;
+				case REFERENCE:
+					break;
+				default:
+					alert("unknown item type: " + activePassageData[i].itemType);
+					break;
             }
         }
-        
-        var url = 'version=' + allVersions + range + '|' + searchType + '=' + searchWord;
-        closeChapterSelect();
+		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
+        var url = allVersions + range + previousSearch + currentSearch;
+        closeSearchSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
         step.router.navigateSearch(url, true);
     }

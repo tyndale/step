@@ -207,24 +207,26 @@
     }
 
     function _buildBookHeaderAndSkeleton() {
-        return '<div class="header">' +
-            '<h4>' + __s.bible_book_name + '</h4>' +
-            '<div class="append">' +
-            '<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-            '<div class="onoffswitch2">' +
-            '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-            '<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-            '<span class="onoffswitch2-inner"></span>' +
-            '<span class="onoffswitch2-switch"></span>' +
-            '</label>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
+         var html = '<div class="header">' +
+            '<h4>' + __s.bible_book_name + '</h4>';
+			if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() === "")
+				html += '<div class="append">' +
+					'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
+					'<div class="onoffswitch2">' +
+					'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
+					'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
+					'<span class="onoffswitch2-inner"></span>' +
+					'<span class="onoffswitch2-switch"></span>' +
+					'</label>' +
+					'</div>' +
+					'</div>';
+            html += '</div>' +
             '<h5>Old Testament</h5>' +
             '<div id="ot_table"/>' +
             '<h5>New Testament</h5>' +
             '<div id="nt_table"/>' +
             '</div>';
+		return html;
     }
 
     function __buildBookTableHeader(columns) {
@@ -314,18 +316,19 @@
 
 	function _userEnterPassage() {
 		$('#keyboardEntry').hide();
-		var html = '<h4>Type in your passage</h4>' +
-			'<div class="append">' +
-			'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-			'<div class="onoffswitch2">' +
-			'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-			'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-			'<span class="onoffswitch2-inner"></span>' +
-			'<span class="onoffswitch2-switch"></span>' +
-			'</label>' +
-			'</div>' +
-			'</div><br>' +
-			'<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
+		var html = '<h4>Type in your passage</h4>';
+		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() === "")
+			html += '<div class="append">' +
+				'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
+				'<div class="onoffswitch2">' +
+				'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
+				'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
+				'<span class="onoffswitch2-inner"></span>' +
+				'<span class="onoffswitch2-switch"></span>' +
+				'</label>' +
+				'</div>' +
+				'</div><br>';
+		html += '<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
 			'<p>Enter passage(s):</p>' +
