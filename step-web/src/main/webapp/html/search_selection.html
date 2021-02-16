@@ -185,7 +185,7 @@
 				'</label>' +
 				'</div>' +
 				'</span><br>';			
-		html +=	'<button id="searchRangeButton" type="button" style="color:#498090;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
+		html +=	'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
             '</div><br>' +
 			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
             '<div id="search_table">' +
@@ -292,14 +292,16 @@
             '</div>' +
             '<div id="search_range_table">' +
 			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;border:1px solid #498090" ' +
+            'title="Click to select/unselect all Old Testament books" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)>Old Testament</button>' +
             '<div id="ot_table"/>' +
 			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;border:1px solid #498090" ' +
+            'title="Click to select/unselect all New Testament books" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)>New Testament</button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
    			'<br><br>' +
-			'<button type="button" style="font-size:16px;color:#498090;float:right;border:1px solid #498090" onclick=_updateRange()><b>Update search range</b></button><br>';
+			'<button type="button" style="font-size:16px;color:#498090;background-color:#ffffff;float:right;border:1px solid #498090" onclick=_updateRange()><b>Update search range</b></button><br>';
 
         var browserWidth = $(window).width();
         var columns = 7;
@@ -506,6 +508,7 @@
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
 					'type="button" class="pressedButton" style="color:#498090;width:97%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
+                    'title="Click to select/unselect all books in the ' + groupsOfBooks[j].groupName  + ' category" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
 					'</td>'; 
@@ -519,7 +522,7 @@
 						var displayName = _getBookDisplayName(groupsOfBooks[j].books[k]);
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
-							'title="' + displayName[0] + '" ' +
+							'title="Click to select/unselect ' + displayName[0] + '" ' +
 							'type="button" class="pressedButton" style="color:#498090;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +

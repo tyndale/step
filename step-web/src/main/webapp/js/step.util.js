@@ -694,7 +694,7 @@ step.util = {
 						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
             }
             if (allSelectedBibleVersions.length > 0)
-                container.append('<button type="button" onclick="step.util.startPickBible()" class="select-' + VERSION + '" ' +
+                container.append('<button type="button" onclick="step.util.startPickBible()" title="Click to select additional Bible translations" class="select-' + VERSION + '" ' +
                     'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                     allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
             if (allSelectedReferences.length === 0) {
@@ -709,10 +709,10 @@ step.util = {
                 allSelectedReferences = allSelectedReferences.substr(0, lastComma) + '...';
             }
             console.log("all selected ref: " + allSelectedReferences);
-            container.append('<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + '" ' +
+            container.append('<button type="button" onclick="step.util.passageSelectionModal()" title="Click to select a new passage" class="select-' + REFERENCE + '" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
-            container.append('<button type="button" onclick="step.util.searchSelectionModal()" ' +
+            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="Click to select a search of the Bible" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
             for (var i = 0; i < searchTokens.length; i++) {
