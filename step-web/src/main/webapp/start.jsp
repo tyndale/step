@@ -141,8 +141,7 @@
                     <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">
                         <div class="input-group">
-                            <input id="masterSearch" type="text" class="form-control input-lg"
-                                   placeholder="<fmt:message key="search_placeholder" />">
+                            <input id="masterSearch" type="text" class="form-control input-lg">
                             <span class="input-group-btn findButton">
                                     <span>Search</span>
                                     <i class="find glyphicon glyphicon-search"></i>
