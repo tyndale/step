@@ -154,7 +154,6 @@
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
-	showClassicalUI: false,
     timers: {},
     unaugmentStrong : function(strong) {
         var result = (strong || "");

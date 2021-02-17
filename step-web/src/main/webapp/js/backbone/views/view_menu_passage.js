@@ -17,7 +17,7 @@ var PassageMenuView = Backbone.View.extend({
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    classicalReferenceButton: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.display_classical_ui %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= step.util.showClassicalUI ? "visible" : "hidden" %>;"></span></a></li>',
+    classicalUIButton: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.display_classical_ui %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isClassicalUI ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -433,17 +433,33 @@ var PassageMenuView = Backbone.View.extend({
                 self._setVisible(this, newSecondZhLexicon);
             }));
         }
-		dropdown.append($(_.template(this.classicalReferenceButton)()).click(function (e) {
+		var classicalUI = false;
+		var classicalCookie = $.cookie('classicalUI');
+		if (typeof classicalCookie === "undefined") {
+			classicalUI = self.model.get("isClassicalUI");
+			if (typeof classicalUI === "undefined") {
+				this.model.save({ isClassicalUI: false });
+				classicalUI = false;
+				$.cookie('classicalUI', false);
+			}
+        }
+		else if (classicalCookie === "true") classicalUI = true;
+		else if (classicalCookie === "false") classicalUI = false;
+
+		dropdown.append($(_.template(this.classicalUIButton)({ isClassicalUI: classicalUI })).click(function (e) {
 			e.stopPropagation(); //prevent the bubbling up
-			step.util.showClassicalUI = !step.util.showClassicalUI;  // reverse true or false
-			self._setVisible(this, step.util.showClassicalUI);
-            if (step.util.showClassicalUI) {
+            var newClassicalUI = !self.model.get("isClassicalUI");  // reverse true or false
+            self.model.save({ isClassicalUI: newClassicalUI }); // toggle the tick
+            self._setVisible(this, newClassicalUI);
+            if (newClassicalUI) {
 				$('#s2id_masterSearch').show();
 				$('.findButton').show();
+				$.cookie('classicalUI', true);
 			}
 			else {
 				$('#s2id_masterSearch').hide();
 				$('.findButton').hide();
+				$.cookie('classicalUI', false);
 			}
 		}));
         var currentVerseVocabSetting = self.model.get("isVerseVocab");

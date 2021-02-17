@@ -95,10 +95,6 @@ var MainSearchView = Backbone.View.extend({
                 url: function (term, page) {
                     var lang = step.state.language();
 					if ((term.length >= 2) || (!step.util.isBlank(lang) && (lang.toLowerCase().startsWith("zh")))) {
-						//if (!step.util.showClassicalUI) {
-							//alert('Searches often require the classical buttons, we are turning them on.');
-						//	step.util.showClassicalUI = true;
-						//}
 						var url = SEARCH_AUTO_SUGGESTIONS + term;
 						var contextArgs = "";
 						if (self.specificContext.length != 0) {
@@ -258,7 +254,13 @@ var MainSearchView = Backbone.View.extend({
             }
         });
         var container = this.masterSearch.select2("container");
-		if (step.util.showClassicalUI) {
+		var classicalUI = false;
+		var classicalCookie = $.cookie('classicalUI');
+		if (typeof classicalCookie === "undefined") 
+				classicalUI = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isClassicalUI") || false;
+		else if (classicalCookie === "true") classicalUI = true;
+		else if (classicalCookie === "false") classicalUI = false;
+		if (classicalUI) {
 			$('#s2id_masterSearch').show();
 			$('.findButton').show();
 		}
@@ -1039,14 +1041,6 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
-        if (step.util.showClassicalUI) {
-			$('#s2id_masterSearch').show();
-			$('.findButton').show();
-		}
-		else {
-			$('#s2id_masterSearch').hide();
-			$('.findButton').hide();
-		}
         if ($(window).width() < 900) {
 			// $('.dropdown-share').hide();  PT:  We should consider hiding it.  I am not a fan of social media
 			$('.openNewPanel').hide();

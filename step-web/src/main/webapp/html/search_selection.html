@@ -288,14 +288,14 @@
 
     function _buildRangeHeaderAndSkeleton() {
 		var html = '<div class="header">' +
-            '<h4>Select your search range:</h4>' + // should internationalize this
+            '<h4>Click the buttons to select your search range:</h4>' + // should internationalize this
             '</div>' +
             '<div id="search_range_table">' +
-			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;border:1px solid #498090" ' +
+			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="Click to select/unselect all Old Testament books" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)>Old Testament</button>' +
             '<div id="ot_table"/>' +
-			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:100%;font-size:18px;border:1px solid #498090" ' +
+			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="Click to select/unselect all New Testament books" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)>New Testament</button>' +
             '<div id="nt_table"/>' +
@@ -507,7 +507,7 @@
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="pressedButton" style="color:#498090;width:97%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
+					'type="button" class="pressedButton" style="color:#498090;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
                     'title="Click to select/unselect all books in the ' + groupsOfBooks[j].groupName  + ' category" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
