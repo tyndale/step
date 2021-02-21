@@ -348,11 +348,11 @@
 		$(function(){
 			$("#bookchaptermodalbody").keypress(function(e){
 				var code = (e.keyCode ? e.keyCode : e.which);
-				if (code == 13) _handleEnteredPassage(false);
-				else if (code == 44) _handleEnteredPassage(true);
+				if (code == 13) _handleEnteredPassage(false); // 13 is return
+				else if (code == 44) _handleEnteredPassage(true); // 44 is ,
 			}).keyup(function(e){
 				var code = (e.keyCode ? e.keyCode : e.which);
-				if ((code == 8) || (code == 46)) $('#userEnterPassageError').text("");
+				if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 			});
 		});
 		$('textarea#enterYourPassage').focus();

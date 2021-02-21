@@ -444,7 +444,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="/js/defaults/step.defaults.js" type="text/javascript"></script>
 <script src="/js/step_ready.js" type="text/javascript"></script>
 <script src="/js/color_code_grammar.js" type="text/javascript"></script>
-
 <%
 } else {
 %>

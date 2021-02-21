@@ -146,7 +146,7 @@ var ExamplesView = Backbone.View.extend({
 				'</div>' +
 			'</div>' +
 			'<div class="text-muted step-copyright">' +
-				'<span>&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House, Cambridge, UK</a> - 2020</span>' +
+				'<span>&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">STEPBible</a> - 2021</span>' +
 			'</div>' +
 		'</div>'
 	),

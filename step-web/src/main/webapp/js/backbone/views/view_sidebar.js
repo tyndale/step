@@ -201,39 +201,6 @@ var SidebarView = Backbone.View.extend({
             }
         }
         this.tabContainer.append(this.lexicon);
-		if ($(window).width() < 1130) {
-			this.closeSidebar();
-            this._closeLexiconModal();
-			var modalTemplate = $(_.template(
-            '<div id="lexiconModal" class="modal selectModal" role="dialog" aria-labelledby="about" aria-hidden="true">' +
-                '<div class="modal-dialog">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '</div>' + //end header
-                '<div class="modal-body">' +
-                '<div id="lexiconModalInfo">' +
-                '</div>' +
-                '<div class="footer"><button class="btn btn-default btn-sm closeModal" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +
-                '</div>' + //end modal body
-                '</div>' + //end content
-                '</div>' + //end dialog
-                '</div>' +
-                '</div>')());
-			modalTemplate.find("#lexiconModalInfo").append(this.lexicon);
-			modalTemplate.appendTo("body");
-			$('#lexiconModal').modal('show');
-		}
-    },
-    _closeLexiconModal: function() {
-        var element = document.getElementById('lexiconModal');
-        if (element) {
-			$('#lexiconModal').modal('hide');
-			$('#lexiconModal').modal({
-				show: false
-			});
-			element.parentNode.removeChild(element);
-		}
     },
     _createBriefWordPanel: function (panel, mainWord, currentUserLang) {
         var chineseGloss = "";
@@ -370,10 +337,8 @@ var SidebarView = Backbone.View.extend({
     _appendLexiconSearch: function (panel, mainWord) {
         panel.append("<br />").append(__s.lexicon_search_for_this_word);
         if (mainWord.count) {
-            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).data("closeModal", this._closeLexiconModal).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
-                var closeModalFunction = $(this).data("closeModal");
-				closeModalFunction();
-				var strongNumber = $(this).data("strongNumber");
+            panel.append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append('<span class="strongCount"> ' + sprintf(__s.stats_occurs, mainWord.count) + '</span>').click(function () {
+                var strongNumber = $(this).data("strongNumber");
                 var args = "strong=" + encodeURIComponent(strongNumber);
                 step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
                 step.router.navigatePreserveVersions(args);
@@ -565,10 +530,8 @@ var SidebarView = Backbone.View.extend({
         }
     },
     openSidebar: function () {
-        //if ($(window).width() >= 1130) {
-            this.sidebarButtonIcon.addClass("active");
-            this.$el.closest('.row-offcanvas').addClass("active");
-        //}
+        this.sidebarButtonIcon.addClass("active");
+        this.$el.closest('.row-offcanvas').addClass("active");
     },
     closeSidebar: function () {
         this.sidebarButtonIcon.removeClass("active");

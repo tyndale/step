@@ -5,6 +5,7 @@
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
 <div class="footer">
+'<span id="searchSelectError" style="color: red;"></span>';
 </div>
 <style>
 .pressedButton {
@@ -129,21 +130,34 @@
             $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
-                    _handleEnteredSearchWord();
+                    handleKeyboardInput(e);
                 });
             });
             $('textarea#userTextInput').focus();
         }
     });
 
+    function handleKeyboardInput(e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) {
+            $('#searchSelectError').text("Please click to select one of the suggested search.");
+            var userInput =  $('textarea#userTextInput').val();
+            userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
+            $('textarea#userTextInput').val(userInput);
+        }
+        else {
+            $('#searchSelectError').text("");
+            _handleEnteredSearchWord();
+        }
+    }
+
     function goBackToPreviousPage() {
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#bookchaptermodalbody').empty().append(_buildSearchHeaderAndTable());
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
             $(function(){
-                //$("#bookchaptermodalbody").keyup(function(e){
                 $('textarea#userTextInput').keyup(function(e){
-                    _handleEnteredSearchWord();
+                    handleKeyboardInput(e);
                 });
             });
             $('textarea#userTextInput').focus();
@@ -293,11 +307,11 @@
             '<div id="search_range_table">' +
 			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="Click to select/unselect all Old Testament books" ' +
-			'class="pressedButton" onclick=_userClickedTestament(this.id)>Old Testament</button>' +
+			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>Old Testament</i></button>' +
             '<div id="ot_table"/>' +
 			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="Click to select/unselect all New Testament books" ' +
-			'class="pressedButton" onclick=_userClickedTestament(this.id)>New Testament</button>' +
+			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>New Testament</i></button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
    			'<br><br>' +
