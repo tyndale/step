@@ -152,6 +152,7 @@
     }
 
     function goBackToPreviousPage() {
+		$('#searchSelectError').text("");
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#bookchaptermodalbody').empty().append(_buildSearchHeaderAndTable());
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
@@ -211,7 +212,7 @@
 			'<tr style="height:30px">' +
 			'<tr>' +
 			'<th scope="col">Type of search</th>' +
-			'<th scope="col">Possible search word(s)</th>' +
+			'<th scope="col">Suggested search word(s)</th>' +
 			'</tr>';
 		for (var i = 0; i < typeDesc.length; i ++) {
 			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '">' +
@@ -225,6 +226,7 @@
     }
 
     function _buildRangeHeaderAndTable() {
+	    $('#searchSelectError').text("");
 		var html = _buildRangeHeaderAndSkeleton()
 		$('#bookchaptermodalbody').empty().append(html);
 		if (searchRangeOnly) $('#srchModalBackButton').hide();
