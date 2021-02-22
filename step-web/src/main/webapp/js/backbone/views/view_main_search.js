@@ -1041,16 +1041,6 @@ var MainSearchView = Backbone.View.extend({
         this._setData(data);
         this._addTokenHandlers();
         this._reEvaluateMasterVersion();
-        if ($(window).width() < 900) {
-			// $('.dropdown-share').hide();  PT:  We should consider hiding it.  I am not a fan of social media
-			$('.openNewPanel').hide();
-			$('.passageOptionsGroup .closeColumn').hide();
-        }
-        else {
-			// $('.dropdown-share').show();
-			$('.openNewPanel').show();
-			$('.passageOptionsGroup .closeColumn').show();
-        }
     },
     _handleKeyPressInSearch: function (ev) {
         if (ev.keyCode == 13 && !ev.isPropagationStopped()) {

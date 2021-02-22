@@ -436,7 +436,7 @@ step.util = {
         step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
 
         //we prevent the event from bubbling up to set the passage id, as we expect a new passage to take focus
-        ev.stopPropagation();
+        if (ev) ev.stopPropagation();
     },
 
     /**
