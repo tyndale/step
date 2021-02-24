@@ -697,7 +697,7 @@ step.util = {
 						 (searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS) ||
 						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
             }
-			if (allSelectedBibleVersions.length > 30) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
             if (allSelectedBibleVersions.length > 0)
                 container.append('<button type="button" onclick="step.util.startPickBible()" title="Click to select additional Bible translations" class="select-' + VERSION + '" ' +
                     'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
@@ -718,7 +718,7 @@ step.util = {
 				else allSelectedReferences = "Select passage";
 			}
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
-            else if (allSelectedReferences.length > 30) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+            else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
 			var spaceRequired = (allSelectedReferences.length * 6.5) + 8;
 			if (spaceRequired > remainingSpaceForButton) {
