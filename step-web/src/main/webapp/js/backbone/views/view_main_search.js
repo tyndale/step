@@ -267,7 +267,12 @@ var MainSearchView = Backbone.View.extend({
 		else {
 			$('#s2id_masterSearch').hide();
 			$('.findButton').hide();
-			if ($(window).width() < 1130) $('#social-media-icon').hide();
+			if ($(window).width() < 1130) {
+                $('#social-media-icon').hide();
+                if (window.matchMedia("only screen and (max-width: 760px)").matches) {
+                    step.util.changeFontSize($('.passageOptionsGroup'), 1);
+                }
+            }
 		}
 		if (step.state.language().startsWith("zh"))
 			container.data("select2").opts.minimumInputLength = 1; // Chinese Bible short names and search words can be 1 character 1 long

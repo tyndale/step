@@ -742,7 +742,7 @@ step.util = {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
                     (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
 					var contentToAdd = step.util.ui.renderArg(searchTokens[i], isMasterVersion);
-					spaceRequired = ($(contentToAdd).text().length * 7) + 25;
+					spaceRequired = ($(contentToAdd).text().length * 7) + 5;
 					if (spaceRequired > remainingSpaceForButton) {
 						container.append('<br>');
 						remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
