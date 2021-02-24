@@ -654,6 +654,11 @@ step.util = {
         selectMark: function (classes) {
             return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
         },
+        shortenDisplayText: function (text, maxLength) {
+            var lastComma = text.substr(0, maxLength).lastIndexOf(",");
+            if (lastComma < 5) lastComma = maxLength;
+            return text.substr(0, lastComma) + '...';
+		},
         renderArgs: function (searchTokens, container) {
             if (!container) {
                 container = $("<span>");
@@ -692,32 +697,59 @@ step.util = {
 						 (searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS) ||
 						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
             }
+			if (allSelectedBibleVersions.length > 30) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
             if (allSelectedBibleVersions.length > 0)
                 container.append('<button type="button" onclick="step.util.startPickBible()" title="Click to select additional Bible translations" class="select-' + VERSION + '" ' +
                     'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                     allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
+			var passageContainerWidth = $('.passageContainer.active').width();
+			if (typeof passageContainerWidth !== "number") {
+				console.log('cannot get passage container width: ' + passageContainerWidth);
+				passageContainerWidth = 1000;
+			}
+			var remainingSpaceForButton = passageContainerWidth;
+			var spaceUsedForItemsOnTopRight = 170;
+			if (foundSearch) spaceUsedForItemsOnTopRight += 90;
+			if ($(window).width() >= 1130) spaceUsedForItemsOnTopRight += 40; // space for the facebook/twitter icon
+			remainingSpaceForButton -= spaceUsedForItemsOnTopRight; // space for the + and x on the top right of the panel
+			remainingSpaceForButton -= (allSelectedBibleVersions.length * 6.7) + 12.2;
             if (allSelectedReferences.length === 0) {
-		        if (foundSearch)
-					allSelectedReferences = "Gen-Rev";
+		        if (foundSearch) allSelectedReferences = "Gen-Rev";
 				else allSelectedReferences = "Select passage";
 			}
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
-            else if (allSelectedReferences.length > 30) {
-                var lastComma = allSelectedReferences.substr(0, 28).lastIndexOf(",");
-                if (lastComma < 5) lastComma = 28;
-                allSelectedReferences = allSelectedReferences.substr(0, lastComma) + '...';
-            }
+            else if (allSelectedReferences.length > 30) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
+			var spaceRequired = (allSelectedReferences.length * 6.5) + 8;
+			if (spaceRequired > remainingSpaceForButton) {
+				container.append('<br>');
+				remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
+			}
+			remainingSpaceForButton -= spaceRequired;
             container.append('<button type="button" onclick="step.util.passageSelectionModal()" title="Click to select a new passage" class="select-' + REFERENCE + '" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
-            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="Click to select a search of the Bible" ' +
+			spaceRequired = 35;
+			if (spaceRequired > remainingSpaceForButton) {
+				container.append('<br>');
+				remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
+			}
+			remainingSpaceForButton -= spaceRequired;
+            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="Click to select a search of the Bible" class="select-search" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;')
+                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;');
             for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
-                    (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) // VERSION and REFERENCE buttons are already created a few lines above.
-                    container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
+                    (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
+					var contentToAdd = step.util.ui.renderArg(searchTokens[i], isMasterVersion);
+					spaceRequired = ($(contentToAdd).text().length * 7) + 25;
+					if (spaceRequired > remainingSpaceForButton) {
+						container.append('<br>');
+						remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
+					}
+					remainingSpaceForButton -= spaceRequired;
+                    container.append(contentToAdd);
+				}
             }
             return container.html();
         },
@@ -727,27 +759,13 @@ step.util = {
             searchToken.item = searchToken.enhancedTokenInfo;
 
             //rewrite the item type in case it's a strong number
-            if (searchToken.itemType == STRONG_NUMBER) {
-                //pretend it's a Greek meaning, or a Hebrew meaning
+            if (searchToken.itemType == STRONG_NUMBER) //pretend it's a Greek meaning, or a Hebrew meaning
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
-            } else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
+            else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH)
                 searchToken.itemType = SUBJECT_SEARCH;
-            } else if (searchToken.itemType == REFERENCE) {  // PT: This probably can be deleted but leaving it here just in case
-                console.log("reached code which should not be used?  loc 1");
-                return '<button type="button" onclick="step.util.passageSelectionModal()" class="select-' + REFERENCE + ' select2-search-choice" '+
-                    'style="padding: 6px 7px 5px 7px; color: white; font-size: 14px; line-height: 13px; border-radius: 4px; border: none; background: #AA1B41">' +
-                    this.renderEnhancedToken(searchToken, isMasterVersion) +
-                    '</button>';
-            }
-            else if (searchToken.itemType == VERSION) {   // PT: This probably can be deleted but leaving it here just in case
-                console.log("reached code which should not be used?  loc 2");
-                return this.renderEnhancedToken(searchToken, isMasterVersion);
-            }
-            else {
-                return '<span class="argSelect select-' + searchToken.itemType + '">' +
-                    this.renderEnhancedToken(searchToken, isMasterVersion) +
-                    '</span>';
-            }
+            return '<span class="argSelect select-' + searchToken.itemType + '">' +
+                this.renderEnhancedToken(searchToken, isMasterVersion) +
+                '</span>';
         },
         getSource: function (itemType, nowrap) {
             var source;

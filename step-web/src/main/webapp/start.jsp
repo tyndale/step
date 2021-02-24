@@ -174,7 +174,7 @@
                                 <%
                                     if (!appManager.isLocal()) {
                                 %>
-                                <span class="dropdown">
+                                <span id="social-media-icon" class="dropdown">
                                         <a class="dropdown-share" data-toggle="dropdown"
                                            title="<fmt:message key="share" />">
                                             <i class="glyphicon glyphicon-thumbs-up"></i>

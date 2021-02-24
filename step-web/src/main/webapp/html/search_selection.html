@@ -318,13 +318,6 @@
             '<div id="ob_table"/>' +
    			'<br><br>' +
 			'<button type="button" style="font-size:16px;color:#498090;background-color:#ffffff;float:right;border:1px solid #498090" onclick=_updateRange()><b>Update search range</b></button><br>';
-
-        var browserWidth = $(window).width();
-        var columns = 7;
-        if (browserWidth < 1100) {
-            columns = 6;
-            if (browserWidth < 800) columns = 4;
-        }
 		return html;
     }
     
@@ -423,12 +416,6 @@
         var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
         var counter = 0;
         var notSeenNT = true;
-        var browserWidth = $(window).width();
-        var columns = 7;
-        if (browserWidth < 1100) {
-            columns = 6;
-            if (browserWidth < 800) columns = 4;
-        }
         var typlicalBooksChapters = false;
         var arrayOfTyplicalBooksChapters;
         var start = 0;
@@ -486,6 +473,12 @@
 				groupsOther[0].inCurrentTranslation.push(true);
 			}
 		}
+        var browserWidth = $(window).width();
+        var columns = 7;
+        if (browserWidth < 1100) {
+            columns = 6;
+            if (browserWidth < 800) columns = 4;
+        }
 		_fillBooksTable(groupsOT, columns, 'ot_table');
 		_fillBooksTable(groupsNT, columns, 'nt_table');
 		_fillBooksTable(groupsOther, columns, 'other_table');
