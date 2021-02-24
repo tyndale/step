@@ -274,7 +274,6 @@
         var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
         closeChapterSelect();
         console.log("navigateSearch from passage_selection.html: " + url)
-		step.previousUserSearch[step.util.activePassageId()] = "";
         step.router.navigateSearch(url, true); // skip QFilter
     }
 

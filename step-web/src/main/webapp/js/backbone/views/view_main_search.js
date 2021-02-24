@@ -633,15 +633,10 @@ var MainSearchView = Backbone.View.extend({
 			args += (args.length > 0) ? "|" : "";
 			args += searchArgs;
 		}
-		var curPassageID = step.util.activePassageId();
         if (refArgs.length > 0) {
-			if (!( (searchArgs.length > 0) && // There must be a search
-				 ( ((typeof step.previousUserSearch[curPassageID] === "undefined") || (step.previousUserSearch[curPassageID] === "")) || // undefined when the user first land on the Gen 1 page.  Blank if the last user action was to change passage.
-				    (refArgs.toLowerCase === "reference=gen.1") // If it is gen.1, all the gen.1 results will show first 
-				 ) 
-			   )) args += '|' + refArgs;
-		}
-        step.previousUserSearch[curPassageID] = searchArgs;
+            args += (args.length > 0) ? "|" : "";
+            args += refArgs;
+        }
         console.log("navigateSearch from view_main_search: ", args);
         step.router.navigateSearch(args);
     },

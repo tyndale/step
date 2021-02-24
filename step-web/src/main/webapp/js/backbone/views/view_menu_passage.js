@@ -660,7 +660,6 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         step.util.activePassageId(this.model.get("passageId"));
-		step.previousUserSearch[step.util.activePassageId()] = "";
 
         var args = this.model.get("args") || "";
         var reference = "";
