@@ -239,6 +239,22 @@ var StepRouter = Backbone.Router.extend({
         var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
         passageOptions.find(".argSummary").remove();
         passageOptions.append(container);
+		var width = $(passageOptions).find('.argSummary').width() - 30;  // take account of spaces between buttons
+		var remainingWidth = width;
+		remainingWidth -= $(passageOptions).find('.select-version').width();
+		var referenceWidth = $(passageOptions).find('.select-reference').width();
+		remainingWidth -= referenceWidth;
+		if (remainingWidth < 0) {
+			$('<br>').insertAfter($(passageOptions).find('.select-version'));
+			remainingWidth = width - referenceWidth;
+		}
+		remainingWidth -= 20; // take account of spaces between buttons
+		var searchWidth = $(passageOptions).find('.select-search').width();
+		remainingWidth -= searchWidth;
+		if ((searchWidth > 35) && ($('.resultsLabel').text() === "")) 
+			remainingWidth -= 50;
+		if (remainingWidth < 0)
+			$('<br>').insertAfter($(passageOptions).find('.select-reference'));
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;

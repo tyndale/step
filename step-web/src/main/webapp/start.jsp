@@ -174,7 +174,7 @@
                                 <%
                                     if (!appManager.isLocal()) {
                                 %>
-                                <span id="social-media-icon" class="dropdown">
+                                <span class="dropdown hidden-xs">
                                         <a class="dropdown-share" data-toggle="dropdown"
                                            title="<fmt:message key="share" />">
                                             <i class="glyphicon glyphicon-thumbs-up"></i>
@@ -191,10 +191,10 @@
                                     </span>
 
                                 <%--  this button starts hidden as there is only 1 column showing --%>
-                                <a class="openNewPanel" title="<fmt:message key="open_in_new_panel" />">
+                                <a class="openNewPanel hidden-xs" title="<fmt:message key="open_in_new_panel" />">
                                     <i class="glyphicon glyphicon-plus"></i>
                                 </a>
-                                <a class="closeColumn disabled" title="<fmt:message key="close" />">
+                                <a class="closeColumn disabled hidden-xs" title="<fmt:message key="close" />">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </div>

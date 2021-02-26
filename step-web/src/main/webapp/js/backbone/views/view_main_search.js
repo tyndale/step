@@ -2,7 +2,7 @@ var MainSearchView = Backbone.View.extend({
     el: ".search-form",
     events: {
         "click .find": "search",
-        "click .showStats": "showAnalysis",
+        "click .showSidebar": "showAnalysis",
         "click .showBooks": "showBooks"
     },
     //context items are of the form { itemType: x, value: y }
@@ -263,16 +263,33 @@ var MainSearchView = Backbone.View.extend({
 		if (classicalUI) {
 			$('#s2id_masterSearch').show();
 			$('.findButton').show();
+			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
+			$('.tmp-navbar-toggle').show();
+			$('.tmp-navbar-toggle').removeClass('tmp-navbar-toggle').addClass('navbar-toggle');
+			$('.tmp-navbar-collapse').removeClass('tmp-navbar-collapse').addClass('navbar-collapse');
+			$('.tmp-collapse').removeClass('tmp-collapse').addClass('collapse');
+			$('.headerButtons .tmp-dropdown').removeClass('tmp-dropdown').addClass('dropdown');
+			//$('.tmp-dropdown-toggle').removeClass('tmp-dropdown-toggle').addClass('dropdown-toggle');
+			// $('#help_message').show();
+			// $('#language_message').show();
+			$('.navbarIconDesc').hide();
 		}
 		else {
 			$('#s2id_masterSearch').hide();
 			$('.findButton').hide();
-			if ($(window).width() < 1130) {
-                $('#social-media-icon').hide();
-                if (window.matchMedia("only screen and (max-width: 760px)").matches) {
-                    step.util.changeFontSize($('.passageOptionsGroup'), 1);
-                }
-            }
+			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
+			if (window.matchMedia("only screen and (max-width: 760px)").matches) {
+				step.util.changeFontSize($('.passageOptionsGroup'), 1);
+			}
+			$('.navbar-toggle').removeClass('navbar-toggle').addClass('tmp-navbar-toggle');
+			$('.tmp-navbar-toggle').hide();
+			$('.navbar-collapse').removeClass('navbar-collapse').addClass('tmp-navbar-collapse');
+			$('.collapse').removeClass('collapse').addClass('tmp-collapse');
+			$('.headerButtons .dropdown').removeClass('dropdown').addClass('tmp-dropdown');
+			// $('.dropdown-toggle').removeClass('dropdown-toggle').addClass('tmp-dropdown-toggle');
+			// $('#help_message').hide();
+			// $('#language_message').hide();
+			$('.navbarIconDesc').show();
 		}
 		if (step.state.language().startsWith("zh"))
 			container.data("select2").opts.minimumInputLength = 1; // Chinese Bible short names and search words can be 1 character 1 long

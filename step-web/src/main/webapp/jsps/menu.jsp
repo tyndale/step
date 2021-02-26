@@ -17,13 +17,22 @@
 %>
 <fmt:setBundle basename="HtmlBundle"/>
 <div class="headerButtons pull-right">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<!--    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-    </button>
+    </button> -->
 
-    <a class="showStats" title="<fmt:message key="passage_open_sidebar" />">
+    <a id="panel-icon" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel" />">
+        <i class="glyphicon glyphicon-plus"></i><span class="hidden-xs navbarIconDesc">Add panel</span>
+    </a>
+    <a id="stats-icon" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
+        <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">Analysis</span>
+    </a>
+	<a id="bookmark-icon" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
+        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">Bookmark </span>
+    </a>
+<!--     <a id="sidebar-icon" class="showSidebar" title="<fmt:message key="passage_open_sidebar" />">
         <i class="glyphicon icon-sidebar">
             <svg width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g>
@@ -36,14 +45,14 @@
                 </g>
             </svg>
         </i>
-    </a>
-    <div class="navbar-collapse collapse">
+    </a> -->
+    <span class="navbar-collapse collapse">
         <span class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
                 <i class="glyphicon icon-language">
                     <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
-                </i>
-                <span><fmt:message key="installation_book_language"/></span>
+                </i><span class="hidden-xs navbarIconDesc">Language</span>
+                <!-- <span><fmt:message key="installation_book_language"/></span> -->
             <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
                 <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
 
@@ -64,15 +73,15 @@
             if (!appManager.isLocal()) {
         %>
         <a id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
-            <i class="glyphicon glyphicon-bullhorn"></i>
+            <i class="glyphicon glyphicon-bullhorn"></i><span class="hidden-xs navbarIconDesc"> Feedback </span>
         </a>
         <%
             }
         %>
         <span class="dropdown">
             <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
-                <i class="glyphicon glyphicon-option-vertical"></i>
-                <span><fmt:message key="help"/></span>
+                <i class="glyphicon glyphicon-option-vertical"></i><span class="hidden-xs navbarIconDesc">More</span>
+                <!-- <span><fmt:message key="help"/></span> -->
             </a>
             <ul class="dropdown-menu pull-right helpMenu" dir="${ ltr ? "ltr" : "rtl" }">
                 <!-- # Download STEP -->
@@ -130,5 +139,5 @@
                 %>
             </ul>
         </span>
-    </div>
+    </span>
 </div>

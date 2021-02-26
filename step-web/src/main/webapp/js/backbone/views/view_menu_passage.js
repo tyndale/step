@@ -448,18 +448,36 @@ var PassageMenuView = Backbone.View.extend({
 
 		dropdown.append($(_.template(this.classicalUIButton)({ isClassicalUI: classicalUI })).click(function (e) {
 			e.stopPropagation(); //prevent the bubbling up
-            var newClassicalUI = !self.model.get("isClassicalUI");  // reverse true or false
-            self.model.save({ isClassicalUI: newClassicalUI }); // toggle the tick
-            self._setVisible(this, newClassicalUI);
-            if (newClassicalUI) {
+            var userSelectedClassicalUI = !self.model.get("isClassicalUI");  // reverse true or false
+            self.model.save({ isClassicalUI: userSelectedClassicalUI }); // toggle the tick
+            self._setVisible(this, userSelectedClassicalUI);
+            if (userSelectedClassicalUI) {
 				$('#s2id_masterSearch').show();
 				$('.findButton').show();
 				$.cookie('classicalUI', true);
+				$('.tmp-navbar-toggle').show();
+				$('.tmp-navbar-toggle').removeClass('tmp-navbar-toggle').addClass('navbar-toggle');
+				$('.tmp-navbar-collapse').removeClass('tmp-navbar-collapse').addClass('navbar-collapse');
+				$('.tmp-collapse').removeClass('tmp-collapse').addClass('collapse');
+				$('.headerButtons .tmp-dropdown').removeClass('tmp-dropdown').addClass('dropdown');
+				$('.headerButtons .tmp-dropdown-toggle').removeClass('tmp-dropdown-toggle').addClass('dropdown-toggle');
+				// $('#help_message').show();
+				// $('#language_message').show();
+				$('.navbarIconDesc').hide();
 			}
 			else {
 				$('#s2id_masterSearch').hide();
 				$('.findButton').hide();
 				$.cookie('classicalUI', false);
+				$('.navbar-toggle').removeClass('navbar-toggle').addClass('tmp-navbar-toggle');
+				$('.tmp-navbar-toggle').hide();
+				$('.navbar-collapse').removeClass('navbar-collapse').addClass('tmp-navbar-collapse');
+				$('.collapse').removeClass('collapse').addClass('tmp-collapse');
+				$('.headerButtons .dropdown').removeClass('dropdown').addClass('tmp-dropdown');
+				$('.headerButtons .dropdown-toggle').removeClass('dropdown-toggle').addClass('tmp-dropdown-toggle');
+				// $('#help_message').hide();
+				// $('#language_message').hide();
+				$('.navbarIconDesc').show();
 			}
 		}));
         var currentVerseVocabSetting = self.model.get("isVerseVocab");

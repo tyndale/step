@@ -702,17 +702,6 @@ step.util = {
                 container.append('<button type="button" onclick="step.util.startPickBible()" title="Click to select additional Bible translations" class="select-' + VERSION + '" ' +
                     'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                     allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
-			var passageContainerWidth = $('.passageContainer.active').width();
-			if (typeof passageContainerWidth !== "number") {
-				console.log('cannot get passage container width: ' + passageContainerWidth);
-				passageContainerWidth = 1000;
-			}
-			var remainingSpaceForButton = passageContainerWidth;
-			var spaceUsedForItemsOnTopRight = 170;
-			if (foundSearch) spaceUsedForItemsOnTopRight += 90;
-			if ($(window).width() >= 1130) spaceUsedForItemsOnTopRight += 40; // space for the facebook/twitter icon
-			remainingSpaceForButton -= spaceUsedForItemsOnTopRight; // space for the + and x on the top right of the panel
-			remainingSpaceForButton -= (allSelectedBibleVersions.length * 6.7) + 12.2;
             if (allSelectedReferences.length === 0) {
 		        if (foundSearch) allSelectedReferences = "Gen-Rev";
 				else allSelectedReferences = "Select passage";
@@ -720,37 +709,30 @@ step.util = {
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
-			var spaceRequired = (allSelectedReferences.length * 6.5) + 8;
-			if (spaceRequired > remainingSpaceForButton) {
-				container.append('<br>');
-				remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
-			}
-			remainingSpaceForButton -= spaceRequired;
+
             container.append('<button type="button" onclick="step.util.passageSelectionModal()" title="Click to select a new passage" class="select-' + REFERENCE + '" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
-			spaceRequired = 35;
-			if (spaceRequired > remainingSpaceForButton) {
-				container.append('<br>');
-				remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
-			}
-			remainingSpaceForButton -= spaceRequired;
-            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="Click to select a search of the Bible" class="select-search" ' +
-                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&#9662;</span></button>&nbsp;');
-            for (var i = 0; i < searchTokens.length; i++) {
+			var searchWords = "";
+			for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
                     (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
-					var contentToAdd = step.util.ui.renderArg(searchTokens[i], isMasterVersion);
-					spaceRequired = ($(contentToAdd).text().length * 7) + 5;
-					if (spaceRequired > remainingSpaceForButton) {
-						container.append('<br>');
-						remainingSpaceForButton = passageContainerWidth - spaceUsedForItemsOnTopRight;
+					var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
+					if (word.length > 0) {
+						if (searchWords.length > 20) {
+							if (searchWords.substr(-3) !== '...') searchWords += '...';
+						}
+						else {
+							if (searchWords.length > 0) searchWords += ', ';
+							searchWords += word;
+						}
 					}
-					remainingSpaceForButton -= spaceRequired;
-                    container.append(contentToAdd);
 				}
             }
+            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="Click to select a search of the Bible" class="select-search" ' +
+                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
+                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;' + searchWords + '&nbsp;&#9662;</span></button>&nbsp;');
+
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {

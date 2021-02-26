@@ -8,7 +8,7 @@ var SidebarView = Backbone.View.extend({
 
         //create tab container
         var container = this.$el.find(">div");
-        this.sidebarButton = $(".navbar-brand .showStats");
+        this.sidebarButton = $(".navbar-brand .showSidebar");
         this.sidebarButtonIcon = this.sidebarButton.find(".glyphicon");
         this.tabContainer = this._createBaseTabs();
         this.tabHeaders = this._createTabHeadersContainer();
