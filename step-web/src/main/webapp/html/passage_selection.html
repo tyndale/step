@@ -1,6 +1,16 @@
 ﻿<div class="modal-header">
 	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
+	<br>
+	<div id="displayLocForm" class="form-group pull-right">
+	<label for="displayLocation">Display new passage in:</label>
+	<select type="text" id="displayLocation">
+	<option value="replace">Current panel</option>
+	<option id="newPanel" class="hidden-xs" value="new">New panel</option>
+	<option id="appendToPanel" value="append">Current panel, after current passage</option>
+	</select>
+	</div>
+	<br>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
@@ -13,11 +23,19 @@
 <script>
     var version = "ESV_th";
     var userLang = "en";
-    var addInsteadOfReplace = false;
 	var lastInput = "";
 	var lastInputChecked = "";
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
+		var hideAppend = false;
+		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
+			$('#appendToPanel').hide();
+			hideAppend = true;
+		}
+		if ($('.passageContainer.active').width() < 500) {
+			if (hideAppend) $('#displayLocForm').hide();
+			else $('#newPanel').hide();
+		}
         _displayListOfBooks();
     });
 
@@ -214,19 +232,8 @@
 
     function _buildBookHeaderAndSkeleton() {
          var html = '<div class="header">' +
-            '<h4>' + __s.bible_book_name + '</h4>';
-			if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() === "")
-				html += '<div class="append">' +
-					'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-					'<div class="onoffswitch2">' +
-					'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-					'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-					'<span class="onoffswitch2-inner"></span>' +
-					'<span class="onoffswitch2-switch"></span>' +
-					'</label>' +
-					'</div>' +
-					'</div>';
-            html += '</div>' +
+            '<h4>' + __s.bible_book_name + '</h4>' +
+            '</div>' +
             '<h5>Old Testament</h5>' +
             '<div id="ot_table"/>' +
             '<h5>New Testament</h5>' +
@@ -247,34 +254,31 @@
         return html;
     }
 
-    function addPassage() {
-        if (document.getElementById('addpassageonoffswitch').checked) {
-            addInsteadOfReplace = true;
-            $('#appendMsg').addClass('checked');
-        }
-        else {
-            addInsteadOfReplace = false;
-            $('#appendMsg').removeClass('checked');
-        }
-    }
-
     function goToPassage(osisID) {
         var activePassageData = step.util.activePassage().get("searchTokens") || [];
         var allVersions = "";
         var existingReferences = "";
+		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
         for (var i = 0; i < activePassageData.length; i++) {
             if (activePassageData[i].itemType == "version") {
                 if (allVersions.length > 0) allVersions += "|version=";
                 allVersions += activePassageData[i].item.shortInitials;
             }
-            else if ((addInsteadOfReplace) && (activePassageData[i].itemType == "reference")) {
+            else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType == "reference")) {
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
         var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
         closeChapterSelect();
-        console.log("navigateSearch from passage_selection.html: " + url)
-        step.router.navigateSearch(url, true); // skip QFilter
+        console.log("navigateSearch from passage_selection.html: " + url);
+		if ((selectedDisplayLoc === "replace") || (selectedDisplayLoc === "append")) step.router.navigateSearch(url, true); // skip QFilter
+		else {
+			//step.util.createNewLinkedColumn(0);
+			step.util.createNewColumn();
+			ap=step.util.activePassage();
+			ap.save({targetLocation:"Gen.4.4"},{silent:true});
+			step.router.navigatePreserveVersions("reference=" + osisID, false)
+		}
     }
 
     function getChapters(bookOsisID, version, userLang, numOfChapters) {
@@ -323,17 +327,6 @@
 		$('#keyboardEntry').hide();
         $('#pssgModalBackButton').show();
 		var html = '<h4>Type in your passage</h4>';
-		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() === "")
-			html += '<div class="append">' +
-				'<h6 id="appendMsg">Append the new passage to the current web page</h6>' +
-				'<div class="onoffswitch2">' +
-				'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addpassageonoffswitch" onchange="addPassage()"/>' +
-				'<label class="onoffswitch2-label" for="addpassageonoffswitch">' +
-				'<span class="onoffswitch2-inner"></span>' +
-				'<span class="onoffswitch2-switch"></span>' +
-				'</label>' +
-				'</div>' +
-				'</div><br>';
 		html += '<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
 			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
