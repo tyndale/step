@@ -648,7 +648,7 @@ var PassageMenuView = Backbone.View.extend({
 
         //do facebook share
         if (window.FB && window.FB.XFBML) {
-        	if (url != null) url = url.replace(/\|/g, "%7C");
+        	if (url != null) url = url.replace(/\|/g, "%7C").replace(/\-/g, "%2D");
             var facebook = $('<fb:share-button type="button_count"></fb:share-button>').attr("href", url);
             this.sharingBar.append($("<li>").append(facebook));
             window.FB.XFBML.parse(facebook.parent().get(0));
