@@ -269,13 +269,14 @@
     }
 
     function goToPassage(osisID, chptrOrVrsNum) {
+		var bookID = osisID.substring(0, osisID.indexOf("."));
+		if (bookID === "") bookID = osisID;
 		if ((chptrOrVrsNum != 0) && (addVerseSelection) && (modalMode === 'chapter')) {
-			var bookID = osisID.substring(0, osisID.indexOf("."));
 			var numOfVerse = 0;
 	        for (var i = 0; i < osisChapterJsword.length; i++) {
                 var currentOsisID = (osisChapterJsword[i].length === 4) ? osisChapterJsword[i][3] : osisChapterJsword[i][0];
 				if (bookID === currentOsisID) {
-					numOfVerse = osisChapterJsword[i][2][chptrOrVrsNum-1] || 0;
+					numOfVerse = osisChapterJsword[i][2][Math.abs(chptrOrVrsNum)-1] || 0; // -1 is used for books with 1 chapter (e.g.: Jude)
 					break;
 				}
 			}
@@ -310,7 +311,19 @@
 			}
 			if (modalMode === "verse") {
 				ap=step.util.activePassage();
-				ap.save({targetLocation: osisID}, {silent: true});
+				var numOfChaptersInBook = 0;
+		        for (var i = 0; i < osisChapterJsword.length; i++) {
+					var currentOsisID = (osisChapterJsword[i].length === 4) ? osisChapterJsword[i][3] : osisChapterJsword[i][0];
+					if (bookID === currentOsisID) {
+						numOfChaptersInBook = osisChapterJsword[i][1];
+						break;
+					}
+				}
+				if (numOfChaptersInBook === 1) {
+					var tmpOsisID = osisID.substring(0, osisID.indexOf(".")) + '.1.' + osisID.substring(osisID.indexOf(".") + 1);
+					ap.save({targetLocation: tmpOsisID}, {silent: true});
+				}
+				else ap.save({targetLocation: osisID}, {silent: true});
 				osisID = osisID.substring(0, osisID.lastIndexOf('.'));
 			}
 			console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
@@ -445,7 +458,10 @@
 				lastNumOfChapters = chptrOrVrsNum;
 			}
         }
-        if (chptrOrVrsNum === 1) goToPassage(osisIDLink, -1); // If there is only one chapter, just go to it.
+        if (chptrOrVrsNum === 1) {
+			goToPassage(osisIDLink, -1); // If there is only one chapter, just go to it.
+			return;
+		}
         html +=
             '</tr></table>' +
             '</div>';
