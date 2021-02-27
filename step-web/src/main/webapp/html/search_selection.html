@@ -1,8 +1,26 @@
 ﻿<div class="modal-header">
 	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<button type="button" class="close" data-dismiss="modal" onclick=closeSearchSelect()>X</button>
+	<br>
+	<span id="modalonoffswitch" class="pull-right">
+		<span id="appendMsg">&nbsp;<b>Add to existing search</b></span>
+		<div class="onoffswitch2 append">
+			<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/>
+			<label class="onoffswitch2-label" for="addsearchonoffswitch">
+			<span class="onoffswitch2-inner"></span>
+			<span class="onoffswitch2-switch"></span>
+			</label>
+		</div>
+	</span>
+	<span id="displayLocForm" class="form-group pull-right">
+		<label for="displayLocation">Display new passage in:</label>
+		<select type="text" id="displayLocation">
+		<option value="replace">Current panel</option>
+		<option id="newPanel" class="hidden-xs" value="new">New panel</option>
+		</select>
+	</span>
 </div>
-<div id="bookchaptermodalbody" class="modal-body">
+<div id="searchrmodalbody" class="modal-body">
 </div>
 <div class="footer">
 	<span id="searchSelectError" style="color: red;"></span>
@@ -113,6 +131,8 @@
     $(document).ready(function () {
 		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
+		debugger;
+		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
         if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
             var activePassageData = step.util.activePassage().get("searchTokens") || [];
             var existingReferences = "";
@@ -124,9 +144,10 @@
             }
             if (existingReferences !== "") searchRange = existingReferences;
         }
+		else $('#modalonoffswitch').hide();
         if (searchRangeOnly) _buildRangeHeaderAndTable()
         else {
-            $('#bookchaptermodalbody').append(_buildSearchHeaderAndTable());
+            $('#searchrmodalbody').append(_buildSearchHeaderAndTable());
             $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
@@ -154,7 +175,7 @@
     function goBackToPreviousPage() {
 		$('#searchSelectError').text("");
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
-			$('#bookchaptermodalbody').empty().append(_buildSearchHeaderAndTable());
+			$('#searchrmodalbody').empty().append(_buildSearchHeaderAndTable());
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
@@ -188,19 +209,8 @@
 		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
 		var searchTypeTitle = ["Search the Bible with the text you entered", "Search as a Greek word", "Search as a Hebrew word", "Search the subjects in the Bible", "Search definition of words with the text you entered"];        
 		var html = '<div class="header">' +
-            '<h4>Enter search word</h4>'; // should internationalize this
-        if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")
-			html +=	'<span class="append">' +
-				'<span id="appendMsg">Append to the search</span>' +
-				'<div class="onoffswitch2">' +
-				'<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/>' +
-				'<label class="onoffswitch2-label" for="addsearchonoffswitch">' +
-				'<span class="onoffswitch2-inner"></span>' +
-				'<span class="onoffswitch2-switch"></span>' +
-				'</label>' +
-				'</div>' +
-				'</span><br>';			
-		html +=	'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
+            '<h4>Enter search word</h4>' + // should internationalize this
+			'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
             '</div><br>' +
 			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
             '<div id="search_table">' +
@@ -228,7 +238,7 @@
     function _buildRangeHeaderAndTable() {
 	    $('#searchSelectError').text("");
 		var html = _buildRangeHeaderAndSkeleton()
-		$('#bookchaptermodalbody').empty().append(html);
+		$('#searchrmodalbody').empty().append(html);
 		if (searchRangeOnly) $('#srchModalBackButton').hide();
 		else $('#srchModalBackButton').show();
 		_buildBookTable();
@@ -788,8 +798,11 @@
         }
 		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
         var url = allVersions + range + previousSearch + currentSearch;
+		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
         closeSearchSelect();
-        console.log("navigateSearch from passage_selection.html: " + url)
+        console.log("navigateSearch from passage_selection.html: " + url);
+		debugger;
+		if (selectedDisplayLoc === "new") step.util.createNewColumn();
         step.router.navigateSearch(url, true);
     }
 </script>
