@@ -345,35 +345,29 @@
     }
 
 	function _handleEnteredPassage(verifyOnly) {
-		var userInput = $('textarea#enterYourPassage').val();
-		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',');
-		lastInput = userInput;
-		if (verifyOnly) {
-			var pos = userInput.lastIndexOf(",");
-			if (pos > -1) userInput = userInput.substring(pos + 1);
-		}
-		userInput = userInput.replace(/^\s+/g, '');
-		lastInputChecked = userInput;
-		
+		userInput = $('textarea#enterYourPassage').val();
+		userInput = userInput.replace(/[\n\r\t]/g, ' ').replace(/\s\s+/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '')
+        userInput = userInput.replace(/[–—]/g, '-'); // replace n-dash and m-dash with hyphen
 		var url = SEARCH_AUTO_SUGGESTIONS + userInput + "/limit%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
 		$.getJSON(url, function (data) {
 			if (data.length > 0) {
 				if (data[0].suggestion.passage) {
 					console.log(data);
-					$('#userEnterPassageError').text("Program error: 1st element not false");
+					$('#userEnterPassageError').text("Program error: unexpend result from SEARCH_AUTO_SUGGESTIONS");
 				}
 				else if (!verifyOnly) goToPassage(data[0].suggestion.osisID, 0); // 0 is ready to go to passage
 			}
 			else {
-				var errorText = (lastInputChecked != "") ? errorText = ' for "' + lastInputChecked + '"' : "";
+				var errorText = (userInput != "") ? ' for "' + userInput + '"' : "";
 				$('#userEnterPassageError').text("No match" + errorText + ", please update the passage you entered.");
 				$('textarea#enterYourPassage').focus();
-				$('textarea#enterYourPassage').val(lastInput);
+                if (!verifyOnly) $('textarea#enterYourPassage').val(userInput);
 			}
 		});
 	}
 
 	function _userEnterPassage() {
+    
 		$('#keyboardEntry').hide();
         $('#pssgModalBackButton').show();
 		var html = '<h4>Type in your passage</h4>';
