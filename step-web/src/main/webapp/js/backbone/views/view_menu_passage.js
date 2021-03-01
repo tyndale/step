@@ -683,29 +683,40 @@ var PassageMenuView = Backbone.View.extend({
         if (ev) {
             ev.preventDefault();
         }
-
         step.util.activePassageId(this.model.get("passageId"));
-
         var args = this.model.get("args") || "";
+        args = args.replace(new RegExp('\\|?' + REFERENCE        + '[^|]+', "ig"), "");
         var reference = "";
-        if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
-        else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
-        //console.log("key.osisKeyId: " + reference);
-        args = args.replace(/reference=[^|]+\|?/ig, "")
-            .replace(/&&/ig, "")
-            .replace(/&$/ig, "");
-        var isPassageForChineseLexicon = (this.model.get("searchType") == 'ORIGINAL_GREEK_RELATED') || (this.model.get("searchType") == 'ORIGINAL_HEBREW_RELATED');
-        if (isPassageForChineseLexicon) {
-            args = args.replace(/strong=[GH]\d{3}[\dA-D][a-f]?\|?/i, "");
+        var tmpArgs = this.removeSearchArgs(args);
+        if (tmpArgs !== args) { // There is probably search so go to current chapter instead.  
+            args = tmpArgs;
             reference = this.model.attributes.osisId;
             this.model.attributes.strongHighlights = "";
         }
-        if (args.length > 0 && args[args.length - 1] != '|') {
-            args += "|";
+        else {
+            if ((key != undefined) && (key.osisKeyId != undefined) && (key.osisKeyId != null)) reference = key.osisKeyId;
+            else alert("Cannot determine the last location, please re-enter the last passage you want to view.  key.osisKeyId is null or undefined");
+        }
+        args = args.replace(/&&/ig, "")
+                   .replace(/&$/ig, "");
+        if (args.length > 0) {
+            args = args.replace(/^\|/, '')
+                       .replace(/\|\|+/, '|');
+            if (args[args.length - 1] !== '|') args += '|';
         }
         args += "reference=" + reference;
         console.log("navigateSearch from goToSiblingChapter: " + args);
         step.router.navigateSearch(args);
+    },
+    removeSearchArgs: function(args) {
+        return args.replace(new RegExp('\\|?' + STRONG_NUMBER    + '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + TEXT_SEARCH      + '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + SUBJECT_SEARCH   + '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + GREEK            +  '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + HEBREW           +  '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + GREEK_MEANINGS   +  '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + HEBREW_MEANINGS  +  '[^|]+', "ig"), "")
+                   .replace(new RegExp('\\|?' + MEANINGS         +  '[^|]+', "ig"), "");
     },
     /**
      * Closes the whole column by removing it from the DOM
