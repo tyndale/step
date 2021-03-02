@@ -326,7 +326,7 @@
 			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>New Testament</i></button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
-   			'<br><br>' +
+   			'<br><span id="updateFeedback" style="color: green;"></span><br>' +
 			'<button type="button" style="font-size:16px;color:#498090;background-color:#ffffff;float:right;border:1px solid #498090" onclick=_updateRange()><b>Update search range</b></button><br>';
 		return html;
     }
@@ -569,24 +569,28 @@
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
 				$(el).removeClass('pressedButton');
 			});
+			$('#updateFeedback').text("Removed " + $(clicked_id2).text() + " from search range.");
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
 				$(el).addClass('pressedButton');
 			});
-
+			$('#updateFeedback').text("Added " + $(clicked_id2).text() + " to search range.");
 		}
 	}
 
 	function _userClickedCategory(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
+		var categoryName = $(clicked_id2).text();
+		categoryName = categoryName.replace(/:$/, "");
 		if ($(clicked_id2).hasClass('pressedButton')) {
 			$(clicked_id2).removeClass('pressedButton');
 			$("button[id^='" + clicked_id + "b']").each(function (i, el) {
 				$(el).removeClass('pressedButton');
 			});
 			$(clicked_id2.substring(0, 3) + '_hdr').removeClass('pressedButton');
+			$('#updateFeedback').text("Removed " +  + " from search range.");
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
@@ -594,6 +598,7 @@
 				$(el).addClass('pressedButton');
 			});
 			_checkHeaderButton(clicked_id);
+			$('#updateFeedback').text("Added " + $(clicked_id2).text() + " to search range.");
 		}
 	}
 	
@@ -608,6 +613,7 @@
 				$('#' + tmpID).removeClass('pressedButton');
 			}
 			$(clicked_id2.substring(0, 3) + '_hdr').removeClass('pressedButton');
+			$('#updateFeedback').text("Removed " + $(clicked_id2).text() + " from search range.");
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
@@ -623,6 +629,7 @@
 					$('#' + tmpID).addClass('pressedButton');
 					_checkHeaderButton(clicked_id);
 				}
+				$('#updateFeedback').text("Added " + $(clicked_id2).text() + " to search range.");
 			}
 		}
 	}
