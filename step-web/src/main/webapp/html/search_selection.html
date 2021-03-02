@@ -37,7 +37,7 @@
     var userLang = "en";
     var addInsteadOfReplace = false;
 	var searchOnSpecificType = "";
-	var searchTypeCode = [TEXT_SEARCH, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW, SUBJECT_SEARCH, MEANINGS];
+	var searchTypeCode = [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW];
 	var searchRangeOnly;
 	var searchModalCurrentPage = 1;
 	var searchUserInput = "";
@@ -205,8 +205,9 @@
     }
 
     function _buildSearchHeaderAndTable() {
-		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
-		var searchTypeTitle = ["Search the Bible with the text you entered", "Search as a Greek word", "Search as a Hebrew word", "Search the subjects in the Bible", "Search definition of words with the text you entered"];        
+//		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
+		var typeDesc = ["<b>Word*</b> or \"a phrase\" in the translation", "<b>Subject</b> or a person in the bible", "<b>Fuzzy search</b> for words meaning", "<b>Greek</b> words meaning", "Greek word (e.g. agape or ἀγάπη)", "<b>Hebrew</b> words meaning", "Hebrew word (e.g. hesed or חֶ֫סֶד)"];
+		var searchTypeTitle = ["Search the Bible with the text you entered", "Search the subjects in the Bible", "Search definition of words with the text you entered", "Search as a Greek word", "Search Greek word that can be translated as", "Search as a Hebrew word", "Search Greek word that can be translated as"];
 		var html = '<div class="header">' +
             '<h4>Enter search word</h4>' + // should internationalize this
 			'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
