@@ -3,7 +3,7 @@
 	<button type="button" class="close" data-dismiss="modal" onclick=closeSearchSelect()>X</button>
 	<br>
 	<span id="modalonoffswitch" class="pull-right">
-		<span id="appendMsg">&nbsp;<b>Add to existing search</b></span>
+		<span id="append_msg">&nbsp;<b>Add to existing search</b></span>
 		<div class="onoffswitch2 append">
 			<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/>
 			<label class="onoffswitch2-label" for="addsearchonoffswitch">
@@ -13,10 +13,10 @@
 		</div>
 	</span>
 	<span id="displayLocForm" class="form-group pull-right">
-		<label for="displayLocation">Display new passage in:</label>
+		<label id="display_result_in" for="displayLocation">Display result in:</label>
 		<select type="text" id="displayLocation">
-		<option value="replace">Current panel</option>
-		<option id="newPanel" class="hidden-xs" value="new">New panel</option>
+		<option id="current_panel" value="replace">Current panel</option>
+		<option id="new_panel" class="hidden-xs" value="new">New panel</option>
 		</select>
 	</span>
 </div>
@@ -111,26 +111,32 @@
             ["Rev", 22]
         ];
 	var groupsOT = [
-			{groupName: 'Book of Moses', show: false, books: [0, 1, 2, 3, 4], inCurrentTranslation: [false, false, false, false, false]},
-			{groupName: 'History of Israel', show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-				inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false]},
-			{groupName: 'Poetry', show: false, books: [17, 18, 19, 20, 21], inCurrentTranslation: [false, false, false, false, false]},
-			{groupName: 'Major Prophets', show: false, books: [22, 23, 24, 25, 26], inCurrentTranslation: [false, false, false, false, false]},
-			{groupName: 'Minor Prophets', show: false, books: [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-				inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false]}
-		];
+		{groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], inCurrentTranslation: [false, false, false, false, false]},
+		{groupName: __s.history_books, show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+			inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false]},
+		{groupName: __s.poetic_books, show: false, books: [17, 18, 19, 20, 21], inCurrentTranslation: [false, false, false, false, false]},
+		{groupName: __s.major_prophets, show: false, books: [22, 23, 24, 25, 26], inCurrentTranslation: [false, false, false, false, false]},
+		{groupName: __s.minor_prophets, show: false, books: [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
+			inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false]}
+	];
 	var groupsNT = [
-			{groupName: 'Gospel and Acts', show: false, books: [39, 40, 41, 42, 43], inCurrentTranslation: [false, false, false, false, false]},
-			{groupName: 'Pauline Epistles', show: false, books: [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
-				inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false, false]},
-			{groupName: 'Other NT', show: false, books: [57, 58, 59, 60, 61, 62, 63, 64, 65],
-				inCurrentTranslation: [false, false, false, false, false, false, false, false, false]}
-		];
+		{groupName: __s.gospels_and_acts, show: false, books: [39, 40, 41, 42, 43], inCurrentTranslation: [false, false, false, false, false]},
+		{groupName: __s.pauline_epistles, show: false, books: [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
+			inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false, false]},
+		{groupName: __s.other_nt, show: false, books: [57, 58, 59, 60, 61, 62, 63, 64, 65],
+			inCurrentTranslation: [false, false, false, false, false, false, false, false, false]}
+	];
 	var groupsOther = [{groupName: 'Other', show: false, books: [], inCurrentTranslation: []}];
 
     $(document).ready(function () {
 		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
+        $('#display_result_in').text(__s.display_result_in);
+        $('#append_msg').text(__s.append_msg);
+		$('#current_panel').text(__s.current_panel);
+        $('#new_panel').text(__s.new_panel);
+		if ((userLang.indexOf('en') != 0) && (groupsOT[0].groupName === "Books of Moses") && (groupsOT[0].groupName !== "Pentateuch"))
+			groupsOT[0].groupName = __s.the_pentateuch;
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
         if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
             var activePassageData = step.util.activePassage().get("searchTokens") || [];
@@ -160,7 +166,7 @@
     function handleKeyboardInput(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) {
-            $('#searchSelectError').text("Please click to select one of the suggested search.");
+            $('#searchSelectError').text(__s.click_to_select_search);
             var userInput =  $('textarea#userTextInput').val();
             userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
             $('textarea#userTextInput').val(userInput);
@@ -173,6 +179,7 @@
 
     function goBackToPreviousPage() {
 		$('#searchSelectError').text("");
+		$('#srchModalBackButton').prop('title', '');
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#searchmodalbody').empty().append(_buildSearchHeaderAndTable());
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
@@ -196,21 +203,21 @@
     function addSearch() {
         if (document.getElementById('addsearchonoffswitch').checked) {
             addInsteadOfReplace = true;
-            $('#appendMsg').addClass('checked');
+            $('#append_msg').addClass('checked');
         }
         else {
             addInsteadOfReplace = false;
-            $('#appendMsg').removeClass('checked');
+            $('#append_msg').removeClass('checked');
         }
     }
 
     function _buildSearchHeaderAndTable() {
 //		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
-		var typeDesc = ["<b>Word*</b> or \"a phrase\" in the translation", "<b>Subject</b> or a person in the bible", "<b>Fuzzy search</b> for words meaning", "<b>Greek</b> words meaning", "Greek word (e.g. agape or ἀγάπη)", "<b>Hebrew</b> words meaning", "Hebrew word (e.g. hesed or חֶ֫סֶד)"];
-		var searchTypeTitle = ["Search the Bible with the text you entered", "Search the subjects in the Bible", "Search definition of words with the text you entered", "Search Greek word that can be translated as", "Search as a Greek word", "Search Hebrew word that can be translated as", "Search as a Hebrew word"];
+//		var typeDesc = ["<b>Word*</b> or \"a phrase\" in the translation:", "<b>Subject</b> or a person in the Bible:", "<b>Fuzzy search</b> for words meaning:", "<b>Greek</b> words meaning:", "Greek word (e.g. <i>agape</i> or ἀγάπη):", "<b>Hebrew</b> words meaning:", "Hebrew word (e.g. <i>hesed</i> or חֶ֫סֶד):"];
+//		var searchTypeTitle = ["Search the Bible with the text you entered", "Search the subjects in the Bible", "Search definition of words with the text you entered", "Search Greek word that can be translated as", "Search as a Greek word", "Search Hebrew word that can be translated as", "Search as a Hebrew word"];
 		var html = '<div class="header">' +
-            '<h4>Enter search word</h4>' + // should internationalize this
-			'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>Range:</b> ' + searchRange + '&nbsp;&#9662;</button>' +
+            '<h4>' + __s.enter_search_word + '</h4>' +
+			'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '&nbsp;&#9662;</button>' +
             '</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
 			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
@@ -222,13 +229,16 @@
 			'</colgroup>' +
 			'<tr style="height:30px">' +
 			'<tr>' +
-			'<th scope="col">Type of search</th>' +
-			'<th scope="col">Suggested search word(s)</th>' +
+			'<th scope="col">' + __s.type_of_search + '</th>' +
+			'<th scope="col">' + __s.suggested_search_words + '</th>' +
 			'</tr>';
-		for (var i = 0; i < typeDesc.length; i ++) {
-			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '">' +
-				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + searchTypeCode[i] + '" title="' + searchTypeTitle[i] + '" style="font-size:12px;text-align:left">' + typeDesc[i] + '</td>' +
-				'<td id="searchResults' + searchTypeCode[i] + '" style="font-size:12px;text-align:left"></td>' +
+		for (var i = 0; i < searchTypeCode.length; i ++) {
+			var srchCode = searchTypeCode[i];
+			debugger;
+			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
+				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
+				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + '</td>' +
+				'<td id="searchResults' + srchCode + '" style="font-size:12px;text-align:left"></td>' +
 				'</tr>';
 		}
 		html += '</table>' +
@@ -238,10 +248,14 @@
 
     function _buildRangeHeaderAndTable() {
 	    $('#searchSelectError').text("");
+		$('#updateFeedback').text("");
 		var html = _buildRangeHeaderAndSkeleton()
 		$('#searchmodalbody').empty().append(html);
 		if (searchRangeOnly) $('#srchModalBackButton').hide();
-		else $('#srchModalBackButton').show();
+		else {
+			$('#srchModalBackButton').show();
+			$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
+		}
 		_buildBookTable();
         if (searchRange !== 'Gen-Rev') {
             var bookSelected = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
@@ -301,8 +315,9 @@
                     }
                 }
             }
-
+			$('#updateFeedback').text(__s.search_range_button_color_desc);
         }
+		else $('#updateFeedback').text(__s.all_books_selected);
 	}
 
     function _getPosOfBookInBible(bookName) {
@@ -315,24 +330,26 @@
 
     function _buildRangeHeaderAndSkeleton() {
 		var html = '<div class="header">' +
-            '<h4>Click the buttons to select your search range:</h4>' + // should internationalize this
+            '<h4>' + __s.click_to_select_search_range + ':</h4>' +
             '</div>' +
             '<div id="search_range_table">' +
 			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
-            'title="Click to select/unselect all Old Testament books" ' +
-			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>Old Testament</i></button>' +
+            'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.old_testament + ' ' + __s.bible_book + '" ' +
+			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.old_testament + ':</i></button>' +
             '<div id="ot_table"/>' +
 			'<button id="nt_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
-            'title="Click to select/unselect all New Testament books" ' +
-			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>New Testament</i></button>' +
+            'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.new_testament + ' ' + __s.bible_book + '" ' +
+			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
    			'<br><span id="updateFeedback" style="color: green;"></span><br>' +
-			'<button type="button" style="font-size:16px;color:#498090;background-color:#ffffff;float:right;border:1px solid #498090" onclick=_updateRange()><b>Update search range</b></button><br>';
+			'<button type="button" style="font-size:16px;color:#498090;background-color:#ffffff;float:right;border:1px solid #498090" ' +
+			'onclick=_updateRange()><b>' + __s.update_search_range + '</b></button><br>';
 		return html;
     }
     
 	function _updateRange() {
+		$('#searchSelectError').text("");
 		var start = -1;
 		var end = -1;
 		var result = "";
@@ -528,7 +545,7 @@
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
 					'type="button" class="pressedButton" style="color:#498090;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
-                    'title="Click to select/unselect all books in the ' + groupsOfBooks[j].groupName  + ' category" ' +
+                    'title="'  + __s.click_to_select + ' ' + __s.all + ' ' + groupsOfBooks[j].groupName  + ' ' + __s.bible_book + '" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
 					'</td>'; 
@@ -542,7 +559,7 @@
 						var displayName = _getBookDisplayName(groupsOfBooks[j].books[k]);
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
-							'title="Click to select/unselect ' + displayName[0] + '" ' +
+							'title="'  + __s.click_to_select + ' ' + displayName[0] + '" ' +
 							'type="button" class="pressedButton" style="color:#498090;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +
@@ -570,14 +587,14 @@
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
 				$(el).removeClass('pressedButton');
 			});
-			$('#updateFeedback').text("Removed " + $(clicked_id2).text() + " from search range.");
+			$('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
 				$(el).addClass('pressedButton');
 			});
-			$('#updateFeedback').text("Added " + $(clicked_id2).text() + " to search range.");
+			$('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
 		}
 	}
 
@@ -591,7 +608,7 @@
 				$(el).removeClass('pressedButton');
 			});
 			$(clicked_id2.substring(0, 3) + '_hdr').removeClass('pressedButton');
-			$('#updateFeedback').text("Removed " +  + " from search range.");
+			$('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
@@ -599,7 +616,7 @@
 				$(el).addClass('pressedButton');
 			});
 			_checkHeaderButton(clicked_id);
-			$('#updateFeedback').text("Added " + $(clicked_id2).text() + " to search range.");
+			$('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
 		}
 	}
 	
@@ -614,7 +631,7 @@
 				$('#' + tmpID).removeClass('pressedButton');
 			}
 			$(clicked_id2.substring(0, 3) + '_hdr').removeClass('pressedButton');
-			$('#updateFeedback').text("Removed " + $(clicked_id2).text() + " from search range.");
+			$('#updateFeedback').text(__s.removed + " \"" + $(clicked_id2).text() + "\". " + __s.click_update_when_finish);
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
@@ -630,7 +647,7 @@
 					$('#' + tmpID).addClass('pressedButton');
 					_checkHeaderButton(clicked_id);
 				}
-				$('#updateFeedback').text("Added " + $(clicked_id2).text() + " to search range.");
+				$('#updateFeedback').text(__s.added + " \"" + $(clicked_id2).text() + "\". " + __s.click_update_when_finish);
 			}
 		}
 	}
@@ -738,8 +755,8 @@
 									str2Search = text2Display;
 								}
 								else {
-									text2Display = data[i].suggestion.gloss + ' (' + data[i].suggestion.stepTransliteration +
-										' - ' + data[i].suggestion.matchingForm + ')';
+									text2Display = data[i].suggestion.gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
+										'</i> - ' + data[i].suggestion.matchingForm + ')';
 									str2Search = data[i].suggestion.strongNumber;
 									searchType = 'strong';
 								}

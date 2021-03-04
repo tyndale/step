@@ -699,7 +699,7 @@ step.util = {
             }
 			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
             if (allSelectedBibleVersions.length > 0)
-                container.append('<button type="button" onclick="step.util.startPickBible()" title="Click to select additional Bible translations" class="select-' + VERSION + '" ' +
+                container.append('<button type="button" onclick="step.util.startPickBible()" title="' + __s.click_translation + '" class="select-' + VERSION + '" ' +
                     'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                     allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
             if (allSelectedReferences.length === 0) {
@@ -710,7 +710,7 @@ step.util = {
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
 
-            container.append('<button type="button" onclick="step.util.passageSelectionModal()" title="Click to select a new passage" class="select-' + REFERENCE + '" ' +
+            container.append('<button type="button" onclick="step.util.passageSelectionModal()" title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
 			var searchWords = "";
@@ -729,7 +729,7 @@ step.util = {
 					}
 				}
             }
-            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="Click to select a search of the Bible" class="select-search" ' +
+            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="' + __s.click_search + '" class="select-search" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;' + searchWords + '&nbsp;&#9662;</span></button>&nbsp;');
 

@@ -3,7 +3,7 @@
 	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
 	<br>
 		<span id="modalonoffswitch" class="pull-right">
-		<span id="selectVerse">&nbsp;<b>Select verse number</b></span>
+		<span id="select_verse_number">&nbsp;<b>Select verse number</b></span>
 		<div class="onoffswitch2 append">
 			<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>
 			<label class="onoffswitch2-label" for="selectverseonoffswitch">
@@ -13,11 +13,11 @@
 		</div>
 	</span>
 	<div id="displayLocForm" class="form-group pull-right">
-		<label for="displayLocation">Display new passage in:</label>
+		<label id="display_passage_at" for="displayLocation">Display passage in:</label>
 		<select type="text" id="displayLocation">
-		<option value="replace">Current panel</option>
-		<option id="newPanel" class="hidden-xs" value="new">New panel</option>
-		<option id="appendToPanel" value="append">Current panel, after current passage</option>
+		<option id="current_panel" value="replace">Current panel</option>
+		<option id="new_panel" class="hidden-xs" value="new">New panel</option>
+		<option id="append_to_panel" value="append">Current panel, after current passage</option>
 		</select>
 	</div>
 </div>
@@ -26,7 +26,7 @@
 <div class="footer">
 	<a id="keyboardEntry" href="javascript:_userEnterPassage();">
 		<img src="/images/keyboard.jpg" alt="Keyboard entry">
-		<span>Type in the passage (optional)</span>
+		<span id='type_in_your_passage'>Type in the passage (optional)</span>
 	</a>
 </div>
 <script>
@@ -108,15 +108,21 @@
 	];
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
+		$('#display_passage_at').text(__s.display_passage_at);
+		$('#current_panel').text(__s.current_panel);
+		$('#new_panel').text(__s.new_panel);
+		$('#append_to_panel').text(__s.append_to_panel);
+		$('#select_verse_number').text(__s.select_verse_number);
+		$('#type_in_your_passage').text(__s.type_in_your_passage);
 		closeSearchSelect();
 		var hideAppend = false;
 		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
-			$('#appendToPanel').hide();
+			$('#append_to_panel').hide();
 			hideAppend = true;
 		}
 		if ($('.passageContainer.active').width() < 500) {
 			if (hideAppend) $('#displayLocForm').hide();
-			else $('#newPanel').hide();
+			else $('#new_panel').hide();
 		}
         _displayListOfBooks();
     });
@@ -246,11 +252,11 @@
 
     function _buildBookHeaderAndSkeleton() {
          var html = '<div class="header">' +
-            '<h4>' + __s.bible_book_name + '</h4>' +
+            '<h4>' + __s.please_select_book + '</h4>' +
             '</div>' +
-            '<h5>Old Testament</h5>' +
+            '<h5>' + __s.old_testament + '</h5>' +
             '<div id="ot_table"/>' +
-            '<h5>New Testament</h5>' +
+            '<h5>' + __s.new_testament + '</h5>' +
             '<div id="nt_table"/>' +
             '</div>';
 		return html;
@@ -367,17 +373,16 @@
 	}
 
 	function _userEnterPassage() {
-    
 		$('#keyboardEntry').hide();
         $('#pssgModalBackButton').show();
-		var html = '<h4>Type in your passage</h4>';
-		html += '<p>&nbsp;&nbsp;&nbsp;<b>Examples:</b>	Matt 6</p>' +
-			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Isa 40:1-2</p>' +
-			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;John 3:16, Rom 3:23, Rev 1:8</p><br><br>' +
-			'<p>Enter passage(s):</p>' +
+		var html = '<h4>' + __s.type_in_your_passage + '</h4>';
+		html += '<p>&nbsp;&nbsp;&nbsp;<b>' + __s.examples + ':</b>	' + __s.passage_example1 + '</p>' +
+			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + __s.passage_example2 + '</p>' +
+			'<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + __s.passage_example3 + '</p><br><br>' +
+			'<p>' + __s.enter_passage + ':</p>' +
 			'<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>' + // size 16px so the mobile devices will not expand
 			'<br><br>' +
-			'<button type="button" onclick=_handleEnteredPassage(false)>Go to passage</button>&nbsp;' +
+			'<button type="button" class="pull-right" onclick=_handleEnteredPassage(false)>' + __s.go_to_passage + '</button>&nbsp;' +
 			'<span id="userEnterPassageError" style="color: red;"></span>';
 		$('#bookchaptermodalbody').empty();
 		$('#bookchaptermodalbody').append(html);
@@ -397,14 +402,14 @@
     function _buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, isChapter) {
 		var headerMsg;
 		if (isChapter) {
-			headerMsg = __s.chapters_in_book;
+			headerMsg = __s.please_select_chapter;
 			modalMode = 'chapter';
 		}
 		else {
-			headerMsg = __s.display_verseNumbers;
+			headerMsg = __s.please_select_verse;
 			modalMode = 'verse';
 		}
-        var html = '<h4>' + headerMsg + '</h4>' +
+        var html = '<h5>' + headerMsg + '</h5>' +
             '<table>' +
             '<colgroup>' +
 				'<col span="1" style="width: 10%;">' +
@@ -489,11 +494,11 @@
 	function addSelectVerse() {
         if (document.getElementById('selectverseonoffswitch').checked) {
             addVerseSelection = true;
-            $('#selectVerse').addClass('checked');
+            $('#select_verse_number').addClass('checked');
         }
         else {
             addVerseSelection = false;
-            $('#selectVerse').removeClass('checked');
+            $('#select_verse_number').removeClass('checked');
         }
     }
 	
