@@ -731,8 +731,10 @@
 									if (text2Display.length == 0) {
 										console.log('group, but no examples');
 									}
-									text2Display += ', etc. <i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
-									searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:_handleEnteredSearchWord(\'' + searchType + '\')">' + text2Display + "</a>";
+									else {
+										text2Display += ', ' + __s.etc + '<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
+										searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:_handleEnteredSearchWord(\'' + searchType + '\')">' + text2Display + "</a>";
+									}
 								}
 								else searchResultsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
 							}
