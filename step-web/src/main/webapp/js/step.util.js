@@ -709,8 +709,7 @@ step.util = {
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
-
-            container.append('<button type="button" onclick="step.util.passageSelectionModal()" title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
+            container.append('<button type="button" onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
                 '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
 			var searchWords = "";
@@ -1357,13 +1356,17 @@ step.util = {
             doHighlight(nonJqElement, cssClasses, regex);
         }
     },
-    passageSelectionModal: function (passageSelectionConfirmed) {
+    passageSelectionModal: function (activePassageNumber, passageSelectionConfirmed) {
+		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
+			step.util.activePassageId(activePassageNumber); // make the passage active
+        var element = document.getElementById('passageSelectionConfirmModal');
+        if (element) element.parentNode.removeChild(element);
+        element = document.getElementById('passageSelectionModal');
+        if (element) element.parentNode.removeChild(element);
         if ((!passageSelectionConfirmed) && (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")) {
             var passageSelectConfirmDiv = $('<div id="passageSelectionConfirmModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">');
-            var element = document.getElementById('passageSelectionConfirmModal');
-            if (element) element.parentNode.removeChild(element);
             passageSelectConfirmDiv.appendTo("body");
             $('#passageSelectionConfirmModal').modal('show').find('.modal-content').load('/html/passage_selection_confirm.html');            
         }
@@ -1371,8 +1374,6 @@ step.util = {
             var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">');
-            var element = document.getElementById('passageSelectionModal');
-            if (element) element.parentNode.removeChild(element);
             passageSelectDiv.appendTo("body");
             //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
             $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');

@@ -30,7 +30,7 @@
         <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="passage_stats" /></span>
     </a>
 	<a id="bookmark-icon" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
-        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks_and_recent_texts" /> </span>
+        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /> </span>
     </a>
 <!--     <a id="sidebar-icon" class="showSidebar" title="<fmt:message key="passage_open_sidebar" />">
         <i class="glyphicon icon-sidebar">

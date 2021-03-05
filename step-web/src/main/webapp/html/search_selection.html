@@ -234,7 +234,6 @@
 			'</tr>';
 		for (var i = 0; i < searchTypeCode.length; i ++) {
 			var srchCode = searchTypeCode[i];
-			debugger;
 			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
 				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + '</td>' +
@@ -544,7 +543,7 @@
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="pressedButton" style="color:#498090;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
+					'type="button" class="pressedButton" style="font-size:12px;color:#498090;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
                     'title="'  + __s.click_to_select + ' ' + __s.all + ' ' + groupsOfBooks[j].groupName  + ' ' + __s.bible_book + '" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
@@ -560,7 +559,7 @@
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
 							'title="'  + __s.click_to_select + ' ' + displayName[0] + '" ' +
-							'type="button" class="pressedButton" style="color:#498090;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
+							'type="button" class="pressedButton" style="font-size:12px;color:#498090;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +
 							'</td>';

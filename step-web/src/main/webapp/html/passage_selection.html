@@ -2,24 +2,26 @@
 	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<button type="button" class="close" data-dismiss="modal" onclick=closeChapterSelect()>X</button>
 	<br>
-		<span id="modalonoffswitch" class="pull-right">
-		<span id="select_verse_number">&nbsp;<b>Select verse number</b></span>
-		<div class="onoffswitch2 append">
-			<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>
-			<label class="onoffswitch2-label" for="selectverseonoffswitch">
-			<span class="onoffswitch2-inner"></span>
-			<span class="onoffswitch2-switch"></span>
-			</label>
-		</div>
-	</span>
-	<div id="displayLocForm" class="form-group pull-right">
-		<label id="display_passage_at" for="displayLocation">Display passage in:</label>
-		<select type="text" id="displayLocation">
-		<option id="current_panel" value="replace">Current panel</option>
-		<option id="new_panel" class="hidden-xs" value="new">New panel</option>
-		<option id="append_to_panel" value="append">Current panel, after current passage</option>
-		</select>
-	</div>
+    <div id="modalonoffswitch" class="pull-right">
+        <span id="select_verse_number">&nbsp;<b>Select verse number</b></span>
+        <div class="onoffswitch2 append pull-right">
+            <input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="selectverseonoffswitch" onchange="addSelectVerse()"/>
+            <label class="onoffswitch2-label" for="selectverseonoffswitch">
+            <span class="onoffswitch2-inner"></span>
+            <span class="onoffswitch2-switch"></span>
+            </label>
+        </div>
+    </div>
+    <br>
+    <div id="displayLocForm" class="form-group" style="clear:both;float:right">
+        <label id="display_passage_at" for="displayLocation">Display passage in:</label>
+        <select type="text" id="displayLocation">
+            <option id="current_panel" value="replace">Current panel</option>
+            <option id="new_panel" class="hidden-xs" value="new">New panel</option>
+            <option id="append_to_panel" value="append">Current panel, after current passage</option>
+        </select>
+    </div>
+	<br>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
