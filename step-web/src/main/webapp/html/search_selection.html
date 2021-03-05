@@ -212,9 +212,6 @@
     }
 
     function _buildSearchHeaderAndTable() {
-//		var typeDesc = ["This wording in the Bible", "Greek word that can be translated as", "Greek word", "Hebrew word that can be translated as", "Hebrew word", "Verses with the subject of", "English words that can be translated as"];
-//		var typeDesc = ["<b>Word*</b> or \"a phrase\" in the translation:", "<b>Subject</b> or a person in the Bible:", "<b>Fuzzy search</b> for words meaning:", "<b>Greek</b> words meaning:", "Greek word (e.g. <i>agape</i> or ἀγάπη):", "<b>Hebrew</b> words meaning:", "Hebrew word (e.g. <i>hesed</i> or חֶ֫סֶד):"];
-//		var searchTypeTitle = ["Search the Bible with the text you entered", "Search the subjects in the Bible", "Search definition of words with the text you entered", "Search Greek word that can be translated as", "Search as a Greek word", "Search Hebrew word that can be translated as", "Search as a Hebrew word"];
 		var html = '<div class="header">' +
             '<h4>' + __s.enter_search_word + '</h4>' +
 			'<button id="searchRangeButton" type="button" style="color:#498090;background-color:#ffffff;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '&nbsp;&#9662;</button>' +
@@ -236,7 +233,7 @@
 			var srchCode = searchTypeCode[i];
 			html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
 				'<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
-				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + '</td>' +
+				__s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + ':</td>' +
 				'<td id="searchResults' + srchCode + '" style="font-size:12px;text-align:left"></td>' +
 				'</tr>';
 		}
@@ -725,7 +722,7 @@
 									for (var k = 0; k < data[i].extraExamples.length; k++) {
 										if (k > 0) text2Display += ", ";
 										if ((searchType === GREEK) || (searchType === HEBREW))
-											text2Display += data[i].extraExamples[k].stepTransliteration;
+											text2Display += '<i>' + data[i].extraExamples[k].stepTransliteration + '</i>';
 										else if ((searchType === GREEK_MEANINGS) || (searchType === HEBREW_MEANINGS) || (searchType === MEANINGS))
 											text2Display += data[i].extraExamples[k].gloss;
 										else if (searchType === SUBJECT_SEARCH)
