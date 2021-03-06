@@ -170,6 +170,8 @@
             var userInput =  $('textarea#userTextInput').val();
             userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
             $('textarea#userTextInput').val(userInput);
+			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+\s?\d/i) > -1) _handleEnteredSearchWord(null, null, true);
+
         }
         else {
             $('#searchSelectError').text("");
@@ -677,10 +679,10 @@
         return html;
     }
 
-	function _handleEnteredSearchWord(limitType, previousUserInput) {
+	function _handleEnteredSearchWord(limitType, previousUserInput, userPressedEnterKey) {
 		var userInput = '';
 		$('#warningMessage').text('');
-		if (typeof previousUserInput === "undefined") userInput =  $('textarea#userTextInput').val();
+		if ((typeof previousUserInput === "undefined") || (previousUserInput === null))  userInput =  $('textarea#userTextInput').val();
 		else {
 			userInput = previousUserInput;
 			$('textarea#userTextInput').text(userInput);
@@ -705,6 +707,8 @@
 				for (var i = 0; i < searchTypeCode.length; i++) {
 					searchResultsToDisplay.push("");
 				}
+				var referenceCount = 0;
+				var osisID = "";
 				for (var i = 0; i < data.length; i++) {
 					var searchType = data[i].itemType;
 					var searchResultIndex = searchTypeCode.indexOf(searchType);
@@ -765,6 +769,8 @@
 							if ((data[i].suggestion.sectionType === 'PASSAGE') && (!data[i].suggestion.wholeBook)) {
 								pos = searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+\s?\d/i);
 								if (pos > -1) {
+									referenceCount ++;
+									osisID = data[0].suggestion.osisID;
 									$('#warningMessage').text('If you want to read a passage, use the button at the top of the panel which displays the passage. You can only search for words and subjects here.');
 									$('#warningMessage').append($('.passageContainer.active').find('.argSummary').find('.select-reference').clone(true));
 								}
@@ -775,6 +781,9 @@
 							console.log(data[i]);
                             break;
 					}
+				}
+				if ((userPressedEnterKey) && (referenceCount == 1) && (osisID !== "")) {
+					goToPassage(osisID, 0);
 				}
 				for (l = 0; l < searchResultsToDisplay.length; l++) {
 					$('#searchResults' + searchTypeCode[l]).html(searchResultsToDisplay[l]);
@@ -840,4 +849,70 @@
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();
         step.router.navigateSearch(url, true);
     }
+	
+	function goToPassage(osisID, chptrOrVrsNum) {
+		var addVerseSelection = false;
+		var modalMode = "";
+		var bookID = osisID.substring(0, osisID.indexOf("."));
+		if (bookID === "") bookID = osisID;
+		if ((chptrOrVrsNum != 0) && (addVerseSelection) && (modalMode === 'chapter')) {
+			var numOfVerse = 0;
+	        for (var i = 0; i < osisChapterJsword.length; i++) {
+                var currentOsisID = (osisChapterJsword[i].length === 4) ? osisChapterJsword[i][3] : osisChapterJsword[i][0];
+				if (bookID === currentOsisID) {
+					numOfVerse = osisChapterJsword[i][2][Math.abs(chptrOrVrsNum)-1] || 0; // -1 is used for books with 1 chapter (e.g.: Jude)
+					break;
+				}
+			}
+			if (numOfVerse > 0) {
+				_buildChptrVrsTbl(null, osisID, numOfVerse, false);
+				return;
+			}
+			else alert('Cannot determine the number of verse in ' + osisID + '.  Will proceed to display the chapter.');
+		}
+        var activePassageData = step.util.activePassage().get("searchTokens") || [];
+        var allVersions = "";
+        var existingReferences = "";
+		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
+        for (var i = 0; i < activePassageData.length; i++) {
+            if (activePassageData[i].itemType == "version") {
+                if (allVersions.length > 0) allVersions += "|version=";
+                allVersions += activePassageData[i].item.shortInitials;
+            }
+            else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType == "reference")) {
+                existingReferences += "|reference=" + activePassageData[i].item.osisID;
+            }
+        }
+        closeSearchSelect();
+		if (selectedDisplayLoc === "append") {
+			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
+			step.router.navigateSearch(url, true); // skip QFilter
+		}
+		else {
+			if (selectedDisplayLoc === "new") {
+				//step.util.createNewLinkedColumn(0);
+				step.util.createNewColumn();
+			}
+			if (modalMode === "verse") {
+				ap=step.util.activePassage();
+				var numOfChaptersInBook = 0;
+		        for (var i = 0; i < osisChapterJsword.length; i++) {
+					var currentOsisID = (osisChapterJsword[i].length === 4) ? osisChapterJsword[i][3] : osisChapterJsword[i][0];
+					if (bookID === currentOsisID) {
+						numOfChaptersInBook = osisChapterJsword[i][1];
+						break;
+					}
+				}
+				if (numOfChaptersInBook === 1) {
+					var tmpOsisID = osisID.substring(0, osisID.indexOf(".")) + '.1.' + osisID.substring(osisID.indexOf(".") + 1);
+					ap.save({targetLocation: tmpOsisID}, {silent: true});
+				}
+				else ap.save({targetLocation: osisID}, {silent: true});
+				osisID = osisID.substring(0, osisID.lastIndexOf('.'));
+			}
+			console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
+			step.router.navigatePreserveVersions("reference=" + osisID, false);
+		}
+    }
+
 </script>
