@@ -765,7 +765,7 @@
 							if ((data[i].suggestion.sectionType === 'PASSAGE') && (!data[i].suggestion.wholeBook)) {
 								pos = searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+\s?\d/i);
 								if (pos > -1) {
-									$('#warningMessage').text('You can search for words and subjects here.  If you want to read a passage, please use this button at the top of the panel which displays the passage:');
+									$('#warningMessage').text('If you want to read a passage, use the button at the top of the panel which displays the passage. You can only search for words and subjects here.');
 									$('#warningMessage').append($('.passageContainer.active').find('.argSummary').find('.select-reference').clone(true));
 								}
 							}
