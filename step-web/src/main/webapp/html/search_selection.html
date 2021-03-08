@@ -170,7 +170,7 @@
             var userInput =  $('textarea#userTextInput').val();
             userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
             $('textarea#userTextInput').val(userInput);
-			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+\s?\d/i) > -1) _handleEnteredSearchWord(null, null, true);
+			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) _handleEnteredSearchWord(null, null, true);
 
         }
         else {
@@ -707,8 +707,6 @@
 				for (var i = 0; i < searchTypeCode.length; i++) {
 					searchResultsToDisplay.push("");
 				}
-				var referenceCount = 0;
-				var osisID = "";
 				for (var i = 0; i < data.length; i++) {
 					var searchType = data[i].itemType;
 					var searchResultIndex = searchTypeCode.indexOf(searchType);
@@ -767,10 +765,9 @@
 							break;
 						case REFERENCE:
 							if ((data[i].suggestion.sectionType === 'PASSAGE') && (!data[i].suggestion.wholeBook)) {
-								pos = searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+\s?\d/i);
+								pos = searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i);
 								if (pos > -1) {
-									referenceCount ++;
-									if (referenceCount == 1) osisID = data[0].suggestion.osisID;
+									if (userPressedEnterKey) goToPassage(data[0].suggestion.osisID, 0);
 									$('#warningMessage').text('If you want to read a passage, use the button at the top of the panel which displays the passage. You can only search for words and subjects here.');
 									$('#warningMessage').append($('.passageContainer.active').find('.argSummary').find('.select-reference').clone(true));
 								}
@@ -782,8 +779,6 @@
                             break;
 					}
 				}
-				if ((userPressedEnterKey) && (referenceCount >= 1) && (osisID !== ""))
-					goToPassage(osisID, 0);
 				for (l = 0; l < searchResultsToDisplay.length; l++) {
 					$('#searchResults' + searchTypeCode[l]).html(searchResultsToDisplay[l]);
 					if (typeof limitType === "undefined") $('.select-' + searchTypeCode[l]).show()

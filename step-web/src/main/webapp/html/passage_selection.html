@@ -26,10 +26,14 @@
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
 <div class="footer">
-	<a id="keyboardEntry" href="javascript:_userEnterPassage();">
-		<img src="/images/keyboard.jpg" alt="Keyboard entry">
-		<span id='type_in_your_passage'>Type in the passage (optional)</span>
-	</a>
+	<!-- <a id="keyboardEntry" href="javascript:_userEnterPassage();"> -->
+		<!-- <img src="/images/keyboard.jpg" alt="Keyboard entry"> -->
+		<!-- <span id='type_in_your_passage'>Type in the passage (optional)</span> -->
+	<!-- </a> -->
+	<img src="/images/keyboard.jpg" alt="Keyboard entry">
+	<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>
+	<br>
+	<span id="userEnterPassageError" style="color: red;"></span>'
 </div>
 <script>
     var version = "ESV_th";
@@ -127,6 +131,15 @@
 			else $('#new_panel').hide();
 		}
         _displayListOfBooks();
+		$("textarea#enterYourPassage").keypress(function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if (code == 13) _handleEnteredPassage(false); // 13 is return
+			else if (code == 44) _handleEnteredPassage(true); // 44 is ,
+		}).keyup(function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
+		});
+		$('textarea#enterYourPassage').focus();
     });
 
 	function _displayListOfBooks() {
@@ -368,7 +381,7 @@
 			else {
 				var errorText = (userInput != "") ? ' for "' + userInput + '"' : "";
 				$('#userEnterPassageError').text("No match" + errorText + ", please update the passage you entered.");
-				$('textarea#enterYourPassage').focus();
+				$('textareatextarea#enterYourPassage').focus();
                 if (!verifyOnly) $('textarea#enterYourPassage').val(userInput);
 			}
 		});
