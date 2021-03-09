@@ -1,6 +1,6 @@
 ﻿<div class="modal-header">
 	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
-	<button type="button" class="close" data-dismiss="modal" onclick=closeSearchSelect()>X</button>
+	<button type="button" class="close" data-dismiss="modal" onclick=closeModal("searchSelectionModal")>X</button>
 	<br>
 	<span id="modalonoffswitch" class="pull-right">
 		<span id="append_msg">&nbsp;<b>Add to existing search</b></span>
@@ -27,8 +27,8 @@
 </div>
 <style>
 .pressedButton {
-	background-color: #008cba;
-	color: white !important;
+	background-color: #00ff80;
+	color: red !important;
 	border: 2px solid black;
 }
 </style>
@@ -330,6 +330,7 @@
 		var html = '<div class="header">' +
             '<h4>' + __s.click_to_select_search_range + ':</h4>' +
             '</div>' +
+			'<span id="updateFeedback" style="color: green;"></span>' +
             '<div id="search_range_table">' +
 			'<button id="ot_hdr" type="button" style="color:#498090;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.old_testament + ' ' + __s.bible_book + '" ' +
@@ -340,7 +341,8 @@
 			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
-   			'<br><span id="updateFeedback" style="color: green;"></span><br>' +
+   			'<br>' +
+			'<span>' + __s.click_update_when_finish + '</span>' +
 			'<button type="button" style="font-size:16px;color:#498090;background-color:#ffffff;float:right;border:1px solid #498090" ' +
 			'onclick=_updateRange()><b>' + __s.update_search_range + '</b></button><br>';
 		return html;
@@ -585,14 +587,14 @@
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
 				$(el).removeClass('pressedButton');
 			});
-			$('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
+			$('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
 				$(el).addClass('pressedButton');
 			});
-			$('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
+			$('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
 		}
 	}
 
@@ -606,7 +608,7 @@
 				$(el).removeClass('pressedButton');
 			});
 			$(clicked_id2.substring(0, 3) + '_hdr').removeClass('pressedButton');
-			$('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
+			$('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
@@ -614,7 +616,7 @@
 				$(el).addClass('pressedButton');
 			});
 			_checkHeaderButton(clicked_id);
-			$('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\". " + __s.click_update_when_finish);
+			$('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
 		}
 	}
 	
@@ -629,7 +631,7 @@
 				$('#' + tmpID).removeClass('pressedButton');
 			}
 			$(clicked_id2.substring(0, 3) + '_hdr').removeClass('pressedButton');
-			$('#updateFeedback').text(__s.removed + " \"" + $(clicked_id2).text() + "\". " + __s.click_update_when_finish);
+			$('#updateFeedback').text(__s.removed + " \"" + $(clicked_id2).text() + "\".");
 		}
 		else {
 			$(clicked_id2).addClass('pressedButton');
@@ -645,7 +647,7 @@
 					$('#' + tmpID).addClass('pressedButton');
 					_checkHeaderButton(clicked_id);
 				}
-				$('#updateFeedback').text(__s.added + " \"" + $(clicked_id2).text() + "\". " + __s.click_update_when_finish);
+				$('#updateFeedback').text(__s.added + " \"" + $(clicked_id2).text() + "\".");
 			}
 		}
 	}
@@ -794,17 +796,6 @@
 		}
 	}
 
-    function closeSearchSelect() {
-        var element = document.getElementById('searchSelectionModal');
-		if (element) {
-			$('#searchSelectionModal').modal('hide');
-			$('#searchSelectionModal').modal({
-				show: false
-			});
-			element.parentNode.removeChild(element);
-		}
-    }
-
     function goSearch(searchType, searchWord) {
         var activePassageData = step.util.activePassage().get("searchTokens") || [];
         var allVersions = "";
@@ -838,7 +829,7 @@
 		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
         var url = allVersions + range + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
-        closeSearchSelect();
+		closeModal('searchSelectionModal');
         console.log("navigateSearch from passage_selection.html: " + url);
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();
         step.router.navigateSearch(url, true);
@@ -877,7 +868,7 @@
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
-        closeSearchSelect();
+		closeModal('searchSelectionModal');
 		if (selectedDisplayLoc === "append") {
 			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
 			step.router.navigateSearch(url, true); // skip QFilter
@@ -906,6 +897,17 @@
 			}
 			console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
 			step.router.navigatePreserveVersions("reference=" + osisID, false);
+		}
+    }
+	
+    function closeModal(modalID) {
+        var element = document.getElementById(modalID);
+		if (element) {	
+			$('#' + modalID).modal('hide');
+			$('#' + modalID).modal({
+				show: false
+			});
+			element.parentNode.removeChild(element);
 		}
     }
 

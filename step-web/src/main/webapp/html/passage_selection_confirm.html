@@ -1,5 +1,5 @@
 ﻿<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal" onclick=closeSelectConfirm()>X</button>
+	<button type="button" class="close" data-dismiss="modal" onclick=closeModal("passageSelectionConfirmModal")>X</button>
 </div>
 <div id="bookchaptermodalbody" class="modal-body">
 </div>
@@ -28,18 +28,21 @@
     }
 
     function _goToUserSelection(userSelection) {
-        closeSelectConfirm();
+        closeModal('passageSelectionConfirmModal');
+		closeModal('searchSelectionModal');
+		closeModal('passageSelectionModal');
         if (userSelection) step.util.searchSelectionModal(true);
         else step.util.passageSelectionModal(-1, true); // PT: come back to check this
     }
 
-    function closeSelectConfirm() {
-        $('#passageSelectionConfirmModal').modal('hide');
-        $('#passageSelectionConfirmModal').modal({
-            show: false
-        });
-        var element = document.getElementById('passageSelectionConfirmModal');
-        if (element) element.parentNode.removeChild(element);
+    function closeModal(modalID) {
+        var element = document.getElementById(modalID);
+		if (element) {	
+			$('#' + modalID).modal('hide');
+			$('#' + modalID).modal({
+				show: false
+			});
+			element.parentNode.removeChild(element);
+		}
     }
-
 </script>
