@@ -27,7 +27,7 @@
 </div>
 <style>
 .pressedButton {
-	background-color: #336600;
+	background-color: #336600 !important;
 	color: white !important;
 	border: 2px solid black;
 }
@@ -216,7 +216,7 @@
     function _buildSearchHeaderAndTable() {
 		var html = '<div class="header">' +
             '<h4>' + __s.enter_search_word + '</h4>' +
-			'<button id="searchRangeButton" type="button" style="color:white;background-color:#cc0000;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '&nbsp;&#9662;</button>' +
+			'<button id="searchRangeButton" type="button" style="color:white;background-color:#498090;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '&nbsp;&#9662;</button>' +
             '</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
 			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
@@ -332,18 +332,18 @@
             '</div>' +
 			'<span id="updateFeedback" style="color: green;"></span>' +
             '<div id="search_range_table">' +
-			'<button id="ot_hdr" type="button" style="color:white;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
+			'<button id="ot_hdr" type="button" style="color:white;background-color:#cc0000;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.old_testament + ' ' + __s.bible_book + '" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.old_testament + ':</i></button>' +
             '<div id="ot_table"/>' +
-			'<button id="nt_hdr" type="button" style="color:white;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
+			'<button id="nt_hdr" type="button" style="color:white;background-color:#cc0000;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.new_testament + ' ' + __s.bible_book + '" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
    			'<br>' +
 			'<span>' + __s.click_update_when_finish + '</span>' +
-			'<button type="button" style="font-size:16px;color:white;background-color:#cc0000;float:right;border:1px solid #498090" ' +
+			'<button type="button" style="font-size:16px;color:white;background-color:#498090;float:right;border:1px solid #498090" ' +
 			'onclick=_updateRange()><b>' + __s.update_search_range + '</b></button><br>';
 		return html;
     }
@@ -544,7 +544,7 @@
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="pressedButton" style="font-size:12px;color:white;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
+					'type="button" class="pressedButton" style="font-size:12px;color:white;background-color:#cc0000;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
                     'title="'  + __s.click_to_select + ' ' + __s.all + ' ' + groupsOfBooks[j].groupName  + ' ' + __s.bible_book + '" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
@@ -560,7 +560,7 @@
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
 							'title="'  + __s.click_to_select + ' ' + displayName[0] + '" ' +
-							'type="button" class="pressedButton" style="font-size:12px;color:white;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
+							'type="button" class="pressedButton" style="font-size:12px;color:white;background-color:#cc0000;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +
 							'</td>';
