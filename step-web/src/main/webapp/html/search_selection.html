@@ -216,7 +216,7 @@
     function _buildSearchHeaderAndTable() {
 		var html = '<div class="header">' +
             '<h4>' + __s.enter_search_word + '</h4>' +
-			'<button id="searchRangeButton" type="button" style="color:white;background-color:#498090;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '&nbsp;&#9662;</button>' +
+			'<button id="searchRangeButton" type="button" style="color:#498090;background-color:white;font-size:15px;float:right;border:1px solid #498090" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '&nbsp;&#9662;</button>' +
             '</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
 			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
@@ -329,21 +329,22 @@
     function _buildRangeHeaderAndSkeleton() {
 		var html = '<div class="header">' +
             '<h4>' + __s.click_to_select_search_range + ':</h4>' +
+            '<span style="color:#336600;float:right">' + __s.search_range_button_color_desc + '</span>' +
             '</div>' +
 			'<span id="updateFeedback" style="color: green;"></span>' +
             '<div id="search_range_table">' +
-			'<button id="ot_hdr" type="button" style="color:white;background-color:#cc0000;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
+			'<button id="ot_hdr" type="button" style="color:black;background-color:white;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.old_testament + ' ' + __s.bible_book + '" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.old_testament + ':</i></button>' +
             '<div id="ot_table"/>' +
-			'<button id="nt_hdr" type="button" style="color:white;background-color:#cc0000;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
+			'<button id="nt_hdr" type="button" style="color:black;background-color:white;display:block;width:97%;font-size:18px;border:1px solid #498090" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.new_testament + ' ' + __s.bible_book + '" ' +
 			'class="pressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
             '<div id="nt_table"/>' +
             '<div id="ob_table"/>' +
    			'<br>' +
-			'<span>' + __s.click_update_when_finish + '</span>' +
-			'<button type="button" style="font-size:16px;color:white;background-color:#498090;float:right;border:1px solid #498090" ' +
+			'<span id="click_when_finish" style="display:none">' + __s.click_update_when_finish + '</span>' +
+			'<button type="button" style="font-size:16px;color:#498090;background-color:white;float:right;border:1px solid #498090" ' +
 			'onclick=_updateRange()><b>' + __s.update_search_range + '</b></button><br>';
 		return html;
     }
@@ -544,7 +545,7 @@
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="pressedButton" style="font-size:12px;color:white;background-color:#cc0000;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
+					'type="button" class="pressedButton" style="font-size:12px;color:black;background-color:white;width:95%;height:' +  rowHeight + 'px;border:1px solid #498090" ' +
                     'title="'  + __s.click_to_select + ' ' + __s.all + ' ' + groupsOfBooks[j].groupName  + ' ' + __s.bible_book + '" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
@@ -560,7 +561,7 @@
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
 							'title="'  + __s.click_to_select + ' ' + displayName[0] + '" ' +
-							'type="button" class="pressedButton" style="font-size:12px;color:white;background-color:#cc0000;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
+							'type="button" class="pressedButton" style="font-size:12px;color:black;background-color:white;width:95%;height:95%;border:1px solid #498090" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +
 							'</td>';
@@ -582,6 +583,7 @@
 
 	function _userClickedTestament(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
+        $('#click_when_finish').show();
 		if ($(clicked_id2).hasClass('pressedButton')) {
 			$(clicked_id2).removeClass('pressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
@@ -601,6 +603,7 @@
 	function _userClickedCategory(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
 		var categoryName = $(clicked_id2).text();
+        $('#click_when_finish').show();
 		categoryName = categoryName.replace(/:$/, "");
 		if ($(clicked_id2).hasClass('pressedButton')) {
 			$(clicked_id2).removeClass('pressedButton');
@@ -622,6 +625,7 @@
 	
 	function _userClickedBook(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
+        $('#click_when_finish').show();
 		if ($(clicked_id2).hasClass('pressedButton')) {
 			$(clicked_id2).removeClass('pressedButton');
 			var regex = /b\d{1,2}$/;
@@ -655,6 +659,7 @@
 	function _checkHeaderButton(clicked_id) {
 		var idPrefix = clicked_id.substring(0, 2);
 		var numOfGroups = 0;
+        $('#click_when_finish').show();
 		if (idPrefix == 'ot') numOfGroups = groupsOT.length;
 		else if (idPrefix == 'nt') numOfGroups = groupsNT.length;
 		idPrefix = '#' + idPrefix + '_tableg';
