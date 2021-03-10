@@ -278,6 +278,7 @@ var MainSearchView = Backbone.View.extend({
 			$('#s2id_masterSearch').hide();
 			$('.findButton').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
+			// if the screen is small (probably mobile devices) increase the font size 1 time.
 			if ((window.matchMedia("only screen and (max-width: 760px)").matches) && 
 				(typeof step.settings.get('defaultfont') === "undefined"))
 				step.util.changeFontSize($('.passageOptionsGroup'), 1);
