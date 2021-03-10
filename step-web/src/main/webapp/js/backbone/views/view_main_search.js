@@ -278,9 +278,9 @@ var MainSearchView = Backbone.View.extend({
 			$('#s2id_masterSearch').hide();
 			$('.findButton').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
-			if (window.matchMedia("only screen and (max-width: 760px)").matches) {
+			if ((window.matchMedia("only screen and (max-width: 760px)").matches) && 
+				(typeof step.settings.get('defaultfont') === "undefined"))
 				step.util.changeFontSize($('.passageOptionsGroup'), 1);
-			}
 			$('.navbar-toggle').removeClass('navbar-toggle').addClass('tmp-navbar-toggle');
 			$('.tmp-navbar-toggle').hide();
 			$('.navbar-collapse').removeClass('navbar-collapse').addClass('tmp-navbar-collapse');
