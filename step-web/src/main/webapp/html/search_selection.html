@@ -315,7 +315,27 @@
             }
 			$('#updateFeedback').text(__s.search_range_button_color_desc);
         }
-		else $('#updateFeedback').text(__s.all_books_selected);
+		else {
+		    for (var i = 0; i < 2; i++) {
+                var curGroup;
+                var idPrefix;
+                if (i == 0) {
+                    curGroup = groupsOT;
+                    idPrefix = 'ot_tableg';
+                }
+                else if (i == 1) {
+                    curGroup = groupsNT;
+                    idPrefix = 'nt_tableg';
+                }
+                for (var j = 0; j < curGroup.length; j++) {
+                    for (var k = 0; k < curGroup[j].books.length; k++) {
+                        _userClickedBook(idPrefix + j + 'b' + k);
+                    }
+                }
+				$('#click_when_finish').hide();
+            }
+			$('#updateFeedback').text(__s.all_books_not_selected);
+		}
 	}
 
     function _getPosOfBookInBible(bookName) {
@@ -441,8 +461,6 @@
 	}
 	
     function _buildBookHTMLTable(data) {
-        var ot = "Gen Exod Lev Num Deut Josh Judg Ruth 1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr Ezra Neh Esth Job Ps Prov Eccl Song Isa Jer Lam Ezek Dan Hos Joel Amos Obad Jonah Mic Nah Hab Zeph Hag Zech Mal";
-        var nt = "Matt Mark Luke John Acts Rom 1Cor 2Cor Gal Eph ﻿Phil Col 1Thess 2Thess 1Tim 2Tim Titus Phlm Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev";
         var counter = 0;
         var notSeenNT = true;
         var typlicalBooksChapters = false;
@@ -788,7 +806,7 @@
 				}
 				for (l = 0; l < searchResultsToDisplay.length; l++) {
 					$('#searchResults' + searchTypeCode[l]).html(searchResultsToDisplay[l]);
-					if (typeof limitType === "undefined") $('.select-' + searchTypeCode[l]).show()
+					if ((typeof limitType === "undefined") || (limitType === null)) $('.select-' + searchTypeCode[l]).show()
 					else if (searchResultsToDisplay[l].length > 0) $('.select-' + searchTypeCode[l]).show()
 					else $('.select-' + searchTypeCode[l]).hide()
 				}

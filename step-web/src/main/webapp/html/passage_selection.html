@@ -30,7 +30,7 @@
 		<!-- <img src="/images/keyboard.jpg" alt="Keyboard entry"> -->
 		<!-- <span id='type_in_your_passage'>Type in the passage (optional)</span> -->
 	<!-- </a> -->
-	<img src="/images/keyboard.jpg" alt="Keyboard entry">
+	<img id="keyboard_icon" src="/images/keyboard.jpg" alt="Keyboard entry">
 	<textarea id="enterYourPassage" rows="1" style="font-size:16px; width: 80%;"></textarea>
 	<br>
 	<span id="userEnterPassageError" style="color: red;"></span>'
@@ -151,6 +151,8 @@
     }
 
 	function _buildBookTable() {
+        $('#enterYourPassage').show();
+        $('#keyboard_icon').show();
         var translationType = _getTranslationType();
         if ((userLang.toLowerCase().startsWith("en") || userLang.toLowerCase().startsWith("es") || userLang.toLowerCase().startsWith("zh")) &&
             (translationType !== "")) {
@@ -416,6 +418,8 @@
 
     function _buildChptrVrsTbl(data, bookOsisID, numOfChptrsOrVrs, isChapter) {
 		var headerMsg;
+        $('#enterYourPassage').hide();
+        $('#keyboard_icon').hide();
 		if (isChapter) {
 			headerMsg = __s.please_select_chapter;
 			modalMode = 'chapter';

@@ -659,7 +659,7 @@ step.util = {
             if (lastComma < 5) lastComma = maxLength;
             return text.substr(0, lastComma) + '...';
 		},
-        renderArgs: function (searchTokens, container) {
+        renderArgs: function (searchTokens, container, createButtons) {
             if (!container) {
                 container = $("<span>");
             }
@@ -667,7 +667,7 @@ step.util = {
             if (!searchTokens) {
                 return container.html();
             }
-
+			var upsideDownTriangle = (createButtons) ? '&nbsp;&#9662;' : '';
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var allSelectedBibleVersions = "";
             var allSelectedReferences = "";
@@ -699,9 +699,11 @@ step.util = {
             }
 			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
             if (allSelectedBibleVersions.length > 0)
-                container.append('<button type="button" onclick="step.util.startPickBible()" title="' + __s.click_translation + '" class="select-' + VERSION + '" ' +
+                container.append('<button type="button" ' +
+					((createButtons) ? 'onclick="step.util.startPickBible()"' : '') +
+					' title="' + __s.click_translation + '" class="select-' + VERSION + '" ' +
                     'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                    allSelectedBibleVersions + '&nbsp;&#9662;</button>&nbsp;'); // #9662 is the upside down triangle
+                    allSelectedBibleVersions + upsideDownTriangle + '</button>&nbsp;');
             if (allSelectedReferences.length === 0) {
 		        if (foundSearch) allSelectedReferences = "Gen-Rev";
 				else allSelectedReferences = "Select passage";
@@ -709,9 +711,11 @@ step.util = {
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
-            container.append('<button type="button" onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
+            container.append('<button type="button" ' +
+				((createButtons) ? 'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')"' : '') +
+				' title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                '<div>' + allSelectedReferences + '&nbsp;&#9662;</div></button>&nbsp;');
+                '<div>' + allSelectedReferences + upsideDownTriangle + '</div></button>&nbsp;');
 			var searchWords = "";
 			for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
@@ -728,9 +732,11 @@ step.util = {
 					}
 				}
             }
-            container.append('<button type="button" onclick="step.util.searchSelectionModal()" title="' + __s.click_search + '" class="select-search" ' +
+            container.append('<button type="button" ' + 
+				((createButtons) ? 'onclick="step.util.searchSelectionModal()"' : '') +
+				' title="' + __s.click_search + '" class="select-search" ' +
                 'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;' + searchWords + '&nbsp;&#9662;</span></button>&nbsp;');
+                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;' + searchWords + upsideDownTriangle + '</span></button>&nbsp;');
 
             return container.html();
         },
