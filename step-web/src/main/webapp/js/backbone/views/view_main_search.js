@@ -281,7 +281,7 @@ var MainSearchView = Backbone.View.extend({
 			// if the screen is small (probably mobile devices) increase the font size 1 time.
 			if ((window.matchMedia("only screen and (max-width: 760px)").matches) && 
 				(typeof step.settings.get('defaultfont') === "undefined"))
-				step.util.changeFontSize($('.passageOptionsGroup'), 1);
+				step.util.changeFontSize($('.passageOptionsGroup'), 2);
 			$('.navbar-toggle').removeClass('navbar-toggle').addClass('tmp-navbar-toggle');
 			$('.tmp-navbar-toggle').hide();
 			$('.navbar-collapse').removeClass('navbar-collapse').addClass('tmp-navbar-collapse');
