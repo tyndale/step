@@ -481,6 +481,8 @@ step.util = {
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
         newColumn.find(".select-reference").text("Select passage \u25BE");  // There is an upside triangle at the end of the string.
+		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")"); 
+		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;&nbsp;\u25BE</span>');  // There is an upside triangle at the end of the string.
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
         newColumn.find(".popover").remove();
@@ -699,11 +701,14 @@ step.util = {
             }
 			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
             if (allSelectedBibleVersions.length > 0)
-                container.append('<button type="button" ' +
+                container.append(
+					((createButtons) ? '<button type="button" ' : '<span ') +
 					((createButtons) ? 'onclick="step.util.startPickBible()"' : '') +
 					' title="' + __s.click_translation + '" class="select-' + VERSION + '" ' +
-                    'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                    allSelectedBibleVersions + upsideDownTriangle + '</button>&nbsp;');
+                    'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF!important;' +
+					((createButtons) ? 'border:1px solid #498090' : '') +
+					'">' + allSelectedBibleVersions + upsideDownTriangle + 
+					((createButtons) ? '</button>&nbsp;' : '&nbsp;|</span>') );
             if (allSelectedReferences.length === 0) {
 		        if (foundSearch) allSelectedReferences = "Gen-Rev";
 				else allSelectedReferences = "Select passage";
@@ -711,11 +716,14 @@ step.util = {
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
             console.log("all selected ref: " + allSelectedReferences);
-            container.append('<button type="button" ' +
+            container.append(
+				((createButtons) ? '<button type="button" ' : '<span ') +
 				((createButtons) ? 'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')"' : '') +
 				' title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
-                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                '<div>' + allSelectedReferences + upsideDownTriangle + '</div></button>&nbsp;');
+                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF!important;' +
+				((createButtons) ? 'border:1px solid #498090' : '') +
+                '">' + allSelectedReferences + upsideDownTriangle +
+				((createButtons) ? '</button>' : '</span>') );
 			var searchWords = "";
 			for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
@@ -732,11 +740,18 @@ step.util = {
 					}
 				}
             }
-            container.append('<button type="button" ' + 
-				((createButtons) ? 'onclick="step.util.searchSelectionModal()"' : '') +
-				' title="' + __s.click_search + '" class="select-search" ' +
-                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF;border:1px solid #498090">' +
-                '<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;' + searchWords + upsideDownTriangle + '</span></button>&nbsp;');
+			if ((createButtons) || (searchWords !== ''))
+				container.append(
+					'&nbsp;' +
+					((createButtons) ? '' : '|') +
+					((createButtons) ? '<button type="button" ' : '<span ') +
+					((createButtons) ? 'onclick="step.util.searchSelectionModal()"' : '') +
+					' title="' + __s.click_search + '" class="select-search" ' +
+					'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF!important;' +
+					((createButtons) ? 'border:1px solid #498090' : '') +
+					'"><i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+					'&nbsp;' + searchWords + upsideDownTriangle +
+					((createButtons) ? '</button>' : '</span>') );
 
             return container.html();
         },

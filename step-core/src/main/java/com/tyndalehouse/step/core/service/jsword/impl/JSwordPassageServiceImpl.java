@@ -569,7 +569,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Copies all but first into a new array
-     *
      * @param versionsInput the versions input
      * @return the list of all versions
      */
