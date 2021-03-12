@@ -20,7 +20,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.simple_passage_explanation %></span>' +
-					'<a href="/images/Psalm23.gif" target="popup" onclick="window.open(\'/images/Psalm23.gif\',\'SelectPassage\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film"></span></a>' +
+					'<a href="/images/Psalm23.gif" target="popup" onclick="window.open(\'/images/Psalm23.gif\',\'SelectPassage\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=NIV|version=ESV|version=KJV|reference=Joh.3&options=HVGUN&display=COLUMN" title="<%= __s.click_to_try_this %>">' +
@@ -29,7 +29,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.multiple_versions_explanation %></span>' +
-					'<a href="/images/John3.gif" target="popup" onclick="window.open(\'/images/John3.gif\',\'SelectPassage\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film"></span></a>' +
+					'<a href="/images/John3.gif" target="popup" onclick="window.open(\'/images/John3.gif\',\'SelectTranslation\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=ESV|strong=G0080&options=HVNGU" title="<%= __s.click_to_try_this %>">' +
@@ -37,20 +37,28 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="argSelect select-version">ESV</span><span class="argSelect select-greekMeanings">brother</span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="explanationText"><%= __s.simple_search_explanation %></div><span class="input-group" style="overflow: hidden">' +
+					'<span class="explanationText"><%= __s.simple_search_explanation %></span>' +
+					'<a href="/images/ESV_brother.gif" target="popup" onclick="window.open(\'/images/ESV_brother.gif\',\'ESV_Brother\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					
+					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=NIV|version=ESV|text=land|strong=H2617a&options=VGUVNH&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary newArgSummary">' +
 					'<span class="argSelect select-version">NIV</span><span class="argSelect select-version">ESV</span><span class="argSelect select-text">land</span><span class="argSelect select-hebrewMeanings transliteration">he.sed</span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="explanationText"><%= __s.chained_searches_explanation %></div><span class="input-group" style="overflow: hidden">' +
+					'<span class="explanationText"><%= __s.chained_searches_explanation %></span>' +
+					'<a href="/images/ESV_NIV_land_chesed.gif" target="popup" onclick="window.open(\'/images/ESV_NIV_land_chesed.gif\',\'ESV_land_chesed\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+
+					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary newArgSummary">' +
 					'<span class="argSelect select-version">ESV</span><span class="argSelect select-meanings">throne</span><span class="argSelect select-subject">David</span><span class="argSelect select-reference">Isa-Rev</span></span>' +
 					'</a>' +
 					'</span>' +
-
-					'<div class="explanationText"><%= __s.chained_searches_explanation_subject %></div><span class="input-group" style="overflow: hidden">' +
+					'<span class="explanationText"><%= __s.chained_searches_explanation_subject %></span>' +
+					'<a href="/images/ESV_Isa_Rev_throne_david.gif" target="popup" onclick="window.open(\'/images/ESV_Isa_Rev_throne_david.gif\',\'ESV_throne_David\',\'width=434,height=659\')"><span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					
+					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=KJV|version=THGNT|reference=John.1&options=HVLUNM&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary newArgSummary">' +
 					'<span class="argSelect select-version">KJV</span><span class="argSelect select-version">THGNT</span><span class="argSelect select-reference">John 1</span></span>' +
@@ -61,7 +69,8 @@ var ExamplesView = Backbone.View.extend({
 					'&amp;' +
 					'<a href=\'?q=version=THGNT|version=ESV|reference=John.1&options=HLVGUN&display=INTERLINEAR\'><%= __s.greek_interlin %></a>' +
 					'</div>' +
-					'<div class="explanationText"><%= __s.interlinear_versions_explanation %></div>' +
+					'<span class="explanationText"><%= __s.interlinear_versions_explanation %></span>' +
+					'<a href="/images/KJV_THGNT_John1.gif" target="popup" onclick="window.open(\'/images/KJV_THGNT_John1.gif\',\'ESV_throne_David\',\'width=480,height=644\')"><span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="1">' +
