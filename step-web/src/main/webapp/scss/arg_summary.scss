@@ -46,3 +46,29 @@
     }
   }
 }
+
+.newArgSummary {
+	white-space: normal!important;
+	padding:6px 7px 5px 7px;
+	color:#498090;
+	font-size:14px;
+	line-height:13px;
+	border-radius:4px;
+	background:#FFFFFF!important;
+	
+	button {
+		border:1px solid #498090;
+	    &:after {
+		  content: "\25BE"; // upside down triangle
+		  font-style: normal;
+		  margin-left: 5px;
+		}
+	}
+	
+	span {
+		background:#FFFFFF!important;
+		font-size:14px;
+		line-height:19px;
+		color:black;
+	}
+}

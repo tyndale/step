@@ -480,7 +480,7 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
-        newColumn.find(".select-reference").text("Select passage \u25BE");  // There is an upside triangle at the end of the string.
+        newColumn.find(".select-reference").text("Select passage");  // There is an upside triangle at the end of the string.
 		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")"); 
 		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;&nbsp;\u25BE</span>');  // There is an upside triangle at the end of the string.
         newColumn.find(".resultsLabel").html("");
@@ -669,7 +669,6 @@ step.util = {
             if (!searchTokens) {
                 return container.html();
             }
-			var upsideDownTriangle = (createButtons) ? '&nbsp;&#9662;' : '';
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var allSelectedBibleVersions = "";
             var allSelectedReferences = "";
@@ -704,10 +703,8 @@ step.util = {
                 container.append(
 					((createButtons) ? '<button type="button" ' : '<span ') +
 					((createButtons) ? 'onclick="step.util.startPickBible()"' : '') +
-					' title="' + __s.click_translation + '" class="select-' + VERSION + '" ' +
-                    'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF!important;' +
-					((createButtons) ? 'border:1px solid #498090' : '') +
-					'">' + allSelectedBibleVersions + upsideDownTriangle + 
+					' title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
+					allSelectedBibleVersions +
 					((createButtons) ? '</button>&nbsp;' : '&nbsp;|</span>') );
             if (allSelectedReferences.length === 0) {
 		        if (foundSearch) allSelectedReferences = "Gen-Rev";
@@ -719,10 +716,8 @@ step.util = {
             container.append(
 				((createButtons) ? '<button type="button" ' : '<span ') +
 				((createButtons) ? 'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')"' : '') +
-				' title="' + __s.click_passage + '" class="select-' + REFERENCE + '" ' +
-                'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF!important;' +
-				((createButtons) ? 'border:1px solid #498090' : '') +
-                '">' + allSelectedReferences + upsideDownTriangle +
+				' title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
+				allSelectedReferences +
 				((createButtons) ? '</button>' : '</span>') );
 			var searchWords = "";
 			for (var i = 0; i < searchTokens.length; i++) {
@@ -746,11 +741,9 @@ step.util = {
 					((createButtons) ? '' : '|') +
 					((createButtons) ? '<button type="button" ' : '<span ') +
 					((createButtons) ? 'onclick="step.util.searchSelectionModal()"' : '') +
-					' title="' + __s.click_search + '" class="select-search" ' +
-					'style="padding:6px 7px 5px 7px;color:#498090;font-size:14px;line-height:13px;border-radius:4px;background:#FFFFFF!important;' +
-					((createButtons) ? 'border:1px solid #498090' : '') +
-					'"><i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
-					'&nbsp;' + searchWords + upsideDownTriangle +
+					' title="' + __s.click_search + '" class="select-search newArgSummary">' +
+					'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+					'&nbsp;' + searchWords +
 					((createButtons) ? '</button>' : '</span>') );
 
             return container.html();
@@ -1378,12 +1371,12 @@ step.util = {
         }
     },
     passageSelectionModal: function (activePassageNumber, passageSelectionConfirmed) {
-		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
-			step.util.activePassageId(activePassageNumber); // make the passage active
         var element = document.getElementById('passageSelectionConfirmModal');
         if (element) element.parentNode.removeChild(element);
         element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
+		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
+			step.util.activePassageId(activePassageNumber); // make the passage active
         if ((!passageSelectionConfirmed) && (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")) {
             var passageSelectConfirmDiv = $('<div id="passageSelectionConfirmModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
@@ -1401,12 +1394,12 @@ step.util = {
         }
     },
 	searchSelectionModal: function (searchRangeOnly) {
+        var element = document.getElementById('searchSelectionModal');
+        if (element) element.parentNode.removeChild(element);
 		var searchRangeID = (searchRangeOnly) ? 'id="searchRangeOnly" ': '';
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div ' + searchRangeID + 'class="modal-content">');
-        var element = document.getElementById('searchSelectionModal');
-        if (element) element.parentNode.removeChild(element);
         searchSelectDiv.appendTo("body");
         $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },

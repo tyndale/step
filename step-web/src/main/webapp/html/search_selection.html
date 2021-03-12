@@ -794,7 +794,7 @@
 								if (pos > -1) {
 									if (userPressedEnterKey) goToPassage(data[0].suggestion.osisID, 0);
 									$('#warningMessage').text('If you want to read a passage, use the button at the top of the panel which displays the passage. You can only search for words and subjects here.');
-									$('#warningMessage').append($('.passageContainer.active').find('.argSummary').find('.select-reference').clone(true));
+									$('#warningMessage').append($('.passageContainer.active').find('.argSummary').find('.select-reference').clone());
 								}
 							}
 							break;

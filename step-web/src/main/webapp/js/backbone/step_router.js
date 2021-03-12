@@ -233,7 +233,7 @@ var StepRouter = Backbone.Router.extend({
 
     _renderSummary: function (passageModel) {
         var searchTokens = passageModel.get("searchTokens");
-        var container = $("<span></span>").addClass("argSummary");
+        var container = $("<span></span>").addClass("argSummary newArgSummary");
         step.util.ui.renderArgs(searchTokens, container, true); // 3rd arg is to create buttons
 
         var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
