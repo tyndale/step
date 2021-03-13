@@ -2,15 +2,16 @@
 	<button type="button" class="close" data-dismiss="modal" onclick=closeModal("videoModal")>X</button>
 </div>
 <div id="videomodalbody" class="modal-body" style="text-align:center">
+<p id="pleasewait">Loading video, please wait...
 </div>
 <script>
     $(document).ready(function () {
-        
         var file = $('#videoModal').data('videofile');
         var time = $('#videoModal').data('videotime') * 1000;
         var gifElement = document.createElement("img");
         gifElement.src = "/images/" + file;
         gifElement.onload = function() {
+            $('#pleasewait').remove();
             $('#videomodalbody').append(this);
             console.log('timeout ' + time);
             setTimeout(()=> {
