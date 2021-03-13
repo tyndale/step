@@ -1403,6 +1403,15 @@ step.util = {
         searchSelectDiv.appendTo("body");
         $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },
+	showVideoModal: function (videoFile, seconds) {
+        var element = document.getElementById('videoModal');
+        if (element) element.parentNode.removeChild(element);
+        var videoModalDiv = $('<div id="videoModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-videofile="' + videoFile + '" data-videotime="' + seconds + '">' +
+            '<div class="modal-dialog">' +
+            '<div class="modal-content">');
+        videoModalDiv.appendTo("body");
+        $('#videoModal').modal('show').find('.modal-content').load('/html/video_modal.html');
+    },
     startPickBible: function () {
         require(["menu_extras"], function () {
             new PickBibleView({model: step.settings, searchView: self});
