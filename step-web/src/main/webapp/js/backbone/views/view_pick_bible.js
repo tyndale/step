@@ -15,7 +15,7 @@ var PickBibleView = Backbone.View.extend({
     filtersTemplate: _.template('<form role="form" class="form-inline">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" />English</label>' +
+        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= step.english %></label>' +
         '<% if(step.userLanguageCode != "en") { %>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="<%= step.userLanguageCode %>" /><%= step.userLanguage %></label>' +
         '<% } %>' +

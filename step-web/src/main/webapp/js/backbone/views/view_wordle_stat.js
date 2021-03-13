@@ -291,7 +291,9 @@ var ViewLexiconWordle = Backbone.View.extend({
 		if (scope == "BOOK") {
 			displayScope = displayScope.replace(/\d+$/, "");
 		}
-        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + displayScope + " (" + scope + "):</span><br><br>");
+        var scopeText = step.defaults.analysis.scope[step.defaults.analysis.scopeType.indexOf(scope)];
+        
+        $(container).append("<span style=\"font-size:150%;font-weight:bold\">" + displayScope + " (" + scopeText + "):</span><br><br>");
         $.each(wordleData.stats, function (key, value) {
             strongs.push(key);
         });
@@ -353,7 +355,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             animate: isNextChapter
         });
 
-        if (statType == 'WORD') {
+        if (statType === 'WORD') {
             links.hover(
                 function () {
                     step.passage.higlightStrongs({
@@ -365,7 +367,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             );
         }
 
-        if ( (scope == "CHAPTER") && (!wordleData.reference.lastChapter) ) {
+        if ( (scope === "CHAPTER") && (!wordleData.reference.lastChapter) ) {
             $("#nextChapterWordle").show();
             $("#nextChapterInputLine").show();
         }
