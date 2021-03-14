@@ -1361,9 +1361,8 @@ var cf = {
 
     if (configName.indexOf("function:") == 0){
       var functionName = configName.substr(9);
-      if (functionName == "openStats") {
+      if (functionName == "openStats")
         window.localStorage.setItem('colorCode-openStatus', JSON.stringify(true));
-      }
     }
     else cf.openUserSelectedConfig(configName);
     window.localStorage.setItem('colorCode-InfoMsg', JSON.stringify(infoMsg));
