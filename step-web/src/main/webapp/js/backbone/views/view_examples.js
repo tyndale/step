@@ -71,9 +71,8 @@ var ExamplesView = Backbone.View.extend({
 							'&nbsp;<span class=\'glyphicon glyphicon-stats\' style="line-height:13px;color:#498090"></span>' +
 						'</a>' +
 					'</span>' +
-					'<div class="explanationText"><%= __s.esv_word_frequency_explanation %></div>' +
+					'<span class="explanationText"><%= __s.esv_word_frequency_explanation %></span>' +
   					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-
 
 				'</div>' +
 			'</div>' +
@@ -90,11 +89,15 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="argSelect select-version">KJV, THGNT</span><span class="argSelect select-reference">John 1</span></span>' +
 					'</a>' +
 					'</span>' +
-					'<div class="interlinearLinks">' +
-					'<a href=\'?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR\'><%= __s.hebrew_interlin %></a>' +
-					'&amp;' +
-					'<a href=\'?q=version=THGNT|version=ESV|reference=John.1&options=HLVGUN&display=INTERLINEAR\'><%= __s.greek_interlin %></a>' +
-					'</div>' +
+					'<span class="explanationText"><%= __s.interlinear_versions_explanation %></span>' +
+   					'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 36)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+
+					'<span class="input-group" style="overflow: hidden">' +
+					'<a href="/?q=version=OHB|version=ESV&options=LVUMCHN&display=INTERLINEAR" title="<%= __s.click_to_try_this %>">' +
+					'<span class="form-control input-sm argSummary newArgSummary">' +
+					'<span class="argSelect select-version">OHB, ESV</span><span class="argSelect select-reference">Gen 1</span></span>' +
+					'</a>' +
+					'</span>' +
 					'<span class="explanationText"><%= __s.interlinear_versions_explanation %></span>' +
    					'<a href="javascript:step.util.showVideoModal(\'KJV_THGNT_John1.gif\', 36)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 				
