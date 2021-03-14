@@ -72,6 +72,8 @@ var ExamplesView = Backbone.View.extend({
 						'</a>' +
 					'</span>' +
 					'<div class="explanationText"><%= __s.esv_word_frequency_explanation %></div>' +
+  					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+
 
 				'</div>' +
 			'</div>' +
