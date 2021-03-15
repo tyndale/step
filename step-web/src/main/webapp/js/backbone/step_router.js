@@ -246,7 +246,7 @@ var StepRouter = Backbone.Router.extend({
 		remainingWidth -= referenceWidth;
 		if (remainingWidth < 0) {
 			$('<br>').insertAfter($(passageOptions).find('.select-version'));
-			remainingWidth = width - referenceWidth;
+            remainingWidth = width - referenceWidth;
 		}
 		remainingWidth -= 20; // take account of spaces between buttons
 		var searchWidth = $(passageOptions).find('.select-search').width();

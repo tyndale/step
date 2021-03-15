@@ -499,7 +499,6 @@ step.util = {
             newColumn.find(".passageContainer").append(link);
             activePassageModel.save({ linked: newPassageId }, { silent: true });
         }
-
         this.showOrHideTutorial();
         step.util.activePassageId(newPassageId);
 
