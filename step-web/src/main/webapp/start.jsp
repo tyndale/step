@@ -191,7 +191,7 @@
                                     </span>
 
                                 <%--  this button starts hidden as there is only 1 column showing --%>
-                                <a class="openNewPanel hidden-xs" title="<fmt:message key="open_in_new_panel" />">
+                                <a class="openNewPanel hidden-xs" title="<fmt:message key="new_panel" />">
                                     <i class="glyphicon glyphicon-plus"></i>
                                 </a>
                                 <a class="closeColumn disabled hidden-xs" title="<fmt:message key="close" />">

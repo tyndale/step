@@ -24,7 +24,7 @@
     </button> -->
 
     <a id="panel-icon" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel" />">
-        <i class="glyphicon glyphicon-plus"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="open_in_new_panel" /></span>
+        <i class="glyphicon glyphicon-plus"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="new_panel" /></span>
     </a>
     <a id="stats-icon" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
         <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="passage_stats" /></span>
@@ -32,7 +32,10 @@
 	<a id="bookmark-icon" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
         <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /> </span>
     </a>
-<!--     <a id="sidebar-icon" class="showSidebar" title="<fmt:message key="passage_open_sidebar" />">
+	<a id="bookmark-icon" href="javascript:step.util.ui.initSidebar('help');" title="<fmt:message key="welcome_to_step" />">
+        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /> </span>
+    </a>
+    <a id="sidebar-icon" href="javascript:step.util.ui.initSidebar('help');" title="<fmt:message key="welcome_to_step" />">
         <i class="glyphicon icon-sidebar">
             <svg width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g>
@@ -45,7 +48,7 @@
                 </g>
             </svg>
         </i>
-    </a> -->
+    </a>
     <span class="navbar-collapse collapse">
         <span class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
