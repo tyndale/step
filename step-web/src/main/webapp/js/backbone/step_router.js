@@ -257,8 +257,8 @@ var StepRouter = Backbone.Router.extend({
 
         var currentPassageID = passageModel.get("passageId");
         var passageOptions = step.util.getPassageContainer(currentPassageID).find(".passageOptionsGroup");
-		var versionSeparator = false;
-		var referenceSeparator = false;
+		// var versionSeparator = false;
+		// var referenceSeparator = false;
         
 		// if (passageOptions.find(".argSummary").length == 1) {
 			// var resultArray = step.util.ui.renderArgs(searchTokens, container, "text");

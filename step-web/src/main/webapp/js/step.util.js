@@ -679,11 +679,14 @@ step.util = {
             return text.substr(0, lastComma) + '...';
 		},
         renderArgs: function (searchTokens, container, outputMode) {
-            if ((!container) && ((outputMode === "button") || (outputMode === "span"))) {
+			if ((outputMode !== "button") && (outputMode !== "span")) {
+				console.log("called renderArgs with wrong outputMode: " + outputMode);
+				return;
+			}
+            if (!container) {
                 container = $("<span>");
 				if (!searchTokens) return container.html();
             }
-            if (!searchTokens) return ["", "", ""];
 
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var allSelectedBibleVersions = "";
@@ -791,8 +794,6 @@ step.util = {
 						'</span>' );
 				return container.html();
 			}
-			// else if (outputMode === "text")
-				// return [allSelectedBibleVersions, allSelectedReferences, searchWords];
         },
         renderArg: function (searchToken, isMasterVersion) {
             //a search token isn't quite a item, so we need to fudge a few things
