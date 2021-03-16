@@ -154,7 +154,7 @@
     </div>
 
     <div class="mainPanel row row-offcanvas">
-        <div class="" id='columnHolder'>
+        <div class="" id='columnHolder' style="overflow-y:visible">
             <div class="col-sm-6 col-xs-12 column">
                 <div class="passageContainer active" passage-id=0>
                     <span class="activeMarker"></span>

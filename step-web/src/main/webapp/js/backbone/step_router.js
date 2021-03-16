@@ -231,30 +231,59 @@ var StepRouter = Backbone.Router.extend({
         }
     },
 
+    // addLineBreakToPassageOptions: function (passageOptions, versionSeparator, referenceSeparator) {
+		// return; // skip this to debug the shift of the dev
+		// var width = $(passageOptions).find('.argSummary').width() - 30;  // take account of spaces between buttons
+        // if ((width > 30) || (versionSeparator) || (referenceSeparator)) {
+            // var remainingWidth = width;
+            // remainingWidth -= $(passageOptions).find('.select-version').width();
+            // var referenceWidth = $(passageOptions).find('.select-reference').width();
+            // remainingWidth -= referenceWidth;
+            // if ((remainingWidth < 0) || (versionSeparator)) {
+               // $(passageOptions).find('.separator-version').html('<br>');
+                // remainingWidth = width - referenceWidth;
+            // }
+            // remainingWidth -= 20; // take account of spaces between buttons
+            // var searchWidth = $(passageOptions).find('.select-search').width();
+            // remainingWidth -= searchWidth;
+            // if ((searchWidth > 35) && ($('.resultsLabel').text() === "")) 
+                // remainingWidth -= 50;
+            // if ((remainingWidth < 0) || (referenceSeparator))
+               // $(passageOptions).find('.separator-reference').html('<br>');
+        // }
+    // },
     _renderSummary: function (passageModel) {
         var searchTokens = passageModel.get("searchTokens");
-        var container = $("<span></span>").addClass("argSummary newArgSummary");
-        step.util.ui.renderArgs(searchTokens, container, true); // 3rd arg is to create buttons
 
-        var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
-        passageOptions.find(".argSummary").remove();
-        passageOptions.append(container);
-		var width = $(passageOptions).find('.argSummary').width() - 30;  // take account of spaces between buttons
-		var remainingWidth = width;
-		remainingWidth -= $(passageOptions).find('.select-version').width();
-		var referenceWidth = $(passageOptions).find('.select-reference').width();
-		remainingWidth -= referenceWidth;
-		if (remainingWidth < 0) {
-			$('<br>').insertAfter($(passageOptions).find('.select-version'));
-            remainingWidth = width - referenceWidth;
+        var currentPassageID = passageModel.get("passageId");
+        var passageOptions = step.util.getPassageContainer(currentPassageID).find(".passageOptionsGroup");
+		var versionSeparator = false;
+		var referenceSeparator = false;
+        
+		// if (passageOptions.find(".argSummary").length == 1) {
+			// var resultArray = step.util.ui.renderArgs(searchTokens, container, "text");
+			// passageOptions.find('.select-version').text(resultArray[0]);
+			// passageOptions.find('.select-reference').text(resultArray[1]);
+			// passageOptions.find('.select-search').html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>&nbsp;' + resultArray[2]);
+			// if (passageOptions.find(".separator-version").html() === "<br>") versionSeparator = true;
+			// if (passageOptions.find(".separator-reference").html() === "<br>") referenceSeparator = true;
+		// }
+		// else {
+			
+		passageOptions.find(".argSummary").remove();
+		var container = $("<span></span>").addClass("argSummary newArgSummary");
+		step.util.ui.renderArgs(searchTokens, container, "button");
+		passageOptions.append(container);
+			
+		// }
+		// this.addLineBreakToPassageOptions(passageOptions, versionSeparator, referenceSeparator);
+
+		var additionalHeightInPassageOption = passageOptions.height();
+		if (additionalHeightInPassageOption > 5) {
+			var heightForPassage = $('.passageContainer.active').height() - Math.ceil(additionalHeightInPassageOption);
+			var passContent = step.util.getPassageContainer(currentPassageID).find(".passageContent");
+			$(passContent).css({'height':heightForPassage + 'px'});
 		}
-		remainingWidth -= 20; // take account of spaces between buttons
-		var searchWidth = $(passageOptions).find('.select-search').width();
-		remainingWidth -= searchWidth;
-		if ((searchWidth > 35) && ($('.resultsLabel').text() === "")) 
-			remainingWidth -= 50;
-		if (remainingWidth < 0)
-			$('<br>').insertAfter($(passageOptions).find('.select-reference'));
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;

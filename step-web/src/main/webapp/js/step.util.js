@@ -380,6 +380,24 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
+		var passageContainerHeight = $('.passageContainer.active').height();
+        for (var i = 0; i < columns.length; i++) {
+			var additionalHeightInPassageOption = $(columns[i]).find('.passageOptionsGroup').height();
+			if (additionalHeightInPassageOption > 5) {
+				var heightForPassage = passageContainerHeight - Math.ceil(additionalHeightInPassageOption);
+				var passContent = $(columns[i]).find(".passageContent");
+				$(passContent).css({'height':heightForPassage + 'px'});
+			}
+		}
+
+		// step.router.addLineBreakToPassageOptions($(columns[i]).find('.passageOptionsGroup'), versionSeparator, referenceSeparator);
+		// var addedHeight = 12;
+		// if (hasVersionSeparator) addedHeight += 12;
+		// if (hasReferenceSeparator) addedHeight += 12;
+        // for (var i = 0; i < columns.length; i++) {
+			// $(columns[i]).css({'margin-top': addedHeight + 'px'});
+        // }
+		
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
@@ -480,9 +498,9 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
-        newColumn.find(".select-reference").text("Select passage");  // There is an upside triangle at the end of the string.
+        newColumn.find(".select-reference").text("Select passage");
 		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")"); 
-		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i><span>&nbsp;&nbsp;\u25BE</span>');  // There is an upside triangle at the end of the string.
+		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
         newColumn.find(".popover").remove();
@@ -660,14 +678,13 @@ step.util = {
             if (lastComma < 5) lastComma = maxLength;
             return text.substr(0, lastComma) + '...';
 		},
-        renderArgs: function (searchTokens, container, createButtons) {
-            if (!container) {
+        renderArgs: function (searchTokens, container, outputMode) {
+            if ((!container) && ((outputMode === "button") || (outputMode === "span"))) {
                 container = $("<span>");
+				if (!searchTokens) return container.html();
             }
+            if (!searchTokens) return ["", "", ""];
 
-            if (!searchTokens) {
-                return container.html();
-            }
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
             var allSelectedBibleVersions = "";
             var allSelectedReferences = "";
@@ -698,26 +715,13 @@ step.util = {
 						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
             }
 			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
-            if (allSelectedBibleVersions.length > 0)
-                container.append(
-					((createButtons) ? '<button type="button" ' : '<span ') +
-					((createButtons) ? 'onclick="step.util.startPickBible()"' : '') +
-					' title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
-					allSelectedBibleVersions +
-					((createButtons) ? '</button>&nbsp;' : '&nbsp;|</span>') );
             if (allSelectedReferences.length === 0) {
 		        if (foundSearch) allSelectedReferences = "Gen-Rev";
 				else allSelectedReferences = "Select passage";
 			}
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
-            console.log("all selected ref: " + allSelectedReferences);
-            container.append(
-				((createButtons) ? '<button type="button" ' : '<span ') +
-				((createButtons) ? 'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')"' : '') +
-				' title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
-				allSelectedReferences +
-				((createButtons) ? '</button>' : '</span>') );
+
 			var searchWords = "";
 			for (var i = 0; i < searchTokens.length; i++) {
                 if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
@@ -734,18 +738,61 @@ step.util = {
 					}
 				}
             }
-			if ((createButtons) || (searchWords !== ''))
-				container.append(
-					'&nbsp;' +
-					((createButtons) ? '' : '|') +
-					((createButtons) ? '<button type="button" ' : '<span ') +
-					((createButtons) ? 'onclick="step.util.searchSelectionModal()"' : '') +
-					' title="' + __s.click_search + '" class="select-search newArgSummary">' +
-					'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
-					'&nbsp;' + searchWords +
-					((createButtons) ? '</button>' : '</span>') );
+			console.log("all selected ref: " + allSelectedReferences);
 
-            return container.html();
+			if (outputMode === "button") {
+				if (allSelectedBibleVersions.length > 0)
+					container.append(
+						'<button type="button" ' +
+							'onclick="step.util.startPickBible()" ' +
+							'title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
+							allSelectedBibleVersions +
+						'</button>' +
+						'<span class="separator-' + VERSION + '">&nbsp;</span>');
+
+				container.append(
+					'<button type="button" ' +
+						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
+						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
+						allSelectedReferences +
+					'</button>' +
+					'<span class="separator-' + REFERENCE + '">&nbsp;</span>');
+
+				container.append(
+					'<button type="button" ' +
+						'onclick="step.util.searchSelectionModal()" ' +
+						'title="' + __s.click_search + '" class="select-search newArgSummary">' +
+						'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+						'&nbsp;' + searchWords +
+					'</button>' );
+				return container.html();
+			}
+			else if (outputMode === "span") {
+				if (allSelectedBibleVersions.length > 0)
+					container.append(
+						'<span ' +
+							'title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
+							allSelectedBibleVersions +
+						'&nbsp;|</span>' );
+
+				container.append(
+					'<span ' +
+						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
+						allSelectedReferences +
+					'</span>' );
+
+				if (searchWords !== '')
+					container.append(
+						'|' +
+						'<span ' +
+							'title="' + __s.click_search + '" class="select-search newArgSummary">' +
+							'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+							'&nbsp;' + searchWords +
+						'</span>' );
+				return container.html();
+			}
+			// else if (outputMode === "text")
+				// return [allSelectedBibleVersions, allSelectedReferences, searchWords];
         },
         renderArg: function (searchToken, isMasterVersion) {
             //a search token isn't quite a item, so we need to fudge a few things
