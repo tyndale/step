@@ -107,8 +107,10 @@
         step.passages.fetch();
         step.bookmarks = new HistoryModelList();
         step.bookmarks.fetch();
-
-
+		// var classicalUI = false;
+		// var classicalCookie = $.cookie('classicalUI');
+		// if (classicalCookie === "true") classicalUI = true;
+		// step.util.setClassicalUI(classicalUI);
         //need to clean up passages... Ideally, by changing the values of passageIds to be 1,2,3,4,...
         //we reserve 0 for the first column
         for (var ii = 0; ii < step.passages.length; ii++) {
@@ -136,17 +138,11 @@
             //reset some attributes that weren't on the model to start with (because of space reasons)
             window.tempModel.createSilently = true;
             var likelyPreviousPassage = identifyLikelyPreviousPassage(window.tempModel);
-			var classicalUI = false;
-			var classicalCookie = $.cookie('classicalUI');
-			if (typeof classicalCookie === "undefined")
-				classicalUI = likelyPreviousPassage ? likelyPreviousPassage.get("isClassicalUI") : false;
-			else if (classicalCookie === "true") classicalUI = true;
-			else if (classicalCookie === "false") classicalUI = false;
+
             modelZero.save(window.tempModel, {silent: true});
             modelZero.save({
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
                 isEnWithZhLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isEnWithZhLexicon") : false,
-				isClassicalUI: classicalUI,
                 isVerseVocab: likelyPreviousPassage ? likelyPreviousPassage.get("isVerseVocab") : true,
                 results: null,
                 linked: null,

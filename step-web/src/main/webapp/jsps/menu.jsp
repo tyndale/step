@@ -33,18 +33,7 @@
         <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
     </a>
     <a id="sidebar-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
-        <i class="glyphicon icon-sidebar">
-            <svg width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g>
-                    <path d="M0,6.00638655 C0,2.68915086 2.68113741,0 6.00212389,0 L51.9978761,0 C55.3127576,0 58,2.68354127 58,6.00638655 L58,41.9936134 C58,45.3108491 55.3188626,48 51.9978761,48 L6.00212389,48 C2.6872424,48 0,45.3164587 0,41.9936134 L0,6.00638655 Z M5,6.00638655 L5,41.9936134 C5,42.5531699 5.44680121,43 6.00212389,43 L51.9978761,43 C52.5537478,43 53,42.5531169 53,41.9936134 L53,6.00638655 C53,5.44683008 52.5531988,5 51.9978761,5 L6.00212389,5 C5.44625218,5 5,5.44688308 5,6.00638655 Z M33,5 L33,43 L37,43 L37,5 L33,5 Z"></path>
-                    <g transform="translate(39.000000, 11.000000)">
-                        <polygon points="0.5 4 11.5 4 11.5 0 0.5 0"></polygon>
-                        <polygon points="0.5 15 11.5 15 11.5 11 0.5 11"></polygon>
-                        <polygon points="0.5 26 11.5 26 11.5 22 0.5 22"></polygon>
-                    </g>
-                </g>
-            </svg>
-        </i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /></span>
+        <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /></span>
     </a>
     <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
         title="<fmt:message key="passage_smaller_fonts"/>">
@@ -97,12 +86,12 @@
                 <%
                     if(!appManager.isLocal()) {
                 %>
-                <li><a href="/downloads.jsp" title="<fmt:message key="download_desktop_step_about" />"><fmt:message key="download_desktop_step" /><span class="new-notice"><fmt:message key="new_functionality" /></span></a></li>
+                <li><a href="/downloads.jsp" title="<fmt:message key="download_desktop_step_about" />"><fmt:message key="download_desktop_step" /></a></li>
                 <%
                     }
                 %>
                 <!-- # Quick tryout links -->
-                <!-- <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>  -->
+                <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
                 <!-- # Video demonstrations -->
                 <li><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help"/></a></li>
                 <!-- # Guide and Instructions -->
@@ -124,13 +113,15 @@
                 %>
                 <!-- # Reset everything -->
                 <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile"/></a></li>
+                <!-- # Classical UI -->
+                <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui"/>&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:12px"></span></a></li>
                 <!-- # We need your help! -->
                 <li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help"/></a></li>
                 <!-- # Feedback & contact -->
                 <%
                     if (!appManager.isLocal()) {
                 %>
-                <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
+                <!-- <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li> -->
                 <!-- # Privacy policy -->
                 <li><a href="/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>

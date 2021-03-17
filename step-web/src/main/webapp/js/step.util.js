@@ -1463,6 +1463,44 @@ step.util = {
         require(["menu_extras"], function () {
             new PickBibleView({model: step.settings, searchView: self});
         });
-    }
+    },
+	setClassicalUI: function (classicalUI) {
+		if (classicalUI) {
+			$('#s2id_masterSearch').show();
+			$('.findButton').show();
+			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
+			$('.tmp-navbar-toggle').show();
+			$('.tmp-navbar-toggle').removeClass('tmp-navbar-toggle').addClass('navbar-toggle');
+			$('.tmp-navbar-collapse').removeClass('tmp-navbar-collapse').addClass('navbar-collapse');
+			$('.tmp-collapse').removeClass('tmp-collapse').addClass('collapse');
+			$('.headerButtons .tmp-dropdown').removeClass('tmp-dropdown').addClass('dropdown');
+			//$('.tmp-dropdown-toggle').removeClass('tmp-dropdown-toggle').addClass('dropdown-toggle');
+			// $('#help_message').show();
+			// $('#language_message').show();
+			$('.navbarIconDesc').hide();
+			$('.quick_tutorial').show();
+			$('#classicalUICheck').show();
+		}
+		else {
+			$('#s2id_masterSearch').hide();
+			$('.findButton').hide();
+			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
+			// if the screen is small (probably mobile devices) increase the font size 1 time.
+			if ((window.matchMedia("only screen and (max-width: 760px)").matches) && 
+				(typeof step.settings.get('defaultfont') === "undefined"))
+				step.util.changeFontSize($('.passageOptionsGroup'), 2);
+			$('.navbar-toggle').removeClass('navbar-toggle').addClass('tmp-navbar-toggle');
+			$('.tmp-navbar-toggle').hide();
+			$('.navbar-collapse').removeClass('navbar-collapse').addClass('tmp-navbar-collapse');
+			$('.collapse').removeClass('collapse').addClass('tmp-collapse');
+			$('.headerButtons .dropdown').removeClass('dropdown').addClass('tmp-dropdown');
+			// $('.dropdown-toggle').removeClass('dropdown-toggle').addClass('tmp-dropdown-toggle');
+			// $('#help_message').hide();
+			// $('#language_message').hide();
+			$('.navbarIconDesc').show();
+			$('.quick_tutorial').hide();
+			$('#classicalUICheck').hide();
+		}
+	}
 }
 ;

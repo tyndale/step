@@ -233,6 +233,7 @@ var ExamplesView = Backbone.View.extend({
     },
     onClickHeading: function (event) {
 		event.stopImmediatePropagation();
+		event.stopPropagation(); //prevent the bubbling up
         var $target = $(event.target);
         var $accordionRow = $target.parent();
         var index = $accordionRow.attr("data-row");

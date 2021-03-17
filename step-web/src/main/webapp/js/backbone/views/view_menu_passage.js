@@ -17,7 +17,6 @@ var PassageMenuView = Backbone.View.extend({
     quickLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.quick_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isQuickLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     enWithZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.en_with_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isEnWithZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
     secondZhLexicon: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.second_zh_lexicon %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isSecondZhLexicon ? "visible" : "hidden" %>;"></span></a></li>',
-    classicalUIButton: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.display_classical_ui %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isClassicalUI ? "visible" : "hidden" %>;"></span></a></li>',
     verseVocab: '<li><a href="javascript:void(0)" data-selected="true"><span><%= __s.verse_vocab %></span><span class="glyphicon glyphicon-ok pull-right" style="visibility: <%= isVerseVocab ? "visible" : "hidden" %>;"></span></a></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -433,53 +432,6 @@ var PassageMenuView = Backbone.View.extend({
                 self._setVisible(this, newSecondZhLexicon);
             }));
         }
-		var classicalUI = false;
-		var classicalCookie = $.cookie('classicalUI');
-		if (typeof classicalCookie === "undefined") {
-			classicalUI = self.model.get("isClassicalUI");
-			if (typeof classicalUI === "undefined") {
-				this.model.save({ isClassicalUI: false });
-				classicalUI = false;
-				$.cookie('classicalUI', false);
-			}
-        }
-		else if (classicalCookie === "true") classicalUI = true;
-		else if (classicalCookie === "false") classicalUI = false;
-
-		dropdown.append($(_.template(this.classicalUIButton)({ isClassicalUI: classicalUI })).click(function (e) {
-			e.stopPropagation(); //prevent the bubbling up
-            var userSelectedClassicalUI = !self.model.get("isClassicalUI");  // reverse true or false
-            self.model.save({ isClassicalUI: userSelectedClassicalUI }); // toggle the tick
-            self._setVisible(this, userSelectedClassicalUI);
-            if (userSelectedClassicalUI) {
-				$('#s2id_masterSearch').show();
-				$('.findButton').show();
-				$.cookie('classicalUI', true);
-				$('.tmp-navbar-toggle').show();
-				$('.tmp-navbar-toggle').removeClass('tmp-navbar-toggle').addClass('navbar-toggle');
-				$('.tmp-navbar-collapse').removeClass('tmp-navbar-collapse').addClass('navbar-collapse');
-				$('.tmp-collapse').removeClass('tmp-collapse').addClass('collapse');
-				$('.headerButtons .tmp-dropdown').removeClass('tmp-dropdown').addClass('dropdown');
-				$('.headerButtons .tmp-dropdown-toggle').removeClass('tmp-dropdown-toggle').addClass('dropdown-toggle');
-				// $('#help_message').show();
-				// $('#language_message').show();
-				$('.navbarIconDesc').hide();
-			}
-			else {
-				$('#s2id_masterSearch').hide();
-				$('.findButton').hide();
-				$.cookie('classicalUI', false);
-				$('.navbar-toggle').removeClass('navbar-toggle').addClass('tmp-navbar-toggle');
-				$('.tmp-navbar-toggle').hide();
-				$('.navbar-collapse').removeClass('navbar-collapse').addClass('tmp-navbar-collapse');
-				$('.collapse').removeClass('collapse').addClass('tmp-collapse');
-				$('.headerButtons .dropdown').removeClass('dropdown').addClass('tmp-dropdown');
-				$('.headerButtons .dropdown-toggle').removeClass('dropdown-toggle').addClass('tmp-dropdown-toggle');
-				// $('#help_message').hide();
-				// $('#language_message').hide();
-				$('.navbarIconDesc').show();
-			}
-		}));
         var currentVerseVocabSetting = self.model.get("isVerseVocab");
         if (currentVerseVocabSetting == null) {
             this.model.save({isVerseVocab: true});
