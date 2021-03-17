@@ -32,7 +32,7 @@
 	<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
         <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
     </a>
-    <a id="sidebar-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
+    <a id="sidebar-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
         <i class="glyphicon icon-sidebar">
             <svg width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g>
@@ -48,13 +48,12 @@
     </a>
     <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
         title="<fmt:message key="passage_smaller_fonts"/>">
-        <span class="smallerFont" style="color:white;background:black;font-size:16px"><fmt:message key="passage_font_size_symbol"/></span>
-        <span class="hidden-xs navbarIconDesc"> <fmt:message key="passage_smaller_fonts"/></span>
+        <span class="smallerFont" style="color:white;background:black;font-size:16px"> <fmt:message key="passage_font_size_symbol"/> </span>
     </a>					
     <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
         title="<fmt:message key="passage_larger_fonts"/>">
         <span class="largerFont" style="color:white;background:black;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
-        <span class="hidden-xs navbarIconDesc"> <fmt:message key="passage_larger_fonts"/></span>
+        <span class="hidden-xs hidden-sm navbarIconDesc"><fmt:message key="font_sizes"/></span>
     </a>
     <span class="navbar-collapse collapse">
         <span class="dropdown">
