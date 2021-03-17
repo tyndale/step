@@ -1,6 +1,6 @@
 var ExamplesView = Backbone.View.extend({
 	exampleTemplate: _.template(
-		'<div class="passageContainer examplesContainer">' +
+		'<div id="welcomeExamples" class="passageContainer examplesContainer">' +
 			'<a class="closeColumn" title="<%= __s.close %> />">' +
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
@@ -195,7 +195,7 @@ var ExamplesView = Backbone.View.extend({
     },
     render: function () {
         //this.$el.load("/jsps/examples.jsp", null, _.bind(this.initAccordions, this));
-        this.$el.append(this.exampleTemplate);
+		if ($('#welcomeExamples').length == 0) this.$el.append(this.exampleTemplate);
         this.initAccordions();
     },
     initAccordions: function () {
@@ -221,17 +221,18 @@ var ExamplesView = Backbone.View.extend({
         var storageKey = "stepBible-displayQuickTryoutAccordion" + index;
 
         if ($accordionBody.is(":visible")) {
-            $accordionRow.find(".accordion-body").slideUp(600);
+            $accordionRow.find(".accordion-body").slideUp();
             $accordionRow.find(".plusminus").text("+");
             localStorage.setItem(storageKey, "false");
         }
         else {
-            $accordionRow.find(".accordion-body").slideDown(600);
+            $accordionRow.find(".accordion-body").slideDown();
             $accordionRow.find(".plusminus").text("-");
             localStorage.setItem(storageKey, "true");
         }
     },
     onClickHeading: function (event) {
+		event.stopImmediatePropagation();
         var $target = $(event.target);
         var $accordionRow = $target.parent();
         var index = $accordionRow.attr("data-row");

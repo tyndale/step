@@ -22,20 +22,17 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button> -->
-
-    <a id="panel-icon" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel" />">
-        <i class="glyphicon glyphicon-plus"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="new_panel" /></span>
+	
+    <a id="panel-icon"  style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel"/>">
+        <i class="glyphicon glyphicon-plus"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="new_panel"/></span>
     </a>
-    <a id="stats-icon" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats" />">
-        <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="passage_stats" /></span>
+    <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats"/>">
+        <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="passage_stats"/></span>
     </a>
-	<a id="bookmark-icon" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
-        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /> </span>
+	<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
+        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
     </a>
-	<a id="bookmark-icon" href="javascript:step.util.ui.initSidebar('help');" title="<fmt:message key="welcome_to_step" />">
-        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /> </span>
-    </a>
-    <a id="sidebar-icon" href="javascript:step.util.ui.initSidebar('help');" title="<fmt:message key="welcome_to_step" />">
+    <a id="sidebar-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
         <i class="glyphicon icon-sidebar">
             <svg width="22px" height="16px" viewBox="0 0 58 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g>
@@ -47,11 +44,21 @@
                     </g>
                 </g>
             </svg>
-        </i>
+        </i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /></span>
+    </a>
+    <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
+        title="<fmt:message key="passage_smaller_fonts"/>">
+        <span class="smallerFont" style="color:white;background:black;font-size:16px"><fmt:message key="passage_font_size_symbol"/></span>
+        <span class="hidden-xs navbarIconDesc"> <fmt:message key="passage_smaller_fonts"/></span>
+    </a>					
+    <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
+        title="<fmt:message key="passage_larger_fonts"/>">
+        <span class="largerFont" style="color:white;background:black;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
+        <span class="hidden-xs navbarIconDesc"> <fmt:message key="passage_larger_fonts"/></span>
     </a>
     <span class="navbar-collapse collapse">
         <span class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
+            <a style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
                 <i class="glyphicon icon-language">
                     <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
                 </i><span class="hidden-xs navbarIconDesc"><fmt:message key="installation_book_language"/></span>
@@ -75,14 +82,14 @@
         <%
             if (!appManager.isLocal()) {
         %>
-        <a id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+        <a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
             <i class="glyphicon glyphicon-bullhorn"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="help_feedback" /></span>
         </a>
         <%
             }
         %>
         <span class="dropdown">
-            <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
+            <a style="padding-left:5px" class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" title="<fmt:message key="help"/>">
                 <i class="glyphicon glyphicon-option-vertical"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="more"/></span>
                 <!-- <span><fmt:message key="help"/></span> -->
             </a>
@@ -96,7 +103,7 @@
                     }
                 %>
                 <!-- # Quick tryout links -->
-                <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
+                <!-- <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>  -->
                 <!-- # Video demonstrations -->
                 <li><a href="https://www.stepbible.org/videos" target="_blank"><fmt:message key="video_help"/></a></li>
                 <!-- # Guide and Instructions -->
