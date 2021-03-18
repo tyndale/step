@@ -111,10 +111,10 @@
                 <%
                     }
                 %>
+                <!-- # Classical UI -->
+                <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui"/>&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:11px"></span></a></li>
                 <!-- # Reset everything -->
                 <li class="resetEverything"><a href="javascript:void(0)"><fmt:message key="tools_forget_my_profile"/></a></li>
-                <!-- # Classical UI -->
-                <li class="classicalUI"><a href="javascript:void(0)"><fmt:message key="display_classical_ui"/>&nbsp;<span id="classicalUICheck" class="glyphicon glyphicon-check" style="font-size:12px"></span></a></li>
                 <!-- # We need your help! -->
                 <li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help"/></a></li>
                 <!-- # Feedback & contact -->

@@ -107,10 +107,12 @@
         step.passages.fetch();
         step.bookmarks = new HistoryModelList();
         step.bookmarks.fetch();
+		// The following 4 lines are not needed.  Should be removed after verification.  PT 3/17/2021
 		// var classicalUI = false;
 		// var classicalCookie = $.cookie('classicalUI');
 		// if (classicalCookie === "true") classicalUI = true;
 		// step.util.setClassicalUI(classicalUI);
+		
         //need to clean up passages... Ideally, by changing the values of passageIds to be 1,2,3,4,...
         //we reserve 0 for the first column
         for (var ii = 0; ii < step.passages.length; ii++) {
