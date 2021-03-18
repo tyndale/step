@@ -128,7 +128,7 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.kjv_verb_imperative_explanation %></span>' +
-   					'<a href="javascript:step.util.showVideoModal(\'color_code_1.gif\', 92)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+   					'<a href="javascript:step.util.showVideoModal(\'color_code_1.gif\', 93)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="javascript:cf.setNextPageURL(\'/?q=version=KJV|reference=Col.1&options=HVGUNC\', \'verb, main vs supporting verbs\', \'kjv_verb_main_supporting_explanation\')" title="<%= __s.click_to_try_this %>">' +

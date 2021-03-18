@@ -17,11 +17,11 @@
 %>
 <fmt:setBundle basename="HtmlBundle"/>
 <div class="headerButtons pull-right">
-<!--    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-    </button> -->
+    </button>
 	
     <a id="panel-icon"  style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel"/>">
         <i class="glyphicon glyphicon-plus"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="new_panel"/></span>
@@ -32,14 +32,14 @@
 	<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
         <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
     </a>
-    <a id="sidebar-icon" style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
+    <a id="sidebar-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
         <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /></span>
     </a>
-    <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
+    <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
         title="<fmt:message key="passage_smaller_fonts"/>">
         <span class="smallerFont" style="color:white;background:black;font-size:16px"> <fmt:message key="passage_font_size_symbol"/> </span>
     </a>					
-    <a id="panel-icon"  style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
+    <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
         title="<fmt:message key="passage_larger_fonts"/>">
         <span class="largerFont" style="color:white;background:black;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
         <span class="hidden-xs hidden-sm navbarIconDesc"><fmt:message key="font_sizes"/></span>
