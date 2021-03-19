@@ -5,7 +5,6 @@ var ExamplesView = Backbone.View.extend({
 				'<i class="glyphicon glyphicon-remove"></i>' +
 			'</a>' +
 			'<h3><%= __s.simple_intro_welcome %></h3>' +
-			'<h4><%= __s.simple_intro_tyndale_house_project %></h4>' +
 			'<p><%= __s.simple_intro %></p>' +
 			'<div class="accordion-row" data-row="0">' +
 				'<h5 class="accordion-heading"><%= __s.quick_tutorial_header1 %>' +
@@ -21,9 +20,8 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.simple_passage_explanation %></span>' +
-					'<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">&nbsp;' +
-					'<span data-intro="Take a look at the short videos to learn the new features" data-position="bottom" data-step="4" ' + 
-					'class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					'<a id="firstVideoLink" href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">&nbsp;' +
+					'<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=NIV|version=ESV|version=KJV|reference=Joh.3&options=HVGUN&display=COLUMN" title="<%= __s.click_to_try_this %>">' +
@@ -217,10 +215,13 @@ var ExamplesView = Backbone.View.extend({
     },
     render: function () {
         //this.$el.load("/jsps/examples.jsp", null, _.bind(this.initAccordions, this));
-		if ($('#welcomeExamples').length == 0) this.$el.append(this.exampleTemplate);
-		if ($.cookie('classicalUI') === "true") $('#classicalUIVideo').hide();
+		if ($('#welcomeExamples').length == 0) {
+			this.$el.append(this.exampleTemplate);
+			this.initAccordions();
+		}
+        var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
+		if (classicalUISetting === "true") $('#classicalUIVideo').hide();
 		else $('#classicalUIVideo').show();
-        this.initAccordions();
     },
     initAccordions: function () {
         var count = this.$el.find(".accordion-row").length;

@@ -24,7 +24,6 @@
     </a>
 
     <h3><fmt:message key="simple_intro_welcome"/></h3>
-    <h4><fmt:message key="simple_intro_tyndale_house_project"/></h4>
 
     <p><fmt:message key="simple_intro"/></p>
 

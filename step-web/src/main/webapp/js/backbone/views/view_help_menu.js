@@ -41,10 +41,9 @@ var ViewHelpMenuOptions = Backbone.View.extend({
         step.util.ui.showTutorial();
     },
 	classicalUI : function() {
-		var classicalUI = true; // reserse the setting
-		var classicalCookie = $.cookie('classicalUI');
-		if (classicalCookie === "true") classicalUI = false; // reserse the setting
+        var classicalUISetting = (window.localStorage) ? window.localStorage.getItem("step.classicalUI") : $.cookie('step.classicalUI');
+		var classicalUI = (classicalUISetting === "true") ? false : true; // reserse the setting
 		step.util.setClassicalUI(classicalUI);
-		$.cookie('classicalUI', classicalUI);
-    }
+		if (window.localStorage) window.localStorage.setItem("step.classicalUI", classicalUI);
+		else $.cookie('step.classicalUI', classicalUI);    }
 });

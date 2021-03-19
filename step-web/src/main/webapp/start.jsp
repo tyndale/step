@@ -64,8 +64,6 @@
     <%-- 3rd party libs --%>
     <link rel="stylesheet" type="text/css" href="/css/qtip.css"/>
     <link rel="stylesheet" type="text/css" href="/css/cardo.css"/>
-	<!-- Add IntroJs styles -->
-	<link href="/css/introjs.min.css" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -81,7 +79,8 @@
     <%
         }
     %>
-
+	<!-- Add IntroJs styles -->
+	<link href="/css/introjs.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -136,9 +135,9 @@
                                     </g>
                                 </svg>
                             </a>
-                            <span class="subtitle">
-                                <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>
-                            </span>
+                            <!-- <span class="subtitle">  -->
+                            <!--     <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>  -->
+                            <!-- </span>  -->
                         </span>
                     <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">

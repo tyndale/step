@@ -733,7 +733,6 @@ step.util = {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<button type="button" ' +
-							'data-intro="Click here to select Bible translations (e.g. NIV, NASB, ...)" data-position="bottom" data-step="2" ' + 
 							'onclick="step.util.startPickBible()" ' +
 							'title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
 							allSelectedBibleVersions +
@@ -742,7 +741,6 @@ step.util = {
 
 				container.append(
 					'<button type="button" ' +
-						'data-intro="Click here to select Bible passsage (e.g. John 1)" data-position="bottom" data-step="1" ' + 
 						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
 						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
 						allSelectedReferences +
@@ -751,7 +749,6 @@ step.util = {
 
 				container.append(
 					'<button type="button" ' +
-						'data-intro="Click here to search on words, subject, word meaning ..." data-position="bottom" data-step="3" ' + 
 						'onclick="step.util.searchSelectionModal()" ' +
 						'title="' + __s.click_search + '" class="select-search newArgSummary">' +
 						'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +

@@ -32,7 +32,7 @@
 	<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
         <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
     </a>
-    <a id="sidebar-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
+    <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
         <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /></span>
     </a>
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
