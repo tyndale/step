@@ -1495,6 +1495,59 @@ step.util = {
 			var passContent = passageContainer.find(".passageContent");
 			$(passContent).css({'height':heightForPassage + 'px'});
 		}
+	},
+	showIntro: function (showAnyway) {
+	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.introJs") : $.cookie('step.introJs');
+		var introCount = parseInt(introCountFromStorageOrCookie, 10);
+		if (isNaN(introCount)) introCount = 0;
+		if ((introCount < 3) || (showAnyway)) {
+			var introJsSteps = [
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-version'),
+					intro: 'Click to select Bible translations (e.g. NIV, NASB, ...)',
+					position: 'bottom'
+				},
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-reference'),
+					intro: 'Click to select Bible passsage (e.g. John 1)',
+					position: 'bottom'
+				},
+				{
+					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-search'),
+					intro: 'Click to search on words, subject, word meaning, Greek or Hebrew words ...',
+					position: 'bottom-left-aligned'
+				}
+			];
+			
+
+			if ($('#quickTour').is(':visible')) {
+				if (window.innerWidth <= 768) $('.row-offcanvas').removeClass('active')
+				else {
+					introJsSteps.unshift(
+						{
+							element: document.querySelector('#quickTour'),
+							intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.<br><br>If you want to take the tour later, click on "<b>Quick tour<b>".',
+							position: 'left'
+						}
+					);
+				}
+			}
+			else {
+				introJsSteps.unshift(
+					{
+						element: document.querySelector('#examples-icon'),
+						intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.<br><br>If you want to take the tour later, click on the <b>?</b> (question mark) icon and then click "<b>Quick tour</b>" in the side panel.',
+						position: 'left'
+					}
+				);
+			}
+			introJs().setOptions({
+				steps: introJsSteps
+			}).start();
+		}
+		introCount ++;
+		if (window.localStorage) window.localStorage.setItem("step.introJs", introCount);
+		else $.cookie('step.introJs', introCount);
 	}
 }
 ;

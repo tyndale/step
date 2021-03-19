@@ -244,57 +244,7 @@
                 window.open(window.location);
             });
         }
-		
-        var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.introJs") : $.cookie('step.introJs');
-		var introCount = parseInt(introCountFromStorageOrCookie, 10);
-		if (isNaN(introCount)) introCount = 0;
-		if (introCount < 4) {
-			var introJsSteps = [
-				{
-					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-version'),
-					intro: 'Click to select Bible translations (e.g. NIV, NASB, ...)',
-					position: 'bottom'
-				},
-				{
-					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-reference'),
-					intro: 'Click to select Bible passsage (e.g. John 1)',
-					position: 'bottom'
-				},
-				{
-					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-search'),
-					intro: 'Click to search on words, subject, word meaning, Greek or Hebrew words ...',
-					position: 'bottom'
-				}
-			];
-			if ($(window).width() <= 768) {
-				introJsSteps.push(
-					{
-						element: document.querySelector('#examples-icon'),
-						intro: 'Click on the question mark to look at the examples and view the videos',
-						position: 'left'
-					}
-				);
-				introJs().setOptions({
-				  steps: introJsSteps
-				}).start();
-			}
-			else {
-				introJsSteps.push(
-					{
-						element: document.querySelector('#firstVideoLink'),
-						intro: 'Look at the examples and view the videos.',
-						position: 'left'
-					}
-				);
-
-				introJs().setOptions({
-				  steps: introJsSteps
-				}).start();
-			}
-			introCount ++;
-			if (window.localStorage) window.localStorage.setItem("step.introJs", introCount);
-			else $.cookie('step.introJs', introCount);
-		}
+		step.util.showIntro();
     });
 	$( window ).resize(function() {
 		step.util.refreshColumnSize();

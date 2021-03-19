@@ -75,7 +75,13 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="explanationText"><%= __s.esv_word_frequency_explanation %></span>' +
   					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
-					'<br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:#498090">Old user interface</span>' +
+					'<br><br><a href="javascript:step.util.showIntro(true)">' +
+					'<div id="quickTour"><span style="font-size:14px;font-weight:bold;color:black">Quick tour</span>' +
+					'<br><span class="explanationText">Take a quick tour of the new user Interface</span>' +
+					'</div>' +
+					'</a>' +
+
+					'<br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black">Old user interface</span>' +
 					'<br><span class="explanationText">STEP Bible has improved the user interface. We do not recommend the old user interface, but it is available in case you prefer the old input line, the following video shows how to re-enable the old input line.</span>' +
 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 16)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +
@@ -202,7 +208,7 @@ var ExamplesView = Backbone.View.extend({
 				'</div>' +
 			'</div>' +
 			'<div class="text-muted step-copyright">' +
-				'<span>&copy; <a href="http://www.tyndale.cam.ac.uk" target="_blank">STEPBible</a> - 2021</span>' +
+				'<span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html" target="_blank">STEPBible</a> - 2021</span>' +
 			'</div>' +
 		'</div>'
 	),

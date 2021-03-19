@@ -134,7 +134,7 @@
         </div>
     </div>
     <div class="text-muted step-copyright">
-                <span>&copy; <a href="http://www.tyndale.cam.ac.uk"
+                <span>&copy; <a href="https://stepbibleguide.blogspot.com/p/copyrights-licences.html"
                                 target="_blank">Tyndale House, Cambridge, UK</a> - <%= Calendar.getInstance().get(Calendar.YEAR) %></span>
     </div>
 </div>
