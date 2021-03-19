@@ -13,6 +13,7 @@ var ExamplesView = Backbone.View.extend({
 				'</h5>' +
 				'<div class="accordion-body">' +
 					'<br>' +
+
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=ESV|reference=Ps.23&options=VHNUG" title="<%= __s.click_to_try_this %>">' +
 					'<span class="form-control input-sm argSummary newArgSummary">' +
@@ -20,7 +21,9 @@ var ExamplesView = Backbone.View.extend({
 					'</a>' +
 					'</span>' +
 					'<span class="explanationText"><%= __s.simple_passage_explanation %></span>' +
-					'<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					'<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">&nbsp;' +
+					'<span data-intro="Take a look at the short videos to learn the new features" data-position="bottom" data-step="4" ' + 
+					'class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<span class="input-group" style="overflow: hidden">' +
 					'<a href="/?q=version=NIV|version=ESV|version=KJV|reference=Joh.3&options=HVGUN&display=COLUMN" title="<%= __s.click_to_try_this %>">' +
@@ -74,6 +77,11 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="explanationText"><%= __s.esv_word_frequency_explanation %></span>' +
   					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
+					'<br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:#498090">Old user interface</span>' +
+					'<br><span class="explanationText">STEP Bible has improved the user interface. We do not recommend the old user interface, but it is available in case you prefer the old input line, the following video shows how to re-enable the old input line.</span>' +
+					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 16)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
+					'</div>' +
+					
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="1">' +
@@ -210,6 +218,8 @@ var ExamplesView = Backbone.View.extend({
     render: function () {
         //this.$el.load("/jsps/examples.jsp", null, _.bind(this.initAccordions, this));
 		if ($('#welcomeExamples').length == 0) this.$el.append(this.exampleTemplate);
+		if ($.cookie('classicalUI') === "true") $('#classicalUIVideo').hide();
+		else $('#classicalUIVideo').show();
         this.initAccordions();
     },
     initAccordions: function () {

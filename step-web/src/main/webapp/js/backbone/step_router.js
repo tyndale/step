@@ -256,34 +256,14 @@ var StepRouter = Backbone.Router.extend({
         var searchTokens = passageModel.get("searchTokens");
 
         var currentPassageID = passageModel.get("passageId");
-        var passageOptions = step.util.getPassageContainer(currentPassageID).find(".passageOptionsGroup");
-		// var versionSeparator = false;
-		// var referenceSeparator = false;
-        
-		// if (passageOptions.find(".argSummary").length == 1) {
-			// var resultArray = step.util.ui.renderArgs(searchTokens, container, "text");
-			// passageOptions.find('.select-version').text(resultArray[0]);
-			// passageOptions.find('.select-reference').text(resultArray[1]);
-			// passageOptions.find('.select-search').html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>&nbsp;' + resultArray[2]);
-			// if (passageOptions.find(".separator-version").html() === "<br>") versionSeparator = true;
-			// if (passageOptions.find(".separator-reference").html() === "<br>") referenceSeparator = true;
-		// }
-		// else {
+        var passageContainer = step.util.getPassageContainer(currentPassageID);
+        var passageOptions = passageContainer.find(".passageOptionsGroup");
 			
 		passageOptions.find(".argSummary").remove();
 		var container = $("<span></span>").addClass("argSummary newArgSummary");
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
-			
-		// }
-		// this.addLineBreakToPassageOptions(passageOptions, versionSeparator, referenceSeparator);
-
-		var additionalHeightInPassageOption = passageOptions.height();
-		if (additionalHeightInPassageOption > 5) {
-			var heightForPassage = $('.passageContainer.active').height() - Math.ceil(additionalHeightInPassageOption);
-			var passContent = step.util.getPassageContainer(currentPassageID).find(".passageContent");
-			$(passContent).css({'height':heightForPassage + 'px'});
-		}
+		step.util.adjustPassageOptionHeight(passageContainer);
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;

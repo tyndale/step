@@ -64,6 +64,8 @@
     <%-- 3rd party libs --%>
     <link rel="stylesheet" type="text/css" href="/css/qtip.css"/>
     <link rel="stylesheet" type="text/css" href="/css/cardo.css"/>
+	<!-- Add IntroJs styles -->
+	<link href="/css/introjs.min.css" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link href="/css/bootstrap.css" rel="stylesheet" media="screen"/>
@@ -394,6 +396,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 </script>
 <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+<script src="/libs/introjs.min.js" type="text/javascript"></script>
 <%
     if (request.getParameter("debug") != null) {
 %>

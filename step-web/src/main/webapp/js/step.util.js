@@ -380,24 +380,10 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
-		var passageContainerHeight = $('.passageContainer.active').height();
-        for (var i = 0; i < columns.length; i++) {
-			var additionalHeightInPassageOption = $(columns[i]).find('.passageOptionsGroup').height();
-			if (additionalHeightInPassageOption > 5) {
-				var heightForPassage = passageContainerHeight - Math.ceil(additionalHeightInPassageOption);
-				var passContent = $(columns[i]).find(".passageContent");
-				$(passContent).css({'height':heightForPassage + 'px'});
-			}
+		for (var i = 0; i < columns.length; i++) {
+			var passageContainer = $(columns[i]).find('.passageContainer');
+			step.util.adjustPassageOptionHeight(passageContainer);
 		}
-
-		// step.router.addLineBreakToPassageOptions($(columns[i]).find('.passageOptionsGroup'), versionSeparator, referenceSeparator);
-		// var addedHeight = 12;
-		// if (hasVersionSeparator) addedHeight += 12;
-		// if (hasReferenceSeparator) addedHeight += 12;
-        // for (var i = 0; i < columns.length; i++) {
-			// $(columns[i]).css({'margin-top': addedHeight + 'px'});
-        // }
-		
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
@@ -747,6 +733,7 @@ step.util = {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<button type="button" ' +
+							'data-intro="Click here to select Bible translations (e.g. NIV, NASB, ...)" data-position="bottom" data-step="2" ' + 
 							'onclick="step.util.startPickBible()" ' +
 							'title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
 							allSelectedBibleVersions +
@@ -755,6 +742,7 @@ step.util = {
 
 				container.append(
 					'<button type="button" ' +
+						'data-intro="Click here to select Bible passsage (e.g. John 1)" data-position="bottom" data-step="1" ' + 
 						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
 						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
 						allSelectedReferences +
@@ -763,6 +751,7 @@ step.util = {
 
 				container.append(
 					'<button type="button" ' +
+						'data-intro="Click here to search on words, subject, word meaning ..." data-position="bottom" data-step="3" ' + 
 						'onclick="step.util.searchSelectionModal()" ' +
 						'title="' + __s.click_search + '" class="select-search newArgSummary">' +
 						'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
@@ -1500,6 +1489,14 @@ step.util = {
 			$('.navbarIconDesc').show();
 			$('.quick_tutorial').hide();
 			$('#classicalUICheck').hide();
+		}
+	},
+	adjustPassageOptionHeight: function (passageContainer) {
+		var additionalHeightInPassageOption = passageContainer.find(".passageOptionsGroup").height();
+		if (additionalHeightInPassageOption > 5) {
+			var heightForPassage = passageContainer.height() - (Math.ceil(additionalHeightInPassageOption) - 5);
+			var passContent = passageContainer.find(".passageContent");
+			$(passContent).css({'height':heightForPassage + 'px'});
 		}
 	}
 }

@@ -251,5 +251,9 @@
                 window.open(window.location);
             });
         }
+		introJs().start();
     });
+	$( window ).resize(function() {
+		step.util.refreshColumnSize();
+	});
 })();
