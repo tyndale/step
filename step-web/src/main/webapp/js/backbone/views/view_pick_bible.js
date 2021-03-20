@@ -1,9 +1,9 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        // '<h1><%= key %></h1>' +
-        '<button><%= key %></button>' +
-        '<ul class="list-group">' +
+        '<button class="langBtn btn_<%= key.replaceAll(/[\\s,]/ig, "") %>" style="background:white">' +
+        '<%= key %> &#9662;</button><br>' +
+        '<ul class="list-group ul_<%= key.replaceAll(/[\\s,]/ig, "") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
@@ -32,6 +32,7 @@ var PickBibleView = Backbone.View.extend({
         '<li><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
         '<li><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
         '</ul>' +
+        '<p>Press on a button below to open the Bible/Commentary available. White color buttons are unselected. Green are selected.</p>' +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +
@@ -284,6 +285,13 @@ var PickBibleView = Backbone.View.extend({
             }
         });
         this._addTagLine();
+        this._displayGroup('Mostwidelyused');
+        this._displayGroup('English');
+        this._displayGroup('HebrewOldTestament');
+        this._displayGroup('GreekOldTestament');
+        this._displayGroup('GreekNewTestament');
+
+        this.$el.find(".langBtn").click(this._handleUsrClick);
     },
     _addTagLine: function(){
         var bibleVersions = $("#bibleVersions");
@@ -301,5 +309,33 @@ var PickBibleView = Backbone.View.extend({
             return actualLanguage == "he" || actualLanguage == "grc";
         }
         return actualLanguage == wantedLanguage;
+    },
+    _handleUsrClick: function (event) {
+        var btnClassName = "";
+        var ulClassName = "";
+        for (var i = 0; i < event.target.classList.length; i++) {
+            if (event.target.classList[i].substr(0, 4) === "btn_") {
+                btnClassName = '.' + event.target.classList[i];
+                ulClassName = ".ul_" + event.target.classList[i].substr(4);
+                break;
+            }
+        }
+        if (btnClassName !== "") {
+            if ($(ulClassName).is(":visible")) {
+                $(ulClassName).hide();
+                $(btnClassName).css('background', 'white').css('color', 'black');            
+            }
+            else {
+                $(ulClassName).show();
+                $(btnClassName).css('background', '#336600').css('color', 'white');
+            }
+        }
+    },
+    _displayGroup: function (className) {
+        var btnClassName = ".btn_" + className;
+        var ulClassName = ".ul_" + className;
+        $(ulClassName).show();
+        $(btnClassName).css('background', '#336600').css('color', 'white');
     }
+
 });
