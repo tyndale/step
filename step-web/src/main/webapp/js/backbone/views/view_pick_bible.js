@@ -227,8 +227,8 @@ var PickBibleView = Backbone.View.extend({
                 if (this._isLanguageValid(version.languageCode, selectedLanguage)) {
                     if (selectedLanguage == "_all") {
                         //now filter by language:
-                        if ((version.languageCode !== "en") && (version.languageCode !== 'he') && 
-                            (version.languageCode !== 'grc')) 
+                        if ((version.languageCode !== "en") && (version.languageCode !== "eng") &&
+                            (version.languageCode !== 'he') && (version.languageCode !== 'grc')) 
                                 this._addGroupingByLanguage(bibleList, v, version);
                     } else if (selectedLanguage == "en") {
                         if (version.languageCode == "en") {
