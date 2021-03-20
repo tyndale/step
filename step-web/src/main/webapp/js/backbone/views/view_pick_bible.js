@@ -1,7 +1,8 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        '<h1><%= key %></h1>' +
+        // '<h1><%= key %></h1>' +
+        '<button><%= key %></button>' +
         '<ul class="list-group">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
@@ -14,7 +15,7 @@ var PickBibleView = Backbone.View.extend({
         '<% }) %>'),
     filtersTemplate: _.template('<form role="form" class="form-inline">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
+        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.other  %></label>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= __s.english %></label>' +
         '<% if(step.userLanguageCode != "en") { %>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="<%= step.userLanguageCode %>" /><%= step.userLanguage %></label>' +
@@ -225,7 +226,9 @@ var PickBibleView = Backbone.View.extend({
                 if (this._isLanguageValid(version.languageCode, selectedLanguage)) {
                     if (selectedLanguage == "_all") {
                         //now filter by language:
-                        this._addGroupingByLanguage(bibleList, v, version);
+                        if ((version.languageCode !== "en") && (version.languageCode !== 'he') && 
+                            (version.languageCode !== 'grc')) 
+                                this._addGroupingByLanguage(bibleList, v, version);
                     } else if (selectedLanguage == "en") {
                         if (version.languageCode == "en") {
                             this._addGroupingByLanguage(bibleList, v, version);
