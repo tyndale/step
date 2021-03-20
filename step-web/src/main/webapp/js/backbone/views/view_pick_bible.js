@@ -43,13 +43,13 @@ var PickBibleView = Backbone.View.extend({
         '</div>' + //end dialog
         '</div>' +
         '</div>'),
-    suggestedEnglish: ['ESV', 'NIV', 'NASB', 'KJV', 'ASV', 'WEB', 'DRC', 'CPDV'],
+    suggestedEnglish: ['ESV', 'NIV', 'NASB_th', 'KJVA', 'NETfull', 'HCSB', 'BSB', 'ASV-TH', 'DRC', 'CPDV'],
     ancientBlackList: ["HebModern"],
     ancientOrder: [
-        [__s.widely_used, ['OSMHB', 'LXX', 'Byz', 'TR', 'SBLG']],
-        [__s.hebrew_ot, ["Aleppo", "OSMHB", "SP", "WLC", "MapM"]],
-        [__s.greek_ot, ["LXX", "LXX_th", "ABPGRK", "ABP", "ABpGk_th", "ABpEn_th"]],
-        [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "Nestle", "Tisch", "TNT", "TR", "WHNU"]],
+        [__s.widely_used, ['THOT', 'LXX', 'THGNT', 'Byz', 'TR', 'SBLG']],
+        [__s.hebrew_ot, ['THOT', "Alep", "OHB", "WLC", "MapM"]],
+        [__s.greek_ot, ["LXX", "LXX_th", "ABPGRK", "ABP", "ABGk"]],
+        [__s.greek_nt, ["Ant", "Byz", "Elzevir", "Nestle", "SBLG", "THGNT", "Tisch", "TNT", "TR", "WHNU"]],
         [__s.coptic_texts, ["CopNT", "CopSahHorner", "CopSahidica", "CopSahidicMSS"]],
         [__s.latin_texts, ["DRC", "Vulgate", "VulgSistine", "VulgHetzenauer", "VulgConte", "VulgClementine"]],
         [__s.coptic_texts, ["CopNT", "CopSahHorner", "CopSahidica", "CopSahidicMSS"]],
