@@ -1,9 +1,9 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,]/ig, "") %>" style="background:white">' +
+        '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/ig, "") %>" style="background:white">' +
         '<%= key %> &#9662;</button><br>' +
-        '<ul class="list-group ul_<%= key.replaceAll(/[()\\s,]/ig, "") %>" style="display:none">' +
+        '<ul class="list-group ul_<%= key.replaceAll(/[()\\s,\']/ig, "") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
@@ -15,7 +15,7 @@ var PickBibleView = Backbone.View.extend({
         '<% }) %>'),
     filtersTemplate: _.template('<form role="form" class="form-inline">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.other  %></label>' +
+        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= __s.english %></label>' +
         '<% if(step.userLanguageCode != "en") { %>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="<%= step.userLanguageCode %>" /><%= step.userLanguage %></label>' +
@@ -227,8 +227,8 @@ var PickBibleView = Backbone.View.extend({
                 if (this._isLanguageValid(version.languageCode, selectedLanguage)) {
                     if (selectedLanguage == "_all") {
                         //now filter by language:
-                        if ((version.languageCode !== "en") && (version.languageCode !== "eng") &&
-                            (version.languageCode !== 'he') && (version.languageCode !== 'grc')) 
+                        // if ((version.languageCode !== "en") && (version.languageCode !== "eng") &&
+                            // (version.languageCode !== 'he') && (version.languageCode !== 'grc')) 
                                 this._addGroupingByLanguage(bibleList, v, version);
                     } else if (selectedLanguage == "en") {
                         if (version.languageCode == "en") {
