@@ -1930,8 +1930,10 @@ step.util = {
 		var geo = $( ".selectGeo option:selected" ).val();
 		console.log("geo: " + geo);
 		if (geo === "all") {
+			$('.langSpan').show();
+			$('.langSpan').css('background', 'white').css('color', 'black');
 			$('.langBtn').show();
-			$('.langBtn').css('background', '#336600').css('color', 'white');
+			$('.langBtn').css('background', 'white').css('color', 'black');
 			$('.langUL').hide();
 		}
 		else {
@@ -1945,10 +1947,14 @@ step.util = {
 			else if (geo === "southeast_asia") arrayToProcess = southeast_asia_lang;
 			else if (geo === "western_asia") arrayToProcess = western_asia_lang;
 			else {
+				$('.langSpan').show();
+				$('.langSpan').css('background', 'white').css('color', 'black');
 				$('.langBtn').show();
+				$('.langBtn').css('background', 'white').css('color', 'black');
 				$('.langUL').show();
 				return;
 			}
+			$('.langSpan').hide();
 			$('.langBtn').hide();
 			$('.langUL').hide();
 			for (var i = 0; i < arrayToProcess.length; i++) {
@@ -1958,8 +1964,7 @@ step.util = {
 				}
 				else {
 					$('.btn_' + arrayToProcess[i]).show();
-					$('button.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
-					$('span.langbtn.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+					$('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
 				}
 
 			}
