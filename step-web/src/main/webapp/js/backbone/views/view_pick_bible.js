@@ -299,11 +299,11 @@ var PickBibleView = Backbone.View.extend({
             }
         });
         this._addTagLine();
-        this._displayGroup('Mostwidelyused');
+        this._displayGroup('Most_widely_used');
         this._displayGroup('English');
-        this._displayGroup('HebrewOldTestament');
-        this._displayGroup('GreekOldTestament');
-        this._displayGroup('GreekNewTestament');
+        this._displayGroup('Hebrew_Old_Testament');
+        this._displayGroup('Greek_Old_Testament');
+        this._displayGroup('Greek_New_Testament');
 
         this.$el.find(".langBtn").click(this._handleUsrClick);
     },

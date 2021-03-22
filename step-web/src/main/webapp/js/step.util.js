@@ -1958,7 +1958,8 @@ step.util = {
 				}
 				else {
 					$('.btn_' + arrayToProcess[i]).show();
-					$('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+					$('button.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+					$('span.langbtn.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
 				}
 
 			}
