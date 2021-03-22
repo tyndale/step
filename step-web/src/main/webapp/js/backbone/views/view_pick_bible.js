@@ -1,8 +1,8 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="background:white">' +
-        '<%= key %> &#9662;</button><br>' +
+        '<span class="langBtn"><button class="btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="background:white">' +
+        '<%= key %> &#9662;</button><br></span>' +
         '<ul class="list-group langUL ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
