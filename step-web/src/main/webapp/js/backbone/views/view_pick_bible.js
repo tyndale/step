@@ -3,7 +3,7 @@ var PickBibleView = Backbone.View.extend({
         '<% _.each(versions, function(languageBibles, key) { %>' +
         '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="background:white">' +
         '<%= key %> &#9662;</button><br>' +
-        '<ul class="list-group ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
+        '<ul class="list-group langUL ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +
@@ -32,6 +32,18 @@ var PickBibleView = Backbone.View.extend({
         '<li><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
         '<li><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
         '</ul>' +
+		'<label class="selectGeo" for="selectGeo">Filter languges by geography:</label>' +
+		'<select class="selectGeo" onchange=\'step.util.showByGeo()\'>' +
+		  '<option value="all">All</option>' +
+		  '<option value="africa">Africa</option>' +
+		  '<option value="americas">Americas</option>' +
+		  '<option value="east_asia">East Asia</option>' +
+		  '<option value="europe">Europe</option>' +
+		  '<option value="oceania">Oceania</option>' +
+		  '<option value="south_asia">South Asia</option>' +
+		  '<option value="southeast_asia">Southeast Asia</option>' +
+		  '<option value="western_asia">Western Asia</option>' +
+		'</select>' +
         '<p>Press on a button below to open the Bible/Commentary available. White color buttons are unselected. Green are selected.</p>' +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
@@ -225,7 +237,9 @@ var PickBibleView = Backbone.View.extend({
                 }
 
                 if (this._isLanguageValid(version.languageCode, selectedLanguage)) {
+					$(".selectGeo").hide();
                     if (selectedLanguage == "_all") {
+						$(".selectGeo").show();
                         //now filter by language:
                         // if ((version.languageCode !== "en") && (version.languageCode !== "eng") &&
                             // (version.languageCode !== 'he') && (version.languageCode !== 'grc')) 
