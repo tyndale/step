@@ -337,7 +337,7 @@ var PickBibleView = Backbone.View.extend({
         if (btnClassName !== "") {
             if ($(ulClassName).is(":visible")) {
                 $(ulClassName).hide();
-                $(btnClassName).css('background', 'white').css('color', 'black');            
+                $(btnClassName).css('background', 'white').css('color', 'black');
             }
             else {
                 $(ulClassName).show();

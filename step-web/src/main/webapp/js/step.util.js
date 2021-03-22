@@ -1931,7 +1931,8 @@ step.util = {
 		console.log("geo: " + geo);
 		if (geo === "all") {
 			$('.langBtn').show();
-			$('.langUL').show();
+			$('.langBtn').css('background', '#336600').css('color', 'white');
+			$('.langUL').hide();
 		}
 		else {
 			var arrayToProcess = [];
@@ -1951,8 +1952,15 @@ step.util = {
 			$('.langBtn').hide();
 			$('.langUL').hide();
 			for (var i = 0; i < arrayToProcess.length; i++) {
-				$('.btn_' + arrayToProcess[i]).show();
-                $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');            
+				if (turnOff) {
+					$('.btn_' + arrayToProcess[i]).hide();
+					$('.ul_' + arrayToProcess[i]).hide();
+				}
+				else {
+					$('.btn_' + arrayToProcess[i]).show();
+					$('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+				}
+
 			}
 		}
 	}
