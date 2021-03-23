@@ -793,8 +793,8 @@
 								pos = searchUserInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i);
 								if (pos > -1) {
 									if (userPressedEnterKey) goToPassage(data[0].suggestion.osisID, 0);
-									$('#warningMessage').text('If you want to read a passage, use the button at the top of the panel which displays the passage. You can only search for words and subjects here.');
-									$('#warningMessage').append($('.passageContainer.active').find('.argSummary').find('.select-reference').clone());
+									$('#warningMessage').text('You can only search for words and subjects here.  This video will show you how to select passage.');
+                                    $('#warningMessage').append('<a href="javascript:step.util.showVideoModal(\'Psalm23.gif\', 15)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>');
 								}
 							}
 							break;
