@@ -1549,7 +1549,7 @@ step.util = {
 		if (window.localStorage) window.localStorage.setItem("step.introJs", introCount);
 		else $.cookie('step.introJs', introCount);
 	},
-	showByGeo: function(turnOff) {
+	showByGeo: function(testMode) {
 		var africa_lang = [
 			"Afrikaans",
 			"Amharic",
@@ -1927,50 +1927,54 @@ step.util = {
 			"Turkish",
 			"English"
 		];
-		var geo = $( ".selectGeo option:selected" ).val();
-		console.log("geo: " + geo);
-		if (geo === "all") {
-			$('.langSpan').show();
-			$('.langSpan').css('background', 'white').css('color', 'black');
-			$('.langBtn').show();
-			$('.langBtn').css('background', 'white').css('color', 'black');
-			$('.langUL').hide();
-		}
-		else {
-			var arrayToProcess = [];
-			if (geo === "africa") arrayToProcess = africa_lang;
-			else if (geo === "americas") arrayToProcess = americas_lang;
-			else if (geo === "east_asia") arrayToProcess = east_asia_lang;
-			else if (geo === "europe") arrayToProcess = europe_lang;
-			else if (geo === "oceania") arrayToProcess = oceania_lang;
-			else if (geo === "south_asia") arrayToProcess = south_asia_lang;
-			else if (geo === "southeast_asia") arrayToProcess = southeast_asia_lang;
-			else if (geo === "western_asia") arrayToProcess = western_asia_lang;
-			else {
-				$('.langSpan').show();
-				$('.langSpan').css('background', 'white').css('color', 'black');
-				$('.langBtn').show();
-				$('.langBtn').css('background', 'white').css('color', 'black');
-				$('.langUL').show();
-				return;
-			}
-			if (!turnOff) {
-				$('.langSpan').hide();
-				$('.langBtn').hide();
-				$('.langUL').hide();
-			}
-			for (var i = 0; i < arrayToProcess.length; i++) {
-				if (turnOff) {
-					$('.btn_' + arrayToProcess[i]).hide();
-					$('.ul_' + arrayToProcess[i]).hide();
-				}
-				else {
-					$('.btn_' + arrayToProcess[i]).show();
-					$('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
-				}
+        var arrayToProcess = [];
+        if (testMode) {
+            $('.langSpan').show();
+            $('.langSpan').css('background', 'white').css('color', 'black');
+            $('.langBtn').show();
+            $('.langBtn').css('background', 'white').css('color', 'black');
+            $('.langUL').show();
+            arrayToProcess = africa_lang;
+            arrayToProcess = arrayToProcess.concat(americas_lang);
+            arrayToProcess = arrayToProcess.concat(east_asia_lang);
+            arrayToProcess = arrayToProcess.concat(europe_lang);
+            arrayToProcess = arrayToProcess.concat(oceania_lang);
+            arrayToProcess = arrayToProcess.concat(south_asia_lang);
+            arrayToProcess = arrayToProcess.concat(southeast_asia_lang);
+            arrayToProcess = arrayToProcess.concat(western_asia_lang);
+            for (var i = 0; i < arrayToProcess.length; i++) {
+                $('.btn_' + arrayToProcess[i]).hide();
+                $('.ul_' + arrayToProcess[i]).hide();
+            }
+        }
+        else {
+       		var geo = $( ".selectGeo option:selected" ).val();
+            if (geo === "all") {
+                $('.langSpan').show();
+                $('.langSpan').css('background', 'white').css('color', 'black');
+                $('.langBtn').show();
+                $('.langBtn').css('background', 'white').css('color', 'black');
+                $('.langUL').hide();                
+            }
+            else {
+                if (geo === "africa") arrayToProcess = africa_lang;
+                else if (geo === "americas") arrayToProcess = americas_lang;
+                else if (geo === "east_asia") arrayToProcess = east_asia_lang;
+                else if (geo === "europe") arrayToProcess = europe_lang;
+                else if (geo === "oceania") arrayToProcess = oceania_lang;
+                else if (geo === "south_asia") arrayToProcess = south_asia_lang;
+                else if (geo === "southeast_asia") arrayToProcess = southeast_asia_lang;
+                else if (geo === "western_asia") arrayToProcess = western_asia_lang;
+                $('.langSpan').hide();
+                $('.langBtn').hide();
+                $('.langUL').hide();
+                for (var i = 0; i < arrayToProcess.length; i++) {
+                    $('.btn_' + arrayToProcess[i]).show();
+                    $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+                }
 
-			}
-		}
+            }
+        }
 	}
 }
 ;
