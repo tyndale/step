@@ -1954,9 +1954,11 @@ step.util = {
 				$('.langUL').show();
 				return;
 			}
-			$('.langSpan').hide();
-			$('.langBtn').hide();
-			$('.langUL').hide();
+			if (!turnOff) {
+				$('.langSpan').hide();
+				$('.langBtn').hide();
+				$('.langUL').hide();
+			}
 			for (var i = 0; i < arrayToProcess.length; i++) {
 				if (turnOff) {
 					$('.btn_' + arrayToProcess[i]).hide();
