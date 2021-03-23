@@ -199,9 +199,11 @@ var PickBibleView = Backbone.View.extend({
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
         var filter = "BIBLE"
+        var showGeoSelection = false;
         if (selectedTab == '#commentaryList') {
             filter = "COMMENTARY";
         }
+        else if (selectedLanguage == "_all") showGeoSelection = true;
 
         var bibleList = {};
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
@@ -237,13 +239,9 @@ var PickBibleView = Backbone.View.extend({
                 }
 
                 if (this._isLanguageValid(version.languageCode, selectedLanguage)) {
-					$(".selectGeo").hide();
                     if (selectedLanguage == "_all") {
-						$(".selectGeo").show();
                         //now filter by language:
-                        // if ((version.languageCode !== "en") && (version.languageCode !== "eng") &&
-                            // (version.languageCode !== 'he') && (version.languageCode !== 'grc')) 
-                                this._addGroupingByLanguage(bibleList, v, version);
+                        this._addGroupingByLanguage(bibleList, v, version);
                     } else if (selectedLanguage == "en") {
                         if (version.languageCode == "en") {
                             this._addGroupingByLanguage(bibleList, v, version);
@@ -299,12 +297,15 @@ var PickBibleView = Backbone.View.extend({
             }
         });
         this._addTagLine();
-        this._displayGroup('Most_widely_used');
-        this._displayGroup('English');
-        this._displayGroup('Hebrew_Old_Testament');
-        this._displayGroup('Greek_Old_Testament');
-        this._displayGroup('Greek_New_Testament');
-
+        if (showGeoSelection) $('.selectGeo').show();
+        else {
+            $('.selectGeo').hide();
+            $('.langSpan').show();
+            $('.langSpan').css('background', 'white').css('color', 'black');
+            $('.langBtn').show();
+            $('.langBtn').css('background', '#336600').css('color', 'white');
+            $('.langUL').show();
+        }
         this.$el.find(".langBtn").click(this._handleUsrClick);
     },
     _addTagLine: function(){
@@ -344,12 +345,5 @@ var PickBibleView = Backbone.View.extend({
                 $(btnClassName).css('background', '#336600').css('color', 'white');
             }
         }
-    },
-    _displayGroup: function (className) {
-        var btnClassName = ".btn_" + className;
-        var ulClassName = ".ul_" + className;
-        $(ulClassName).show();
-        $(btnClassName).css('background', '#336600').css('color', 'white');
     }
-
 });
