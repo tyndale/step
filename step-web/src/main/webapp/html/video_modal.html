@@ -9,10 +9,7 @@
         var file = $('#videoModal').data('videofile');
         var time = $('#videoModal').data('videotime') * 1000;
         var gifElement = document.createElement("img");
-        var randomString = "";
-        userAgentString = navigator.userAgent;
-        if ((userAgentString.indexOf("Safari") > -1) && (userAgentString.indexOf("Chrome") == -1))
-            randomString = '?' + performance.now();  // GIF file in the safari browser gets stuck in the last frame after it has played once.
+        var randomString = '?' + performance.now();  // GIF file in some browser gets stuck in the last frame after it has played once.
         gifElement.src = "/images/" + file + randomString;
         gifElement.onload = function() {
             $('#pleasewait').remove();

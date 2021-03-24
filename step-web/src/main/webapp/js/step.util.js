@@ -1500,7 +1500,7 @@ step.util = {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.introJs") : $.cookie('step.introJs');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if ((introCount < 3) || (showAnyway)) {
+		if (((introCount < 3) && (window.innerWidth > 768)) || (showAnyway)) {
 			var introJsSteps = [
 				{
 					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-version'),
@@ -1521,7 +1521,7 @@ step.util = {
 			
 
 			if ($('#quickTour').is(':visible')) {
-				if (window.innerWidth <= 768) $('.row-offcanvas').removeClass('active')
+				if (window.innerWidth <= 768) $('.row-offcanvas').removeClass('active'); // close side panel
 				else {
 					introJsSteps.unshift(
 						{
@@ -1531,15 +1531,6 @@ step.util = {
 						}
 					);
 				}
-			}
-			else {
-				introJsSteps.unshift(
-					{
-						element: document.querySelector('#examples-icon'),
-						intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.<br><br>If you want to take the tour later, click on the <b>?</b> (question mark) icon and then click "<b>Quick tour</b>" in the side panel.',
-						position: 'left'
-					}
-				);
 			}
 			introJs().setOptions({
 				steps: introJsSteps
