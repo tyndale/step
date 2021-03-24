@@ -1522,7 +1522,7 @@ step.util = {
 
 			if ($('#quickTour').is(':visible')) {
 				if (window.innerWidth <= 768) $('.row-offcanvas').removeClass('active'); // close side panel
-				else {
+				else if (window.innerHeight >= 820) {
 					introJsSteps.unshift(
 						{
 							element: document.querySelector('#quickTour'),
@@ -1925,14 +1925,8 @@ step.util = {
             $('.langBtn').show();
             $('.langBtn').css('background', 'white').css('color', 'black');
             $('.langUL').show();
-            arrayToProcess = africa_lang;
-            arrayToProcess = arrayToProcess.concat(americas_lang);
-            arrayToProcess = arrayToProcess.concat(east_asia_lang);
-            arrayToProcess = arrayToProcess.concat(europe_lang);
-            arrayToProcess = arrayToProcess.concat(oceania_lang);
-            arrayToProcess = arrayToProcess.concat(south_asia_lang);
-            arrayToProcess = arrayToProcess.concat(southeast_asia_lang);
-            arrayToProcess = arrayToProcess.concat(western_asia_lang);
+            arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
+                .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
             for (var i = 0; i < arrayToProcess.length; i++) {
                 $('.btn_' + arrayToProcess[i]).hide();
                 $('.ul_' + arrayToProcess[i]).hide();
@@ -1950,11 +1944,10 @@ step.util = {
             else {
                 if (geo === "africa") arrayToProcess = africa_lang;
                 else if (geo === "americas") arrayToProcess = americas_lang;
-                else if (geo === "east_asia") arrayToProcess = east_asia_lang;
+                else if (geo === "east_south_east_asia") arrayToProcess = east_asia_lang.concat(southeast_asia_lang);
                 else if (geo === "europe") arrayToProcess = europe_lang;
                 else if (geo === "oceania") arrayToProcess = oceania_lang;
                 else if (geo === "south_asia") arrayToProcess = south_asia_lang;
-                else if (geo === "southeast_asia") arrayToProcess = southeast_asia_lang;
                 else if (geo === "western_asia") arrayToProcess = western_asia_lang;
                 $('.langSpan').hide();
                 $('.langBtn').hide();
