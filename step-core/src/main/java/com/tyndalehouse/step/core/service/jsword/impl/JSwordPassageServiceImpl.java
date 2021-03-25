@@ -1185,6 +1185,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     if (userLanguage.equalsIgnoreCase("zh")) changeVersion = "CUns";
                     else if (userLanguage.equalsIgnoreCase("zh_tw")) changeVersion = "CUn";
                     else if (userLanguage.toLowerCase().startsWith("es")) changeVersion = "SpaRV1909";
+					else if (userLanguage.toLowerCase().startsWith("bg")) changeVersion = "BulProtRev";
                     if (changeVersion.length() > 0) {
                         tsep.setParameter("defaultVersion", changeVersion);
                     }
