@@ -542,6 +542,7 @@
 
 	function _getBookDisplayName(arrayIndex) {
 		var arrayOfTyplicalBooks = JSON.parse(__s.list_of_bibles_books);
+		if (typeof arrayOfTyplicalBooks[arrayIndex] === "undefined") return [arrayIndex, arrayIndex];
 		var longName = arrayOfTyplicalBooks[arrayIndex][0];
 		if (longName.length <= 5) return [longName, longName];
 		if (typeof arrayOfTyplicalBooks[arrayIndex][1] !== "undefined")

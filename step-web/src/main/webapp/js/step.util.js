@@ -1500,8 +1500,11 @@ step.util = {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.introJs") : $.cookie('step.introJs');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
-		if (((introCount < 3) && (window.innerWidth > 768)) || (showAnyway)) {
+		if ((introCount < 3) || (showAnyway)) {
 			var introJsSteps = [
+				{
+					intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.'
+				},
 				{
 					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-version'),
 					intro: 'Click to select Bible translations (e.g. NIV, NASB, ...)',
@@ -1511,27 +1514,14 @@ step.util = {
 					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-reference'),
 					intro: 'Click to select Bible passsage (e.g. John 1)',
 					position: 'bottom'
-				},
+				}
+			];
+			if (window.innerWidth > 499) introJsSteps.push(
 				{
 					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-search'),
 					intro: 'Click to search on words, subject, word meaning, Greek or Hebrew words ...',
-					position: 'bottom-left-aligned'
-				}
-			];
-			
-
-			if ($('#quickTour').is(':visible')) {
-				if (window.innerWidth <= 768) $('.row-offcanvas').removeClass('active'); // close side panel
-				else if (window.innerHeight >= 820) {
-					introJsSteps.unshift(
-						{
-							element: document.querySelector('#quickTour'),
-							intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.<br><br>If you want to take the tour later, click on "<b>Quick tour<b>".',
-							position: 'left'
-						}
-					);
-				}
-			}
+					position: 'bottom'
+				});
 			introJs().setOptions({
 				steps: introJsSteps
 			}).start();

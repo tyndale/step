@@ -70,7 +70,7 @@
         <%
             if (!appManager.isLocal()) {
         %>
-        <a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
+        <a style="padding-left:5px" id="raiseSupportTrigger" class="hidden-xs" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
             <i class="glyphicon glyphicon-bullhorn"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="help_feedback" /></span>
         </a>
         <%
