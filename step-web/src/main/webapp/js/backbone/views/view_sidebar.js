@@ -505,7 +505,7 @@ var SidebarView = Backbone.View.extend({
         return (str || "").replace(/_([^_]*)_/g, "");
     },
     _createTabHeadersContainer: function () {
-        var template = '<ul class="nav nav-tabs">' +
+        var template = '<ul class="nav nav-tabs" style="display:none">' +
             '<li class="active"><a class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
             '<li><a class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
             '<li><a class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +

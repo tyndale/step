@@ -31,6 +31,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         scopeContainer.append(
             $('<div id="nextChapterInputLine" class="form-group"><label for="nextChapterWordle">' + __s.analyse_update + ':</label></div>').append(this.nextChapter).append(this.newLineSelected));
 
+		this.$el.append("<h2>" + __s.vocabulary_analysis + "</h2>");
         this.$el.append(scopeContainer);
         this.$el.append(this.statsContainer);
 
