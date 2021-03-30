@@ -43,7 +43,7 @@ var PickBibleView = Backbone.View.extend({
 		  '<option value="south_asia">South Asia</option>' +
 		  '<option value="western_asia">Western Asia</option>' +
 		'</select>' +
-        '<p>Press on a button below to open the Bible/Commentary available. White color buttons are unselected. Green are selected.</p>' +
+        '<p>Features: N=Notes G=Grammar V=Vocab I=Interlinear S=Septuagint interlinear A=Alt verse numbers</p>' +
         '<div class="tab-content">' +
         '<div class="tab-pane" id="bibleList">' +
         '</div>' +

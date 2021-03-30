@@ -33,7 +33,7 @@
         <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
     </a>
     <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
-        <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="examples" /></span>
+        <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc"><fmt:message key="examples" /></span>
     </a>
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
         title="<fmt:message key="passage_smaller_fonts"/>">
