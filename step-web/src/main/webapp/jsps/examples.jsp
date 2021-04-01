@@ -56,7 +56,7 @@
                                   option1type="version" option2="throne" option2type="meanings" option3="David"
                                   option3type="subject" option4="Isa-Rev" option4type="reference"
                                   sampleURL="/?q=version=ESV|meanings=throne|subject=david|reference=Isa-Rev&options=HNVUG"/>
-            <search:sample_search explanation="interlinear_versions_explanation" option1="KJV" option1type="version"
+            <search:sample_search explanation="interlinear_grammar_explanation" option1="KJV" option1type="version"
                                   option2="THGNT" option2type="version" option3="John 1" option3type="reference"
                                   sampleURL="/?q=version=KJV|version=THGNT|reference=John.1&options=HVLUNM&display=INTERLINEAR"
                                   showInterlinear="true"/>
