@@ -484,7 +484,7 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
-        newColumn.find(".select-reference").text("Select passage");
+        newColumn.find(".select-reference").text("Passage:");
 		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")"); 
 		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
         newColumn.find(".resultsLabel").html("");
@@ -706,9 +706,9 @@ step.util = {
 			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
             if (allSelectedReferences.length === 0) {
 		        if (foundSearch) allSelectedReferences = "Gen-Rev";
-				else allSelectedReferences = "Select passage";
+				else allSelectedReferences = "Passage:";
 			}
-			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Select passage: Gen 1";
+			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Passage: Gen 1";
             else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 
 			var searchWords = "";

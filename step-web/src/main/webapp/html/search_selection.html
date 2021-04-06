@@ -110,23 +110,93 @@
             ["Jude", 1],
             ["Rev", 22]
         ];
+    var idx2osisChapterJsword = {
+        "Gen": 0,
+        "Exo": 1, "Exod": 1,
+        "Lev": 2,
+        "Num": 3,
+        "Deu": 4, "Deut": 4,
+        "Jos": 5, "Josh": 5,
+        "Judg": 6,
+        "Rut": 7, "Ruth": 7,
+        "1Sa": 8, "1Sam": 8,
+        "2Sa": 9, "2Sam": 9,
+        "1Ki": 10, "1Kgs": 10,
+        "2Ki": 11, "2Kgs": 11,
+        "1Ch": 12, "1Chr": 12,
+        "2Ch": 13, "2Chr": 13,
+        "Ezr": 14, "Ezra": 14,
+        "Neh": 15,
+        "Est": 16, "Esth": 16,
+        "Job": 17,
+        "Psa": 18, "Ps": 18,
+        "Pro": 19, "Prov": 19,
+        "Ecc": 20, "Eccl": 20,
+        "Song": 21,
+        "Isa": 22,
+        "Jer": 23,
+        "Lam": 24,
+        "Eze": 25, "Ezek": 25,
+        "Dan": 26,
+        "Hos": 27,
+        "Joe": 28, "Joel": 28,
+        "Amo": 29, "Amos": 29,
+        "Obd": 30, "Obad": 30,
+        "Jon": 31, "Jonah": 31,
+        "Mic": 32,
+        "Nah": 33,
+        "Hab": 34,
+        "Zep": 35, "Zeph": 35,
+        "Hag": 36,
+        "Zec": 37, "Zech": 37,
+        "Mal": 38,
+        "Mat": 39, "Matt": 39,
+        "Mar": 40, "Mark": 40,
+        "Luk": 41, "Luke": 41,
+        "Joh": 42, "John": 42,
+        "Act": 43, "Acts": 43,
+        "Rom": 44,
+        "1Cor": 45,
+        "2Cor": 46,
+        "Gal": 47,
+        "Eph": 48,
+        "Phili": 49, "Phil": 49,
+        "Col": 50,
+        "1Th": 51, "1Thess": 51,
+        "2Th": 52, "2Thess": 52,
+        "1Ti": 53, "1Tim": 53,
+        "2Ti": 54, "2Tim": 54,
+        "Tit": 55, "Titus": 55,
+        "Phile": 56, "Phlm": 56,
+        "Heb": 57,
+        "Jam": 58, "Jas": 58,
+        "1Pe": 59, "1Pet": 59,
+        "2Pe": 60, "2Pet": 60,
+        "1Jo": 61, "1John": 61,
+        "2Jo": 62, "2John": 62,
+        "3Jo": 63, "3John": 63,
+        "Jude": 64,
+        "Rev": 65
+    }
 	var groupsOT = [
-		{groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], inCurrentTranslation: [false, false, false, false, false]},
+		{groupName: __s.book_of_moses, show: false, books: [0, 1, 2, 3, 4], bookOrderPos: [-1, -1, -1, -1, -1]},
 		{groupName: __s.history_books, show: false, books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-			inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false]},
-		{groupName: __s.poetic_books, show: false, books: [17, 18, 19, 20, 21], inCurrentTranslation: [false, false, false, false, false]},
-		{groupName: __s.major_prophets, show: false, books: [22, 23, 24, 25, 26], inCurrentTranslation: [false, false, false, false, false]},
+			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]},
+		{groupName: __s.poetic_books, show: false, books: [17, 18, 19, 20, 21], bookOrderPos: [-1, -1, -1, -1, -1]},
+		{groupName: __s.major_prophets, show: false, books: [22, 23, 24, 25, 26], bookOrderPos: [-1, -1, -1, -1, -1]},
 		{groupName: __s.minor_prophets, show: false, books: [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
-			inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false]}
+			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]}
 	];
 	var groupsNT = [
-		{groupName: __s.gospels_and_acts, show: false, books: [39, 40, 41, 42, 43], inCurrentTranslation: [false, false, false, false, false]},
+		{groupName: __s.gospels_and_acts, show: false, books: [39, 40, 41, 42, 43], bookOrderPos: [-1, -1, -1, -1, -1]},
 		{groupName: __s.pauline_epistles, show: false, books: [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
-			inCurrentTranslation: [false, false, false, false, false, false, false, false, false, false, false, false, false]},
+			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]},
 		{groupName: __s.other_nt, show: false, books: [57, 58, 59, 60, 61, 62, 63, 64, 65],
-			inCurrentTranslation: [false, false, false, false, false, false, false, false, false]}
+			bookOrderPos: [-1, -1, -1, -1, -1, -1, -1, -1, -1]}
 	];
-	var groupsOther = [{groupName: 'Other', show: false, books: [], inCurrentTranslation: []}];
+	var groupsOther;
+    var bookOrder = [];
+    var idx2BookOrder = {};
 
     $(document).ready(function () {
 		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
@@ -256,11 +326,6 @@
 		}
 		_buildBookTable();
         if (searchRange !== 'Gen-Rev') {
-            var bookSelected = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,       
-                                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-                                false, false, false, false, false, false];
             var tmpSearchRange = searchRange + ',';
             var posOfComma = tmpSearchRange.indexOf(',');
             var curRange = tmpSearchRange.substring(0, posOfComma);
@@ -268,19 +333,19 @@
             while (curRange !== '') {
                 var posOfDash = curRange.indexOf('-');
                 if (posOfDash == -1) {
-                    var posOfBook = _getPosOfBookInBible(curRange);
-                    if (posOfBook > -1) bookSelected[posOfBook] = true;
+                    var posOfBook = idx2BookOrder[curRange];
+                    if (typeof posOfBook !== "undefined") bookOrder[posOfBook][1] = true;
                 }
                 else if (posOfDash > 1) {
                     var firstBook = curRange.substring(0, posOfDash);
                     var secondBook = curRange.substring(posOfDash + 1);
-                    var posOfBook1 = _getPosOfBookInBible(firstBook);
-                    var posOfBook2 = _getPosOfBookInBible(secondBook);
-                    if (posOfBook1 > -1) bookSelected[posOfBook1] = true;
-                    if (posOfBook2 > -1) {
-                        bookSelected[posOfBook2] = true;
+                    var posOfBook1 = idx2BookOrder[firstBook];
+                    var posOfBook2 = idx2BookOrder[secondBook];
+                    if (typeof posOfBook1 !== "undefined") bookOrder[posOfBook1][1] = true;
+                    if (typeof posOfBook2 !== "undefined") {
+                        bookOrder[posOfBook2][1] = true;
                         if ((posOfBook1 > -1) && (posOfBook1 < posOfBook2)) {
-                            for (var i = posOfBook1 + 1; i < posOfBook2; i ++) bookSelected[i] = true; 
+                            for (var i = posOfBook1 + 1; i < posOfBook2; i ++) bookOrder[i][1] = true; 
                         }
                     }
                 }
@@ -294,57 +359,34 @@
                     tmpSearchRange = tmpSearchRange.substring(posOfComma + 1);
                 }
             }
-            for (var i = 0; i < 2; i++) {
-                var curGroup;
-                var idPrefix;
-                if (i == 0) {
-                    curGroup = groupsOT;
-                    idPrefix = 'ot_tableg';
-                }
-                else if (i == 1) {
-                    curGroup = groupsNT;
-                    idPrefix = 'nt_tableg';
-                }
-                for (var j = 0; j < curGroup.length; j++) {
-                    for (var k = 0; k < curGroup[j].books.length; k++) {
-                        if (!(bookSelected[curGroup[j].books[k]])) {
-                            _userClickedBook(idPrefix + j + 'b' + k);
-                        }
-                    }
-                }
-            }
-			$('#updateFeedback').text(__s.search_range_button_color_desc);
         }
-		else {
-		    for (var i = 0; i < 2; i++) {
-                var curGroup;
-                var idPrefix;
-                if (i == 0) {
-                    curGroup = groupsOT;
-                    idPrefix = 'ot_tableg';
-                }
-                else if (i == 1) {
-                    curGroup = groupsNT;
-                    idPrefix = 'nt_tableg';
-                }
-                for (var j = 0; j < curGroup.length; j++) {
-                    for (var k = 0; k < curGroup[j].books.length; k++) {
-                        _userClickedBook(idPrefix + j + 'b' + k);
+        for (var i = 0; i < 3; i++) {
+            var curGroup;
+            var idPrefix;
+            if (i == 0) {
+               curGroup = groupsOT;
+               idPrefix = 'ot_tableg';
+            }
+            else if (i == 1) {
+               curGroup = groupsNT;
+               idPrefix = 'nt_tableg';
+            }
+            else if (i == 2) {
+               curGroup = groupsOther;
+               idPrefix = 'ob_tableg';
+            }
+            for (var j = 0; j < curGroup.length; j++) {
+                for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
+                    if (!(bookOrder[curGroup[j].bookOrderPos[k]][1])) {
+                       _userClickedBook(idPrefix + j + 'b' + k);
                     }
                 }
-				$('#click_when_finish').hide();
             }
-			$('#updateFeedback').text(__s.all_books_not_selected);
-		}
+        }
+        if (searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
+		else $('#updateFeedback').text(__s.search_range_button_color_desc);
+        $('#click_when_finish').hide();
 	}
-
-    function _getPosOfBookInBible(bookName) {
-        for (var i = 0; i < osisChapterJsword.length; i ++) {
-            if ((typeof osisChapterJsword[i][2] !== "undefined") && (osisChapterJsword[i][2] === bookName)) return i;
-            else if (osisChapterJsword[i][0] === bookName) return i;
-        }
-        return -1;
-    }
 
     function _buildRangeHeaderAndSkeleton() {
 		var html = '<div class="header">' +
@@ -372,11 +414,9 @@
     
 	function _updateRange() {
 		$('#searchSelectError').text("");
-		var start = -1;
-		var end = -1;
-		var result = "";
+        console.log(bookOrder);
 		var curIndx = -1;
-		for (var i = 0; i < 2; i++) {
+		for (var i = 0; i < 3; i++) {
 			var curGroup;
 			var idPrefix;
 			if (i == 0) {
@@ -387,44 +427,55 @@
 				curGroup = groupsNT;
 				idPrefix = '#nt_tableg';
 			}
+            else if (i == 2) {
+                curGroup = groupsOther;
+                idPrefix = '#ob_tableg';
+            }
 			for (var j = 0; j < curGroup.length; j++) {
-				for (var k = 0; k < curGroup[j].books.length; k++) {
+				for (var k = 0; k < curGroup[j].bookOrderPos.length; k++) {
 					curIndx ++;
-					if ($(idPrefix + j + 'b' + k).hasClass('pressedButton')) {
-						if (start === -1) start = curIndx;
-						end = curIndx;
-					}
-					else {
-						if (start !== -1) {
-							result += (typeof osisChapterJsword[start][2] !== "undefined") ? osisChapterJsword[start][2] : osisChapterJsword[start][0];
-							if (start !== end) {
-								result += '-';
-								result += (typeof osisChapterJsword[end][2] !== "undefined") ? osisChapterJsword[end][2] : osisChapterJsword[end][0];
-							}
-							result += ',';
-							start = -1;
-							end = -1;
-						}
-					}
-
+					if ( ($(idPrefix + j + 'b' + k).hasClass('pressedButton')) &&
+                         (curGroup[j].bookOrderPos[k] > -1) )
+                        bookOrder[curGroup[j].bookOrderPos[k]][1] = true;
+					else bookOrder[curGroup[j].bookOrderPos[k]][1] = false;
 				}
 			}
 		}
-		if (start !== -1) {
-			result += (typeof osisChapterJsword[start][2] !== "undefined") ? osisChapterJsword[start][2] : osisChapterJsword[start][0];
-			if (start !== end) {
-				result += '-';
-				result += (typeof osisChapterJsword[end][2] !== "undefined") ? osisChapterJsword[end][2] : osisChapterJsword[end][0];
-			}
-		}
+		var start = -1;
+		var end = -1;
+		var result = "";
+        for (var i = 0; i < bookOrder.length; i++) {
+            if (bookOrder[i][1]) {
+                if (start === -1) start = i;
+				end = i;
+            }
+            else {
+                result += _createSingleRange(start, end);
+                start = -1;
+                end = -1;
+            }
+        }
+        result += _createSingleRange(start, end);
         if (result.length > 0) searchRange = result.replace(/,$/, '');
         else searchRange = "Gen-Rev";
-        if (searchRangeOnly) {
-            goSearch();
-        }
+        if (searchRangeOnly) goSearch();
         else goBackToPreviousPage();
     }
 	
+    function _createSingleRange(start, end) {
+        var result = '';
+        console.log("start end: " + start + " " + end);
+        if (start !== -1) {
+            var result = bookOrder[start][0];
+            if (start !== end) {
+                result += '-';
+                result += bookOrder[end][0];
+            }
+            result += ',';
+        }
+        return result;
+    }
+    
 	function _buildBookTable() {
         var translationType = _getTranslationType();
         if ((userLang.toLowerCase().startsWith("en") || userLang.toLowerCase().startsWith("es") || userLang.toLowerCase().startsWith("zh")) &&
@@ -433,9 +484,11 @@
         }
         else {
             var url = SEARCH_AUTO_SUGGESTIONS + "%20%20/" + EXAMPLE_DATA + "%3D" + REFERENCE + "%7C" + LIMIT + "%3D" + REFERENCE + "%7C" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
+			$.ajaxSetup({async: false});
             $.getJSON(url, function (data) {
                 _buildBookHTMLTable(data);
             });
+			$.ajaxSetup({async: true});
         }	
 	}
 
@@ -481,27 +534,44 @@
         }
         else end = data.length;
         var additionalBooks = false;
+        groupsOther = [{groupName: 'Other', show: false, books: [], bookOrderPos: []}];
+		bookOrder = [];
+        idx2BookOrder = {};
+        bookOrderPos = -1;
         for (var i = start; i < end; i++) {
+            bookOrderPos ++;
             var currentOsisID;
             var shortNameToDisplay;
             var longNameToDisplay;
-            var jSwordName;
             if (typlicalBooksChapters) {
                 currentOsisID = (data[i].length === 3) ? data[i][2] : data[i][0];
-                longNameToDisplay = arrayOfTyplicalBooksChapters[i][0];
-                shortNameToDisplay = (arrayOfTyplicalBooksChapters[i].length === 2) ? arrayOfTyplicalBooksChapters[i][1] : currentOsisID;
+                longNameToDisplay = currentOsisID;
+                shortNameToDisplay = currentOsisID;
             }
             else {
                 currentOsisID = data[i].suggestion.osisID;
                 longNameToDisplay = data[i].suggestion.fullName;
                 shortNameToDisplay = (userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replaceAll(" ", "").substr(0, 6);
             }
+			var longID = currentOsisID;
+   			var posOfBook = idx2osisChapterJsword[currentOsisID];
+			if (posOfBook > -1) {
+				if (typeof osisChapterJsword[posOfBook][2] !== "undefined") longID = osisChapterJsword[posOfBook][2];
+				if (typeof arrayOfTyplicalBooksChapters !== "undefined") {
+					longNameToDisplay = arrayOfTyplicalBooksChapters[posOfBook][0];
+					shortNameToDisplay = (arrayOfTyplicalBooksChapters[posOfBook].length === 2) ? arrayOfTyplicalBooksChapters[posOfBook][1] : currentOsisID;
+				}
+			}
+            bookOrder.push([currentOsisID, false, longID, shortNameToDisplay, longNameToDisplay]);
+            idx2BookOrder[currentOsisID] = bookOrderPos;
+            if (currentOsisID != longID) idx2BookOrder[longID] = bookOrderPos;
+            
 			var found = false;
 			for (j = 0; j < groupsOT.length; j ++) {
 				var pos = _isBookInGroup(groupsOT[j], currentOsisID);
 				if (pos > -1) {
-					groupsOT[j].inCurrentTranslation[pos] = true;
-					groupsOT[j].show = true;
+                	groupsOT[j].show = true;
+					groupsOT[j].bookOrderPos[pos] = bookOrderPos;
 					found = true;
 					break;
 				}
@@ -509,16 +579,16 @@
 			if (!found) for (j = 0; j < groupsNT.length; j ++) {
 				var pos = _isBookInGroup(groupsNT[j], currentOsisID);
 				if (pos > -1) {
-					groupsNT[j].inCurrentTranslation[pos] = true;
-					groupsNT[j].show = true;
+                	groupsNT[j].show = true;
+					groupsNT[j].bookOrderPos[pos] = bookOrderPos;
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
 				groupsOther[0].show = true;
-				groupsOther[0].books.push(currentOsisID);
-				groupsOther[0].inCurrentTranslation.push(true);
+				groupsOther[0].books.push(-1);
+				groupsOther[0].bookOrderPos.push(bookOrderPos);
 			}
 		}
         var browserWidth = $(window).width();
@@ -534,33 +604,30 @@
 
 	function _isBookInGroup(groupOfBooks, searchForBookName) {
 		for (var i = 0; i < groupOfBooks.books.length; i ++) {
-			if (searchForBookName === osisChapterJsword[groupOfBooks.books[i]][0]) return i;
-			if ((typeof osisChapterJsword[groupOfBooks.books[i]][2] !== "undefined") &&
-				(searchForBookName === osisChapterJsword[groupOfBooks.books[i]][2])) return i;
+            if ((searchForBookName == osisChapterJsword[groupOfBooks.books[i]][0]) ||
+                (searchForBookName == osisChapterJsword[groupOfBooks.books[i]][2])) return i;
 		}
 		return -1;
 	}
 
 	function _getBookDisplayName(arrayIndex) {
-		var arrayOfTyplicalBooks = JSON.parse(__s.list_of_bibles_books);
-		if (typeof arrayOfTyplicalBooks[arrayIndex] === "undefined") return [arrayIndex, arrayIndex];
-		var longName = arrayOfTyplicalBooks[arrayIndex][0];
-		if (longName.length <= 5) return [longName, longName];
-		if (typeof arrayOfTyplicalBooks[arrayIndex][1] !== "undefined")
-			return [longName, arrayOfTyplicalBooks[arrayIndex][1]];
-		if (typeof osisChapterJsword[arrayIndex][2] !== "undefined")
-			return [longName, osisChapterJsword[arrayIndex][2]];
-		var shortName = osisChapterJsword[arrayIndex][0];
-		if ((typeof osisChapterJsword[arrayIndex][2] !== "undefined") &&
-			(osisChapterJsword[arrayIndex][2].length > osisChapterJsword[arrayIndex][0].length))
-			shortName = osisChapterJsword[arrayIndex][2];
-		return [longName, shortName];
+        return [bookOrder[arrayIndex][4], bookOrder[arrayIndex][3]];
+//		var arrayOfTyplicalBooks = JSON.parse(__s.list_of_bibles_books);
+//		if (typeof arrayOfTyplicalBooks[arrayIndex] === "undefined") return [arrayIndex, arrayIndex];
+//		var longName = arrayOfTyplicalBooks[arrayIndex][0];
+//		if (longName.length <= 5) return [longName, longName];
+//		if (typeof arrayOfTyplicalBooks[arrayIndex][1] !== "undefined")
+//			return [longName, arrayOfTyplicalBooks[arrayIndex][1]];
+//		if ((typeof osisChapterJsword[arrayIndex][2] !== "undefined") &&
+//			(osisChapterJsword[arrayIndex][2].length > osisChapterJsword[arrayIndex][0].length))
+//			return [longName, osisChapterJsword[arrayIndex][2]];
+//		return [longName, osisChapterJsword[arrayIndex][0]];
 	}
 
 	function _fillBooksTable(groupsOfBooks, columns, htmlID) {
 		var tableHTML = "";
 		for (j = 0; j < groupsOfBooks.length; j ++) {
-			var rowsForThisGroup = Math.ceil(groupsOfBooks[j].books.length / (columns - 1));
+			var rowsForThisGroup = Math.ceil(groupsOfBooks[j].bookOrderPos.length / (columns - 1));
 			var rowHeight = 29 * rowsForThisGroup;
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
@@ -571,13 +638,13 @@
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
 					'</td>'; 
 				var currentColumn = 2; // first column used by group name
-				for (k = 0; k < groupsOfBooks[j].books.length; k++) {
-					if (groupsOfBooks[j].inCurrentTranslation[k]) {
+				for (k = 0; k < groupsOfBooks[j].bookOrderPos.length; k++) {
+					if (groupsOfBooks[j].bookOrderPos[k] > -1) {
 						if (currentColumn === 1) {
                             tableHTML += '<tr style="height:30px">';
                             currentColumn = 2; // first column used by group name
                         }
-						var displayName = _getBookDisplayName(groupsOfBooks[j].books[k]);
+						var displayName = _getBookDisplayName(groupsOfBooks[j].bookOrderPos[k]);
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
 							'title="'  + __s.click_to_select + ' ' + displayName[0] + '" ' +
@@ -602,7 +669,6 @@
 	}
 
 	function _userClickedTestament(clicked_id) {
-	debugger;
 		var clicked_id2 = '#' + clicked_id;
         $('#click_when_finish').show();
 		if ($(clicked_id2).hasClass('pressedButton')) {
@@ -622,7 +688,6 @@
 	}
 
 	function _userClickedCategory(clicked_id) {
-	debugger;
 		var clicked_id2 = '#' + clicked_id;
 		var categoryName = $(clicked_id2).text();
         $('#click_when_finish').show();
@@ -867,21 +932,7 @@
 		var modalMode = "";
 		var bookID = osisID.substring(0, osisID.indexOf("."));
 		if (bookID === "") bookID = osisID;
-		if ((chptrOrVrsNum != 0) && (addVerseSelection) && (modalMode === 'chapter')) {
-			var numOfVerse = 0;
-	        for (var i = 0; i < osisChapterJsword.length; i++) {
-                var currentOsisID = (osisChapterJsword[i].length === 4) ? osisChapterJsword[i][3] : osisChapterJsword[i][0];
-				if (bookID === currentOsisID) {
-					numOfVerse = osisChapterJsword[i][2][Math.abs(chptrOrVrsNum)-1] || 0; // -1 is used for books with 1 chapter (e.g.: Jude)
-					break;
-				}
-			}
-			if (numOfVerse > 0) {
-				_buildChptrVrsTbl(null, osisID, numOfVerse, false);
-				return;
-			}
-			else alert('Cannot determine the number of verse in ' + osisID + '.  Will proceed to display the chapter.');
-		}
+
         var activePassageData = step.util.activePassage().get("searchTokens") || [];
         var allVersions = "";
         var existingReferences = "";
@@ -905,23 +956,7 @@
 				//step.util.createNewLinkedColumn(0);
 				step.util.createNewColumn();
 			}
-			if (modalMode === "verse") {
-				ap=step.util.activePassage();
-				var numOfChaptersInBook = 0;
-		        for (var i = 0; i < osisChapterJsword.length; i++) {
-					var currentOsisID = (osisChapterJsword[i].length === 4) ? osisChapterJsword[i][3] : osisChapterJsword[i][0];
-					if (bookID === currentOsisID) {
-						numOfChaptersInBook = osisChapterJsword[i][1];
-						break;
-					}
-				}
-				if (numOfChaptersInBook === 1) {
-					var tmpOsisID = osisID.substring(0, osisID.indexOf(".")) + '.1.' + osisID.substring(osisID.indexOf(".") + 1);
-					ap.save({targetLocation: tmpOsisID}, {silent: true});
-				}
-				else ap.save({targetLocation: osisID}, {silent: true});
-				osisID = osisID.substring(0, osisID.lastIndexOf('.'));
-			}
+
 			console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
 			step.router.navigatePreserveVersions("reference=" + osisID, false);
 		}
