@@ -44,7 +44,7 @@
         <span class="largerFont" style="color:white;background:black;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
         <span class="hidden-xs hidden-sm navbarIconDesc"><fmt:message key="font_sizes"/></span>
     </a>
-    <div class="navbar-collapse collapse">
+    <span class="navbar-collapse collapse">
         <span class="dropdown">
             <a style="padding-left:5px" class="dropdown-toggle" data-toggle="dropdown" title="<fmt:message key="installation_book_language"/>">
                 <i class="glyphicon icon-language">
@@ -139,5 +139,5 @@
                 %>
             </ul>
         </span>
-    </div>
+    </span>
 </div>
