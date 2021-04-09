@@ -1,7 +1,8 @@
 ﻿<div class="modal-header">
 	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
-	<button type="button" class="close" data-dismiss="modal" onclick=closeModal("passageSelectionModal")>X</button>
-	<br>
+	<span class="pull-right">
+	<button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=closeModal("passageSelectionModal")>X</button>
+	<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
     <div id="modalonoffswitch" class="pull-right">
         <span id="select_verse_number">&nbsp;<b>Select verse number</b></span>
         <div class="onoffswitch2 append pull-right">
@@ -12,6 +13,7 @@
             </label>
         </div>
     </div>
+	</span>
     <br>
     <div id="displayLocForm" class="form-group" style="clear:both;float:right;font-size:16px">
         <label id="display_passage_at" for="displayLocation">Display passage in:</label>

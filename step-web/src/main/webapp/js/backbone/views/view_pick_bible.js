@@ -2,7 +2,7 @@ var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
         '<span class="langSpan btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>"><button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="background:white">' +
-        '<%= key %> &#9662;</button><br></span>' +
+        '<%= key %>&nbsp;<span class="plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">-</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
@@ -22,6 +22,7 @@ var PickBibleView = Backbone.View.extend({
         '<% } %>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
+		'&nbsp;&nbsp;&nbsp;<button type="button" class="closeModal" data-dismiss="modal">X</button>' +
         '</form>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
@@ -140,7 +141,7 @@ var PickBibleView = Backbone.View.extend({
         this._filter();
     },
     closeModal: function (ev) {
-        ev.preventDefault();
+        if (ev) ev.preventDefault();
         this.bibleVersions.modal("hide");
         this.remove();
     },
@@ -326,10 +327,12 @@ var PickBibleView = Backbone.View.extend({
     },
     _handleUsrClick: function (event) {
         var btnClassName = "";
+        var plusminusClassName = "";
         var ulClassName = "";
         for (var i = 0; i < event.target.classList.length; i++) {
             if (event.target.classList[i].substr(0, 4) === "btn_") {
                 btnClassName = '.' + event.target.classList[i];
+                plusminusClassName = ".plusminus_" + event.target.classList[i].substr(4);
                 ulClassName = ".ul_" + event.target.classList[i].substr(4);
                 break;
             }
@@ -338,10 +341,12 @@ var PickBibleView = Backbone.View.extend({
             if ($(ulClassName).is(":visible")) {
                 $(ulClassName).hide();
                 $(btnClassName).css('background', 'white').css('color', 'black');
+                $(plusminusClassName).text('-');
             }
             else {
                 $(ulClassName).show();
                 $(btnClassName).css('background', '#336600').css('color', 'white');
+                $(plusminusClassName).text('+');
             }
         }
     }
