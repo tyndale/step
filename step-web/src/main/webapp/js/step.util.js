@@ -1929,7 +1929,7 @@ step.util = {
                 for (var i = 0; i < arrayToProcess.length; i++) {
                     $('.btn_' + arrayToProcess[i]).show();
                     $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
-                    $('.plusminus_' + arrayToProcess[i]).text('-');
+                    $('.plusminus_' + arrayToProcess[i]).text('+');
 
                 }
 
