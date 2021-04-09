@@ -1895,9 +1895,10 @@ step.util = {
         var arrayToProcess = [];
         if (testMode) {
             $('.langSpan').show();
-            $('.langSpan').css('background', 'white').css('color', 'black');
             $('.langBtn').show();
+            $('.langSpan').css('background', 'white').css('color', 'black');
             $('.langBtn').css('background', 'white').css('color', 'black');
+            $('.langPlusMinus').css('background', 'white').css('color', 'black');
             $('.langUL').show();
             arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
                 .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
@@ -1910,10 +1911,12 @@ step.util = {
        		var geo = $( ".selectGeo option:selected" ).val();
             if (geo === "all") {
                 $('.langSpan').show();
-                $('.langSpan').css('background', 'white').css('color', 'black');
                 $('.langBtn').show();
+                $('.langSpan').css('background', 'white').css('color', 'black');
                 $('.langBtn').css('background', 'white').css('color', 'black');
+                $('.langPlusMinus').css('background', 'white').css('color', 'black');
                 $('.langUL').hide();                
+
             }
             else {
                 if (geo === "africa") arrayToProcess = africa_lang;
@@ -1929,6 +1932,7 @@ step.util = {
                 for (var i = 0; i < arrayToProcess.length; i++) {
                     $('.btn_' + arrayToProcess[i]).show();
                     $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+					$('.plusminus_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
                     $('.plusminus_' + arrayToProcess[i]).text('+');
 
                 }

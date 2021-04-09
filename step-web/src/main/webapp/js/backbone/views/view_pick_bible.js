@@ -343,11 +343,13 @@ var PickBibleView = Backbone.View.extend({
             if ($(ulClassName).is(":visible")) {
                 $(ulClassName).hide();
                 $(btnClassName).css('background', 'white').css('color', 'black');
+                $(plusminusClassName).css('background', 'white').css('color', 'black');
                 $(plusminusClassName).text('+');
             }
             else {
                 $(ulClassName).show();
                 $(btnClassName).css('background', '#336600').css('color', 'white');
+				$(plusminusClassName).css('background', '#336600').css('color', 'white');
                 $(plusminusClassName).text('-');
             }
         }
