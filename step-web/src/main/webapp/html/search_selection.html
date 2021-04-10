@@ -14,7 +14,7 @@
 		</div>
 	</span>
 	</span>
-	<span id="displayLocForm" class="form-group pull-right">
+	<span id="displayLocForm" class="form-group pull-right" style="clear:both;float:right;font-size:16px">
 		<label id="display_result_in" for="displayLocation">Display result in:</label>
 		<select type="text" id="displayLocation">
 		<option id="current_panel" value="replace">Current panel</option>
@@ -23,6 +23,8 @@
 	</span>
 </div>
 <div id="searchmodalbody" class="modal-body">
+<div id="previousSearch"></div>
+<div id="searchHdrTable"></div>
 </div>
 <div class="footer">
 	<span id="searchSelectError" style="color: red;"></span>
@@ -213,10 +215,16 @@
         if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
             var activePassageData = step.util.activePassage().get("searchTokens") || [];
             var existingReferences = "";
+            $('#previousSearch').empty();
             for (var i = 0; i < activePassageData.length; i++) {
                 if (activePassageData[i].itemType == REFERENCE) {
                     if (existingReferences !== "") existingReferences += ",";
                     existingReferences += activePassageData[i].item.osisID.replaceAll(' ', ',');
+                }
+                else if (activePassageData[i].itemType !== VERSION) {
+                    debugger;
+                    $('#previousSearch').append(activePassageData[i].tokenType + ": " +  activePassageData[i].token + ',');
+                    console.log('x: ' + activePassageData[i]);
                 }
             }
             if (existingReferences !== "") searchRange = existingReferences;
@@ -224,7 +232,7 @@
 		else $('#modalonoffswitch').hide();
         if (searchRangeOnly) _buildRangeHeaderAndTable()
         else {
-            $('#searchmodalbody').append(_buildSearchHeaderAndTable());
+            $('#searchHdrTable').append(_buildSearchHeaderAndTable());
             $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
@@ -255,7 +263,7 @@
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
-			$('#searchmodalbody').empty().append(_buildSearchHeaderAndTable());
+			$('#searchHdrTable').empty().append(_buildSearchHeaderAndTable());
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
@@ -320,7 +328,7 @@
 	    $('#searchSelectError').text("");
 		$('#updateFeedback').text("");
 		var html = _buildRangeHeaderAndSkeleton()
-		$('#searchmodalbody').empty().append(html);
+		$('#searchHdrTable').empty().append(html);
 		if (searchRangeOnly) $('#srchModalBackButton').hide();
 		else {
 			$('#srchModalBackButton').show();
@@ -798,6 +806,7 @@
 				$('#srchModalBackButton').show();
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + userLang;
 			}
+            $.ajaxSetup({async: false});
 			$.getJSON(url, function (data) {
 				var searchResultsToDisplay = [];
 				for (var i = 0; i < searchTypeCode.length; i++) {
@@ -882,6 +891,7 @@
 					else $('.select-' + searchTypeCode[l]).hide()
 				}
 			});
+            $.ajaxSetup({async: true});
 		}
 		else {
 			for (l = 0; l < searchTypeCode.length; l++) {

@@ -33,7 +33,9 @@ var PickBibleView = Backbone.View.extend({
         '<li><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
         '<li><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
         '</ul>' +
-		'<label class="selectGeo" for="selectGeo">Filter languges by geography:</label>' +
+		'<label class="selectGeo" ' +
+        'style="font-size:16px" ' +
+        'for="selectGeo">Filter languges by geography:</label>' +
 		'<select class="selectGeo" onchange=\'step.util.showByGeo()\'>' +
 		  '<option value="all">All</option>' +
 		  '<option value="africa">Africa</option>' +
