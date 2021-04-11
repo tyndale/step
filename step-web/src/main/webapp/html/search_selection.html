@@ -1,26 +1,28 @@
 ﻿<div class="modal-header">
 	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<span class="pull-right">
-	<button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=closeModal("searchSelectionModal")>X</button>
-	<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
-	<span id="modalonoffswitch" class="pull-right">
-		<span id="append_msg">&nbsp;<b>Add to existing search</b></span>
-		<div class="onoffswitch2 append">
-			<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/>
-			<label class="onoffswitch2-label" for="addsearchonoffswitch">
-			<span class="onoffswitch2-inner"></span>
-			<span class="onoffswitch2-switch"></span>
-			</label>
-		</div>
-	</span>
-	</span>
-	<span id="displayLocForm" class="form-group pull-right" style="clear:both;float:right;font-size:16px">
-		<label id="display_result_in" for="displayLocation">Display result in:</label>
-		<select type="text" id="displayLocation">
-		<option id="current_panel" value="replace">Current panel</option>
-		<option id="new_panel" class="hidden-xs" value="new">New panel</option>
-		</select>
-	</span>
+        <button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=closeModal("searchSelectionModal")>X</button>
+        <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
+        <span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">
+            <label id="display_result_in" for="displayLocation">Display result in:</label>
+            <select type="text" id="displayLocation">
+            <option id="current_panel" value="replace">Current panel</option>
+            <option id="new_panel" class="hidden-xs" value="new">New panel</option>
+            </select>
+        </span>
+    </span>
+	<!-- <span class="pull-right">&nbsp;&nbsp;&nbsp;</span> -->
+	<!-- <span id="modalonoffswitch" class="pull-right"> -->
+		<!-- <span id="append_msg">&nbsp;<b>Add to existing search</b></span> -->
+		<!-- <div class="onoffswitch2 append"> -->
+			<!-- <input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/> -->
+			<!-- <label class="onoffswitch2-label" for="addsearchonoffswitch"> -->
+			<!-- <span class="onoffswitch2-inner"></span> -->
+			<!-- <span class="onoffswitch2-switch"></span> -->
+			<!-- </label> -->
+		<!-- </div> -->
+	<!-- </span> -->
+	<!-- </span> -->
 </div>
 <div id="searchmodalbody" class="modal-body">
 <div id="previousSearch"></div>
@@ -35,17 +37,53 @@
 	color: white !important;
 	border: 2px solid black;
 }
+   ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+   }
+   ul li {
+      border: 1px solid rgb(221, 221, 221);
+      background-color: #498098;
+      color: white;
+      padding: 4px 6px 4px 8px;
+      font-size: 14px;
+      display: block;
+      position: relative;
+   }
+   ul li:hover {
+      background-color: #366072;
+   }
+   tr th,
+   tr td {
+      padding: 4px 6px 4px 8px;
+      font-size: 14px;
+   }
+   .closeMark {
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      right: 0%;
+      padding: 12px 16px;
+      transform: translate(0%, -50%);
+   }
+   .closeMark:hover {
+      background: red;
+   }
 </style>
 <script>
     var version = "ESV_th";
     var userLang = "en";
-    var addInsteadOfReplace = false;
+//    var addInsteadOfReplace = false;
 	var searchOnSpecificType = "";
 	var searchTypeCode = [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW];
 	var searchRangeOnly;
 	var searchModalCurrentPage = 1;
 	var searchUserInput = "";
     var searchRange = "Gen-Rev";
+    var previousSearchTokens = [];
+    var numOfPreviousSearchTokens = 0;
 	var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
             ["Gen", 50],
             ["Exo", 40, "Exod"],
@@ -206,7 +244,7 @@
 		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
         $('#display_result_in').text(__s.display_result_in);
-        $('#append_msg').text(__s.append_msg);
+//        $('#append_msg').text(__s.append_msg);
 		$('#current_panel').text(__s.current_panel);
         $('#new_panel').text(__s.new_panel);
 		if ((userLang.indexOf('en') != 0) && (groupsOT[0].groupName === "Books of Moses") && (groupsOT[0].groupName !== "Pentateuch"))
@@ -216,16 +254,36 @@
             var activePassageData = step.util.activePassage().get("searchTokens") || [];
             var existingReferences = "";
             $('#previousSearch').empty();
+            var listOfPreviousSearch = [];
+            previousSearchTokens = [];
+            numOfPreviousSearchTokens = 0;
             for (var i = 0; i < activePassageData.length; i++) {
                 if (activePassageData[i].itemType == REFERENCE) {
                     if (existingReferences !== "") existingReferences += ",";
                     existingReferences += activePassageData[i].item.osisID.replaceAll(' ', ',');
                 }
                 else if (activePassageData[i].itemType !== VERSION) {
-                    debugger;
-                    $('#previousSearch').append(activePassageData[i].tokenType + ": " +  activePassageData[i].token + ',');
-                    console.log('x: ' + activePassageData[i]);
+                    if (searchTypeCode.indexOf(activePassageData[i].itemType) > 2) {
+                        listOfPreviousSearch.push("<span style='font-size:16px'>" + activePassageData[i].itemType + "</span> = " + activePassageData[i].item.gloss +
+                            ' (<i>' + activePassageData[i].item.stepTransliteration + '</i> - ' + activePassageData[i].item.matchingForm + ')');
+                        previousSearchTokens.push("strong=" + activePassageData[i].token);
+                        numOfPreviousSearchTokens ++;
+                    }
+                    else {
+                        listOfPreviousSearch.push("<span style='font-size:16px'>" + activePassageData[i].itemType + "</span> = " + activePassageData[i].token);
+                        previousSearchTokens.push(activePassageData[i].itemType + "=" + activePassageData[i].token);
+                        numOfPreviousSearchTokens ++;
+                    }
                 }
+            }
+            if (listOfPreviousSearch.length > 0) {
+                var previousSearchHTML =  "<p style='font-size:18px;clear:both'><b>Include the search for:</b> (or click 'X' to remove it)</p><ul>";
+                for (var j = 0; j < listOfPreviousSearch.length; j++) {
+                    previousSearchHTML += "<li id='lOPS_" + j + "'>" + listOfPreviousSearch[j] + 
+                    "<span class='closeMark' onclick=removePreviousSearch(" + j + ")>X</span></li>";
+                }
+                previousSearchHTML += "</ul>";
+                $('#previousSearch').append(previousSearchHTML);
             }
             if (existingReferences !== "") searchRange = existingReferences;
         }
@@ -264,6 +322,7 @@
 		$('#srchModalBackButton').prop('title', '');
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(_buildSearchHeaderAndTable());
+			$('#previousSearch').show();
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
@@ -282,16 +341,16 @@
 		else alert('Unknown state goBackToPreviousPage');
     }
 
-    function addSearch() {
-        if (document.getElementById('addsearchonoffswitch').checked) {
-            addInsteadOfReplace = true;
-            $('#append_msg').addClass('checked');
-        }
-        else {
-            addInsteadOfReplace = false;
-            $('#append_msg').removeClass('checked');
-        }
-    }
+//    function addSearch() {
+//        if (document.getElementById('addsearchonoffswitch').checked) {
+//            addInsteadOfReplace = true;
+//            $('#append_msg').addClass('checked');
+//        }
+//        else {
+//            addInsteadOfReplace = false;
+//            $('#append_msg').removeClass('checked');
+//        }
+//    }
 
     function _buildSearchHeaderAndTable() {
 		var html = '<div class="header">' +
@@ -327,7 +386,8 @@
     function _buildRangeHeaderAndTable() {
 	    $('#searchSelectError').text("");
 		$('#updateFeedback').text("");
-		var html = _buildRangeHeaderAndSkeleton()
+		var html = _buildRangeHeaderAndSkeleton();
+		$('#previousSearch').hide();
 		$('#searchHdrTable').empty().append(html);
 		if (searchRangeOnly) $('#srchModalBackButton').hide();
 		else {
@@ -468,7 +528,7 @@
         result += _createSingleRange(start, end);
         if (result.length > 0) searchRange = result.replace(/,$/, '');
         else searchRange = "Gen-Rev";
-        if (searchRangeOnly) goSearch();
+        if ((searchRangeOnly) || ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0))) goSearch();
         else goBackToPreviousPage();
     }
 	
@@ -904,7 +964,6 @@
         var activePassageData = step.util.activePassage().get("searchTokens") || [];
         var allVersions = "";
         var range = (searchRange === "Gen-Rev") ? "" : "|reference=" + searchRange;
-        var previousSearch = "";
         var currentSearch = (typeof searchType === "undefined") ? "" : '|' + searchType + '=' + searchWord;
         for (var i = 0; i < activePassageData.length; i++) {
 			switch(activePassageData[i].itemType) {
@@ -912,12 +971,9 @@
 				case GREEK_MEANINGS:
 				case HEBREW:
 				case HEBREW_MEANINGS:
-					previousSearch += '|strong=' + activePassageData[i].token;
-					break;
 				case TEXT_SEARCH:
 				case MEANINGS:
 				case SUBJECT_SEARCH:
-					previousSearch += '|' + activePassageData[i].itemType + '=' + activePassageData[i].token;
 					break;
 				case VERSION:
 					if (allVersions.length > 0) allVersions += '|';
@@ -930,7 +986,11 @@
 					break;
             }
         }
-		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
+        var previousSearch = "";
+        for (var i = 0; i < previousSearchTokens.length; i++) {
+            if (previousSearchTokens[i] !== "") previousSearch += '|' + previousSearchTokens[i];
+        }
+//		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
         var url = allVersions + range + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		closeModal('searchSelectionModal');
@@ -959,19 +1019,12 @@
             }
         }
 		closeModal('searchSelectionModal');
-		if (selectedDisplayLoc === "append") {
-			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
-			step.router.navigateSearch(url, true); // skip QFilter
-		}
-		else {
-			if (selectedDisplayLoc === "new") {
-				//step.util.createNewLinkedColumn(0);
-				step.util.createNewColumn();
-			}
+        if (selectedDisplayLoc === "new") {
+            step.util.createNewColumn();
+        }
 
-			console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
-			step.router.navigatePreserveVersions("reference=" + osisID, false);
-		}
+        console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
+        step.router.navigatePreserveVersions("reference=" + osisID, false);
     }
 	
     function closeModal(modalID) {
@@ -984,5 +1037,20 @@
 			element.parentNode.removeChild(element);
 		}
     }
+
+    function removePreviousSearch(index) {
+        previousSearchTokens[index] = "";
+        numOfPreviousSearchTokens --;
+        $('#lOPS_' + index).hide();
+        if (numOfPreviousSearchTokens == 0) {
+			$('#previousSearch').empty().append('<button type="button" style="border:none;font-size:16px" onclick=deleteAllSearch()><i class="glyphicon glyphicon-trash">Remove previous search</i></button>');
+		}
+    }
+	
+    function deleteAllSearch(index) {
+	debugger;
+		closeModal('searchSelectionModal');
+		$('.previousChapter').click()
+	}
 
 </script>

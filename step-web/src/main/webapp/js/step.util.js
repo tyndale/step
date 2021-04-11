@@ -704,29 +704,33 @@ step.util = {
 						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
             }
 			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
-            if (allSelectedReferences.length === 0) {
-		        if (foundSearch) allSelectedReferences = "Gen-Rev";
-				else allSelectedReferences = "Passage:";
-			}
-			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Passage: Gen 1";
-            else if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
 
 			var searchWords = "";
-			for (var i = 0; i < searchTokens.length; i++) {
-                if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
-                    (searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
-					var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
-					if (word.length > 0) {
-						if (searchWords.length > 20) {
-							if (searchWords.substr(-3) !== '...') searchWords += '...';
-						}
-						else {
-							if (searchWords.length > 0) searchWords += ', ';
-							searchWords += word;
+            if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+			if (foundSearch) {
+				for (var i = 0; i < searchTokens.length; i++) {
+					if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
+						(searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
+						var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
+						if (word.length > 0) {
+							if (searchWords.length > 20) {
+								if (searchWords.substr(-3) !== '...') searchWords += '...';
+							}
+							else {
+								if (searchWords.length > 0) searchWords += ', ';
+								searchWords += word;
+							}
 						}
 					}
 				}
-            }
+				if (allSelectedReferences.length > 0) {
+					searchWords += " (" + allSelectedReferences + ")";
+				}
+			}
+
+            if ((foundSearch) || (allSelectedReferences.length === 0)) allSelectedReferences = "Passage:";
+			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Passage: Gen 1";
+
 			console.log("all selected ref: " + allSelectedReferences);
 
 			if (outputMode === "button") {
@@ -1403,28 +1407,28 @@ step.util = {
             doHighlight(nonJqElement, cssClasses, regex);
         }
     },
-    passageSelectionModal: function (activePassageNumber, passageSelectionConfirmed) {
+    passageSelectionModal: function (activePassageNumber) {
+	// , passageSelectionConfirmed) {
         var element = document.getElementById('passageSelectionConfirmModal');
         if (element) element.parentNode.removeChild(element);
         element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-        if ((!passageSelectionConfirmed) && (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")) {
-            var passageSelectConfirmDiv = $('<div id="passageSelectionConfirmModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                '<div class="modal-dialog">' +
-                '<div class="modal-content">');
-            passageSelectConfirmDiv.appendTo("body");
-            $('#passageSelectionConfirmModal').modal('show').find('.modal-content').load('/html/passage_selection_confirm.html');            
-        }
-        else {
+        // if ((!passageSelectionConfirmed) && (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")) {
+            // var passageSelectConfirmDiv = $('<div id="passageSelectionConfirmModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                // '<div class="modal-dialog">' +
+                // '<div class="modal-content">');
+            // passageSelectConfirmDiv.appendTo("body");
+            // $('#passageSelectionConfirmModal').modal('show').find('.modal-content').load('/html/passage_selection_confirm.html');            
+        // }
+        // else {
             var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">');
             passageSelectDiv.appendTo("body");
-            //if ($.getUrlVars().indexOf("debug") == -1) $.ajaxSetup({ cache: true }); // PT is this needed?
             $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
-        }
+        // }
     },
 	searchSelectionModal: function (searchRangeOnly) {
         var element = document.getElementById('searchSelectionModal');
