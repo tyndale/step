@@ -78,7 +78,7 @@
 //    var addInsteadOfReplace = false;
 	var searchOnSpecificType = "";
 	var searchTypeCode = [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW];
-	var searchRangeOnly;
+//	var searchRangeOnly;
 	var searchModalCurrentPage = 1;
 	var searchUserInput = "";
     var searchRange = "Gen-Rev";
@@ -241,7 +241,7 @@
     var idx2BookOrder = {};
 
     $(document).ready(function () {
-		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
+//		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
         $('#display_result_in').text(__s.display_result_in);
 //        $('#append_msg').text(__s.append_msg);
@@ -288,8 +288,8 @@
             if (existingReferences !== "") searchRange = existingReferences;
         }
 		else $('#modalonoffswitch').hide();
-        if (searchRangeOnly) _buildRangeHeaderAndTable()
-        else {
+//        if (searchRangeOnly) _buildRangeHeaderAndTable()
+//        else {
             $('#searchHdrTable').append(_buildSearchHeaderAndTable());
             $('#srchModalBackButton').hide();
             $(function(){
@@ -298,7 +298,7 @@
                 });
             });
             $('textarea#userTextInput').focus();
-        }
+//        }
     });
 
     function handleKeyboardInput(e) {
@@ -389,11 +389,11 @@
 		var html = _buildRangeHeaderAndSkeleton();
 		$('#previousSearch').hide();
 		$('#searchHdrTable').empty().append(html);
-		if (searchRangeOnly) $('#srchModalBackButton').hide();
-		else {
+//		if (searchRangeOnly) $('#srchModalBackButton').hide();
+//		else {
 			$('#srchModalBackButton').show();
 			$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
-		}
+//		}
 		_buildBookTable();
         if (searchRange !== 'Gen-Rev') {
             var tmpSearchRange = searchRange + ',';
@@ -528,7 +528,8 @@
         result += _createSingleRange(start, end);
         if (result.length > 0) searchRange = result.replace(/,$/, '');
         else searchRange = "Gen-Rev";
-        if ((searchRangeOnly) || ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0))) goSearch();
+//        if ((searchRangeOnly) || ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0))) goSearch();
+        if ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0)) goSearch();
         else goBackToPreviousPage();
     }
 	
@@ -1043,14 +1044,8 @@
         numOfPreviousSearchTokens --;
         $('#lOPS_' + index).hide();
         if (numOfPreviousSearchTokens == 0) {
-			$('#previousSearch').empty().append('<button type="button" style="border:none;font-size:16px" onclick=deleteAllSearch()><i class="glyphicon glyphicon-trash">Remove previous search</i></button>');
+			$('#previousSearch').empty(); //.append('<button type="button" style="border:none;font-size:16px" onclick=deleteAllSearch()><i class="glyphicon glyphicon-trash">Remove previous search</i></button>');
 		}
     }
-	
-    function deleteAllSearch(index) {
-	debugger;
-		closeModal('searchSelectionModal');
-		$('.previousChapter').click()
-	}
 
 </script>

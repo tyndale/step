@@ -1430,13 +1430,15 @@ step.util = {
             $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
         // }
     },
-	searchSelectionModal: function (searchRangeOnly) {
+//	searchSelectionModal: function (searchRangeOnly) {
+	searchSelectionModal: function () {
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
-		var searchRangeID = (searchRangeOnly) ? 'id="searchRangeOnly" ': '';
+//		var searchRangeID = (searchRangeOnly) ? 'id="searchRangeOnly" ': '';
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-            '<div ' + searchRangeID + 'class="modal-content">');
+//            '<div ' + searchRangeID + 'class="modal-content">');
+            '<div class="modal-content">');
         searchSelectDiv.appendTo("body");
         $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },
