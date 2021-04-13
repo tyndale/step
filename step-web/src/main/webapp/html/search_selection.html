@@ -25,11 +25,14 @@
 	<!-- </span> -->
 </div>
 <div id="searchmodalbody" class="modal-body">
-<div id="previousSearch"></div>
-<div id="searchHdrTable"></div>
+  <div id="searchHdrTable"></div>
+  <br>
+  <div id="previousSearch"></div>
 </div>
 <div class="footer">
 	<span id="searchSelectError" style="color: red;"></span>
+    <button id="updateButton" type="button" style="display:none;color:#498090;background-color:white;font-size:15px;float:right;border:1px solid #498090" 
+    onclick=goSearch()><b>Update search</b></button><br><br>
 </div>
 <style>
 .pressedButton {
@@ -84,6 +87,8 @@
     var searchRange = "Gen-Rev";
     var previousSearchTokens = [];
     var numOfPreviousSearchTokens = 0;
+    var includePreviousSearches = false;
+    var rangeWasUpdated = false;
 	var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
             ["Gen", 50],
             ["Exo", 40, "Exod"],
@@ -264,20 +269,37 @@
                 }
                 else if (activePassageData[i].itemType !== VERSION) {
                     if (searchTypeCode.indexOf(activePassageData[i].itemType) > 2) {
-                        listOfPreviousSearch.push("<span style='font-size:16px'>" + activePassageData[i].itemType + "</span> = " + activePassageData[i].item.gloss +
+                        var type = activePassageData[i].itemType;
+                        if (type.toLowerCase().startsWith("greek")) type = "Greek";
+                        else if (type.toLowerCase().startsWith("hebrew")) type = "Hebrew";
+                        listOfPreviousSearch.push("<span style='font-size:16px'>" + type + "</span> = " + activePassageData[i].item.gloss +
                             ' (<i>' + activePassageData[i].item.stepTransliteration + '</i> - ' + activePassageData[i].item.matchingForm + ')');
                         previousSearchTokens.push("strong=" + activePassageData[i].token);
                         numOfPreviousSearchTokens ++;
                     }
                     else {
-                        listOfPreviousSearch.push("<span style='font-size:16px'>" + activePassageData[i].itemType + "</span> = " + activePassageData[i].token);
+                        var type = activePassageData[i].itemType;
+                        if (type.toLowerCase === "text") type = "Word or phrase";
+                        listOfPreviousSearch.push("<span style='font-size:16px'>" + type + "</span> = " + activePassageData[i].token);
                         previousSearchTokens.push(activePassageData[i].itemType + "=" + activePassageData[i].token);
                         numOfPreviousSearchTokens ++;
                     }
                 }
             }
             if (listOfPreviousSearch.length > 0) {
-                var previousSearchHTML =  "<p style='font-size:18px;clear:both'><b>Include the search for:</b> (or click 'X' to remove it)</p><ul>";
+                var previousSearchHTML =
+                    '<div id="modalonoffswitch">' +
+                        '<span  class="pull-left" style="font-size:18px" id="search_with_previous"><b>Include previous searches</b>&nbsp;&nbsp;</span>' +
+                        '<div class="onoffswitch2 pull-left">' +
+                            '<input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="showprevioussearchonoff" onchange="showPreviousSearch()"/>' +
+                            '<label class="onoffswitch2-label" for="showprevioussearchonoff">' +
+                            '<span class="onoffswitch2-inner"></span>' +
+                            '<span class="onoffswitch2-switch"></span>' +
+                            '</label>' +
+                        '</div>' +
+                    '</div><br><br>' +
+                    '<ul id="listofprevioussearchs" style="display:none">';
+                //var previousSearchHTML =  "<p style='font-size:18px;clear:both'><b>Include the search for:</b> (or click 'X' to remove it)</p><ul>";
                 for (var j = 0; j < listOfPreviousSearch.length; j++) {
                     previousSearchHTML += "<li id='lOPS_" + j + "'>" + listOfPreviousSearch[j] + 
                     "<span class='closeMark' onclick=removePreviousSearch(" + j + ")>X</span></li>";
@@ -529,8 +551,11 @@
         if (result.length > 0) searchRange = result.replace(/,$/, '');
         else searchRange = "Gen-Rev";
 //        if ((searchRangeOnly) || ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0))) goSearch();
-        if ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0)) goSearch();
-        else goBackToPreviousPage();
+        // if ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0)) goSearch();
+        //else goBackToPreviousPage();
+        rangeWasUpdated = true;
+        if (includePreviousSearches) $('#updateButton').show();
+        goBackToPreviousPage();
     }
 	
     function _createSingleRange(start, end) {
@@ -988,8 +1013,10 @@
             }
         }
         var previousSearch = "";
-        for (var i = 0; i < previousSearchTokens.length; i++) {
-            if (previousSearchTokens[i] !== "") previousSearch += '|' + previousSearchTokens[i];
+        if (includePreviousSearches) {
+            for (var i = 0; i < previousSearchTokens.length; i++) {
+                if (previousSearchTokens[i] !== "") previousSearch += '|' + previousSearchTokens[i];
+            }
         }
 //		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
         var url = allVersions + range + previousSearch + currentSearch;
@@ -1001,7 +1028,6 @@
     }
 	
 	function goToPassage(osisID, chptrOrVrsNum) {
-		var addVerseSelection = false;
 		var modalMode = "";
 		var bookID = osisID.substring(0, osisID.indexOf("."));
 		if (bookID === "") bookID = osisID;
@@ -1043,9 +1069,23 @@
         previousSearchTokens[index] = "";
         numOfPreviousSearchTokens --;
         $('#lOPS_' + index).hide();
+        $('#updateButton').show();
         if (numOfPreviousSearchTokens == 0) {
 			$('#previousSearch').empty(); //.append('<button type="button" style="border:none;font-size:16px" onclick=deleteAllSearch()><i class="glyphicon glyphicon-trash">Remove previous search</i></button>');
 		}
+    }
+    
+    function showPreviousSearch() {
+        if (document.getElementById('showprevioussearchonoff').checked) {
+            includePreviousSearches = true;
+            $('#listofprevioussearchs').show();
+            if (rangeWasUpdated) $('#updateButton').show();
+        }
+        else {
+            includePreviousSearches = false;
+            $('#listofprevioussearchs').hide();
+            $('#updateButton').hide();
+        }
     }
 
 </script>

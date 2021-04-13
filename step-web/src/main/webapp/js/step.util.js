@@ -1409,8 +1409,8 @@ step.util = {
     },
     passageSelectionModal: function (activePassageNumber) {
 	// , passageSelectionConfirmed) {
-        var element = document.getElementById('passageSelectionConfirmModal');
-        if (element) element.parentNode.removeChild(element);
+        // var element = document.getElementById('passageSelectionConfirmModal');
+        // if (element) element.parentNode.removeChild(element);
         element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
