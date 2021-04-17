@@ -1,10 +1,9 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        // '<span class="langSpan"><button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %> stepButton">' +
+        '<span class="langSpan span_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">' +
         '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %> stepButton">' +
-        // '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
-        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br>' +
+        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
         '<ul class="list-group langUL ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
@@ -306,7 +305,7 @@ var PickBibleView = Backbone.View.extend({
         if (showGeoSelection) $('.selectGeo').show();
         else {
             $('.selectGeo').hide();
-            // $('.langSpan').show();
+            $('.langSpan').show();
             // $('.langSpan').css('background', 'white').css('color', 'black');
             $('.langBtn').show();
 //            $('.langBtn').css('background', '#336600').css('color', 'white');

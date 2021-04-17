@@ -1902,9 +1902,9 @@ step.util = {
         if (testMode) {
             $('.langSpan').show();
             $('.langBtn').show();
-            $('.langSpan').css('background', 'white').css('color', 'black');
-            $('.langBtn').css('background', 'white').css('color', 'black');
-            $('.langPlusMinus').css('background', 'white').css('color', 'black');
+            // $('.langSpan').css('background', 'white').css('color', 'black');
+            // $('.langBtn').css('background', 'white').css('color', 'black');
+            // $('.langPlusMinus').css('background', 'white').css('color', 'black');
             $('.langUL').show();
             arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
                 .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
@@ -1918,9 +1918,9 @@ step.util = {
             if (geo === "all") {
                 $('.langSpan').show();
                 $('.langBtn').show();
-                $('.langSpan').css('background', 'white').css('color', 'black');
-                $('.langBtn').css('background', 'white').css('color', 'black');
-                $('.langPlusMinus').css('background', 'white').css('color', 'black');
+                // $('.langSpan').css('background', 'white').css('color', 'black');
+                // $('.langBtn').css('background', 'white').css('color', 'black');
+                // $('.langPlusMinus').css('background', 'white').css('color', 'black');
                 $('.langUL').hide();                
 
             }
@@ -1937,8 +1937,9 @@ step.util = {
                 $('.langUL').hide();
                 for (var i = 0; i < arrayToProcess.length; i++) {
                     $('.btn_' + arrayToProcess[i]).show();
-                    $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
-					$('.plusminus_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+					$('.span_' + arrayToProcess[i]).show();
+                    // $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
+					// $('.plusminus_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
                     $('.plusminus_' + arrayToProcess[i]).text('+');
 
                 }
