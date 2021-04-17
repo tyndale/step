@@ -260,7 +260,7 @@ var StepRouter = Backbone.Router.extend({
         var passageOptions = passageContainer.find(".passageOptionsGroup");
 			
 		passageOptions.find(".argSummary").remove();
-		var container = $("<span></span>").addClass("argSummary newArgSummary");
+		var container = $("<span></span>").addClass("argSummary argSumSpan");
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
 		step.util.adjustPassageOptionHeight(passageContainer);

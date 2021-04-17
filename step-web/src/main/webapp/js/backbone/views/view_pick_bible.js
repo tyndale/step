@@ -1,8 +1,10 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        '<span class="langSpan btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>"><button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="background:white">' +
-        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
+        // '<span class="langSpan"><button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %> stepButton">' +
+        '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %> stepButton">' +
+        // '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
+        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br>' +
         '<ul class="list-group langUL ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
@@ -15,12 +17,12 @@ var PickBibleView = Backbone.View.extend({
         '<% }) %>'),
     filtersTemplate: _.template('<form role="form" class="form-inline">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= __s.english %></label>' +
+        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
+        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" /><%= __s.english %></label>' +
         '<% if(step.userLanguageCode != "en") { %>' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="<%= step.userLanguageCode %>" /><%= step.userLanguage %></label>' +
+        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="<%= step.userLanguageCode %>" /><%= step.userLanguage %></label>' +
         '<% } %>' +
-        '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
+        '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
 		'&nbsp;&nbsp;&nbsp;<button type="button" class="closeModal" data-dismiss="modal">X</button>' +
         '</form>'),
@@ -53,8 +55,8 @@ var PickBibleView = Backbone.View.extend({
         '<div class="tab-pane" id="commentaryList">' +
         '</div>' +
         '</div>' + //end body
-        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label>Update display order</label></button>' +
-                                  '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
+        '<div class="modal-footer"><button id ="order_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label>Update display order</label></button>' +
+                                  '<button id ="ok_button_bible_modal" class="btn btn-default btn-sm stepButton" data-dismiss="modal"><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
         '</div>' +
@@ -121,7 +123,7 @@ var PickBibleView = Backbone.View.extend({
         //make the right button active
         var language = this._getLanguage();
         userHasUpdated = false;
-        this.$el.find(".btn").has("input[data-lang='" + language + "']").addClass("active");
+        this.$el.find(".btn").has("input[data-lang='" + language + "']").addClass("active").addClass("stepPressedButton");
 
         var navTabsLi = $(".nav-tabs li");
         navTabsLi.has("a[href='" + this._getSelectedTab() + "']").addClass("active");
@@ -206,6 +208,8 @@ var PickBibleView = Backbone.View.extend({
             filter = "COMMENTARY";
         }
         else if (selectedLanguage == "_all") showGeoSelection = true;
+        this.$el.find(".btn.stepPressedButton").removeClass("stepPressedButton");
+        this.$el.find(".btn").has("input[data-lang='" + selectedLanguage + "']").addClass("stepPressedButton");
 
         var bibleList = {};
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
@@ -302,14 +306,16 @@ var PickBibleView = Backbone.View.extend({
         if (showGeoSelection) $('.selectGeo').show();
         else {
             $('.selectGeo').hide();
-            $('.langSpan').show();
-            $('.langSpan').css('background', 'white').css('color', 'black');
+            // $('.langSpan').show();
+            // $('.langSpan').css('background', 'white').css('color', 'black');
             $('.langBtn').show();
-            $('.langBtn').css('background', '#336600').css('color', 'white');
+//            $('.langBtn').css('background', '#336600').css('color', 'white');
+            $('.langBtn').addClass('stepPressedButton');
             $('.langPlusMinus').text('-');
             $('.langUL').show();
         }
         this.$el.find(".langBtn").click(this._handleUsrClick);
+        this.$el.find(".langPlusMinus").click(this._handleUsrClick);
     },
     _addTagLine: function(){
         var bibleVersions = $("#bibleVersions");
@@ -329,29 +335,39 @@ var PickBibleView = Backbone.View.extend({
         return actualLanguage == wantedLanguage;
     },
     _handleUsrClick: function (event) {
+        event.stopPropagation();
         var btnClassName = "";
         var plusminusClassName = "";
         var ulClassName = "";
         for (var i = 0; i < event.target.classList.length; i++) {
-            if ((event.target.classList[i].substr(0, 4) === "btn_") ||
-                (event.target.classList[i].substr(0, 10) === "plusminus_")) {
+            if (event.target.classList[i].substr(0, 4) === "btn_") {
                 btnClassName = '.' + event.target.classList[i];
                 plusminusClassName = ".plusminus_" + event.target.classList[i].substr(4);
                 ulClassName = ".ul_" + event.target.classList[i].substr(4);
+                break;
+            }
+            else if (event.target.classList[i].substr(0, 10) === "plusminus_") {
+                btnClassName = '.btn_' + event.target.classList[i].substr(10);
+                plusminusClassName = '.' + event.target.classList[i];
+                ulClassName = ".ul_" + event.target.classList[i].substr(10);
                 break;
             }
         }
         if (btnClassName !== "") {
             if ($(ulClassName).is(":visible")) {
                 $(ulClassName).hide();
-                $(btnClassName).css('background', 'white').css('color', 'black');
-                $(plusminusClassName).css('background', 'white').css('color', 'black');
+                $(btnClassName).removeClass('stepPressedButton');
+                $(plusminusClassName).removeClass('stepPressedButton');
+                // $(btnClassName).css('background', 'white').css('color', 'black');
+                // $(plusminusClassName).css('background', 'white').css('color', 'black');
                 $(plusminusClassName).text('+');
             }
             else {
                 $(ulClassName).show();
-                $(btnClassName).css('background', '#336600').css('color', 'white');
-				$(plusminusClassName).css('background', '#336600').css('color', 'white');
+                $(btnClassName).addClass('stepPressedButton');
+                $(plusminusClassName).addClass('stepPressedButton');
+                // $(btnClassName).css('background', '#336600').css('color', 'white');
+				// $(plusminusClassName).css('background', '#336600').css('color', 'white');
                 $(plusminusClassName).text('-');
             }
         }

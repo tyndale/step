@@ -738,7 +738,7 @@ step.util = {
 					container.append(
 						'<button type="button" ' +
 							'onclick="step.util.startPickBible()" ' +
-							'title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
+							'title="' + __s.click_translation + '" class="select-' + VERSION + ' stepButton">' +
 							allSelectedBibleVersions +
 						'</button>' +
 						'<span class="separator-' + VERSION + '">&nbsp;</span>');
@@ -746,7 +746,7 @@ step.util = {
 				container.append(
 					'<button type="button" ' +
 						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
-						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
+						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' stepButton">' +
 						allSelectedReferences +
 					'</button>' +
 					'<span class="separator-' + REFERENCE + '">&nbsp;</span>');
@@ -754,8 +754,8 @@ step.util = {
 				container.append(
 					'<button type="button" ' +
 						'onclick="step.util.searchSelectionModal()" ' +
-						'title="' + __s.click_search + '" class="select-search newArgSummary">' +
-						'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
+						'title="' + __s.click_search + '" class="select-search stepButton">' +
+						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
 					'</button>' );
 				return container.html();
@@ -764,13 +764,13 @@ step.util = {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<span ' +
-							'title="' + __s.click_translation + '" class="select-' + VERSION + ' newArgSummary">' +
+							'title="' + __s.click_translation + '" class="select-' + VERSION + ' argSumSpan">' +
 							allSelectedBibleVersions +
 						'&nbsp;|</span>' );
 
 				container.append(
 					'<span ' +
-						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' newArgSummary">' +
+						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' argSumSpan">' +
 						allSelectedReferences +
 					'</span>' );
 
@@ -778,7 +778,7 @@ step.util = {
 					container.append(
 						'|' +
 						'<span ' +
-							'title="' + __s.click_search + '" class="select-search newArgSummary">' +
+							'title="' + __s.click_search + '" class="select-search argSumSpan">' +
 							'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
 							'&nbsp;' + searchWords +
 						'</span>' );
@@ -1496,19 +1496,19 @@ step.util = {
 					intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.'
 				},
 				{
-					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-version'),
+					element: document.querySelector('.passageContainer.active').querySelector('.stepButton').querySelector('.select-version'),
 					intro: 'Click to select Bible translations (e.g. NIV, NASB, ...)',
 					position: 'bottom'
 				},
 				{
-					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-reference'),
+					element: document.querySelector('.passageContainer.active').querySelector('.stepButton').querySelector('.select-reference'),
 					intro: 'Click to select Bible passsage (e.g. John 1)',
 					position: 'bottom'
 				}
 			];
 			if (window.innerWidth > 499) introJsSteps.push(
 				{
-					element: document.querySelector('.passageContainer.active').querySelector('.newArgSummary').querySelector('.select-search'),
+					element: document.querySelector('.passageContainer.active').querySelector('.stepButton').querySelector('.select-search'),
 					intro: 'Click to search on words, subject, word meaning, Greek or Hebrew words ...',
 					position: 'bottom'
 				});
