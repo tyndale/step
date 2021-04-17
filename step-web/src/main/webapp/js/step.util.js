@@ -738,7 +738,7 @@ step.util = {
 					container.append(
 						'<button type="button" ' +
 							'onclick="step.util.startPickBible()" ' +
-							'title="' + __s.click_translation + '" class="select-' + VERSION + ' stepButton">' +
+							'title="' + __s.click_translation + '" class="select-' + VERSION + ' stepButtonTriangle">' +
 							allSelectedBibleVersions +
 						'</button>' +
 						'<span class="separator-' + VERSION + '">&nbsp;</span>');
@@ -746,7 +746,7 @@ step.util = {
 				container.append(
 					'<button type="button" ' +
 						'onclick="step.util.passageSelectionModal(' + step.util.activePassageId() + ')" ' +
-						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' stepButton">' +
+						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' stepButtonTriangle">' +
 						allSelectedReferences +
 					'</button>' +
 					'<span class="separator-' + REFERENCE + '">&nbsp;</span>');
@@ -754,7 +754,7 @@ step.util = {
 				container.append(
 					'<button type="button" ' +
 						'onclick="step.util.searchSelectionModal()" ' +
-						'title="' + __s.click_search + '" class="select-search stepButton">' +
+						'title="' + __s.click_search + '" class="select-search stepButtonTriangle">' +
 						'<i style="font-size:10px" class="find glyphicon glyphicon-search"></i>' +
 						'&nbsp;' + searchWords +
 					'</button>' );

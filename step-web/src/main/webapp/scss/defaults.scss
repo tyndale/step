@@ -108,12 +108,22 @@ ul .glyphicon-ok {
 	border:1px solid #498090;
 	font-style: normal;
 	margin-left: 5px;
-		
-	button {
-	    &:after {
-		  content: "\25BE"; // upside down triangle
-		}
-	}
+}
+
+.stepButtonTriangle {
+	white-space:normal!important;
+	padding:6px 7px 5px 7px;
+	color:#498090;
+	font-size:14px;
+	line-height:13px;
+	border-radius:4px;
+	background:#FFFFFF!important;
+	border:1px solid #498090;
+	font-style: normal;
+	margin-left: 5px;
+    &:after {
+      content: "\25BE"; // upside down triangle
+    }
 }
 
 .stepPressedButton {
