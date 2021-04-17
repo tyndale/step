@@ -37,11 +37,11 @@
     </a>
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
         title="<fmt:message key="passage_smaller_fonts"/>">
-        <span class="smallerFont" style="color:white;background:black;font-size:16px"> <fmt:message key="passage_font_size_symbol"/> </span>
+        <span class="smallerFont" style="color:white;background:#5E5E5E;font-size:16px"> <fmt:message key="passage_font_size_symbol"/> </span>
     </a>					
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
         title="<fmt:message key="passage_larger_fonts"/>">
-        <span class="largerFont" style="color:white;background:black;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
+        <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
         <span class="hidden-xs navbarIconDesc"><fmt:message key="font_sizes"/></span>
     </a>
     <span class="navbar-collapse collapse">
