@@ -356,7 +356,7 @@ var PickBibleView = Backbone.View.extend({
             if ($(ulClassName).is(":visible")) {
                 $(ulClassName).hide();
                 $(btnClassName).removeClass('stepPressedButton');
-                $(plusminusClassName).removeClass('stepPressedButton');
+                // $(plusminusClassName).removeClass('stepPressedButton');
                 // $(btnClassName).css('background', 'white').css('color', 'black');
                 // $(plusminusClassName).css('background', 'white').css('color', 'black');
                 $(plusminusClassName).text('+');
@@ -364,7 +364,7 @@ var PickBibleView = Backbone.View.extend({
             else {
                 $(ulClassName).show();
                 $(btnClassName).addClass('stepPressedButton');
-                $(plusminusClassName).addClass('stepPressedButton');
+                // $(plusminusClassName).addClass('stepPressedButton');
                 // $(btnClassName).css('background', '#336600').css('color', 'white');
 				// $(plusminusClassName).css('background', '#336600').css('color', 'white');
                 $(plusminusClassName).text('-');
