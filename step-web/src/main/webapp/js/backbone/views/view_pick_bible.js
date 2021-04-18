@@ -199,6 +199,7 @@ var PickBibleView = Backbone.View.extend({
         var self = this;
         var selectedTab = this._getSelectedTab();
         var selectedLanguage = this._getLanguage();
+        var origLanguage = selectedLanguage;
 		if (selectedLanguage == "zh_TW") selectedLanguage = "zh";
 
         var filter = "BIBLE"
@@ -208,7 +209,7 @@ var PickBibleView = Backbone.View.extend({
         }
         else if (selectedLanguage == "_all") showGeoSelection = true;
         this.$el.find(".btn.stepPressedButton").removeClass("stepPressedButton");
-        this.$el.find(".btn").has("input[data-lang='" + selectedLanguage + "']").addClass("stepPressedButton");
+        this.$el.find(".btn").has("input[data-lang='" + origLanguage + "']").addClass("stepPressedButton");
 
         var bibleList = {};
         if (selectedLanguage == "_ancient" && filter == 'BIBLE') {
