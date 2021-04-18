@@ -146,11 +146,18 @@ public final class JSwordUtils {
             @Override
             public int compare(final BibleVersion o1, final BibleVersion o2) {
                 // return o1.getShortInitials().compareTo(o2.getShortInitials());
+
                 int result = o1.getLanguageName().compareTo(o2.getLanguageName());
                 if (result == 0) {
                     return o1.getShortInitials().compareTo(o2.getShortInitials());
                 }
-                return result;
+                else if (o1.getLanguageName().compareTo("English") == 0) {
+                    return -1;
+                }
+                else if (o2.getLanguageName().compareTo("English") == 0) {
+                    return 1;
+                }
+                 return result;
             }
         });
 
