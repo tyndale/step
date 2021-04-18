@@ -145,7 +145,8 @@ public final class JSwordUtils {
         sort(values, new Comparator<BibleVersion>() {
             @Override
             public int compare(final BibleVersion o1, final BibleVersion o2) {
-                return o1.getShortInitials().compareTo(o2.getShortInitials());
+                //return o1.getShortInitials().compareTo(o2.getShortInitials());
+                return o1.getLanguageName().compareTo(o2.getLanguageName());
             }
         });
 
