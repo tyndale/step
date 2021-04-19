@@ -124,7 +124,23 @@ var ExamplesView = Backbone.View.extend({
 					'</span>' +
 					'<span class="explanationText"><%= __s.vocab_explanation %></span>' +
    					'<a href="javascript:step.util.showVideoModal(\'ESV_orig_voc_transliteration.gif\', 35)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
-                
+
+					'<span class="input-group" style="overflow:hidden">' +
+                    '<a href="?q=version=LXX|version=AB|version=ABGk|version=ABEn|reference=Exod.31&options=VLGUHVNAT&display=INTERLEAVED" title="<%= __s.click_to_try_this %>">' +
+					'<span class="argSummary argSumSpan">' +
+					'<span class="argSelect stepButton">LXX, AB, ABGk, ABEn</span><span class="argSelect stepButton">Exo 31</span>' +
+					'</a>' +
+					'</span>' +
+					'<span class="explanationText"><b>The Septuagint (OT in Greek)</b> older versions (“LXX” is Rhalfs) and later ecclesiastical versions (ABGr).</span>' +
+
+					'<span class="input-group" style="overflow:hidden">' +
+                    '<a href="?q=version=ESV|version=THOT|version=ABGk|version=ABEn|reference=Isa.53.1 John.12.38&options=VVNH&display=COLUMN&pos=1" title="<%= __s.click_to_try_this %>">' +
+					'<span class="argSummary argSumSpan">' +
+					'<span class="argSelect stepButton">ESV, THOT, ABGk, ABEn</span><span class="argSelect stepButton">Isa 53:1, Joh 12:38</span>' +
+					'</a>' +
+					'</span>' +
+					'<span class="explanationText"><b>Compare and search Greek in OT & NT.</b> Most English tagged versions are linked with Hebrew OT and Greek NT. A few are linked with Greek OT & NT.</span>' +
+
 				'</div>' +
 			'</div>' +
 			'<div class="accordion-row" data-row="2">' +
