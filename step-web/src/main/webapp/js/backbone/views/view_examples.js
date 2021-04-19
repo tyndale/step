@@ -75,12 +75,15 @@ var ExamplesView = Backbone.View.extend({
   					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<br><br><a href="javascript:step.util.showIntro(true)">' +
-					'<div id="quickTour"><span style="font-size:14px;font-weight:bold;color:black">Quick tour</span>' +
-					'<br><span class="explanationText">Take a quick tour of the new user Interface</span>' +
-					'</div>' +
+					'<span id="quickTour"><span style="font-size:14px;font-weight:bold;color:black">Quick tour</span>' +
+					'<br><span class="explanationText">Take a quick tour of the new user interface.</span>' +
+					'</span>' +
 					'</a>' +
+                    '<span class="explanationText">  Or see a quick introduction in the </span>' +
+                    '<a href="https://drive.google.com/drive/folders/19OgRWS8Rbk92V5zAETpJ14QFSNjf76um">' +
+                    'user guide.</a>' +
 
-					'<br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black">Old user interface</span>' +
+					'<br><br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black">Old user interface</span>' +
 					'<br><span class="explanationText">STEP Bible has improved the user interface. We do not recommend the old user interface, but it is available in case you prefer the old input line, the following video shows how to re-enable the old input line.</span>' +
 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 16)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +
