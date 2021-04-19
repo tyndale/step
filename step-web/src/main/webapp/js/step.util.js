@@ -1408,36 +1408,22 @@ step.util = {
         }
     },
     passageSelectionModal: function (activePassageNumber) {
-	// , passageSelectionConfirmed) {
-        // var element = document.getElementById('passageSelectionConfirmModal');
-        // if (element) element.parentNode.removeChild(element);
         element = document.getElementById('passageSelectionModal');
         if (element) element.parentNode.removeChild(element);
 		if ((activePassageNumber !== -1) && (step.util.activePassageId() !== activePassageNumber))
 			step.util.activePassageId(activePassageNumber); // make the passage active
-        // if ((!passageSelectionConfirmed) && (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "")) {
-            // var passageSelectConfirmDiv = $('<div id="passageSelectionConfirmModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                // '<div class="modal-dialog">' +
-                // '<div class="modal-content">');
-            // passageSelectConfirmDiv.appendTo("body");
-            // $('#passageSelectionConfirmModal').modal('show').find('.modal-content').load('/html/passage_selection_confirm.html');            
-        // }
-        // else {
             var passageSelectDiv = $('<div id="passageSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">');
             passageSelectDiv.appendTo("body");
             $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
-        // }
     },
-//	searchSelectionModal: function (searchRangeOnly) {
+
 	searchSelectionModal: function () {
         var element = document.getElementById('searchSelectionModal');
         if (element) element.parentNode.removeChild(element);
-//		var searchRangeID = (searchRangeOnly) ? 'id="searchRangeOnly" ': '';
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-//            '<div ' + searchRangeID + 'class="modal-content">');
             '<div class="modal-content">');
         searchSelectDiv.appendTo("body");
         $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
@@ -1902,9 +1888,6 @@ step.util = {
         if (testMode) {
             $('.langSpan').show();
             $('.langBtn').show();
-            // $('.langSpan').css('background', 'white').css('color', 'black');
-            // $('.langBtn').css('background', 'white').css('color', 'black');
-            // $('.langPlusMinus').css('background', 'white').css('color', 'black');
             $('.langUL').show();
             arrayToProcess = africa_lang.concat(americas_lang).concat(east_asia_lang).concat(europe_lang).concat(oceania_lang)
                 .concat(south_asia_lang).concat(southeast_asia_lang).concat(western_asia_lang);
@@ -1918,9 +1901,6 @@ step.util = {
             if (geo === "all") {
                 $('.langSpan').show();
                 $('.langBtn').show();
-                // $('.langSpan').css('background', 'white').css('color', 'black');
-                // $('.langBtn').css('background', 'white').css('color', 'black');
-                // $('.langPlusMinus').css('background', 'white').css('color', 'black');
                 $('.langUL').hide();                
 
             }
@@ -1938,8 +1918,6 @@ step.util = {
                 for (var i = 0; i < arrayToProcess.length; i++) {
                     $('.btn_' + arrayToProcess[i]).show();
 					$('.span_' + arrayToProcess[i]).show();
-                    // $('.btn_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
-					// $('.plusminus_' + arrayToProcess[i]).css('background', 'white').css('color', 'black');
                     $('.plusminus_' + arrayToProcess[i]).text('+');
 
                 }

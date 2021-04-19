@@ -45,8 +45,7 @@ var StepRouter = Backbone.Router.extend({
         }
         this.navigateSearch(extra);
     },
-    navigateSearch: function (args, skipQFilter) { // historyOptions) { -- PT: I don't think history Options is used.
-		var historyOptions;
+    navigateSearch: function (args, skipQFilter) {
         var activePassageId = step.util.activePassageId();
         var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
@@ -63,7 +62,7 @@ var StepRouter = Backbone.Router.extend({
         }
         var urlStub = "";
 
-        if (step.util.isBlank(args)) { // && (!historyOptions || !historyOptions.replace)) { -- PT: I don't think history Options is used.
+        if (step.util.isBlank(args)) {
             var modelArgs = activePassageModel.get("args") || "";
             urlStub = this._addArg(urlStub, "q", modelArgs);
         } else {
@@ -97,9 +96,6 @@ var StepRouter = Backbone.Router.extend({
             urlStub = this._addArg(urlStub, "debug");
         }
 
-        if (!historyOptions) {
-            historyOptions = { trigger: true};
-        }
         //we will get a null-arg as part of the replacing of the URL with the correct URL
         //call back from after the routing call to rest backend call. So need
         //to avoid writing over 'args'
@@ -113,6 +109,7 @@ var StepRouter = Backbone.Router.extend({
         if(currentFragment === targetFragment) {
             activePassageModel.trigger("afterRender");
         } else {
+        	var historyOptions = { trigger: true};
             this.navigate(urlStub, historyOptions);
         }
     },
@@ -231,27 +228,6 @@ var StepRouter = Backbone.Router.extend({
         }
     },
 
-    // addLineBreakToPassageOptions: function (passageOptions, versionSeparator, referenceSeparator) {
-		// return; // skip this to debug the shift of the dev
-		// var width = $(passageOptions).find('.argSummary').width() - 30;  // take account of spaces between buttons
-        // if ((width > 30) || (versionSeparator) || (referenceSeparator)) {
-            // var remainingWidth = width;
-            // remainingWidth -= $(passageOptions).find('.select-version').width();
-            // var referenceWidth = $(passageOptions).find('.select-reference').width();
-            // remainingWidth -= referenceWidth;
-            // if ((remainingWidth < 0) || (versionSeparator)) {
-               // $(passageOptions).find('.separator-version').html('<br>');
-                // remainingWidth = width - referenceWidth;
-            // }
-            // remainingWidth -= 20; // take account of spaces between buttons
-            // var searchWidth = $(passageOptions).find('.select-search').width();
-            // remainingWidth -= searchWidth;
-            // if ((searchWidth > 35) && ($('.resultsLabel').text() === "")) 
-                // remainingWidth -= 50;
-            // if ((remainingWidth < 0) || (referenceSeparator))
-               // $(passageOptions).find('.separator-reference').html('<br>');
-        // }
-    // },
     _renderSummary: function (passageModel) {
         var searchTokens = passageModel.get("searchTokens");
 

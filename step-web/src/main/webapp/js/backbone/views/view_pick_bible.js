@@ -307,9 +307,7 @@ var PickBibleView = Backbone.View.extend({
         else {
             $('.selectGeo').hide();
             $('.langSpan').show();
-            // $('.langSpan').css('background', 'white').css('color', 'black');
             $('.langBtn').show();
-//            $('.langBtn').css('background', '#336600').css('color', 'white');
             $('.langBtn').addClass('stepPressedButton');
             $('.langPlusMinus').text('-');
             $('.langUL').show();
@@ -357,17 +355,11 @@ var PickBibleView = Backbone.View.extend({
             if ($(ulClassName).is(":visible")) {
                 $(ulClassName).hide();
                 $(btnClassName).removeClass('stepPressedButton');
-                // $(plusminusClassName).removeClass('stepPressedButton');
-                // $(btnClassName).css('background', 'white').css('color', 'black');
-                // $(plusminusClassName).css('background', 'white').css('color', 'black');
                 $(plusminusClassName).text('+');
             }
             else {
                 $(ulClassName).show();
                 $(btnClassName).addClass('stepPressedButton');
-                // $(plusminusClassName).addClass('stepPressedButton');
-                // $(btnClassName).css('background', '#336600').css('color', 'white');
-				// $(plusminusClassName).css('background', '#336600').css('color', 'white');
                 $(plusminusClassName).text('-');
             }
         }

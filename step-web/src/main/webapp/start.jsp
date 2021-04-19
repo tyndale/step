@@ -135,9 +135,6 @@
                                     </g>
                                 </svg>
                             </a>
-                            <!-- <span class="subtitle">  -->
-                            <!--     <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>  -->
-                            <!-- </span>  -->
                         </span>
                     <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">

@@ -238,7 +238,6 @@ var ExamplesView = Backbone.View.extend({
         this.render();
     },
     render: function () {
-        //this.$el.load("/jsps/examples.jsp", null, _.bind(this.initAccordions, this));
 		if ($('#welcomeExamples').length == 0) {
 			this.$el.append(this.exampleTemplate);
 			this.initAccordions();

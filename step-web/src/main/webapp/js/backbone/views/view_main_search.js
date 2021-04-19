@@ -260,20 +260,19 @@ var MainSearchView = Backbone.View.extend({
 		
 		if (step.state.language().startsWith("zh"))
 			container.data("select2").opts.minimumInputLength = 1; // Chinese Bible short names and search words can be 1 character 1 long
-			container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
-			container.find("ul.select2-choices")
+        container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
+        container.find("ul.select2-choices")
             .sortable({})
             .on('dragstart.h5s', function () {
                 self.masterSearch.select2("onSortStart");
             }).bind('sortupdate', function () {
-            //Triggered when the user stopped sorting and the DOM position has changed.
-            self.masterSearch.select2("onSortEnd");
-            self._reEvaluateMasterVersion();
-        });
+                //Triggered when the user stopped sorting and the DOM position has changed.
+                self.masterSearch.select2("onSortEnd");
+                self._reEvaluateMasterVersion();
+            });
         this.masterSearch.on('change', function () {
             self.masterSearch.html(self.masterSearch.val());
         });
-
     },
     _setData: function (values) {
         this.masterSearch.select2("data", values, true);

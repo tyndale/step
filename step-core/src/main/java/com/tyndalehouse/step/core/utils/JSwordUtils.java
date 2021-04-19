@@ -142,12 +142,8 @@ public final class JSwordUtils {
             public int compare(final BibleVersion o1, final BibleVersion o2) {
                 String lang1 = org.apache.commons.lang3.StringUtils.stripAccents(o1.getLanguageName().toLowerCase());
                 String lang2 = org.apache.commons.lang3.StringUtils.stripAccents(o2.getLanguageName().toLowerCase());
-                if (lang1.startsWith("'")) {
-                    lang1 = lang1.substring(1);
-                }
-                if (lang2.startsWith("'")) {
-                    lang2 = lang2.substring(1);
-                }
+                if (lang1.startsWith("'")) lang1 = lang1.substring(1);
+                if (lang2.startsWith("'")) lang2 = lang2.substring(1);
                 int result = lang1.compareTo(lang2);
                 if (result == 0) return o1.getShortInitials().compareTo(o2.getShortInitials());
                 else if (lang1.compareTo("English") == 0) return -1; // This will put English at the beginning of the list.

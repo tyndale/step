@@ -11,18 +11,6 @@
             </select>
         </span>
     </span>
-	<!-- <span class="pull-right">&nbsp;&nbsp;&nbsp;</span> -->
-	<!-- <span id="modalonoffswitch" class="pull-right"> -->
-		<!-- <span id="append_msg">&nbsp;<b>Add to existing search</b></span> -->
-		<!-- <div class="onoffswitch2 append"> -->
-			<!-- <input type="checkbox" name="onoffswitch2" class="onoffswitch2-checkbox" id="addsearchonoffswitch" onchange="addSearch()"/> -->
-			<!-- <label class="onoffswitch2-label" for="addsearchonoffswitch"> -->
-			<!-- <span class="onoffswitch2-inner"></span> -->
-			<!-- <span class="onoffswitch2-switch"></span> -->
-			<!-- </label> -->
-		<!-- </div> -->
-	<!-- </span> -->
-	<!-- </span> -->
 </div>
 <div id="searchmodalbody" class="modal-body">
   <div id="searchHdrTable"></div>
@@ -372,11 +360,8 @@
 		var html = _buildRangeHeaderAndSkeleton();
 		$('#previousSearch').hide();
 		$('#searchHdrTable').empty().append(html);
-//		if (searchRangeOnly) $('#srchModalBackButton').hide();
-//		else {
-			$('#srchModalBackButton').show();
-			$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
-//		}
+		$('#srchModalBackButton').show();
+		$('#srchModalBackButton').prop('title', 'Return to search without updating search range.');
 		_buildBookTable();
         if (searchRange !== 'Gen-Rev') {
             var tmpSearchRange = searchRange + ',';
@@ -669,16 +654,6 @@
 
 	function _getBookDisplayName(arrayIndex) {
         return [bookOrder[arrayIndex][4], bookOrder[arrayIndex][3]];
-//		var arrayOfTyplicalBooks = JSON.parse(__s.list_of_bibles_books);
-//		if (typeof arrayOfTyplicalBooks[arrayIndex] === "undefined") return [arrayIndex, arrayIndex];
-//		var longName = arrayOfTyplicalBooks[arrayIndex][0];
-//		if (longName.length <= 5) return [longName, longName];
-//		if (typeof arrayOfTyplicalBooks[arrayIndex][1] !== "undefined")
-//			return [longName, arrayOfTyplicalBooks[arrayIndex][1]];
-//		if ((typeof osisChapterJsword[arrayIndex][2] !== "undefined") &&
-//			(osisChapterJsword[arrayIndex][2].length > osisChapterJsword[arrayIndex][0].length))
-//			return [longName, osisChapterJsword[arrayIndex][2]];
-//		return [longName, osisChapterJsword[arrayIndex][0]];
 	}
 
 	function _fillBooksTable(groupsOfBooks, columns, htmlID) {

@@ -340,20 +340,6 @@ var SearchDisplayView = DisplayView.extend({
         if (contentGenerator != undefined) {
             contentCell.append(contentGenerator(contentCell, item));
         } else {
-            // var pos1 = item.preview.indexOf("<span class='verseNumber'></span>");
-            // if (pos1 > -1) {
-                // var pos2 = item.preview.indexOf("<a name='");
-                // if ((pos2 > -1) && (pos2 < pos1)) {
-                    // pos2 += 9;
-                    // var pos3 = item.preview.indexOf("'", pos2);
-                    // if (pos3 > -1) {
-                        // pos1 += 26;
-                        // item.preview =  item.preview.substring(0, pos1) + 
-                                        // item.preview.substr(pos2, pos3 - pos2).replace(/\./, ' ') +
-                                        // item.preview.substr(pos1);
-                    // }
-                // }
-            // }
             contentCell.append(item.preview);
         }
 

@@ -120,7 +120,7 @@
                 <%
                     if (!appManager.isLocal()) {
                 %>
-                <!-- <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li> -->
+                <li><a href="javascript:void(0)" id="provideFeedback"  data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback"/></a></li>
                 <!-- # Privacy policy -->
                 <li><a href="/cookies_policy.html" target="_blank"><fmt:message key="help_privacy_policy"/></a></li>
                 <% } %>
