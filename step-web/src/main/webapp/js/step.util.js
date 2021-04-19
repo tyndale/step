@@ -1496,19 +1496,19 @@ step.util = {
 					intro: 'We updated our user interface and would like to introduce the key features.<br><br>We will only show this message on your first three visits.'
 				},
 				{
-					element: document.querySelector('.passageContainer.active').querySelector('.select-version'),
+					element: document.querySelector('.passageContainer.active').querySelector('.select-version.stepButtonTriangle'),
 					intro: 'Click to select Bible translations (e.g. NIV, NASB, ...)',
 					position: 'bottom'
 				},
 				{
-					element: document.querySelector('.passageContainer.active').querySelector('.select-reference'),
+					element: document.querySelector('.passageContainer.active').querySelector('.select-reference.stepButtonTriangle'),
 					intro: 'Click to select Bible passsage (e.g. John 1)',
 					position: 'bottom'
 				}
 			];
 			if (window.innerWidth > 499) introJsSteps.push(
 				{
-					element: document.querySelector('.passageContainer.active').querySelector('.select-search'),
+					element: document.querySelector('.passageContainer.active').querySelector('.select-search.stepButtonTriangle'),
 					intro: 'Click to search on words, subject, word meaning, Greek or Hebrew words ...',
 					position: 'bottom'
 				});
