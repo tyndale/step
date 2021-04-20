@@ -146,8 +146,8 @@ public final class JSwordUtils {
                 if (lang2.startsWith("'")) lang2 = lang2.substring(1);
                 int result = lang1.compareTo(lang2);
                 if (result == 0) return o1.getShortInitials().compareTo(o2.getShortInitials());
-                else if (lang1.compareTo("English") == 0) return -1; // This will put English at the beginning of the list.
-                else if (lang2.compareTo("English") == 0) return 1; // This will put English at the beginning of the list.
+                else if (lang1.equals("english")) return -1; // This will put English at the beginning of the list.
+                else if (lang2.equals("english")) return 1; // This will put English at the beginning of the list.
                 return result;
             }
         });
