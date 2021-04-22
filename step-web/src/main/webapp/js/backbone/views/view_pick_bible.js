@@ -1,10 +1,10 @@
 var PickBibleView = Backbone.View.extend({
     versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
-        '<span class="langSpan span_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">' +
-        '<button class="langBtn btn_<%= key.replaceAll(/[()\\s,\']/g, "_") %> stepButton">' +
-        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replaceAll(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
-        '<ul class="list-group langUL ul_<%= key.replaceAll(/[()\\s,\']/g, "_") %>" style="display:none">' +
+        '<span class="langSpan span_<%= key.replace(/[()\\s,\']/g, "_") %>">' +
+        '<button class="langBtn btn_<%= key.replace(/[()\\s,\']/g, "_") %> stepButton">' +
+        '<%= key %>&nbsp;<span class="langPlusMinus plusminus_<%= key.replace(/[()\\s,\']/g, "_") %>">+</span></button><br></span>' +
+        '<ul class="list-group langUL ul_<%= key.replace(/[()\\s,\']/g, "_") %>" style="display:none">' +
         '<% _.each(languageBibles, function(languageBible) { %>' +
         '<li class="list-group-item" data-initials="<%= languageBible.shortInitials %>">' +
         '<a class="glyphicon glyphicon-info-sign" title="<%= __s.passage_info_about_version %>" target="_blank" href="http://<%= step.state.getDomain() %>/version.jsp?version=<%= languageBible.shortInitials %>"></a>' +

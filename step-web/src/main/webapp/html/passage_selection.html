@@ -237,7 +237,7 @@
                 currentOsisID = data[i].suggestion.osisID;
                 numOfChapters = 0; // don't know yet, need to find out
                 longNameToDisplay = data[i].suggestion.fullName;
-                shortNameToDisplay = (userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replaceAll(" ", "").substr(0, 6);
+                shortNameToDisplay = (userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
             }
             var newTestament;
             var oldTestment = false;
