@@ -427,17 +427,22 @@
 	}
 
     function _buildRangeHeaderAndSkeleton() {
+		var fontSize = 16;
+		var userAgentString = navigator.userAgent;
+        if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) && (userAgentString.indexOf("Safari/600.1.4") > -1)) {
+			fontSize = 12;
+		}
 		var html = '<div class="header">' +
             '<h4>' + __s.click_to_select_search_range + ':</h4>' +
             '<span style="color:#336600;float:right">' + __s.search_range_button_color_desc + '</span>' +
             '</div>' +
 			'<span id="updateFeedback"></span>' +
             '<div id="search_range_table">' +
-			'<button id="ot_hdr" type="button" class="stepButton" style="display:block;width:97%;font-size:18px" ' +
+			'<button id="ot_hdr" type="button" class="stepButton" style="display:block;width:97%;font-size:' + fontSize + 'px" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.old_testament + ' ' + __s.bible_book + '" ' +
 			'class="stepPressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.old_testament + ':</i></button>' +
             '<div id="ot_table"/>' +
-			'<button id="nt_hdr" type="button" class="stepButton" style="display:block;width:97%;font-size:18px" ' +
+			'<button id="nt_hdr" type="button" class="stepButton" style="display:block;width:97%;font-size:' + fontSize + 'px" ' +
             'title="'  + __s.click_to_select + ' ' + __s.all + ' '  + __s.new_testament + ' ' + __s.bible_book + '" ' +
 			'class="stepPressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
             '<div id="nt_table"/>' +
@@ -639,9 +644,14 @@
             columns = 6;
             if (browserWidth < 800) columns = 4;
         }
-		_fillBooksTable(groupsOT, columns, 'ot_table');
-		_fillBooksTable(groupsNT, columns, 'nt_table');
-		_fillBooksTable(groupsOther, columns, 'ob_table');
+		var smallerSize = false;
+		var userAgentString = navigator.userAgent;
+        if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) && (userAgentString.indexOf("Safari/600.1.4") > -1)) {
+			smallerSize = true;
+		}
+		_fillBooksTable(groupsOT, columns, 'ot_table', smallerSize);
+		_fillBooksTable(groupsNT, columns, 'nt_table', smallerSize);
+		_fillBooksTable(groupsOther, columns, 'ob_table', smallerSize);
     }
 
 	function _isBookInGroup(groupOfBooks, searchForBookName) {
@@ -656,15 +666,21 @@
         return [bookOrder[arrayIndex][4], bookOrder[arrayIndex][3]];
 	}
 
-	function _fillBooksTable(groupsOfBooks, columns, htmlID) {
+	function _fillBooksTable(groupsOfBooks, columns, htmlID, smallerSize) {
 		var tableHTML = "";
+		var trHeight = 29;
+		var fontSize = 12;
+		if (smallerSize) {
+			trHeight = 22;
+			fontSize = 9;
+		}
 		for (j = 0; j < groupsOfBooks.length; j ++) {
 			var rowsForThisGroup = Math.ceil(groupsOfBooks[j].bookOrderPos.length / (columns - 1));
-			var rowHeight = 29 * rowsForThisGroup;
+			var rowHeight = trHeight * rowsForThisGroup;
 			if (groupsOfBooks[j].show) {
-				tableHTML += '<tr style="height:30px"><td rowspan="' + rowsForThisGroup + '">' +
+				tableHTML += '<tr style="height:' + (trHeight + 1) + 'px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="stepButton stepPressedButton" style="font-size:12px;width:95%;height:' +  rowHeight + 'px" ' +
+					'type="button" class="stepButton stepPressedButton" style="font-size:' + fontSize + 'px;width:95%;height:' +  rowHeight + 'px" ' +
                     'title="'  + __s.click_to_select + ' ' + __s.all + ' ' + groupsOfBooks[j].groupName  + ' ' + __s.bible_book + '" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
@@ -673,14 +689,15 @@
 				for (k = 0; k < groupsOfBooks[j].bookOrderPos.length; k++) {
 					if (groupsOfBooks[j].bookOrderPos[k] > -1) {
 						if (currentColumn === 1) {
-                            tableHTML += '<tr style="height:30px">';
+                            tableHTML += '<tr style="height:' + (trHeight + 1) + 'px">';
                             currentColumn = 2; // first column used by group name
                         }
 						var displayName = _getBookDisplayName(groupsOfBooks[j].bookOrderPos[k]);
 						tableHTML += '<td>' +
 							'<button id="' + htmlID + 'g' + j + 'b' + k + '" ' +
 							'title="'  + __s.click_to_select + ' ' + displayName[0] + '" ' +
-							'type="button" class="stepButton stepPressedButton" style="font-size:12px;width:95%;height:95%" ' + 'onclick=_userClickedBook(this.id)>' + 
+							// height used to be 95%
+							'type="button" class="stepButton stepPressedButton" style="font-size:' + fontSize + 'px;width:95%;height:' + (trHeight - 2) + 'px" ' + 'onclick=_userClickedBook(this.id)>' + 
 							displayName[1] +
 							'</button>' +
 							'</td>';

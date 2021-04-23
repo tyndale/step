@@ -2,7 +2,7 @@
 	<button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=closeModal("videoModal")>X</button>
 </div>
 <div id="videomodalbody" class="modal-body" style="text-align:center;background-color:grey">
-<p id="pleasewait">Loading video, please wait...
+<p id="pleasewait">Loading video, please wait...</p>
 </div>
 <script>
     $(document).ready(function () {
@@ -11,14 +11,11 @@
         var gifElement = document.createElement("img");
         var randomString = '?' + performance.now();  // GIF file in some browser gets stuck in the last frame after it has played once.
         gifElement.src = "/images/" + file + randomString;
-        gifElement.onload = function() {
-            $('#pleasewait').remove();
-            $('#videomodalbody').append(this);
-            console.log('timeout ' + time);
-            setTimeout(()=> {
-                closeModal('videoModal')
-            }, time);
-        }
+		gifElement.onload = function() {
+			$('#pleasewait').remove();
+			$('#videomodalbody').append(gifElement);
+			setTimeout(function(){ closeModal('videoModal') }, time);
+		}
     });
 
     function closeModal(modalID) {

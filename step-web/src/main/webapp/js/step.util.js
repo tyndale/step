@@ -1424,7 +1424,7 @@ step.util = {
         if (element) element.parentNode.removeChild(element);
         var searchSelectDiv = $('<div id="searchSelectionModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
-            '<div class="modal-content">');
+            '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;overflow-y:scroll;overflow:scroll;-webkit-overflow-scrolling:touch">');
         searchSelectDiv.appendTo("body");
         $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },

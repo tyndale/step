@@ -7,12 +7,13 @@
     }
 </style>  
 <div class="modal-header">
-  <button type="button" class="closeModal pull-right" data-dismiss="modal">X</button>
+  <button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=saveVersionOrder()>X</button>
 </div>
 <div class="modal-body">
 <div id="sortVersionModal"></div>
 <div class="footer">
-<button id="updateVersionOrderButton" class="btn btn-default btn-xs closeModal" onclick=saveVersionOrder()><label>Update order</label></button>
+<button id="updateVersionOrderButton" class="btn btn-default btn-xs closeModal stepButton pull-right" onclick=saveVersionOrder()><label>Update order</label></button>
+<br>
 </div>
 </div>
 </div>
@@ -42,7 +43,7 @@
 	  for (var j = 0; j < nestedSortables.length; j++) {
 		new Sortable(nestedSortables[j], {
 		  animation: 150,
-		  onEnd: function(/**Event*/evt) {
+		  onEnd: function(evt) {
 			afterSort = [];
 			for (var j = 0; j < $('#nestedVersion')[0].children.length; j ++) {
 			  afterSort.push($('#nestedVersion')[0].children[j].innerText.replace(/(\r\n|\n|\r)/gm,"")); // Dec 2020.  Safari browser on iPhone has an extra 0A character at the end of the string.
@@ -54,7 +55,8 @@
       $('#updateVersionOrderButton').hide();
 	});
 	function saveVersionOrder() {
-	    if ((afterSort !== undefined) && (JSON.stringify(beforeSort) !== JSON.stringify(afterSort))) {
+		if (typeof afterSort === "undefined") afterSort = beforeSort;
+//	    if ((afterSort !== undefined) && (JSON.stringify(beforeSort) !== JSON.stringify(afterSort))) {
 			var allVersions = "version=";
 			for (var i = 0; i < afterSort.length; i++) {
 				if (i > 0) allVersions += '|version=';
@@ -77,7 +79,7 @@
 			closeVersionOrder();
 			console.log("navigateSearch from order_version.html: " + url)
 			step.router.navigateSearch(url, true);
-		}
+//		}
 	}
 	function closeVersionOrder() {
 		$('#orderVersionModal').modal('hide');
