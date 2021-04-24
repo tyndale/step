@@ -203,14 +203,15 @@
         $('#new_panel').text(__s.new_panel);
 		$('#updateButton').text(__s.update_search);
         var ua = navigator.userAgent.toLowerCase();
-        if (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
-            (ua.indexOf("safari/60") > -1)) {
+        if ( (ua.indexOf("android") > -1) ||
+             (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
+                (ua.indexOf("safari/60") > -1)) ) {
             $("#searchmodalbody").addClass("scrollPart");
 //          alert(ua);
 		}
-        if (ua.indexOf("android") > -1) {
+        if  {
             $("#searchmodalbody").addClass("scrollPart");
-            alert(ua);
+//          alert(ua);
         }
 		if ((userLang.indexOf('en') != 0) && (groupsOT[0].groupName === "Books of Moses") && (groupsOT[0].groupName !== "Pentateuch"))
 			groupsOT[0].groupName = __s.the_pentateuch;
