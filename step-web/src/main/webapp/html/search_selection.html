@@ -202,6 +202,16 @@
 		$('#current_panel').text(__s.current_panel);
         $('#new_panel').text(__s.new_panel);
 		$('#updateButton').text(__s.update_search);
+        var ua = navigator.userAgent.toLowerCase();
+        if (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
+            (ua.indexOf("safari/60") > -1)) {
+            $("#searchmodalbody").addClass("scrollPart");
+//          alert(ua);
+		}
+        if (ua.indexOf("android") > -1) {
+            $("#searchmodalbody").addClass("scrollPart");
+            alert(ua);
+        }
 		if ((userLang.indexOf('en') != 0) && (groupsOT[0].groupName === "Books of Moses") && (groupsOT[0].groupName !== "Pentateuch"))
 			groupsOT[0].groupName = __s.the_pentateuch;
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
@@ -624,16 +634,6 @@
         if (browserWidth < 1100) {
             columns = 6;
             if (browserWidth < 800) columns = 4;
-        }
-		var ua = navigator.userAgent.toLowerCase();
-        if (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
-            (ua.indexOf("safari/60") > -1)) {
-            $("#searchmodalbody").addClass("scrollPart");
-//          alert(ua);
-		}
-        if (ua.indexOf("android") > -1) {
-            $("#searchmodalbody").addClass("scrollPart");
-            alert(ua);
         }
 		_fillBooksTable(groupsOT, columns, 'ot_table');
 		_fillBooksTable(groupsNT, columns, 'nt_table');
