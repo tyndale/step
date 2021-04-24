@@ -90,7 +90,28 @@
 	.closeMark:hover {
 	  background: red;
 	}
-  
+}
+
+@media screen and (min-height: 400px) {
+	.scrollPart {
+		max-height: 200px;
+		width:100%;
+		overflow-y:scroll;
+	}
+}
+@media screen and (min-height: 600px) {
+  .scrollPart {
+	max-height: 400px;
+	width:100%;
+	overflow-y:scroll;
+  }
+}
+@media screen and (min-height: 900px) {
+  .scrollPart {
+	max-height: 700px;
+	width:100%;
+	overflow-y:scroll;
+  }
 }
 
 #modalonoffswitch {

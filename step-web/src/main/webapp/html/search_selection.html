@@ -18,19 +18,21 @@
   <div id="previousSearch"></div>
 </div>
 <div class="footer">
-	<span id="searchSelectError" style="color: red;"></span>
-    <span id="updateButton" style="display:none">
-    <button type="button" class="stepButton" style="font-size:15px;float:right" 
-    onclick=goSearch()><b>Update search</b></button><br>
-    </span>
+	<span id="searchSelectError"></span>
+    <!-- <span id="updateRangeButton" style="display:none"> -->
+	<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"
+	onclick=_updateRange()></button>
+	<!-- </span> -->
+    <!-- <span id="updateButton" style="display:none"> -->
+    <button id="updateButton" style="display:none;float:right" type="button" class="stepButton"
+    onclick=goSearch()></button><br>
+    <!-- </span> -->
 </div>
 <script>
     var version = "ESV_th";
     var userLang = "en";
-//    var addInsteadOfReplace = false;
 	var searchOnSpecificType = "";
 	var searchTypeCode = [TEXT_SEARCH, SUBJECT_SEARCH, MEANINGS, GREEK_MEANINGS, GREEK, HEBREW_MEANINGS, HEBREW];
-//	var searchRangeOnly;
 	var searchModalCurrentPage = 1;
 	var searchUserInput = "";
     var searchRange = "Gen-Rev";
@@ -195,12 +197,11 @@
     var idx2BookOrder = {};
 
     $(document).ready(function () {
-//		searchRangeOnly = ($("#searchRangeOnly").length === 1); // If HTML ID exists, this modal is called to only show the range modal.
         userLang = step.state.language() || "en-US";
         $('#display_result_in').text(__s.display_result_in);
-//        $('#append_msg').text(__s.append_msg);
 		$('#current_panel').text(__s.current_panel);
         $('#new_panel').text(__s.new_panel);
+		$('#updateButton').text(__s.update_search);
 		if ((userLang.indexOf('en') != 0) && (groupsOT[0].groupName === "Books of Moses") && (groupsOT[0].groupName !== "Pentateuch"))
 			groupsOT[0].groupName = __s.the_pentateuch;
 		if ($('.passageContainer.active').width() < 500) $('#displayLocForm').hide();
@@ -248,7 +249,6 @@
                         '</div>' +
                     '</div><br><br>' +
                     '<ul id="listofprevioussearchs" style="display:none">';
-                //var previousSearchHTML =  "<p style='font-size:18px;clear:both'><b>Include the search for:</b> (or click 'X' to remove it)</p><ul>";
                 for (var j = 0; j < listOfPreviousSearch.length; j++) {
                     previousSearchHTML += "<li id='lOPS_" + j + "'>" + listOfPreviousSearch[j] + 
                     "<span class='closeMark' onclick=removePreviousSearch(" + j + ")>X</span></li>";
@@ -259,23 +259,20 @@
             if (existingReferences !== "") searchRange = existingReferences;
         }
 		else $('#modalonoffswitch').hide();
-//        if (searchRangeOnly) _buildRangeHeaderAndTable()
-//        else {
-            $('#searchHdrTable').append(_buildSearchHeaderAndTable());
-            $('#srchModalBackButton').hide();
-            $(function(){
-                $('textarea#userTextInput').keyup(function(e){
-                    handleKeyboardInput(e);
-                });
-            });
-            $('textarea#userTextInput').focus();
-//        }
+		$('#searchHdrTable').append(_buildSearchHeaderAndTable());
+		$('#srchModalBackButton').hide();
+		$(function(){
+			$('textarea#userTextInput').keyup(function(e){
+				handleKeyboardInput(e);
+			});
+		});
+		$('textarea#userTextInput').focus();
     });
 
     function handleKeyboardInput(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13) {
-            $('#searchSelectError').text(__s.click_to_select_search);
+			$('#warningMessage').text(__s.click_to_select_search);
             var userInput =  $('textarea#userTextInput').val();
             userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
             $('textarea#userTextInput').val(userInput);
@@ -283,7 +280,7 @@
 
         }
         else {
-            $('#searchSelectError').text("");
+			$('#warningMessage').text("");
             _handleEnteredSearchWord();
         }
     }
@@ -291,6 +288,8 @@
     function goBackToPreviousPage() {
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
+		$("#updateRangeButton").hide();
+		if ((rangeWasUpdated) && (includePreviousSearches)) $('#updateButton').show();
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(_buildSearchHeaderAndTable());
 			$('#previousSearch').show();
@@ -311,17 +310,6 @@
 		}
 		else alert('Unknown state goBackToPreviousPage');
     }
-
-//    function addSearch() {
-//        if (document.getElementById('addsearchonoffswitch').checked) {
-//            addInsteadOfReplace = true;
-//            $('#append_msg').addClass('checked');
-//        }
-//        else {
-//            addInsteadOfReplace = false;
-//            $('#append_msg').removeClass('checked');
-//        }
-//    }
 
     function _buildSearchHeaderAndTable() {
 		var html = '<div class="header">' +
@@ -423,18 +411,21 @@
         }
         if (searchRange === 'Gen-Rev') $('#updateFeedback').text(__s.all_books_not_selected);
 		else $('#updateFeedback').text(__s.search_range_button_color_desc);
-        $('#click_when_finish').hide();
+		$('#searchSelectError').text("");
+		$('#updateRangeButton').hide();
+		$('#updateRangeButton').text(__s.update_search_range);
+		$('#updateButton').hide();
 	}
 
     function _buildRangeHeaderAndSkeleton() {
 		var fontSize = 16;
-		var userAgentString = navigator.userAgent;
-        if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) && (userAgentString.indexOf("Safari/600.1.4") > -1)) {
-			fontSize = 12;
-		}
+		//var userAgentString = navigator.userAgent;
+        //if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) && (userAgentString.indexOf("Safari/600.1.4") > -1)) {
+		//	fontSize = 12;
+		//}
 		var html = '<div class="header">' +
             '<h4>' + __s.click_to_select_search_range + ':</h4>' +
-            '<span style="color:#336600;float:right">' + __s.search_range_button_color_desc + '</span>' +
+            '<span style="float:right">' + __s.search_range_button_color_desc + '</span>' +
             '</div>' +
 			'<span id="updateFeedback"></span>' +
             '<div id="search_range_table">' +
@@ -447,17 +438,12 @@
 			'class="stepPressedButton" onclick=_userClickedTestament(this.id)><i>' + __s.new_testament + ':</i></button>' +
             '<div id="nt_table"/>' +
 			'<h4 id="other_books_hdr"/>' +
-            '<div id="ob_table"/>' +
-   			'<br>' +
-			'<span id="click_when_finish" style="display:none">' + __s.click_update_when_finish + '</span>' +
-			'<button type="button" class="stepButton" style="float:right" ' +
-			'onclick=_updateRange()><b>' + __s.update_search_range + '</b></button><br>';
+            '<div id="ob_table"/>';
 		return html;
     }
     
 	function _updateRange() {
 		$('#searchSelectError').text("");
-        console.log(bookOrder);
 		var curIndx = -1;
 		for (var i = 0; i < 3; i++) {
 			var curGroup;
@@ -501,17 +487,12 @@
         result += _createSingleRange(start, end);
         if (result.length > 0) searchRange = result.replace(/,$/, '');
         else searchRange = "Gen-Rev";
-//        if ((searchRangeOnly) || ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0))) goSearch();
-        // if ((searchUserInput.length == 0) && (numOfPreviousSearchTokens > 0)) goSearch();
-        //else goBackToPreviousPage();
         rangeWasUpdated = true;
-        if (includePreviousSearches) $('#updateButton').show();
         goBackToPreviousPage();
     }
 	
     function _createSingleRange(start, end) {
         var result = '';
-        console.log("start end: " + start + " " + end);
         if (start !== -1) {
             var result = bookOrder[start][0];
             if (start !== end) {
@@ -647,7 +628,8 @@
 		var smallerSize = false;
 		var userAgentString = navigator.userAgent;
         if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) && (userAgentString.indexOf("Safari/600.1.4") > -1)) {
-			smallerSize = true;
+			$("#searchmodalbody").addClass("scrollPart");
+		//	smallerSize = true;
 		}
 		_fillBooksTable(groupsOT, columns, 'ot_table', smallerSize);
 		_fillBooksTable(groupsNT, columns, 'nt_table', smallerSize);
@@ -680,7 +662,7 @@
 			if (groupsOfBooks[j].show) {
 				tableHTML += '<tr style="height:' + (trHeight + 1) + 'px"><td rowspan="' + rowsForThisGroup + '">' +
 					'<button id="' + htmlID + 'g' + j + '"' +
-					'type="button" class="stepButton stepPressedButton" style="font-size:' + fontSize + 'px;width:95%;height:' +  rowHeight + 'px" ' +
+					'type="button" class="stepButton stepPressedButton" style="font-size:' + fontSize + 'px;width:100%;min-height:' +  rowHeight + 'px" ' +
                     'title="'  + __s.click_to_select + ' ' + __s.all + ' ' + groupsOfBooks[j].groupName  + ' ' + __s.bible_book + '" ' +
 					'onclick=_userClickedCategory(this.id)>' +
 					'<i>' + groupsOfBooks[j].groupName + ':</i></button>' +
@@ -719,7 +701,8 @@
 
 	function _userClickedTestament(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
-        $('#click_when_finish').show();
+		$('#searchSelectError').text(__s.click_update_when_finish);
+		$('#updateRangeButton').show();
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			$("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
@@ -739,7 +722,8 @@
 	function _userClickedCategory(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
 		var categoryName = $(clicked_id2).text();
-        $('#click_when_finish').show();
+		$('#searchSelectError').text(__s.click_update_when_finish);
+		$('#updateRangeButton').show();
 		categoryName = categoryName.replace(/:$/, "");
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
@@ -761,7 +745,8 @@
 	
 	function _userClickedBook(clicked_id) {
 		var clicked_id2 = '#' + clicked_id;
-        $('#click_when_finish').show();
+        $('#searchSelectError').text(__s.click_update_when_finish);
+		$('#updateRangeButton').show();
 		if ($(clicked_id2).hasClass('stepPressedButton')) {
 			$(clicked_id2).removeClass('stepPressedButton');
 			var regex = /b\d{1,2}$/;
@@ -795,7 +780,8 @@
 	function _checkHeaderButton(clicked_id) {
 		var idPrefix = clicked_id.substring(0, 2);
 		var numOfGroups = 0;
-        $('#click_when_finish').show();
+		//$('#searchSelectError').text(__s.click_update_when_finish);
+		//$('#updateRangeButton').show();
 		if (idPrefix == 'ot') numOfGroups = groupsOT.length;
 		else if (idPrefix == 'nt') numOfGroups = groupsNT.length;
 		idPrefix = '#' + idPrefix + '_tableg';
@@ -971,7 +957,6 @@
                 if (previousSearchTokens[i] !== "") previousSearch += '|' + previousSearchTokens[i];
             }
         }
-//		if ((!searchRangeOnly) && (!addInsteadOfReplace)) previousSearch = '';
         var url = allVersions + range + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
 		closeModal('searchSelectionModal');

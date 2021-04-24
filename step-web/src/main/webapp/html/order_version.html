@@ -7,7 +7,7 @@
     }
 </style>  
 <div class="modal-header">
-  <button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=saveVersionOrder()>X</button>
+  <button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=userCloseVersionOrder()>X</button>
 </div>
 <div class="modal-body">
 <div id="sortVersionModal"></div>
@@ -55,31 +55,35 @@
       $('#updateVersionOrderButton').hide();
 	});
 	function saveVersionOrder() {
-		if (typeof afterSort === "undefined") afterSort = beforeSort;
 //	    if ((afterSort !== undefined) && (JSON.stringify(beforeSort) !== JSON.stringify(afterSort))) {
-			var allVersions = "version=";
-			for (var i = 0; i < afterSort.length; i++) {
-				if (i > 0) allVersions += '|version=';
-				var curVersion = afterSort[i];
-				var pos = curVersion.indexOf(' - ');
-				if (pos > 1) curVersion = curVersion.substr(0, pos);
-				allVersions += curVersion;
+		if (typeof afterSort === "undefined") afterSort = beforeSort;
+		var allVersions = "version=";
+		for (var i = 0; i < afterSort.length; i++) {
+			if (i > 0) allVersions += '|version=';
+			var curVersion = afterSort[i];
+			var pos = curVersion.indexOf(' - ');
+			if (pos > 1) curVersion = curVersion.substr(0, pos);
+			allVersions += curVersion;
+		}
+		var activePassageData = step.util.activePassage().get("searchTokens") || [];
+		var allReferences = '|reference=';
+		numOfReferences = 0;
+		for (var i = 0; i < activePassageData.length; i++) {
+			if (activePassageData[i].itemType == 'reference') {
+				if (numOfReferences > 0) allReferences += '|reference=';
+				allReferences += activePassageData[i].item.osisID;
+				numOfReferences ++;
 			}
-			var activePassageData = step.util.activePassage().get("searchTokens") || [];
-			var allReferences = '|reference=';
-			numOfReferences = 0;
-			for (var i = 0; i < activePassageData.length; i++) {
-				if (activePassageData[i].itemType == 'reference') {
-					if (numOfReferences > 0) allReferences += '|reference=';
-					allReferences += activePassageData[i].item.osisID;
-					numOfReferences ++;
-				}
-			}
-			var url = allVersions + allReferences;
-			closeVersionOrder();
-			console.log("navigateSearch from order_version.html: " + url)
-			step.router.navigateSearch(url, true);
+		}
+		var url = allVersions + allReferences;
+		closeVersionOrder();
+		console.log("navigateSearch from order_version.html: " + url)
+		step.router.navigateSearch(url, true);
 //		}
+	}
+	function userCloseVersionOrder() {
+		afterSort = beforeSort;
+		saveVersionOrder();
 	}
 	function closeVersionOrder() {
 		$('#orderVersionModal').modal('hide');
