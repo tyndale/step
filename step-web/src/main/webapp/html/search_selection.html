@@ -625,17 +625,19 @@
             columns = 6;
             if (browserWidth < 800) columns = 4;
         }
-		var smallerSize = false;
-		var userAgentString = navigator.userAgent;
-        if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) &&
-            (userAgentString.indexOf("Safari/60") > -1)) {
+		var ua = navigator.userAgent.toLowerCase();
+        if (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
+            (ua.indexOf("safari/60") > -1)) {
             $("#searchmodalbody").addClass("scrollPart");
 //          alert(userAgentString);
-		//	smallerSize = true;
 		}
-		_fillBooksTable(groupsOT, columns, 'ot_table', smallerSize);
-		_fillBooksTable(groupsNT, columns, 'nt_table', smallerSize);
-		_fillBooksTable(groupsOther, columns, 'ob_table', smallerSize);
+        if (ua.indexOf("android") > -1) {
+            $("#searchmodalbody").addClass("scrollPart");
+            alert(userAgentString);
+        }
+		_fillBooksTable(groupsOT, columns, 'ot_table');
+		_fillBooksTable(groupsNT, columns, 'nt_table');
+		_fillBooksTable(groupsOther, columns, 'ob_table');
     }
 
 	function _isBookInGroup(groupOfBooks, searchForBookName) {
@@ -650,14 +652,10 @@
         return [bookOrder[arrayIndex][4], bookOrder[arrayIndex][3]];
 	}
 
-	function _fillBooksTable(groupsOfBooks, columns, htmlID, smallerSize) {
+	function _fillBooksTable(groupsOfBooks, columns, htmlID) {
 		var tableHTML = "";
 		var trHeight = 29;
 		var fontSize = 12;
-		if (smallerSize) {
-			trHeight = 22;
-			fontSize = 9;
-		}
 		for (j = 0; j < groupsOfBooks.length; j ++) {
 			var rowsForThisGroup = Math.ceil(groupsOfBooks[j].bookOrderPos.length / (columns - 1));
 			var rowHeight = trHeight * rowsForThisGroup;
