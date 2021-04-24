@@ -629,10 +629,8 @@
 		var userAgentString = navigator.userAgent;
         if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) &&
             (userAgentString.indexOf("Safari/60") > -1)) {
-//            if (userAgentString.indexOf("Safari/604") == -1) {
-                alert(userAgentString);
-                $("#searchmodalbody").addClass("scrollPart");
-//            }
+            $("#searchmodalbody").addClass("scrollPart");
+//          alert(userAgentString);
 		//	smallerSize = true;
 		}
 		_fillBooksTable(groupsOT, columns, 'ot_table', smallerSize);
