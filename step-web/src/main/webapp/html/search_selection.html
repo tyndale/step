@@ -629,11 +629,11 @@
         if (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
             (ua.indexOf("safari/60") > -1)) {
             $("#searchmodalbody").addClass("scrollPart");
-//          alert(userAgentString);
+//          alert(ua);
 		}
         if (ua.indexOf("android") > -1) {
             $("#searchmodalbody").addClass("scrollPart");
-            alert(userAgentString);
+            alert(ua);
         }
 		_fillBooksTable(groupsOT, columns, 'ot_table');
 		_fillBooksTable(groupsNT, columns, 'nt_table');
