@@ -94,24 +94,24 @@
 
 @media screen and (min-height: 400px) {
 	.scrollPart {
-		max-height: 200px;
+		max-height: 70%;
 		width:100%;
 		overflow-y:scroll;
 	}
 }
 @media screen and (min-height: 600px) {
-  .scrollPart {
-	max-height: 400px;
-	width:100%;
-	overflow-y:scroll;
-  }
+    .scrollPart {
+        max-height: 80%;
+        width:100%;
+        overflow-y:scroll;
+    }
 }
 @media screen and (min-height: 900px) {
-  .scrollPart {
-	max-height: 700px;
-	width:100%;
-	overflow-y:scroll;
-  }
+    .scrollPart {
+        max-height: 85%;
+        width:100%;
+        overflow-y:scroll;
+    }
 }
 
 #modalonoffswitch {

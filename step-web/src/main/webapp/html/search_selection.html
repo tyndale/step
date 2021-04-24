@@ -18,15 +18,12 @@
   <div id="previousSearch"></div>
 </div>
 <div class="footer">
+    <br>
 	<span id="searchSelectError"></span>
-    <!-- <span id="updateRangeButton" style="display:none"> -->
 	<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"
 	onclick=_updateRange()></button>
-	<!-- </span> -->
-    <!-- <span id="updateButton" style="display:none"> -->
     <button id="updateButton" style="display:none;float:right" type="button" class="stepButton"
     onclick=goSearch()></button><br>
-    <!-- </span> -->
 </div>
 <script>
     var version = "ESV_th";
@@ -207,7 +204,6 @@
              (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
                 (ua.indexOf("safari/60") > -1)) ) {
             $("#searchmodalbody").addClass("scrollPart");
-//          alert(ua);
 		}
 		if ((userLang.indexOf('en') != 0) && (groupsOT[0].groupName === "Books of Moses") && (groupsOT[0].groupName !== "Pentateuch"))
 			groupsOT[0].groupName = __s.the_pentateuch;
