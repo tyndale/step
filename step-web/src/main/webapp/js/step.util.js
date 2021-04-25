@@ -727,7 +727,6 @@ step.util = {
 					searchWords += " (" + allSelectedReferences + ")";
 				}
 			}
-
             if ((foundSearch) || (allSelectedReferences.length === 0)) allSelectedReferences = "Passage:";
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Passage: Gen 1";
 
@@ -764,21 +763,27 @@ step.util = {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<span ' +
-							'title="' + __s.click_translation + '" class="select-' + VERSION + ' argSumSpan">' +
+							// 'title="' + __s.click_translation + '" class="select-' + VERSION + ' argSumSpan">' +
+							'title="' + __s.click_translation + '" class="' + 'argSumSpan">' +
 							allSelectedBibleVersions +
-						'&nbsp;|</span>' );
+						'</span>' );
 
-				container.append(
-					'<span ' +
-						'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' argSumSpan">' +
-						allSelectedReferences +
-					'</span>' );
+				if (allSelectedReferences !== "Passage:") {
+					if (allSelectedReferences === "Passage: Gen 1") allSelectedReferences = "Gen 1";
+					container.append(
+						'<span ' +
+							// 'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' argSumSpan">' +
+							'title="' + __s.click_passage + '" class="' + 'argSumSpan">|&nbsp;' +
+							allSelectedReferences +
+						'</span>' );
+				}
 
 				if (searchWords !== '')
 					container.append(
 						'|' +
 						'<span ' +
-							'title="' + __s.click_search + '" class="select-search argSumSpan">' +
+							// 'title="' + __s.click_search + '" class="select-search argSumSpan">' +
+							'title="' + __s.click_search + '" class="argSumSpan">' +
 							'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
 							'&nbsp;' + searchWords +
 						'</span>' );
