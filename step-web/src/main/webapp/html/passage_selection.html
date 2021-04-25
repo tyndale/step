@@ -430,20 +430,23 @@
 			headerMsg = __s.please_select_verse;
 			modalMode = 'verse';
 		}
+        var tableColumns = 10;
+        var widthPercent = 10;
+        var ua = navigator.userAgent.toLowerCase();
+        if ( (ua.indexOf("android") > -1) ||
+             (((ua.indexOf("ipad") > -1) || (ua.indexOf("iphone") > -1)) &&
+                (ua.indexOf("safari/60") > -1)) ) {
+            tableColumns = 7;
+            widthPercent = 14;
+		}
+
         var html = '<h5>' + headerMsg + '</h5>' +
             '<table>' +
-            '<colgroup>' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-				'<col span="1" style="width: 10%;">' +
-            '</colgroup>' +
+            '<colgroup>';
+        for (var c = 0; c < tableColumns; c++) {
+            html += '<col span="1" style="width:' + widthPercent + '%">';
+        }
+        html += '</colgroup>' +
             '<tr style="height:30px">';
 
         var chptrOrVrsNum = 0;
@@ -457,7 +460,7 @@
                 chptrOrVrsNum++;
                 osisIDLink = (numOfChptrsOrVrs === 1) ? bookOsisID : bookOsisID + '.' + chptrOrVrsNum;
                 html += '<td><a href="javascript:goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');">' + chptrOrVrsNum + '</a></td>'
-                if ((chptrOrVrsNum > 9) && ((chptrOrVrsNum % 10) == 0)) {
+                if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
                     html += '</tr><tr style="height:30px">';
                 }
             }
@@ -468,7 +471,7 @@
                     chptrOrVrsNum++;
                     osisIDLink = data[i].suggestion.osisID;
                     html += '<td><a href="javascript:goToPassage(\'' + osisIDLink + '\', \'' + chptrOrVrsNum + '\');">' + chptrOrVrsNum + '</a></td>'
-                    if ((chptrOrVrsNum > 9) && ((chptrOrVrsNum % 10) == 0)) {
+                    if ((chptrOrVrsNum > (tableColumns - 1)) && ((chptrOrVrsNum % tableColumns) == 0)) {
                         html += '</tr><tr style="height:30px">';
                     }
                 }
