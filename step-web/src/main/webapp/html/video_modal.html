@@ -13,7 +13,7 @@
         if ((typeof performance === "object") && (typeof performance.now() === "number")) {
             randomString = '?' + performance.now();  // GIF file in some browser gets stuck in the last frame after it has played once.
         }
-        else randomString = Math.floor(Math.random() * 10000); 
+        else randomString = '?' + Math.floor(Math.random() * 10000); 
         gifElement.src = "/images/" + file + randomString;
 		gifElement.onload = function() {
 			$('#pleasewait').remove();
