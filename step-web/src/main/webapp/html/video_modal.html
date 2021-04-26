@@ -9,7 +9,11 @@
         var file = $('#videoModal').data('videofile');
         var time = $('#videoModal').data('videotime') * 1000;
         var gifElement = document.createElement("img");
-        var randomString = '?' + performance.now();  // GIF file in some browser gets stuck in the last frame after it has played once.
+        var randomString = "";
+        if ((typeof performance === "object") && (typeof performance.now() === "number")) {
+            randomString = '?' + performance.now();  // GIF file in some browser gets stuck in the last frame after it has played once.
+        }
+        else randomString = Math.floor(Math.random() * 10000); 
         gifElement.src = "/images/" + file + randomString;
 		gifElement.onload = function() {
 			$('#pleasewait').remove();
