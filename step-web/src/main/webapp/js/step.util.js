@@ -718,10 +718,11 @@ step.util = {
 							}
 							else {
 								if (searchWords.length > 0) searchWords += ', ';
-								searchWords += ((searchTokens[i].tokenType === GREEK_MEANINGS) || (searchTokens[i].itemType === GREEK_MEANINGS) ||
-									(searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS)) ?
-									 "<i>" + word + "</i>" : word;
-								
+								if ((searchTokens[i].tokenType === GREEK_MEANINGS) || (searchTokens[i].itemType === GREEK_MEANINGS) ||
+									(searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
+								else if ((searchTokens[i].tokenType === SUBJECT_SEARCH) || (searchTokens[i].itemType === SUBJECT_SEARCH)) searchWords += word.toUpperCase();
+								else if ((searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) searchWords += "~" + word;
+								else searchWords += word;
 							}
 						}
 					}
@@ -1474,8 +1475,8 @@ step.util = {
 	},
 	adjustPassageOptionHeight: function (passageContainer) {
 		var additionalHeightInPassageOption = passageContainer.find(".passageOptionsGroup").height();
-		if (additionalHeightInPassageOption > 5) {
-			var heightForPassage = passageContainer.height() - (Math.ceil(additionalHeightInPassageOption) - 5);
+		if (additionalHeightInPassageOption > 40) {
+			var heightForPassage = passageContainer.height() - (Math.ceil(additionalHeightInPassageOption) - 40);
 			var passContent = passageContainer.find(".passageContent");
 			$(passContent).css({'height':heightForPassage + 'px'});
 		}
