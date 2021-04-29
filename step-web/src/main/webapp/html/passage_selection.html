@@ -130,7 +130,7 @@
 		}
 		if ($('.passageContainer.active').width() < 500) {
 			if (hideAppend) $('#displayLocForm').hide();
-			else $('#new_panel').hide();
+			else $('#new_panel').remove();
 		}
         _displayListOfBooks();
 		$("textarea#enterYourPassage").keypress(function(e) {
@@ -141,7 +141,7 @@
 			var code = (e.keyCode ? e.keyCode : e.which);
 			if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 		});
-        var ua = navigator.userAgent.toLowerCase();
+        var ua = navigator.userAgent.toLowerCase();  // only set the focus in the text input area if it is not an Android, iPhone and iPad
         if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
     });
 
