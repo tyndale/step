@@ -713,12 +713,15 @@ step.util = {
 						(searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
 						var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
 						if (word.length > 0) {
-							if (searchWords.length > 20) {
+							if (searchWords.length > 25) {
 								if (searchWords.substr(-3) !== '...') searchWords += '...';
 							}
 							else {
 								if (searchWords.length > 0) searchWords += ', ';
-								searchWords += word;
+								searchWords += ((searchTokens[i].tokenType === GREEK_MEANINGS) || (searchTokens[i].itemType === GREEK_MEANINGS) ||
+									(searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS)) ?
+									 "<i>" + word + "</i>" : word;
+								
 							}
 						}
 					}
