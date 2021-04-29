@@ -142,7 +142,7 @@
 			if ((code == 8) || (code == 46)) $('#userEnterPassageError').text(""); // 8 is backspace, 46 is .
 		});
         var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("android") == -1) $('textarea#enterYourPassage').focus();
+        if ((ua.indexOf("android") == -1) && (ua.indexOf("iphone") == -1) && (ua.indexOf("ipad") == -1)) $('textarea#enterYourPassage').focus();
     });
 
 	function _displayListOfBooks() {
