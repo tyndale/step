@@ -129,8 +129,9 @@
 			hideAppend = true;
 		}
 		if ($('.passageContainer.active').width() < 500) {
-			if (hideAppend) $('#displayLocForm').hide();
-			else $('#new_panel').remove();
+			//if (hideAppend) 
+			$('#displayLocForm').hide();
+			//else $('#new_panel').hide();
 		}
         _displayListOfBooks();
 		$("textarea#enterYourPassage").keypress(function(e) {
