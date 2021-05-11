@@ -1474,9 +1474,16 @@ step.util = {
 		}
 	},
 	adjustPassageOptionHeight: function (passageContainer) {
-		var additionalHeightInPassageOption = passageContainer.find(".passageOptionsGroup").height();
-		if (additionalHeightInPassageOption > 40) {
-			var heightForPassage = passageContainer.height() - (Math.ceil(additionalHeightInPassageOption) - 40);
+		var passageContainerHeight = passageContainer.height();
+		var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
+		var passageContentHeight = passageContainer.find(".passageContent").height();
+		console.log("passageContainer h: " + passageContainerHeight + " passageOptionHeight: " + passageOptionHeight,
+			" mainPanel: " + $('.mainPanel').height() + " window: " + $(window).height()); 
+		var totalHeight = passageOptionHeight + passageContentHeight;
+		var diff = passageContainerHeight - totalHeight;
+		if (Math.abs(diff) > 6) {
+			var heightForPassage = passageContainerHeight + diff;
+			console.log("passageContent h: " + heightForPassage + " diff " + diff);
 			var passContent = passageContainer.find(".passageContent");
 			$(passContent).css({'height':heightForPassage + 'px'});
 		}
