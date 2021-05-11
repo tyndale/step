@@ -22,7 +22,7 @@ var StepRouter = Backbone.Router.extend({
         this.navigate(url, { trigger: false, replace: true});
     },
 
-    navigatePreserveVersions: function (partial, stripCommentaries) {
+    navigatePreserveVersions: function (partial, stripCommentaries, skipPage) {
         //get versions of current active passage
         //add versions from current active passage
         var activePassage = step.util.activePassage();
@@ -43,9 +43,10 @@ var StepRouter = Backbone.Router.extend({
                 }
             }
         }
-        this.navigateSearch(extra);
+		skipPage = (skipPage) ? true : false;
+        this.navigateSearch(extra, false, skipPage);
     },
-    navigateSearch: function (args, skipQFilter) {
+    navigateSearch: function (args, skipQFilter, skipPage) {
         var activePassageId = step.util.activePassageId();
         var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
@@ -75,7 +76,7 @@ var StepRouter = Backbone.Router.extend({
         if (!step.util.isBlank(interlinearMode) && interlinearMode != "NONE") {
             urlStub = this._addArg(urlStub, "display", interlinearMode);
         }
-        if (!step.util.isBlank(pageNumber) && pageNumber != "1") {
+        if (!step.util.isBlank(pageNumber) && (pageNumber != "1") && (!skipPage)) {
             urlStub = this._addArg(urlStub, "page", pageNumber);
         }
         if (context != 0) {

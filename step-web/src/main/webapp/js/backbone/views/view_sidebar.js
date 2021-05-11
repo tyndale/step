@@ -323,7 +323,7 @@ var SidebarView = Backbone.View.extend({
                             var refURLStr = $(this).data("refURLStr");
                             var args = "strong=" + encodeURIComponent(strongNumber) + refURLStr;
                             step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
-                            step.router.navigatePreserveVersions(args);
+                            step.router.navigatePreserveVersions(args, false, true);
                     }));
                 }
                 ul.append(li);
@@ -341,7 +341,7 @@ var SidebarView = Backbone.View.extend({
                 var strongNumber = $(this).data("strongNumber");
                 var args = "strong=" + encodeURIComponent(strongNumber);
                 step.util.activePassage().save({strongHighlights: strongNumber}, {silent: true});
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             }));
         }
         panel.append().append('<br />');

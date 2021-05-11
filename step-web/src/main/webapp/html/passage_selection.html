@@ -329,7 +329,7 @@
 		closeModal('passageSelectionModal');
 		if (selectedDisplayLoc === "append") {
 			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
-			step.router.navigateSearch(url, true); // skip QFilter
+			step.router.navigateSearch(url, true, true); // skip QFilter
 		}
 		else {
 			if (selectedDisplayLoc === "new") {

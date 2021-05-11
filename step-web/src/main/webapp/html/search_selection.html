@@ -955,7 +955,7 @@
 		closeModal('searchSelectionModal');
         console.log("navigateSearch from passage_selection.html: " + url);
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();
-        step.router.navigateSearch(url, true);
+        step.router.navigateSearch(url, true, true);
     }
 	
 	function goToPassage(osisID, chptrOrVrsNum) {
