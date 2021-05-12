@@ -1478,9 +1478,9 @@ step.util = {
 		var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
 		if (passageOptionHeight === null) return;
 		var passageContentHeight = passageContainer.find(".passageContent").height();
-		var windowHeight = $(window).height();
-		console.log("passageContainer h: " + passageContainerHeight + " passageOptionHeight: " + passageOptionHeight,
-			" mainPanel: " + $('.mainPanel').height() + " window: " + windowHeight); 
+		// var windowHeight = $(window).height();
+		// console.log("passageContainer h: " + passageContainerHeight + " passageOptionHeight: " + passageOptionHeight,
+			// " mainPanel: " + $('.mainPanel').height() + " window: " + windowHeight); 
 		var totalHeight = passageOptionHeight + passageContentHeight;
 		var diff = passageContainerHeight - totalHeight;
 		if (Math.abs(diff) > 6) {
