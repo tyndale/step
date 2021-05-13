@@ -24,16 +24,16 @@
     </button>
 	
     <a id="panel-icon"  style="padding-left:5px" class="hidden-xs navbarIconDesc" href="javascript:step.util.createNewColumn();" title="<fmt:message key="open_in_new_panel"/>">
-        <i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc"><fmt:message key="new_panel"/></span>
+        <i class="glyphicon glyphicon-plus"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="new_panel"/></span>
     </a>
     <a id="stats-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('analysis');" title="<fmt:message key="passage_stats"/>">
-        <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="passage_stats"/></span>
+        <i class="glyphicon glyphicon-stats"></i><span class="hidden-xs navbarIconDesc">&nbsp;&nbsp;<fmt:message key="passage_stats"/></span>
     </a>
 	<a id="bookmark-icon" style="padding-left:5px" href="javascript:step.util.ui.initSidebar('history');" title="<fmt:message key="bookmarks_and_recent_texts" />">
-        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc"><fmt:message key="bookmarks" /></span>
+        <i class="glyphicon glyphicon-bookmark"></i><span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="bookmarks" /></span>
     </a>
     <a id="examples-icon" style="padding-left:5px" href="javascript:step.util.ui.showTutorial();" title="<fmt:message key="welcome_to_step" />">
-        <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc"><fmt:message key="examples" /></span>
+        <i class="glyphicon glyphicon-question-sign"></i><span class="hidden-xs hidden-sm navbarIconDesc">&nbsp;<fmt:message key="examples" /></span>
     </a>
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), -1);"
         title="<fmt:message key="passage_smaller_fonts"/>">
@@ -42,7 +42,7 @@
     <a style="padding-left:5px" class="navbarIconDesc" href="javascript:step.util.changeFontSize($('.passageOptionsGroup'), 1);"
         title="<fmt:message key="passage_larger_fonts"/>">
         <span class="largerFont" style="color:white;background:#5E5E5E;font-size:22px"><fmt:message key="passage_font_size_symbol"/></span>
-        <span class="hidden-xs navbarIconDesc"><fmt:message key="font_sizes"/></span>
+        <span class="hidden-xs navbarIconDesc">&nbsp;<fmt:message key="font_sizes"/></span>
     </a>
     <span class="navbar-collapse collapse">
         <span class="dropdown">
@@ -71,7 +71,7 @@
             if (!appManager.isLocal()) {
         %>
         <a style="padding-left:5px" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport" title="<fmt:message key="help_feedback" />">
-            <i class="glyphicon glyphicon-bullhorn"></i><span class="navbarIconDesc"><fmt:message key="help_feedback" /></span>
+            <i class="glyphicon glyphicon-bullhorn"></i><span class="navbarIconDesc">&nbsp;<fmt:message key="help_feedback" /></span>
         </a>
         <%
             }
