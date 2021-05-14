@@ -13,7 +13,7 @@ h1, h2, h3, h4, h5, h6, .panel-title {
 }
 
 body {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body, .dropdown-menu, #quickLexicon h1 {
@@ -121,8 +121,11 @@ ul .glyphicon-ok {
 	border:1px solid #498090;
 	font-style: normal;
 	margin-left: 5px;
+
     &:after {
       content: "\25BE"; // upside down triangle
+      display: inline-block;
+      margin-left: 3px;
     }
 }
 

@@ -250,7 +250,7 @@ step.util = {
         //are we going to set a different passage
         if ((val !== null && val !== undefined && val != currentActivePassageId) || force) {
             var columns = $(".passageContainer");
-            columns.filter(".active").removeClass("active").find(".activeMarker").remove();
+            columns.filter(".active").removeClass("active");
 
             //do we need to create a new passage model? only if no others exists with the same passageId.
             var existingModel = step.passages.findWhere({ passageId: val });
@@ -273,7 +273,7 @@ step.util = {
 
 
             //make the new panel active
-            step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
+            step.util.getPassageContainer(val).addClass("active");
             return val;
         }
 
@@ -485,7 +485,7 @@ step.util = {
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
         newColumn.find(".select-reference").text("Passage:");
-		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")"); 
+		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
 		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
         newColumn.find(".resultsLabel").html("");
         newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
@@ -733,8 +733,6 @@ step.util = {
 			}
             if ((foundSearch) || (allSelectedReferences.length === 0)) allSelectedReferences = "Passage:";
 			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Passage: Gen 1";
-
-			console.log("all selected ref: " + allSelectedReferences);
 
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
@@ -1465,7 +1463,7 @@ step.util = {
 			$('.findButton').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
 			// if the screen is small (probably mobile devices) increase the font size 1 time.
-			if ((window.matchMedia("only screen and (max-width: 760px)").matches) && 
+			if ((window.matchMedia("only screen and (max-width: 760px)").matches) &&
 				(typeof step.settings.get('defaultfont') === "undefined"))
 				step.util.changeFontSize($('.passageOptionsGroup'), 2);
 			$('.navbarIconDesc').show();
@@ -1480,7 +1478,7 @@ step.util = {
 		var passageContentHeight = passageContainer.find(".passageContent").height();
 		// var windowHeight = $(window).height();
 		// console.log("passageContainer h: " + passageContainerHeight + " passageOptionHeight: " + passageOptionHeight,
-			// " mainPanel: " + $('.mainPanel').height() + " window: " + windowHeight); 
+			// " mainPanel: " + $('.mainPanel').height() + " window: " + windowHeight);
 		var totalHeight = passageOptionHeight + passageContentHeight;
 		var diff = passageContainerHeight - totalHeight;
 		if (Math.abs(diff) > 6) {
@@ -1919,7 +1917,7 @@ step.util = {
             if (geo === "all") {
                 $('.langSpan').show();
                 $('.langBtn').show();
-                $('.langUL').hide();                
+                $('.langUL').hide();
 
             }
             else {

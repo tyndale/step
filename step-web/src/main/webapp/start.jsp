@@ -141,8 +141,7 @@
                         <div class="input-group">
                             <input id="masterSearch" type="text" class="form-control input-lg">
                             <span class="input-group-btn findButton">
-                                    <span>Search</span>
-                                    <i class="find glyphicon glyphicon-search"></i>
+                                    <span>Search</span><i class="find glyphicon glyphicon-search"></i>
                                 </span>
                         </div>
                     </form>
@@ -155,7 +154,6 @@
         <div class="" id='columnHolder'>
             <div class="col-sm-6 col-xs-12 column">
                 <div class="passageContainer active" passage-id=0>
-                    <span class="activeMarker"></span>
                     <div class="passageText ui-widget">
                         <div class="passageOptionsGroup">
                             <div class="pull-right">
@@ -256,7 +254,7 @@
                                                                             <a href="javascript:void(0)"
                                                                                strong="${ definition.strongNumber}">
                                                                                 <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
-                                                                                
+
                                                                                 <%  if (locale.getLanguage().equalsIgnoreCase("zh")) {
                                                                                         if (locale.getCountry().equalsIgnoreCase("tw")) %>
                                                                                             ${ definition._zh_tw_Gloss}
@@ -265,8 +263,8 @@
                                                                                 <%  }
                                                                                     else { %>
                                                                                         ${ definition.gloss}
-                                                                                <%  } %>                                                                                
-                                                                                
+                                                                                <%  } %>
+
                                                                                 (<span
                                                                                     class="transliteration">${ definition.stepTransliteration }</span>
                                                                                 - <span
