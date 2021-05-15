@@ -196,13 +196,13 @@ var ViewLexiconWordle = Backbone.View.extend({
         this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"),  this.sortSelection.find(".selected").data("value"),  function (key, statType) {
             if (statType == 'WORD') {
                 var args = "strong=" + encodeURIComponent(key);
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             } else if (statType == 'TEXT') {
                 var args = "text=" + encodeURIComponent(key);
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             } else if (statType == 'SUBJECT') {
                 var args = "subject=" + encodeURIComponent(key);
-                step.router.navigatePreserveVersions(args);
+                step.router.navigatePreserveVersions(args, false, true);
             }
         });
     },
