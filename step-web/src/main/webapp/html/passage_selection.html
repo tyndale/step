@@ -241,14 +241,9 @@
                 longNameToDisplay = data[i].suggestion.fullName;
                 shortNameToDisplay = (userLang.toLowerCase().startsWith("en")) ? currentOsisID : data[i].suggestion.shortName.replace(/ /g, "").substr(0, 6);
             }
-            var newTestament;
             var oldTestment = false;
-            newTestament = (nt.indexOf(currentOsisID) > -1);
+            var newTestament = (nt.indexOf(currentOsisID) > -1);
             if (!newTestament) oldTestament = (ot.indexOf(currentOsisID) > -1);
-            if (!newTestament && !oldTestament) {
-                shortNameToDisplay += '<span style="color:brown">*</span>';
-                additionalBooks = true;
-            }
             if ((newTestament) && (notSeenNT)) {
                 notSeenNT = false;
                 counter = 0; // reset counter for NT table
@@ -257,6 +252,10 @@
                 tableHTML = __buildBookTableHeader(columns);
             }
 			if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < 6)) shortNameToDisplay = longNameToDisplay;
+            if (!newTestament && !oldTestament) {
+                shortNameToDisplay += '<span style="color:brown">*</span>';
+                additionalBooks = true;
+            }
             tableHTML += '<td title="' + longNameToDisplay + '">' +
                 '<a href="javascript:getChapters(\'' + currentOsisID + '\', \'' + version + '\', \'' + userLang + '\', ' + numOfChapters + ');">' +
                 shortNameToDisplay + '</a></td>';

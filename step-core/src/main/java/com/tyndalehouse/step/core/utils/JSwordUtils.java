@@ -288,12 +288,6 @@ public final class JSwordUtils {
      * @return
      */
     public static String getChapterOsis(final BibleBook bibleBook, final int chapterNumber) {
-        /**       boolean shortBook = bibleBook.isShortBook();
-        if ((!shortBook) && (chapterNumber == 1)) {
-            String bookName = bibleBook.toString();
-            if ((bookName.equals("PrAzar")) || (bookName.equals("Sus")) || (bookName.equals("Bel")) || (bookName.equals("EpJer")) || (bookName.equals("PrMan")))
-                shortBook = true;
-        } **/
         return bibleBook.isShortBook() ? bibleBook.getOSIS() : String.format(BOOK_CHAPTER_OSIS_FORMAT, bibleBook.getOSIS(), chapterNumber);
     }
 }
