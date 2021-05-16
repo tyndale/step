@@ -1522,6 +1522,16 @@ step.util = {
 		if (window.localStorage) window.localStorage.setItem("step.introJs", introCount);
 		else $.cookie('step.introJs', introCount);
 	},
+	closeModal: function (modalID) {
+        var element = document.getElementById(modalID);
+		if (element) {	
+			$('#' + modalID).modal('hide');
+			$('#' + modalID).modal({
+				show: false
+			});
+			element.parentNode.removeChild(element);
+		}
+    },
 	showByGeo: function(testMode) {
 		var africa_lang = [
 			"Afrikaans",

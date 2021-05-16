@@ -23,7 +23,7 @@ var PickBibleView = Backbone.View.extend({
         '<% } %>' +
         '<label class="btn btn-default btn-sm stepButton"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
-		'&nbsp;&nbsp;&nbsp;<button type="button" class="closeModal" data-dismiss="modal">X</button>' +
+		'&nbsp;&nbsp;&nbsp;<button type="button" class="close" data-dismiss="modal">X</button>' +
         '</form>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +

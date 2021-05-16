@@ -1356,7 +1356,7 @@ var cf = {
   upCaseFirst: function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   },
-// Do not shorten name, called by start.jsp
+// Do not shorten name, called by view_examples.js
   setNextPageURL: function (url, configName, infoMsg) {
 
     if (configName.indexOf("function:") == 0){
@@ -2011,12 +2011,8 @@ var cf = {
     }
     cf.updtLocalStorage();
     if ((!previousEnableGenderNumberClr) && (c4[C_enableGenderNumberClr])) cv[C_userTurnGenderNumberFromOffToOn] = true;
-    if (name == null) {
-      $('#openClrModal .close').click();
-      var element = document.getElementById('openClrModal');
-      element.parentNode.removeChild(element);
-      updateAllSettingsAndInputFields();
-    }
+	step.util.closeModal("openClrModal");
+    if (name == null) updateAllSettingsAndInputFields();
   },
 
   c4VerbTenseMood: function() {

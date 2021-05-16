@@ -1,7 +1,7 @@
 ﻿<div class="modal-header">
 	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<span class="pull-right">
-        <button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=closeModal("searchSelectionModal")>X</button>
+        <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>
         <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
         <span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">
             <label id="display_result_in" for="displayLocation">Display result in:</label>
@@ -952,7 +952,7 @@
         }
         var url = allVersions + range + previousSearch + currentSearch;
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
-		closeModal('searchSelectionModal');
+		step.util.closeModal('searchSelectionModal');
         console.log("navigateSearch from passage_selection.html: " + url);
 		if (selectedDisplayLoc === "new") step.util.createNewColumn();
         step.router.navigateSearch(url, true, true);
@@ -976,24 +976,13 @@
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
-		closeModal('searchSelectionModal');
+		step.util.closeModal('searchSelectionModal');
         if (selectedDisplayLoc === "new") {
             step.util.createNewColumn();
         }
 
         console.log("navigatePreserveVersions from passage_selection.html: " + osisID);
         step.router.navigatePreserveVersions("reference=" + osisID, false, true);
-    }
-	
-    function closeModal(modalID) {
-        var element = document.getElementById(modalID);
-		if (element) {	
-			$('#' + modalID).modal('hide');
-			$('#' + modalID).modal({
-				show: false
-			});
-			element.parentNode.removeChild(element);
-		}
     }
 
     function removePreviousSearch(index) {

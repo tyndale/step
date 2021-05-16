@@ -1,7 +1,7 @@
 ﻿<div class="modal-header">
 	<button id="pssgModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
 	<span class="pull-right">
-	<button type="button" class="closeModal pull-right" data-dismiss="modal" onclick=closeModal("passageSelectionModal")>X</button>
+    <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("passageSelectionModal")>X</button>
 	<span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
     <div id="modalonoffswitch" class="pull-right">
         <span id="select_verse_number">&nbsp;<b>Select verse number</b></span>
@@ -122,7 +122,7 @@
 		$('#append_to_panel').text(__s.append_to_panel);
 		$('#select_verse_number').text(__s.select_verse_number);
 		$('#type_in_your_passage').text(__s.type_in_your_passage);
-		closeModal('searchSelectionModal');
+		step.util.closeModal('searchSelectionModal');
 		var hideAppend = false;
 		if (step.util.getPassageContainer(step.util.activePassageId()).find(".resultsLabel").text() !== "") {
 			$('#append_to_panel').hide();
@@ -326,7 +326,7 @@
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
-		closeModal('passageSelectionModal');
+		step.util.closeModal('passageSelectionModal');
 		if (selectedDisplayLoc === "append") {
 			var url = VERSION + '=' + allVersions + existingReferences + '%7C' + REFERENCE + '=' + osisID;
 			step.router.navigateSearch(url, true, true); // skip QFilter
@@ -516,15 +516,5 @@
             $('#select_verse_number').removeClass('checked');
         }
     }
-	
-    function closeModal(modalID) {
-        var element = document.getElementById(modalID);
-		if (element) {	
-			$('#' + modalID).modal('hide');
-			$('#' + modalID).modal({
-				show: false
-			});
-			element.parentNode.removeChild(element);
-		}
-    }
+
 </script>

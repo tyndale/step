@@ -739,18 +739,18 @@ var PassageMenuView = Backbone.View.extend({
     },
 
     showConfigGrammarColor: function (e) {
-        var grammarColorConfigPage = $('<div id="theGrammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        var grammarColorConfigPage = $('<div id="grammarClrModal" class="modal selectModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">');
-        var temp = document.getElementById("theGrammarClrModal");
+        var temp = document.getElementById("grammarClrModal");
         e.preventDefault();
         if (!temp) grammarColorConfigPage.appendTo("body");
         if ($.getUrlVars().indexOf("debug") == -1) {
             $.ajaxSetup({ cache: true });
-            $('#theGrammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
+            $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.min.html');
         }
         else
-            $('#theGrammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
+            $('#grammarClrModal').modal('show').find('.modal-content').load('/html/color_code_grammar.html');
 
     }
 
