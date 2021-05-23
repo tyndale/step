@@ -616,9 +616,9 @@ var SidebarView = Backbone.View.extend({
                                 .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
                                     .click(function () {
                                         step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
-                                    })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
-                                api.hide();
-                            }));
+                                    })).prepend($('<button type="button" class="close" aria-hidden="true">X</button>').on('click touchstart', (function () {
+										api.hide();
+									})));
                         },
                         visible: function (event, api) {
                             var tooltip = api.elements.tooltip;

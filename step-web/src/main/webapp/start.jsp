@@ -468,7 +468,17 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <%
     }
 %>
-
+<script>
+	jQuery.event.special.touchstart = {
+		setup: function( _, ns, handle ){
+			if ( ns.includes("noPreventDefault") ) {
+				this.addEventListener("touchstart", handle, { passive: false });
+			} else {
+				this.addEventListener("touchstart", handle, { passive: true });
+			}
+		}
+	};
+</script>
 <% if (!appManager.isLocal()) { %>
 <script>
     (function (w, d, s) {
