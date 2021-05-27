@@ -679,61 +679,72 @@ step.util = {
             var allSelectedReferences = "";
 			var foundSearch = false;
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
-                if ((searchTokens[i].tokenType === VERSION) || (searchTokens[i].itemType == VERSION)) {
-                    searchTokens[i].itemType = searchTokens[i].tokenType;
+				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
+				var itemType = searchTokens[i].itemType;
+                if (itemType == VERSION) {
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
                     if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
 					allSelectedBibleVersions += (searchTokens[i].item.shortInitials.length > 0) ?
 						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
                     isMasterVersion = false;
                 }
-                else if ((searchTokens[i].tokenType === REFERENCE) || (searchTokens[i].itemType === REFERENCE)) {
-                    searchTokens[i].itemType = searchTokens[i].tokenType;
+                else if (itemType === REFERENCE) {
                     searchTokens[i].item = searchTokens[i].enhancedTokenInfo;
                     if (allSelectedReferences.length > 0) allSelectedReferences += ", ";
                     allSelectedReferences += (searchTokens[i].item.shortName.length > 0) ?
                         step.util.safeEscapeQuote(searchTokens[i].item.shortName) : step.util.safeEscapeQuote(searchTokens[i].token);
                 }
-				else if ((searchTokens[i].tokenType === STRONG_NUMBER) || (searchTokens[i].itemType === STRONG_NUMBER) ||
-						 (searchTokens[i].tokenType === TEXT_SEARCH) || (searchTokens[i].itemType === TEXT_SEARCH) ||
-						 (searchTokens[i].tokenType === SUBJECT_SEARCH) || (searchTokens[i].itemType === SUBJECT_SEARCH) ||
-						 (searchTokens[i].tokenType === GREEK) || (searchTokens[i].itemType === GREEK) ||
-						 (searchTokens[i].tokenType === HEBREW) || (searchTokens[i].itemType === HEBREW) ||
-						 (searchTokens[i].tokenType === GREEK_MEANINGS) || (searchTokens[i].itemType === GREEK_MEANINGS) ||
-						 (searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS) ||
-						 (searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) foundSearch = true;
+				else if ((itemType === STRONG_NUMBER) ||
+						 (itemType === TEXT_SEARCH) ||
+						 (itemType === SUBJECT_SEARCH) ||
+						 (itemType === GREEK) ||
+						 (itemType === HEBREW) ||
+						 (itemType === GREEK_MEANINGS) ||
+						 (itemType === HEBREW_MEANINGS) ||
+						 (itemType === MEANINGS)) foundSearch = true;
             }
-			if (allSelectedBibleVersions.length > 16) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+			var widthAvailable = $(".passageContainer.active").width();
+			var bibleVersionWidth = 16;
+			var refOrSearchWidth = 24;
+			if (widthAvailable < 400) {
+				bibleVersionWidth = 5;
+				refOrSearchWidth = 11;
+				$("#thumbsup").hide(); // Not enough space to show the thumbsup
+			}
+			if (allSelectedBibleVersions.length > bibleVersionWidth) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, bibleVersionWidth);
 
 			var searchWords = "";
-            if (allSelectedReferences.length > 24) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+            if (allSelectedReferences.length > refOrSearchWidth) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, refOrSearchWidth);
 			if (foundSearch) {
-				for (var i = 0; i < searchTokens.length; i++) {
-					if ((searchTokens[i].tokenType != VERSION) && (searchTokens[i].itemType != VERSION) &&
-						(searchTokens[i].tokenType != REFERENCE) && (searchTokens[i].itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
-						var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
-						if (word.length > 0) {
-							if (searchWords.length > 25) {
-								if (searchWords.substr(-3) !== '...') searchWords += '...';
-							}
-							else {
-								if (searchWords.length > 0) searchWords += ', ';
-								if ((searchTokens[i].tokenType === GREEK_MEANINGS) || (searchTokens[i].itemType === GREEK_MEANINGS) ||
-									(searchTokens[i].tokenType === HEBREW_MEANINGS) || (searchTokens[i].itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
-								else if ((searchTokens[i].tokenType === SUBJECT_SEARCH) || (searchTokens[i].itemType === SUBJECT_SEARCH)) searchWords += word.toUpperCase();
-								else if ((searchTokens[i].tokenType === MEANINGS) || (searchTokens[i].itemType === MEANINGS)) searchWords += "~" + word;
-								else searchWords += word;
+				if (widthAvailable > 400) {
+					for (var i = 0; i < searchTokens.length; i++) {
+						var itemType = searchTokens[i].itemType;
+						if ((itemType != VERSION) &&
+							(itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
+							var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
+							if (word.length > 0) {
+								if ((searchWords.length > refOrSearchWidth) && (searchWords.substr(-3) !== '...'))
+									searchWords += '...';
+								else {
+									if (searchWords.length > 0) searchWords += ', ';
+									if ((itemType === GREEK_MEANINGS) ||
+										(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
+									else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
+									else if (itemType === MEANINGS) searchWords += "~" + word;
+									else searchWords += word;
+								}
 							}
 						}
 					}
-				}
-				if (allSelectedReferences.length > 0) {
-					searchWords += " (" + allSelectedReferences + ")";
+					if (allSelectedReferences.length > 0)
+						searchWords += " (" + allSelectedReferences + ")";
 				}
 			}
-            if ((foundSearch) || (allSelectedReferences.length === 0)) allSelectedReferences = "Passage:";
-			else if (allSelectedReferences == 'Gen 1') allSelectedReferences = "Passage: Gen 1";
-
+            if ((foundSearch) || (allSelectedReferences.length === 0)) {
+				if (widthAvailable > 400) allSelectedReferences = "Passage:";
+				else allSelectedReferences = "Psge:";
+			}
+			else if ((allSelectedReferences == 'Gen 1') && (widthAvailable > 400)) allSelectedReferences = "Passage: Gen 1";
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
@@ -1481,7 +1492,7 @@ step.util = {
 			// " mainPanel: " + $('.mainPanel').height() + " window: " + windowHeight);
 		var totalHeight = passageOptionHeight + passageContentHeight;
 		var diff = passageContainerHeight - totalHeight;
-		if (Math.abs(diff) > 6) {
+		if (Math.abs(diff) > 10) {
 			var heightForPassage = passageContainerHeight + diff;
 			console.log("passageContent h: " + heightForPassage + " diff " + diff);
 			var passContent = passageContainer.find(".passageContent");

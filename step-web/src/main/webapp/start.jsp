@@ -170,12 +170,12 @@
                                 <%
                                     if (!appManager.isLocal()) {
                                 %>
-                                <span class="dropdown hidden-xs">
+                                <span id="thumbsup" class="dropdown hidden-xs">
                                         <a class="dropdown-share" data-toggle="dropdown"
                                            title="<fmt:message key="share" />">
                                             <i class="glyphicon glyphicon-thumbs-up"></i>
                                         </a>
-                                    </span>
+                                </span>
                                 <%
                                     }
                                 %>

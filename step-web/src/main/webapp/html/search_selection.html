@@ -216,13 +216,14 @@
             previousSearchTokens = [];
             numOfPreviousSearchTokens = 0;
             for (var i = 0; i < activePassageData.length; i++) {
-                if (activePassageData[i].itemType == REFERENCE) {
+				var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
+                if (itemType == REFERENCE) {
                     if (existingReferences !== "") existingReferences += ",";
                     existingReferences += activePassageData[i].item.osisID.replace(/ /g, ',');
                 }
-                else if (activePassageData[i].itemType !== VERSION) {
-                    if (searchTypeCode.indexOf(activePassageData[i].itemType) > 2) {
-                        var type = activePassageData[i].itemType;
+                else if (itemType !== VERSION) {
+                    if (searchTypeCode.indexOf(itemType) > 2) {
+                        var type = itemType;
                         if (type.toLowerCase().startsWith("greek")) type = "Greek";
                         else if (type.toLowerCase().startsWith("hebrew")) type = "Hebrew";
                         listOfPreviousSearch.push("<span style='font-size:16px'>" + type + "</span> = " + activePassageData[i].item.gloss +
@@ -231,10 +232,10 @@
                         numOfPreviousSearchTokens ++;
                     }
                     else {
-                        var type = activePassageData[i].itemType;
+                        var type = itemType;
                         if (type.toLowerCase === "text") type = "Word or phrase";
                         listOfPreviousSearch.push("<span style='font-size:16px'>" + type + "</span> = " + activePassageData[i].token);
-                        previousSearchTokens.push(activePassageData[i].itemType + "=" + activePassageData[i].token);
+                        previousSearchTokens.push(itemType + "=" + activePassageData[i].token);
                         numOfPreviousSearchTokens ++;
                     }
                 }
@@ -924,7 +925,8 @@
         var range = (searchRange === "Gen-Rev") ? "" : "|reference=" + searchRange;
         var currentSearch = (typeof searchType === "undefined") ? "" : '|' + searchType + '=' + searchWord;
         for (var i = 0; i < activePassageData.length; i++) {
-			switch(activePassageData[i].itemType) {
+			var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
+			switch(itemType) {
 				case GREEK:
 				case GREEK_MEANINGS:
 				case HEBREW:
@@ -940,7 +942,7 @@
 				case REFERENCE:
 					break;
 				default:
-					alert("unknown item type: " + activePassageData[i].itemType);
+					alert("unknown item type: " + itemType);
 					break;
             }
         }
@@ -968,11 +970,12 @@
         var existingReferences = "";
 		var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
         for (var i = 0; i < activePassageData.length; i++) {
-            if (activePassageData[i].itemType == "version") {
+			var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
+            if (itemType == "version") {
                 if (allVersions.length > 0) allVersions += "|version=";
                 allVersions += activePassageData[i].item.shortInitials;
             }
-            else if ((selectedDisplayLoc === "append") && (activePassageData[i].itemType == "reference")) {
+            else if ((selectedDisplayLoc === "append") && (itemType == "reference")) {
                 existingReferences += "|reference=" + activePassageData[i].item.osisID;
             }
         }
