@@ -380,10 +380,10 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
-		for (var i = 0; i < columns.length; i++) {
-			var passageContainer = $(columns[i]).find('.passageContainer');
-			step.util.adjustPassageOptionHeight(passageContainer);
-		}
+//		for (var i = 0; i < columns.length; i++) {
+//			var passageContainer = $(columns[i]).find('.passageContainer');
+//			step.util.adjustPassageOptionHeight(passageContainer);
+//		}
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
