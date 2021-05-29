@@ -660,6 +660,7 @@ step.util = {
             return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
         },
         shortenDisplayText: function (text, maxLength) {
+			if (text.length <= maxLength) return text;
             var lastComma = text.substr(0, maxLength).lastIndexOf(",");
             if (lastComma < 5) lastComma = maxLength;
             return text.substr(0, lastComma) + '...';
@@ -703,48 +704,69 @@ step.util = {
 						 (itemType === HEBREW_MEANINGS) ||
 						 (itemType === MEANINGS)) foundSearch = true;
             }
-			var widthAvailable = $(".passageContainer.active").width();
-			var bibleVersionWidth = 16;
-			var refOrSearchWidth = 24;
-			if (widthAvailable < 400) {
-				bibleVersionWidth = 5;
-				refOrSearchWidth = 11;
-				$("#thumbsup").hide(); // Not enough space to show the thumbsup
-			}
-			if (allSelectedBibleVersions.length > bibleVersionWidth) allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, bibleVersionWidth);
 
 			var searchWords = "";
-            if (allSelectedReferences.length > refOrSearchWidth) allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, refOrSearchWidth);
 			if (foundSearch) {
-				if (widthAvailable > 400) {
-					for (var i = 0; i < searchTokens.length; i++) {
-						var itemType = searchTokens[i].itemType;
-						if ((itemType != VERSION) &&
-							(itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
-							var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
-							if (word.length > 0) {
-								if ((searchWords.length > refOrSearchWidth) && (searchWords.substr(-3) !== '...'))
-									searchWords += '...';
-								else {
-									if (searchWords.length > 0) searchWords += ', ';
-									if ((itemType === GREEK_MEANINGS) ||
-										(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
-									else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
-									else if (itemType === MEANINGS) searchWords += "~" + word;
-									else searchWords += word;
-								}
+				for (var i = 0; i < searchTokens.length; i++) {
+					var itemType = searchTokens[i].itemType;
+					if ((itemType != VERSION) &&
+						(itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
+						var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
+						if (word.length > 0) {
+							if (searchWords.length > 0) searchWords += ', ';
+							if ((itemType === GREEK_MEANINGS) ||
+								(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
+							else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
+							else if (itemType === MEANINGS) searchWords += "~" + word;
+							else searchWords += word;
+						}
+					}
+				}
+			}
+			
+			var widthAvailable = $(".passageContainer.active").width();
+			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
+			if (widthAvailable < 400) $("#thumbsup").hide(); // Not enough space to show the thumbs up icon (Facebook or Tweeter)
+			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 12;
+			if (!foundSearch) {
+				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
+					(allSelectedReferences === 'Gen 1')) allSelectedReferences = "Passage: Gen 1";
+				else if (allSelectedReferences.length == 0) allSelectedReferences = "Passage:";
+			}
+			else if (allSelectedReferences.length == 0) charAvailable -= 10; // save space for "Passage:"
+			if (outputMode === "span") {
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+				searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+			}
+			else if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) { // outputMode should be button
+				allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, 16);
+				if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
+					allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, 24);
+					if ((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) > charAvailable) {
+						searchWords = step.util.ui.shortenDisplayText(searchWords, 24);
+						var charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+						if (charUsed > charAvailable) {
+							allSelectedBibleVersions = step.util.ui.shortenDisplayText(allSelectedBibleVersions, Math.max(4, allSelectedBibleVersions.length - (charUsed - charAvailable)));
+							charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+							if (charUsed > charAvailable) {
+								allSelectedReferences = step.util.ui.shortenDisplayText(allSelectedReferences, Math.max(6, allSelectedReferences.length - (charAvailable - charUsed)));
+								charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+								if (charUsed > charAvailable)
+									searchWords = step.util.ui.shortenDisplayText(searchWords, Math.max(6, searchWords.length - (charAvailable - charUsed)));
 							}
 						}
 					}
-					if (allSelectedReferences.length > 0)
-						searchWords += " (" + allSelectedReferences + ")";
 				}
 			}
-            if ((foundSearch) || (allSelectedReferences.length === 0)) {
-				if (widthAvailable > 400) allSelectedReferences = "Passage:";
-				else allSelectedReferences = "Psge:";
+			if ((foundSearch) && (allSelectedReferences.length > 0)) {
+				searchWords += " (" + allSelectedReferences + ")";
+				allSelectedReferences = "";
 			}
-			else if ((allSelectedReferences == 'Gen 1') && (widthAvailable > 400)) allSelectedReferences = "Passage: Gen 1";
+			if (allSelectedReferences.length == 0) allSelectedReferences = "Passage:";
+			charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
+			if ((charUsed > charAvailable) && (allSelectedReferences === "Passage:")) allSelectedReferences === "Psge:";
+			
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
@@ -776,7 +798,6 @@ step.util = {
 				if (allSelectedBibleVersions.length > 0)
 					container.append(
 						'<span ' +
-							// 'title="' + __s.click_translation + '" class="select-' + VERSION + ' argSumSpan">' +
 							'title="' + __s.click_translation + '" class="' + 'argSumSpan">' +
 							allSelectedBibleVersions +
 						'</span>' );
@@ -785,7 +806,6 @@ step.util = {
 					if (allSelectedReferences === "Passage: Gen 1") allSelectedReferences = "Gen 1";
 					container.append(
 						'<span ' +
-							// 'title="' + __s.click_passage + '" class="select-' + REFERENCE + ' argSumSpan">' +
 							'title="' + __s.click_passage + '" class="' + 'argSumSpan">|&nbsp;' +
 							allSelectedReferences +
 						'</span>' );
@@ -795,7 +815,6 @@ step.util = {
 					container.append(
 						'|' +
 						'<span ' +
-							// 'title="' + __s.click_search + '" class="select-search argSumSpan">' +
 							'title="' + __s.click_search + '" class="argSumSpan">' +
 							'<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>' +
 							'&nbsp;' + searchWords +
