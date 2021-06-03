@@ -235,7 +235,7 @@
                             if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
                                 var strongNum = syntaxWords[j].substr(7);
                                 if (strongNum.substr(0, 1).toUpperCase() === "G") itemType = GREEK;
-                                else if (strongWord.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
+                                else if (strongNum.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
                                 currWord = {token: syntaxWords[j], item: {gloss: strongNum, stepTransliteration: "", matchingForm: ""} };
                                 if ((typeof step.srchTxt !== "undefined") &&
                                     (typeof step.srchTxt[strongNum] !== "undefined") &&
