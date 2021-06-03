@@ -679,6 +679,7 @@ step.util = {
             var allSelectedBibleVersions = "";
             var allSelectedReferences = "";
 			var foundSearch = false;
+			var searchWords = "";
             for (var i = 0; i < searchTokens.length; i++) { // process all the VERSION and REFERENCE first so that the buttons will always show up first at the top of the panel
 				if (!searchTokens[i].itemType) searchTokens[i].itemType = searchTokens[i].tokenType; // This is needed for syntax search.  Don't know why.  PT 5/26/2021
 				var itemType = searchTokens[i].itemType;
@@ -695,34 +696,52 @@ step.util = {
                     allSelectedReferences += (searchTokens[i].item.shortName.length > 0) ?
                         step.util.safeEscapeQuote(searchTokens[i].item.shortName) : step.util.safeEscapeQuote(searchTokens[i].token);
                 }
-				else if ((itemType === STRONG_NUMBER) ||
+				else if ((itemType === SYNTAX) ||
+                         (itemType === STRONG_NUMBER) ||
 						 (itemType === TEXT_SEARCH) ||
 						 (itemType === SUBJECT_SEARCH) ||
 						 (itemType === GREEK) ||
 						 (itemType === HEBREW) ||
 						 (itemType === GREEK_MEANINGS) ||
 						 (itemType === HEBREW_MEANINGS) ||
-						 (itemType === MEANINGS)) foundSearch = true;
-            }
-
-			var searchWords = "";
-			if (foundSearch) {
-				for (var i = 0; i < searchTokens.length; i++) {
-					var itemType = searchTokens[i].itemType;
-					if ((itemType != VERSION) &&
-						(itemType != REFERENCE)) { // VERSION and REFERENCE buttons are already created a few lines above.
-						var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
-						if (word.length > 0) {
-							if (searchWords.length > 0) searchWords += ', ';
-							if ((itemType === GREEK_MEANINGS) ||
-								(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
-							else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
-							else if (itemType === MEANINGS) searchWords += "~" + word;
-							else searchWords += word;
-						}
+						 (itemType === MEANINGS)) {
+                    foundSearch = true;
+					var word = $(step.util.ui.renderArg(searchTokens[i], isMasterVersion)).text();
+					if (word.length > 0) {
+						if (searchWords.length > 0) searchWords += ', ';
+                        if (itemType === SYNTAX) {
+                            var syntaxWords = searchTokens[i].token.split(" ");
+							var searchRelationship = "";
+                            for (var j = 0; j < syntaxWords.length; j++) {
+								if ((j > 0) && (searchRelationship === "") &&
+									((syntaxWords[j] === "AND") || (syntaxWords[j] === "OR") || (syntaxWords[j] === "NOT"))) {
+									searchRelationship = syntaxWords[j];
+									continue;
+								}
+                                if ((j > 0) && (searchWords.length > 0)) {
+									if ((searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
+									else searchWords += ', ';
+								}
+                                if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
+                                    var strongNum = syntaxWords[j].substr(7);
+                                    if ((typeof step.srchTxt !== "undefined") &&
+                                        (typeof step.srchTxt[strongNum] !== "undefined") &&
+                                        (step.srchTxt[strongNum].search(/(<i>.+<\/i>)/) > -1))
+                                        searchWords += RegExp.$1;
+                                    else searchWords += strongNum;
+                                }
+                                else searchWords += syntaxWords[j];
+								searchRelationship = "";
+                            }
+                        }
+                        else if ((itemType === GREEK_MEANINGS) ||
+							(itemType === HEBREW_MEANINGS)) searchWords += "<i>" + word + "</i>";
+						else if (itemType === SUBJECT_SEARCH) searchWords += word.toUpperCase();
+						else if (itemType === MEANINGS) searchWords += "~" + word;
+						else searchWords += word;
 					}
-				}
-			}
+                }
+            }
 			
 			var widthAvailable = $(".passageContainer.active").width();
 			if (foundSearch) widthAvailable -= 45; // space to show the number of occurance.  eg: 105x
