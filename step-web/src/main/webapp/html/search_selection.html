@@ -1103,7 +1103,8 @@
     }
     
     function showPreviousSearch() {
-        if (document.getElementById('showprevioussearchonoff').checked) {
+		var element = document.getElementById('showprevioussearchonoff');
+        if ((element) && (element.checked)) {
             includePreviousSearches = true;
             $('#listofprevioussearchs').show();
 			$('#searchAndOrNot').show();
@@ -1111,7 +1112,6 @@
 				if ((rangeWasUpdated) || 
 					(numOfPreviousSearchTokens != previousSearchTokens.length)) $('#updateButton').show();
 			}
-			else $('#updateButton').hide();
         }
         else {
             includePreviousSearches = false;
