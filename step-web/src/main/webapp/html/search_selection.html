@@ -347,7 +347,6 @@
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
 		showPreviousSearch(); // The function will determine if it need to show previous search
-		// if ((rangeWasUpdated) && (includePreviousSearches)) $('#updateButton').show();
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(_buildSearchHeaderAndTable());
 			$('#previousSearch').show();
@@ -1104,14 +1103,15 @@
     }
     
     function showPreviousSearch() {
-	debugger;
         if (document.getElementById('showprevioussearchonoff').checked) {
             includePreviousSearches = true;
             $('#listofprevioussearchs').show();
 			$('#searchAndOrNot').show();
-            if ((searchUserInput.length == 0) && 
-				((rangeWasUpdated) || 
-				(numOfPreviousSearchTokens != previousSearchTokens.length)) ) $('#updateButton').show();
+            if (searchUserInput.length == 0) { 
+				if ((rangeWasUpdated) || 
+					(numOfPreviousSearchTokens != previousSearchTokens.length)) $('#updateButton').show();
+			}
+			else $('#updateButton').hide();
         }
         else {
             includePreviousSearches = false;
