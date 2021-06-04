@@ -710,7 +710,7 @@ step.util = {
 					if (word.length > 0) {
 						if (searchWords.length > 0) searchWords += ', ';
                         if (itemType === SYNTAX) {
-                            var syntaxWords = searchTokens[i].token.split(" ");
+                            var syntaxWords = searchTokens[i].token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
 							var searchRelationship = "";
                             for (var j = 0; j < syntaxWords.length; j++) {
 								if ((j > 0) && (searchRelationship === "") &&

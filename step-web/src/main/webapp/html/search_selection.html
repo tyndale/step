@@ -192,6 +192,7 @@
 	var groupsOther;
     var bookOrder = [];
     var idx2BookOrder = {};
+	var showUpdtPrvsSrchBtn = false;
 
     $(document).ready(function () {
         userLang = step.state.language() || "en-US";
@@ -224,7 +225,7 @@
                 }
                 else if (itemType !== VERSION) {
                     if (itemType === SYNTAX) {
-                        var syntaxWords = actPsgeDataElm.token.split(" ");
+                        var syntaxWords = actPsgeDataElm.token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
 						var searchRelationship = "";
                         for (var j = 0; j < syntaxWords.length; j++) {
 							if ((j > 0) && (searchRelationship === "") &&
@@ -259,12 +260,16 @@
             if (listOfPreviousSearch.length > 0) {
                 var previousSearchHTML =
                 '<div id="modalonoffswitch">' +
-                    '<span  class="pull-left" style="font-size:18px" id="search_with_previous"><b>Include previous searches</b>&nbsp;&nbsp;</span>' +
+//                    '<span  class="pull-left" style="font-size:18px" id="search_with_previous"><b>Include previous searches</b>&nbsp;&nbsp;</span>' +
+                    '<span  class="pull-left" style="font-size:18px" id="search_with_previous"><b>Verses found in the previous search...</b>&nbsp;&nbsp;</span>' +
 					'<span class="pull-left">' +
 						'<select id="searchAndOrNot" style="display:none" class="stepButton" type="text" id="searchrelationship">' +
-							'<option id="and_search" value="AND">as an AND search</option>' +
-							'<option id="or_search" value="OR">as an OR search</option>' +
-							'<option id="not_search" value="NOT">as a NOT search</option>' +
+							//'<option id="and_search" value="AND">as an AND search</option>' +
+							//'<option id="or_search" value="OR">as an OR search</option>' +
+							//'<option id="not_search" value="NOT">as a NOT search</option>' +
+							'<option id="and_search" value="AND">that also include the word(s) above (AND)</option>' +
+							'<option id="or_search" value="OR">plus those including the word(s) above (OR)</option>' +
+							'<option id="not_search" value="NOT">that don\'t include the word(s) above (NOT)</option>' +
 						'</select>' +
 					'</span>' +
                     '<span class="onoffswitch2 pull-left">' +
@@ -275,7 +280,7 @@
                         '</label>' +
                     '</span>' +
 				'</div>' +
-                '<br><br>' +
+                '<br><br><br><br>' +
                 '<ul id="listofprevioussearchs" style="display:none">';
                 for (var j = 0; j < listOfPreviousSearch.length; j++) {
                     previousSearchHTML += "<li id='lOPS_" + j + "'>" + listOfPreviousSearch[j] + 
@@ -330,7 +335,6 @@
             userInput = userInput.replace(/[\n\r]/g, '').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
             $('textarea#userTextInput').val(userInput);
 			if (userInput.replace(/\s\s+/, ' ').search(/^\s?[\da-z][a-z]+[\s.]?\d/i) > -1) _handleEnteredSearchWord(null, null, true);
-
         }
         else {
 			$('#warningMessage').text("");
@@ -342,7 +346,8 @@
 		$('#searchSelectError').text("");
 		$('#srchModalBackButton').prop('title', '');
 		$("#updateRangeButton").hide();
-		if ((rangeWasUpdated) && (includePreviousSearches)) $('#updateButton').show();
+		showPreviousSearch(); // The function will determine if it need to show previous search
+		// if ((rangeWasUpdated) && (includePreviousSearches)) $('#updateButton').show();
 		if (typeof $('textarea#userTextInput').val() == "undefined") { // Must be in the search range because search range does not have ID userTextInput
 			$('#searchHdrTable').empty().append(_buildSearchHeaderAndTable());
 			$('#previousSearch').show();
@@ -862,6 +867,7 @@
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 		searchUserInput = userInput;
 		if ((userInput.length > 1) || ((userLang.toLowerCase().startsWith("zh")) && (userInput.length > 0))) {
+			$('#updateButton').hide();
 			var url;
 			if (((typeof limitType === "undefined") || (limitType === null)) && (searchOnSpecificType == ""))
 				url = SEARCH_AUTO_SUGGESTIONS + userInput + "/" + VERSION + "%3D" + version + "%7C?lang=" + userLang;
@@ -965,6 +971,7 @@
 			for (l = 0; l < searchTypeCode.length; l++) {
 				$('#searchResults' + searchTypeCode[l]).text("");
 			}
+			showPreviousSearch(); // The update previous search button might need to be displayed if user has includes previous search 
 		}
 	}
 
@@ -1008,9 +1015,10 @@
 			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
             var existingSyntaxSearch = (currentSearch.substr(0, 8) === "|syntax=") ? currentSearch.substr(8) : "";
             var previousSyntaxSearch = "";
+			var numOfPreviousSyntaxSearch = 0;
             for (var i = 0; i < previousSearchTokens.length; i++) {
-				var previousSearchRelationship = "";
                 if (previousSearchTokens[i] !== "") {
+					var previousSearchRelationship = "";
 					if ((previousSearchTokens[i].substr(0, 4) === "AND ") ||
 						(previousSearchTokens[i].substr(0, 4) === "NOT ")) {
 						previousSearchRelationship = " " + previousSearchTokens[i].substr(0, 4);
@@ -1020,20 +1028,28 @@
 						previousSearchRelationship = " OR ";
 						previousSearchTokens[i] = previousSearchTokens[i].substr(3);
 					}
-                    if (previousSearchTokens[i].substr(0, 5) === "text=") {
-                        previousSyntaxSearch += previousSyntaxSearch == "" ? "|syntax=" : previousSearchRelationship;
-                        previousSyntaxSearch += previousSearchTokens[i].substr(5);
-                    }
-                    else if (previousSearchTokens[i].substr(0, 7) === "strong=") {
-                        previousSyntaxSearch += previousSyntaxSearch == "" ? "|syntax=" : previousSearchRelationship;
-                        previousSyntaxSearch += previousSearchTokens[i].substr(7);
+					var curSearchWord = "";
+					if (previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = previousSearchTokens[i].substr(5);
+                    else if (previousSearchTokens[i].substr(0, 7) === "strong=") curSearchWord = previousSearchTokens[i].substr(7);
+					if (curSearchWord !== "") {
+						numOfPreviousSyntaxSearch ++;
+						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=";
+						else {
+							if (numOfPreviousSyntaxSearch > 2) 
+								previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";
+							previousSyntaxSearch += previousSearchRelationship;
+						}
+                        previousSyntaxSearch += curSearchWord;
                     }
                     else previousSearch += '|' + previousSearchTokens[i];
                 }
             }
             if (previousSyntaxSearch.length > 0) {
-				if (existingSyntaxSearch.length > 0) 
+				if (existingSyntaxSearch.length > 0) {
+					if (numOfPreviousSyntaxSearch >= 2) 
+						previousSyntaxSearch = previousSyntaxSearch.substr(0, 8) + "(" + previousSyntaxSearch.substr(8) + ")";
 					currentSearch = previousSyntaxSearch + " " + searchAndOrNot + " " + existingSyntaxSearch;
+				}
 				else currentSearch = previousSyntaxSearch + currentSearch;
             }
 			if ( ((searchAndOrNot === "OR") || (searchAndOrNot === "NOT")) &&
@@ -1080,19 +1096,22 @@
     function removePreviousSearch(index) {
         previousSearchTokens[index] = "";
         numOfPreviousSearchTokens --;
+		showPreviousSearch();
         $('#lOPS_' + index).hide();
-        $('#updateButton').show();
         if (numOfPreviousSearchTokens == 0) {
-			$('#previousSearch').empty(); //.append('<button type="button" style="border:none;font-size:16px" onclick=deleteAllSearch()><i class="glyphicon glyphicon-trash">Remove previous search</i></button>');
+			$('#previousSearch').empty();
 		}
     }
     
     function showPreviousSearch() {
+	debugger;
         if (document.getElementById('showprevioussearchonoff').checked) {
             includePreviousSearches = true;
             $('#listofprevioussearchs').show();
 			$('#searchAndOrNot').show();
-            if (rangeWasUpdated) $('#updateButton').show();
+            if ((searchUserInput.length == 0) && 
+				((rangeWasUpdated) || 
+				(numOfPreviousSearchTokens != previousSearchTokens.length)) ) $('#updateButton').show();
         }
         else {
             includePreviousSearches = false;
