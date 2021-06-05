@@ -89,10 +89,10 @@ var SidebarView = Backbone.View.extend({
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
 
-        this.lexicon = $("<div id='lexicon' class='tab-pane'></div>");
-        this.analysis = $("<div id='analysis' class='tab-pane'></div>");
-        this.history = $("<div id='history' class='tab-pane'></div>");
-        this.help = $("<div id='help' class='tab-pane'></div>");
+        this.lexicon = $("<div id='lexicon' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
+        this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
+        this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
+        this.help = $("<div id='help' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
         tabContent.append(this.lexicon);
         tabContent.append(this.analysis);
         tabContent.append(this.history);
