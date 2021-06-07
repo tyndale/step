@@ -713,17 +713,23 @@ step.util = {
                             var syntaxWords = searchTokens[i].token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
 							var searchRelationship = "";
                             var indxNeedConcatenate = -1;
+                            var quoteChar = "";
                             for (var j = 0; j < syntaxWords.length; j++) {
                                 if (indxNeedConcatenate == -1) {
-                                    if (syntaxWords[j].substr(0, 1) === '"') indxNeedConcatenate = j;
+                                    if ((syntaxWords[j].substr(0, 1) === '"') ||
+                                        (syntaxWords[j].substr(0, 1) === "'")) {
+                                        indxNeedConcatenate = j;
+                                        quoteChar = syntaxWords[j].substr(0, 1);
+                                    }
                                 }
                                 else {
-                                    if (syntaxWords[j].substr(-1) == '"') {
+                                    if (syntaxWords[j].substr(-1) == quoteChar) {
                                         for (var k = indxNeedConcatenate + 1; k <= j; k++) {
                                             syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
                                             syntaxWords[k] = "";
                                         }
                                         indxNeedConcatenate = -1;
+                                        quoteChar = "";
                                     }
                                 }
                             }

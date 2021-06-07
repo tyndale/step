@@ -942,7 +942,7 @@
 								}
 								else if (searchType === TEXT_SEARCH) {
                                     text2Display = data[i].suggestion.text;
-									str2Search = text2Display.replace(/"/g, '%22').replace(/'/g, '%27');
+									str2Search = text2Display.replace(/"/g, '%22').replace(/'/g, '%22');
 								}
 								else {
 									text2Display = data[i].suggestion.gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
@@ -950,8 +950,9 @@
 									str2Search = data[i].suggestion.strongNumber;
 									searchType = 'strong';
 								}
-								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:goSearch(\'' + searchType + '\',\'' + str2Search + '\',\'' + 
-                                    text2Display.replace(/"/g, '%22').replace(/'/g, '%27') +
+								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:goSearch(\'' + searchType + '\',\'' + 
+                                    str2Search + '\',\'' + 
+                                    text2Display.replace(/"/g, '%22').replace(/'/g, "%22") +
                                     '\')">' + text2Display + "</a>";
 							}
 							break;
