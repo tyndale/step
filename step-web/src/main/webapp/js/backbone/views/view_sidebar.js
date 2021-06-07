@@ -88,7 +88,6 @@ var SidebarView = Backbone.View.extend({
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
-        debugger;
         var heightToSet = $('.passageContainer.active').height();
         if (typeof heightToSet === "number") {
             heightToSet -= 60;
