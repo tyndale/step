@@ -712,7 +712,23 @@ step.util = {
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
 							var searchRelationship = "";
+                            var indxNeedConcatenate = -1;
                             for (var j = 0; j < syntaxWords.length; j++) {
+                                if (indxNeedConcatenate == -1) {
+                                    if (syntaxWords[j].substr(0, 1) === '"') indxNeedConcatenate = j;
+                                }
+                                else {
+                                    if (syntaxWords[j].substr(-1) == '"') {
+                                        for (var k = indxNeedConcatenate + 1; k <= j; k++) {
+                                            syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
+                                            syntaxWords[k] = "";
+                                        }
+                                        indxNeedConcatenate = -1;
+                                    }
+                                }
+                            }
+                            for (var j = 0; j < syntaxWords.length; j++) {
+                                if (syntaxWords[j] == "") continue;
 								if ((j > 0) && (searchRelationship === "") &&
 									((syntaxWords[j] === "AND") || (syntaxWords[j] === "OR") || (syntaxWords[j] === "NOT"))) {
 									searchRelationship = syntaxWords[j];
