@@ -88,11 +88,18 @@ var SidebarView = Backbone.View.extend({
     },
     _createBaseTabs: function () {
         var tabContent = $("<div class='tab-content'></div>");
-
-        this.lexicon = $("<div id='lexicon' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
-        this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
-        this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
-        this.help = $("<div id='help' class='tab-pane' style='overflow-y:scroll;height: 85vh'></div>");
+        debugger;
+        var heightToSet = $('.passageContainer.active').height();
+        if (typeof heightToSet === "number") {
+            heightToSet -= 60;
+            heightToSet += "px";
+        }
+        else heightToSet = "85vh";
+        console.log("lexicon height: " + heightToSet);
+        this.lexicon = $("<div id='lexicon' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
+        this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
+        this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
+        this.help = $("<div id='help' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         tabContent.append(this.lexicon);
         tabContent.append(this.analysis);
         tabContent.append(this.history);
