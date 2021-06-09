@@ -942,7 +942,7 @@
 								}
 								else if (searchType === TEXT_SEARCH) {
                                     text2Display = data[i].suggestion.text;
-									str2Search = text2Display.replace(/"/g, '%22').replace(/'/g, '%22');
+									str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
 								}
 								else {
 									text2Display = data[i].suggestion.gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
@@ -952,7 +952,7 @@
 								}
 								searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:goSearch(\'' + searchType + '\',\'' + 
                                     str2Search + '\',\'' + 
-                                    text2Display.replace(/"/g, '%22').replace(/'/g, "%22") +
+                                    text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
                                     '\')">' + text2Display + "</a>";
 							}
 							break;
