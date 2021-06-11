@@ -710,7 +710,7 @@ step.util = {
 					if (word.length > 0) {
 						if (searchWords.length > 0) searchWords += ', ';
                         if (itemType === SYNTAX) {
-                            var syntaxWords = searchTokens[i].token.replace(/\(/g, '').replace(/\)/g, '').split(" ");
+                            var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
 							var searchRelationship = "";
                             var indxNeedConcatenate = -1;
                             var quoteChar = "";
@@ -741,7 +741,7 @@ step.util = {
 									continue;
 								}
                                 if ((j > 0) && (searchWords.length > 0)) {
-									if ((searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
+									if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
 									else searchWords += ', ';
 								}
                                 if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
