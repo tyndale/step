@@ -385,6 +385,29 @@ step.util = {
 //			step.util.adjustPassageOptionHeight(passageContainer);
 //		}
     },
+    findSearchTermsInQuotes: function(syntaxWords) {
+        var indxNeedConcatenate = -1;
+        var quoteChar = "";
+        for (var j = 0; j < syntaxWords.length; j++) {
+            if (indxNeedConcatenate == -1) {
+                if ((syntaxWords[j].substr(0, 1) === '"') ||
+                    (syntaxWords[j].substr(0, 1) === "'")) {
+                    indxNeedConcatenate = j;
+                    quoteChar = syntaxWords[j].substr(0, 1);
+                }
+            }
+            else {
+                if (syntaxWords[j].substr(-1) == quoteChar) {
+                    for (var k = indxNeedConcatenate + 1; k <= j; k++) {
+                        syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
+                        syntaxWords[k] = "";
+                    }
+                    indxNeedConcatenate = -1;
+                    quoteChar = "";
+                }
+            }
+        }
+    },
     /**
      * Renumbers the models from 0, so that we can track where things are.
      * @private
@@ -711,28 +734,8 @@ step.util = {
 						if (searchWords.length > 0) searchWords += ', ';
                         if (itemType === SYNTAX) {
                             var syntaxWords = searchTokens[i].token.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').split(" ");
-							var searchRelationship = "";
-                            var indxNeedConcatenate = -1;
-                            var quoteChar = "";
-                            for (var j = 0; j < syntaxWords.length; j++) {
-                                if (indxNeedConcatenate == -1) {
-                                    if ((syntaxWords[j].substr(0, 1) === '"') ||
-                                        (syntaxWords[j].substr(0, 1) === "'")) {
-                                        indxNeedConcatenate = j;
-                                        quoteChar = syntaxWords[j].substr(0, 1);
-                                    }
-                                }
-                                else {
-                                    if (syntaxWords[j].substr(-1) == quoteChar) {
-                                        for (var k = indxNeedConcatenate + 1; k <= j; k++) {
-                                            syntaxWords[indxNeedConcatenate] += " " + syntaxWords[k];
-                                            syntaxWords[k] = "";
-                                        }
-                                        indxNeedConcatenate = -1;
-                                        quoteChar = "";
-                                    }
-                                }
-                            }
+                            step.util.findSearchTermsInQuotes(syntaxWords);
+   							var searchRelationship = "";
                             for (var j = 0; j < syntaxWords.length; j++) {
                                 if (syntaxWords[j] == "") continue;
 								if ((j > 0) && (searchRelationship === "") &&
