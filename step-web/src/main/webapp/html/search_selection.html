@@ -38,6 +38,7 @@
     var includePreviousSearches = false;
     var rangeWasUpdated = false;
     var andOrNotUpdated = false;
+    var timer;
 	var osisChapterJsword = [ // Array of OSIS id, number of chapters in the book and the JSword name (if it is different from OSIS id
             ["Gen", 50],
             ["Exo", 40, "Exod"],
@@ -298,7 +299,8 @@
 		$('#srchModalBackButton').hide();
 		$(function(){
 			$('textarea#userTextInput').keyup(function(e){
-				handleKeyboardInput(e);
+                timer && clearTimeout(timer);
+                timer = setTimeout(handleKeyboardInput, 300, e);
 			});
 		});
 		$('textarea#userTextInput').focus();
@@ -325,7 +327,8 @@
             if (actPsgeDataElm.item.stepTransliteration !== "")
                 html += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
             listOfPreviousSearch.push(html);
-            previousSearchTokens.push("strong=" + actPsgeDataElm.token);
+            if (actPsgeDataElm.token.toLowerCase().startsWith("strong:")) previousSearchTokens.push("strong=" + actPsgeDataElm.token.substr(7));
+            else previousSearchTokens.push("strong=" + actPsgeDataElm.token);
         }
         else {
             var type = itemType;
@@ -362,7 +365,8 @@
 			if (searchModalCurrentPage === 1) $('#srchModalBackButton').hide();
             $(function(){
                 $('textarea#userTextInput').keyup(function(e){
-                    handleKeyboardInput(e);
+                    timer && clearTimeout(timer);
+                    timer = setTimeout(handleKeyboardInput, 300, e);
                 });
             });
             $('textarea#userTextInput').focus();
@@ -874,6 +878,7 @@
 		}
 		userInput = userInput.replace(/[\n\r]/g, ' ').replace(/\t/g, ' ').replace(/\s\s/g, ' ').replace(/,,/g, ',').replace(/^\s+/g, '');
 		searchUserInput = userInput;
+        console.log("input: " + userInput);
 		if ((userInput.length > 1) || ((userLang.toLowerCase().startsWith("zh")) && (userInput.length > 0))) {
 			$('#updateButton').hide();
 			var url;
@@ -991,36 +996,40 @@
         var allVersions = "";
         var range = (searchRange === "Gen-Rev") ? "" : "|reference=" + searchRange;
         var currentSearch = "";
-        if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
-        else if (searchType === STRONG_NUMBER) {
-            currentSearch = '|syntax=strong:' + searchWord;
-            if (typeof step.srchTxt == "undefined") step.srchTxt = {};
-            step.srchTxt[searchWord] = displayText;
-        }
-        else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
+        var hasOrigLangSearch = false;
         for (var i = 0; i < activePassageData.length; i++) {
 			var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
 			switch(itemType) {
-				case SYNTAX:
+                case SYNTAX:
+				case TEXT_SEARCH:
+				case MEANINGS:
+				case SUBJECT_SEARCH:
+                    break;
 				case GREEK:
 				case GREEK_MEANINGS:
 				case HEBREW:
 				case HEBREW_MEANINGS:
-				case TEXT_SEARCH:
-				case MEANINGS:
-				case SUBJECT_SEARCH:
+                    hasOrigLangSearch = true;
+                    break;
+				case REFERENCE:
 					break;
 				case VERSION:
 					if (allVersions.length > 0) allVersions += '|';
 					allVersions += 'version=' + activePassageData[i].item.shortInitials;
-					break;
-				case REFERENCE:
 					break;
 				default:
 					alert("unknown item type: " + itemType);
 					break;
             }
         }
+        if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
+        else if (searchType === STRONG_NUMBER) {
+            if ((numOfPreviousSearchTokens > 0) && (!includePreviousSearches)) currentSearch = '|STRONG=' + searchWord;
+            else currentSearch = '|syntax=strong:' + searchWord;
+            if (typeof step.srchTxt == "undefined") step.srchTxt = {};
+            step.srchTxt[searchWord] = displayText;
+        }
+        else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
         var previousSearch = "";
         if (includePreviousSearches) {
 			var searchAndOrNot = $("#searchAndOrNot option:selected").val();
@@ -1033,10 +1042,12 @@
                     if (typeof previousSearchRelationship !== "undefined") {
                         previousSearchRelationship = " " + previousSearchRelationship + " ";
 					}
-                    else previousSearchRelationship = " ";
+                    else {
+                        previousSearchRelationship = " ";
+                    }
 					var curSearchWord = "";
 					if (previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = previousSearchTokens[i].substr(5);
-                    else if (previousSearchTokens[i].substr(0, 7) === "strong=") curSearchWord = previousSearchTokens[i].substr(7);
+                    else if (previousSearchTokens[i].substr(0, 7) === "strong=") curSearchWord = "strong:" + previousSearchTokens[i].substr(7);
 					if (curSearchWord !== "") {
 						numOfPreviousSyntaxSearch ++;
 						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=";
