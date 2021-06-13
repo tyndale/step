@@ -747,8 +747,9 @@ step.util = {
 									if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
 									else searchWords += ', ';
 								}
-                                if (syntaxWords[j].substr(0, 7) === STRONG_NUMBER + ":") {
-                                    var strongNum = syntaxWords[j].substr(7);
+                                currSyntaxWord = syntaxWords[j].replace(/\(\s*/, '').replace(/\s*\)/, '');
+                                if (currSyntaxWord.substr(0, 7) === STRONG_NUMBER + ":") {
+                                    var strongNum = currSyntaxWord.substr(7);
                                     if ((typeof step.srchTxt !== "undefined") &&
                                         (typeof step.srchTxt[strongNum] !== "undefined") &&
                                         (step.srchTxt[strongNum].search(/(<i>.+<\/i>)/) > -1))

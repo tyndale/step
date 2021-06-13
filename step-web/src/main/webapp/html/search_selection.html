@@ -330,8 +330,9 @@
             listOfPreviousSearch.push(html);
             var strongNum = actPsgeDataElm.token.toLowerCase().startsWith("strong:") ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
             previousSearchTokens.push("strong=" + strongNum);
-            if (typeof step.srchTxt == "undefined") step.srchTxt = {};
-            step.srchTxt[strongNum] = (actPsgeDataElm.item.stepTransliteration !== "") ? htmlOfTerm : strongNum;
+            if (typeof step.srchTxt === "undefined") step.srchTxt = {};
+            if ((typeof step.srchTxt[strongNum] === "undefined") && (actPsgeDataElm.item.stepTransliteration !== ""))
+                step.srchTxt[strongNum] = htmlOfTerm;
         }
         else {
             var type = itemType;
@@ -1025,10 +1026,11 @@
         }
         if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
         else if (searchType === STRONG_NUMBER) {
-            if ((numOfPreviousSearchTokens > 0) && (!includePreviousSearches)) currentSearch = '|STRONG=' + searchWord;
+            if ((numOfPreviousSearchTokens > 0) && (!includePreviousSearches)) currentSearch = '|strong=' + searchWord;
             else currentSearch = '|syntax=strong:' + searchWord;
             if (typeof step.srchTxt == "undefined") step.srchTxt = {};
-            step.srchTxt[searchWord] = displayText;
+            if ((typeof step.srchTxt[searchWord] === "undefined") || (step.srchTxt[searchWord].length < 7))
+                step.srchTxt[searchWord] = displayText;
         }
         else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
         var previousSearch = "";
