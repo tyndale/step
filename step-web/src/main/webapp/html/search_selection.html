@@ -323,12 +323,15 @@
             var type = itemType;
             if (type.toLowerCase().startsWith("greek")) type = "Greek";
             else if (type.toLowerCase().startsWith("hebrew")) type = "Hebrew";
-            html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + actPsgeDataElm.item.gloss;
+            var htmlOfTerm = actPsgeDataElm.item.gloss;
             if (actPsgeDataElm.item.stepTransliteration !== "")
-                html += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
+                htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
+            html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
             listOfPreviousSearch.push(html);
-            if (actPsgeDataElm.token.toLowerCase().startsWith("strong:")) previousSearchTokens.push("strong=" + actPsgeDataElm.token.substr(7));
-            else previousSearchTokens.push("strong=" + actPsgeDataElm.token);
+            var strongNum = actPsgeDataElm.token.toLowerCase().startsWith("strong:") ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
+            previousSearchTokens.push("strong=" + strongNum);
+            if (typeof step.srchTxt == "undefined") step.srchTxt = {};
+            step.srchTxt[strongNum] = (actPsgeDataElm.item.stepTransliteration !== "") ? htmlOfTerm : strongNum;
         }
         else {
             var type = itemType;
@@ -996,7 +999,6 @@
         var allVersions = "";
         var range = (searchRange === "Gen-Rev") ? "" : "|reference=" + searchRange;
         var currentSearch = "";
-        var hasOrigLangSearch = false;
         for (var i = 0; i < activePassageData.length; i++) {
 			var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
 			switch(itemType) {
@@ -1009,7 +1011,6 @@
 				case GREEK_MEANINGS:
 				case HEBREW:
 				case HEBREW_MEANINGS:
-                    hasOrigLangSearch = true;
                     break;
 				case REFERENCE:
 					break;
