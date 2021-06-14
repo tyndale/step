@@ -947,8 +947,10 @@
 									str2Search = text2Display;
 								}
 								else if (searchType === TEXT_SEARCH) {
-                                    text2Display = data[i].suggestion.text;
-									str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
+                                    if (data[i].suggestion.text.search(/^[HG]\d/i) == -1) { // Make sure it is not a STRONG number (e.g.: H0001)
+                                        text2Display = data[i].suggestion.text;
+                                    	str2Search = text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22');
+                                    }
 								}
 								else {
 									text2Display = data[i].suggestion.gloss + ' (<i>' + data[i].suggestion.stepTransliteration +
