@@ -748,13 +748,17 @@ step.util = {
 									else searchWords += ', ';
 								}
                                 currSyntaxWord = syntaxWords[j].replace(/\(\s*/, '').replace(/\s*\)/, '');
-                                if (currSyntaxWord.substr(0, 7) === STRONG_NUMBER + ":") {
-                                    var strongNum = currSyntaxWord.substr(7);
+                                
+                                if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{4,5}[abcdefg]?)\s*(\)*)/) > -1) {
+                                    searchWords += RegExp.$1; // Prefix which can be one or more "("
+                                    var strongNum = RegExp.$2;
+                                    var suffix = RegExp.$3;
                                     if ((typeof step.srchTxt !== "undefined") &&
                                         (typeof step.srchTxt[strongNum] !== "undefined") &&
                                         (step.srchTxt[strongNum].search(/(<i>.+<\/i>)/) > -1))
                                         searchWords += RegExp.$1;
                                     else searchWords += strongNum;
+                                    searchWords += suffix;
                                 }
                                 else searchWords += syntaxWords[j];
 								searchRelationship = "";
