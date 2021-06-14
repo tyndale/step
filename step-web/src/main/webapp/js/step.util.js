@@ -747,8 +747,6 @@ step.util = {
 									if ((searchRelationship === "AND") || (searchRelationship === "OR") || (searchRelationship === "NOT")) searchWords += " " + searchRelationship + " ";
 									else searchWords += ', ';
 								}
-                                currSyntaxWord = syntaxWords[j].replace(/\(\s*/, '').replace(/\s*\)/, '');
-                                
                                 if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{4,5}[abcdefg]?)\s*(\)*)/) > -1) {
                                     searchWords += RegExp.$1; // Prefix which can be one or more "("
                                     var strongNum = RegExp.$2;

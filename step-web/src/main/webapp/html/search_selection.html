@@ -329,6 +329,7 @@
             html = "<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + htmlOfTerm;
             listOfPreviousSearch.push(html);
             var strongNum = actPsgeDataElm.token.toLowerCase().startsWith("strong:") ? actPsgeDataElm.token.substr(7) : actPsgeDataElm.token;
+            if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
             previousSearchTokens.push("strong=" + strongNum);
             if (typeof step.srchTxt === "undefined") step.srchTxt = {};
             if ((typeof step.srchTxt[strongNum] === "undefined") && (actPsgeDataElm.item.stepTransliteration !== ""))
@@ -391,14 +392,13 @@
 			'<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '</button>' +
             '</div><br>' +
 			'<span id="warningMessage" style="color: red;"></span>' +
-			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br>' + // size 16px so the mobile devices will not expand
+			'<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br><br>' + // size 16px so the mobile devices will not expand
             '<div id="search_table">' +
 			'<table border="1">' +
             '<colgroup>' +
             '<col span="1" style="width:39%;">' +
 			'<col span="1" style="width:61%;">' +
 			'</colgroup>' +
-			'<tr style="height:30px">' +
 			'<tr>' +
 			'<th scope="col">' + __s.type_of_search + '</th>' +
 			'<th scope="col">' + __s.suggested_search_words + '</th>' +
@@ -1027,10 +1027,15 @@
         if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
         else if (searchType === STRONG_NUMBER) {
             if ((numOfPreviousSearchTokens > 0) && (!includePreviousSearches)) currentSearch = '|strong=' + searchWord;
-            else currentSearch = '|syntax=strong:' + searchWord;
+            else {
+                if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a-g character
+                currentSearch = '|syntax=strong:' + searchWord;
+            }
             if (typeof step.srchTxt == "undefined") step.srchTxt = {};
-            if ((typeof step.srchTxt[searchWord] === "undefined") || (step.srchTxt[searchWord].length < 7))
+            if ((typeof step.srchTxt[searchWord] === "undefined") || (step.srchTxt[searchWord].length < 7)) {
+                if (searchWord.search(/([GH]\d{4,5})[abcdefg]$/) > -1) searchWord = RegExp.$1; // remove the last character if it is an a-g character
                 step.srchTxt[searchWord] = displayText;
+            }
         }
         else if (typeof searchType !== "undefined") currentSearch = '|' + searchType + '=' + searchWord;
         var previousSearch = "";
@@ -1050,7 +1055,8 @@
                     }
 					var curSearchWord = "";
 					if (previousSearchTokens[i].substr(0, 5) === "text=") curSearchWord = previousSearchTokens[i].substr(5);
-                    else if (previousSearchTokens[i].substr(0, 7) === "strong=") curSearchWord = "strong:" + previousSearchTokens[i].substr(7);
+                    else if (previousSearchTokens[i].substr(0, 7) === "strong=")
+                        curSearchWord = "strong:" + previousSearchTokens[i].substr(7);
 					if (curSearchWord !== "") {
 						numOfPreviousSyntaxSearch ++;
 						if (numOfPreviousSyntaxSearch == 1) previousSyntaxSearch =  "|syntax=";
