@@ -365,10 +365,13 @@ function _buildSearchHeaderAndTable() {
         '</tr>';
     for (var i = 0; i < searchTypeCode.length; i ++) {
         var srchCode = searchTypeCode[i];
+        var warnMsgForOrNotSearch = ((srchCode === MEANINGS) || (srchCode === SUBJECT_SEARCH)) ?
+            '<span id="searchResults' + srchCode + 'Warn" style="display:none">' + srchCode + ' search not available with "OR" or "NOT" search.</span>' :
+            "";
         html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
             '<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
             __s['search_type_title_' + srchCode] + '" style="font-size:12px;text-align:left">' + __s['search_type_desc_' + srchCode] + ':</td>' +
-            '<td id="searchResults' + srchCode + '" style="font-size:12px;text-align:left"></td>' +
+            '<td style="text-align:left"><span id="searchResults' + srchCode + '"></span>' + warnMsgForOrNotSearch + '</td>' +
             '</tr>';
     }
     html += '</table>' +
@@ -888,10 +891,14 @@ function _handleEnteredSearchWord(limitType, previousUserInput, userPressedEnter
                                 if (text2Display.length == 0) console.log('group, but no examples');
                                 else {
                                     text2Display += ', ' + __s.etc + '<i style="font-size:12px" class="glyphicon glyphicon-arrow-right"></i>';
+                                    if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
                                     searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:_handleEnteredSearchWord(\'' + searchType + '\')">' + text2Display + "</a>";
                                 }
                             }
-                            else searchResultsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
+                            else {
+                                if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
+                                searchResultsToDisplay[searchResultIndex] += 'There are ' + data[i].count + ' more options.  Keep typing to see them.';
+                            }
                         }
                         else {
                             var str2Search = "";
@@ -915,6 +922,7 @@ function _handleEnteredSearchWord(limitType, previousUserInput, userPressedEnter
                                 str2Search = data[i].suggestion.strongNumber;
                                 searchType = 'strong';
                             }
+                            if (searchResultsToDisplay[searchResultIndex] !== "") searchResultsToDisplay[searchResultIndex] += "<br>";
                             searchResultsToDisplay[searchResultIndex] += '<a style="padding:0px;" href="javascript:goSearch(\'' + searchType + '\',\'' + 
                                 str2Search + '\',\'' + 
                                 text2Display.replace(/["'\u201C\u201D\u2018\u2019]/g, '%22') +
@@ -1087,7 +1095,14 @@ function showPreviousSearch() {
     if ((element) && (element.checked)) {
         includePreviousSearches = true;
         $('#listofprevioussearchs').show();
-        $('#searchAndOrNot').show();
+        var foundSubjectOrMeaningsSearch = false;
+        for (var i = 0; i < previousSearchTokens.length; i++) {
+            if ((previousSearchTokens[i].startsWith(MEANINGS)) || 
+                (previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))
+                foundSubjectOrMeaningsSearch = true;
+        }
+        if (foundSubjectOrMeaningsSearch) $('#searchAndOrNot').hide();
+        else $('#searchAndOrNot').show();
         if (searchUserInput.length == 0) { 
             if ((rangeWasUpdated) || (andOrNotUpdated) ||
                 (numOfPreviousSearchTokens != previousSearchTokens.length)) $('#updateButton').show();
@@ -1101,6 +1116,8 @@ function showPreviousSearch() {
         $('#updateButton').hide();
         $("#searchResultssubject").show();
         $("#searchResultsmeanings").show();
+        $("#searchResultssubjectWarn").hide();
+        $("#searchResultsmeaningsWarn").hide();
     }
 }
 
@@ -1114,9 +1131,14 @@ function handlePreviousSearchAndOrNot() {
     if (searchAndOrNot === "AND") {
         $("#searchResultssubject").show();
         $("#searchResultsmeanings").show();
+        $("#searchResultssubjectWarn").hide();
+        $("#searchResultsmeaningsWarn").hide();
     }
     else {
         $("#searchResultssubject").hide();
         $("#searchResultsmeanings").hide();
+        $("#searchResultssubjectWarn").show();
+        $("#searchResultsmeaningsWarn").show();
+
     }
 }
