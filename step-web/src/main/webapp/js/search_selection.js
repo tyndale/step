@@ -209,7 +209,7 @@ function initSearchSelection() {
                             var strongNum = syntaxWords[j].substr(7);
                             if (strongNum.substr(0, 1).toUpperCase() === "G") itemType = GREEK;
                             else if (strongNum.substr(0, 1).toUpperCase() === "H") itemType = HEBREW;
-                            var result = step.util.getDetailsOfStrong(strongNum);
+                            var result = step.util.getDetailsOfStrong(strongNum, version);
                             currWord = {token: syntaxWords[j], item: {gloss: result[0], stepTransliteration: result[1], matchingForm: result[2]} };
                         }
                         else {
@@ -228,7 +228,7 @@ function initSearchSelection() {
             '<div id="modalonoffswitch">' +
                 '<span  class="pull-left" style="font-size:18px" id="search_with_previous"><b>Verses from previous searches ...</b>&nbsp;&nbsp;</span>' +
                 '<span class="pull-left">' +
-                    '<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text">' +
+                    '<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:handlePreviousSearchAndOrNot()">' +
                         '<option id="and_search" value="AND">that also include the above [AND]</option>' +
                         '<option id="or_search" value="OR">plus those including the above [OR]</option>' +
                         '<option id="not_search" value="NOT">that don\'t include the above [NOT]</option>' +
@@ -1092,16 +1092,31 @@ function showPreviousSearch() {
             if ((rangeWasUpdated) || (andOrNotUpdated) ||
                 (numOfPreviousSearchTokens != previousSearchTokens.length)) $('#updateButton').show();
         }
+        handlePreviousSearchAndOrNot();
     }
     else {
         includePreviousSearches = false;
         $('#listofprevioussearchs').hide();
         $('#searchAndOrNot').hide();
         $('#updateButton').hide();
+        $("#searchResultssubject").show();
+        $("#searchResultsmeanings").show();
     }
 }
 
 function handleAndOrNot() {
     andOrNotUpdated = true;
     $('#updateButton').show();
+}
+
+function handlePreviousSearchAndOrNot() {
+    var searchAndOrNot = $("#searchAndOrNot option:selected").val();
+    if (searchAndOrNot === "AND") {
+        $("#searchResultssubject").show();
+        $("#searchResultsmeanings").show();
+    }
+    else {
+        $("#searchResultssubject").hide();
+        $("#searchResultsmeanings").hide();
+    }
 }

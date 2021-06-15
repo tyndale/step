@@ -699,6 +699,7 @@ step.util = {
             }
 
             var isMasterVersion = _.where(searchTokens, {tokenType: VERSION }) > 1;
+            var firstVersion = "";
             var allSelectedBibleVersions = "";
             var allSelectedReferences = "";
 			var foundSearch = false;
@@ -711,6 +712,7 @@ step.util = {
                     if (allSelectedBibleVersions.length > 0) allSelectedBibleVersions += ", ";
 					allSelectedBibleVersions += (searchTokens[i].item.shortInitials.length > 0) ?
 						step.util.safeEscapeQuote(searchTokens[i].item.shortInitials) : step.util.safeEscapeQuote(searchTokens[i].token);
+                    if (firstVersion == "") firstVersion = allSelectedBibleVersions;
                     isMasterVersion = false;
                 }
                 else if (itemType === REFERENCE) {
@@ -752,7 +754,7 @@ step.util = {
                                     var prefix = RegExp.$1;
                                     var strongNum = RegExp.$2;
                                     var suffix = RegExp.$3;
-                                    var stepTransliteration = step.util.getDetailsOfStrong(strongNum)[1];
+                                    var stepTransliteration = step.util.getDetailsOfStrong(strongNum, firstVersion)[1];
                                     if (stepTransliteration === "") stepTransliteration = strongNum;
                                     searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
                                 }
@@ -2026,7 +2028,7 @@ step.util = {
             }
         }
 	},
-  	getDetailsOfStrong: function(strongNum) {
+  	getDetailsOfStrong: function(strongNum, version) {
         var gloss = strongNum;
         var stepTransliteration = "";
         var matchingForm = "";
@@ -2037,8 +2039,30 @@ step.util = {
             stepTransliteration = RegExp.$2;
             matchingForm = RegExp.$3;
         }
-        else {
-            // get the info from server
+        else { // get the info from server
+            var limitType = "";
+            var firstChar = strongNum.substr(0, 1);
+            if (firstChar === "G") limitType = GREEK;
+            else if (firstChar === "H") limitType = HEBREW;
+            if (limitType !== "") {
+                var url = SEARCH_AUTO_SUGGESTIONS + strongNum + "/" + VERSION + "%3D" + version + "%7C" + LIMIT + "%3D" + limitType + "%7C?lang=" + step.userLanguageCode;
+                var value = $.ajax({ 
+                    url: url,
+                    async: false
+                }).responseText;
+                if (value.length > 10) {
+                    var data = JSON.parse(value);
+                    if ((data.length > 0) && (typeof data[0] !== "undefined") &&
+                        (typeof data[0].suggestion !== "undefined")) {
+                        if (typeof data[0].suggestion.gloss !== "undefined") 
+                            gloss = data[0].suggestion.gloss;
+                        if (typeof data[0].suggestion.stepTransliteration !== "undefined") 
+                            stepTransliteration = data[0].suggestion.stepTransliteration;
+                        if (typeof data[0].suggestion.matchingForm !== "undefined") 
+                            matchingForm = data[0].suggestion.matchingForm;
+                    }
+                }
+            }
         }
         return [gloss, stepTransliteration, matchingForm];
     },
