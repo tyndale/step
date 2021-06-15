@@ -390,6 +390,34 @@
 								<jsFinalFile>color_code_config.${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
+                        <execution>
+							<id>minify-search_selection</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>minify</goal>
+							</goals>
+							<configuration>
+								<jsSourceDir>.</jsSourceDir>
+								<jsSourceFiles>
+									<jsSourceFile>js/search_selection.js</jsSourceFile>
+								</jsSourceFiles>
+								<jsFinalFile>search_selection.${project.version}.js</jsFinalFile>
+							</configuration>
+						</execution>
+                        <execution>
+							<id>minify-passage_selection</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>minify</goal>
+							</goals>
+							<configuration>
+								<jsSourceDir>.</jsSourceDir>
+								<jsSourceFiles>
+									<jsSourceFile>js/passage_selection.js</jsSourceFile>
+								</jsSourceFiles>
+								<jsFinalFile>passage_selection.${project.version}.js</jsFinalFile>
+							</configuration>
+						</execution>
 					</executions>
 				</plugin>
 
@@ -600,7 +628,6 @@
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags> 
                             </configuration>
 						</execution>
-						
 						<execution>
                             <id>change-acl</id>
 							<phase>prepare-package</phase>
@@ -619,7 +646,6 @@
 								<skip>${skipLocalHostACL}</skip>
                             </configuration>
 						</execution>
-
 						<execution>
                             <id>update-color_code-html</id>
 							<phase>prepare-package</phase>
@@ -632,6 +658,38 @@
                                 </includes>
                                 <replacements>
                                     <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
+                            </configuration>
+						</execution>
+						<execution>
+                            <id>update-search_selection-html</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                                <includes>
+                                    <include>${basedir}/target/step-web/html/search_selection.min.html</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token>search_selection\.js</token><value>search_selection.${project.version}.min.js</value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
+                            </configuration>
+						</execution>
+                        <execution>
+                            <id>update-passage_selection-html</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                                <includes>
+                                    <include>${basedir}/target/step-web/html/passage_selection.min.html</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token>passage_selection\.js</token><value>passage_selection.${project.version}.min.js</value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
                             </configuration>

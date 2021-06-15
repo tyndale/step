@@ -55,7 +55,6 @@
       $('#updateVersionOrderButton').hide();
 	});
 	function saveVersionOrder() {
-//	    if ((afterSort !== undefined) && (JSON.stringify(beforeSort) !== JSON.stringify(afterSort))) {
 		if (typeof afterSort === "undefined") afterSort = beforeSort;
 		var allVersions = "version=";
 		for (var i = 0; i < afterSort.length; i++) {
@@ -79,7 +78,6 @@
 		closeVersionOrder();
 		console.log("navigateSearch from order_version.html: " + url)
 		step.router.navigateSearch(url, true, true);
-//		}
 	}
 	function userCloseVersionOrder() {
 		afterSort = beforeSort;

@@ -748,15 +748,13 @@ step.util = {
 									else searchWords += ', ';
 								}
                                 if (syntaxWords[j].search(/\s*(\(*)\s*strong:([GH]\d{4,5}[abcdefg]?)\s*(\)*)/) > -1) {
-                                    searchWords += RegExp.$1; // Prefix which can be one or more "("
+                                    // RegExp.$1 is prefix of open parathesis, RegExp.$2 is the strong number, RegExp.$2 is the suffix of close parathesis
+                                    var prefix = RegExp.$1;
                                     var strongNum = RegExp.$2;
                                     var suffix = RegExp.$3;
-                                    if ((typeof step.srchTxt !== "undefined") &&
-                                        (typeof step.srchTxt[strongNum] !== "undefined") &&
-                                        (step.srchTxt[strongNum].search(/(<i>.+<\/i>)/) > -1))
-                                        searchWords += RegExp.$1;
-                                    else searchWords += strongNum;
-                                    searchWords += suffix;
+                                    var stepTransliteration = step.util.getDetailsOfStrong(strongNum)[1];
+                                    if (stepTransliteration === "") stepTransliteration = strongNum;
+                                    searchWords += prefix + "<i>" + stepTransliteration + "</i>" + suffix;
                                 }
                                 else searchWords += syntaxWords[j];
 								searchRelationship = "";
@@ -1609,7 +1607,7 @@ step.util = {
 			element.parentNode.removeChild(element);
 		}
     },
-	showByGeo: function(testMode) {
+	showByGeo: function(testMode) { // This need to be updated when new language are added.
 		var africa_lang = [
 			"Afrikaans",
 			"Amharic",
@@ -2027,6 +2025,28 @@ step.util = {
 
             }
         }
-	}
+	},
+  	getDetailsOfStrong: function(strongNum) {
+        var gloss = strongNum;
+        var stepTransliteration = "";
+        var matchingForm = "";
+        if ((typeof step.srchTxt !== "undefined") &&
+            (typeof step.srchTxt[strongNum] !== "undefined") &&
+            (step.srchTxt[strongNum].search(/(.+)\s\(<i>(.+)<\/i>\s-\s(.+)\)/) > -1)) {
+            gloss = RegExp.$1;
+            stepTransliteration = RegExp.$2;
+            matchingForm = RegExp.$3;
+        }
+        else {
+            // get the info from server
+        }
+        return [gloss, stepTransliteration, matchingForm];
+    },
+    putStrongDetails: function(strongNum, details) {
+        if (typeof step.srchTxt === "undefined") step.srchTxt = {};
+        if (strongNum.search(/([GH]\d{4,5})[abcdefg]$/) > -1) strongNum = RegExp.$1; // remove the last character if it is an a-g character
+        if ((typeof step.srchTxt[strongNum] === "undefined") || (step.srchTxt[strongNum].length < 7))
+            step.srchTxt[strongNum] = details;
+    }
 }
 ;
