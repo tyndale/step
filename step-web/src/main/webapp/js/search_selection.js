@@ -366,7 +366,7 @@ function _buildSearchHeaderAndTable() {
     for (var i = 0; i < searchTypeCode.length; i ++) {
         var srchCode = searchTypeCode[i];
         var warnMsgForOrNotSearch = ((srchCode === MEANINGS) || (srchCode === SUBJECT_SEARCH)) ?
-            '<span id="searchResults' + srchCode + 'Warn" style="display:none">' + srchCode + ' search not available with "OR" or "NOT" search.</span>' :
+            '<span id="searchResults' + srchCode + 'Warn" style="display:none">Not available with "OR" or "NOT" search.</span>' :
             "";
         html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
             '<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
