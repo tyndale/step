@@ -1040,10 +1040,10 @@ function goSearch(searchType, searchWord, displayText) {
             }
             else currentSearch = previousSyntaxSearch + currentSearch;
         }
-        if ( ((searchAndOrNot === "OR") || (searchAndOrNot === "NOT")) &&
-             ( (previousSearch !== "") || 
-                 ((searchType !== TEXT_SEARCH) && (searchType !== STRONG_NUMBER)) ) )
-                alert(searchAndOrNot + " search is not available for subject and fuzzy search.  An AND search will be used.");
+        // if ( ((searchAndOrNot === "OR") || (searchAndOrNot === "NOT")) &&
+             // ( (previousSearch !== "") || 
+                 // ((searchType !== TEXT_SEARCH) && (searchType !== STRONG_NUMBER)) ) )
+                // alert(searchAndOrNot + " search is not available for subject and fuzzy search.  An AND search will be used.");
     }
     var url = allVersions + range + previousSearch + currentSearch;
     var selectedDisplayLoc = $( "#displayLocation option:selected" ).val();
@@ -1095,13 +1095,14 @@ function showPreviousSearch() {
     if ((element) && (element.checked)) {
         includePreviousSearches = true;
         $('#listofprevioussearchs').show();
-        var foundSubjectOrMeaningsSearch = false;
+        var onlyFoundSubjectOrMeaningsSearch = true;
         for (var i = 0; i < previousSearchTokens.length; i++) {
-            if ((previousSearchTokens[i].startsWith(MEANINGS)) || 
-                (previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))
-                foundSubjectOrMeaningsSearch = true;
+            if ((previousSearchTokens[i] !== "") &&
+                (!previousSearchTokens[i].startsWith(MEANINGS)) &&
+                (!previousSearchTokens[i].startsWith(SUBJECT_SEARCH)))
+                onlyFoundSubjectOrMeaningsSearch = false;
         }
-        if (foundSubjectOrMeaningsSearch) $('#searchAndOrNot').hide();
+        if (onlyFoundSubjectOrMeaningsSearch) $('#searchAndOrNot').hide();
         else $('#searchAndOrNot').show();
         if (searchUserInput.length == 0) { 
             if ((rangeWasUpdated) || (andOrNotUpdated) ||
