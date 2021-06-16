@@ -158,7 +158,10 @@ var PickBibleView = Backbone.View.extend({
             element.parentNode.removeChild(element);
         }
         orderVersionDiv.appendTo("body");
-        $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.html');
+        if ($.getUrlVars().indexOf("debug") == -1)
+            $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.min.html');
+        else
+            $('#orderVersionModal').modal('show').find('.modal-content').load('/html/order_version.html');
     },
     okButton: function (ev) {
         this.closeModal(ev);

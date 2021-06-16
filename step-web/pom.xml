@@ -418,6 +418,20 @@
 								<jsFinalFile>passage_selection.${project.version}.js</jsFinalFile>
 							</configuration>
 						</execution>
+                        <execution>
+							<id>minify-order_version</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>minify</goal>
+							</goals>
+							<configuration>
+								<jsSourceDir>.</jsSourceDir>
+								<jsSourceFiles>
+									<jsSourceFile>js/order_version.js</jsSourceFile>
+								</jsSourceFiles>
+								<jsFinalFile>order_version.${project.version}.js</jsFinalFile>
+							</configuration>
+						</execution>
 					</executions>
 				</plugin>
 
@@ -658,6 +672,7 @@
                                 </includes>
                                 <replacements>
                                     <replacement><token>color_code_config\.js</token><value>color_code_config.${project.version}.min.js</value></replacement>
+                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
                             </configuration>
@@ -674,6 +689,7 @@
                                 </includes>
                                 <replacements>
                                     <replacement><token>search_selection\.js</token><value>search_selection.${project.version}.min.js</value></replacement>
+                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
                             </configuration>
@@ -690,14 +706,30 @@
                                 </includes>
                                 <replacements>
                                     <replacement><token>passage_selection\.js</token><value>passage_selection.${project.version}.min.js</value></replacement>
+                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
                                 </replacements>
                                 <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
                             </configuration>
 						</execution>
-
+                        <execution>
+                            <id>update-order_version-html</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>replace</goal>
+							</goals>
+                            <configuration>
+                                <includes>
+                                    <include>${basedir}/target/step-web/html/order_version.min.html</include>
+                                </includes>
+                                <replacements>
+                                    <replacement><token>order_version\.js</token><value>order_version.${project.version}.min.js</value></replacement>
+                                    <replacement><token>^[\t\s]+</token><value></value></replacement>
+                                </replacements>
+                                <regexFlags> <regexFlag>MULTILINE</regexFlag> </regexFlags>
+                            </configuration>
+						</execution>
 					</executions>
 				</plugin>
-
 				<plugin>
 					<groupId>org.codehaus.cargo</groupId>
 					<artifactId>cargo-maven2-plugin</artifactId>

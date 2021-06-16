@@ -3,33 +3,33 @@
 <script src='js/color_code_config.js'></script>
 <script src='libs/spectrum.js'></script>
 <div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>
+	<button type="button" class="close" data-dismiss="modal" onclick=closeClrConfig()>X</button>
 </div>
 <div class="modal-body">
 <div id="colortabs">
-<ul class="nav nav-tabs">
-<li class="active"><a href="#nounClrs" data-toggle="tab">Number & Gender</a></li>
-<li><a href="#verbClrs" data-toggle="tab">Greek Verbs</a></li>
-<li><a href="#hVerbClrs" data-toggle="tab">OT Verbs</a></li>
-</ul>
-<div class="tab-content">
-<div class="tab-pane fade in active" id="nounClrs">
-</div>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#nounClrs" data-toggle="tab">Number & Gender</a></li>
+		<li><a href="#verbClrs" data-toggle="tab">Greek Verbs</a></li>
+		<li><a href="#hVerbClrs" data-toggle="tab">OT Verbs</a></li>
+	</ul>
+	<div class="tab-content">
+	<div class="tab-pane fade in active" id="nounClrs">
+	</div>
 <div class="tab-pane fade" id="verbClrs"></div>
 <div class="tab-pane fade" id="hVerbClrs"></div>
 <div class="footer">
-<br>
-<button id="openButton" class="stepButton" onclick=openClrConfig()><label>Open</label></button>
-<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>
-<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>
-<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>
-<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>
+	<br>
+	<button id="openButton" class="stepButton" onclick=openClrConfig()><label>Open</label></button>
+	<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>
+	<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>
+	<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>
+	<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>
 </div>
 </div>
 </div>
 </div>
 <script>
-$( document ).ready(function() {
-initializeClrCodeHtmlModalPage();
-});
+	$( document ).ready(function() {
+		initializeClrCodeHtmlModalPage();
+	});
 </script>

@@ -1500,7 +1500,10 @@ step.util = {
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">');
             passageSelectDiv.appendTo("body");
-            $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
+            if ($.getUrlVars().indexOf("debug") == -1)
+                $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.min.html');
+            else
+                $('#passageSelectionModal').modal('show').find('.modal-content').load('/html/passage_selection.html');
     },
 
 	searchSelectionModal: function () {
@@ -1510,7 +1513,10 @@ step.util = {
             '<div class="modal-dialog">' +
             '<div class="modal-content" style="width:100%;max-width:100%;top:0;right:0;bottom:0;left:0;-webkit-overflow-scrolling:touch">');
         searchSelectDiv.appendTo("body");
-        $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
+        if ($.getUrlVars().indexOf("debug") == -1)
+            $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.min.html');
+        else
+            $('#searchSelectionModal').modal('show').find('.modal-content').load('/html/search_selection.html');
     },
 	showVideoModal: function (videoFile, seconds) {
         var element = document.getElementById('videoModal');
