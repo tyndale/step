@@ -968,26 +968,9 @@ function goSearch(searchType, searchWord, displayText) {
     var currentSearch = "";
     for (var i = 0; i < activePassageData.length; i++) {
         var itemType = activePassageData[i].itemType ? activePassageData[i].itemType : activePassageData[i].tokenType
-        switch(itemType) {
-            case SYNTAX:
-            case TEXT_SEARCH:
-            case MEANINGS:
-            case SUBJECT_SEARCH:
-                break;
-            case GREEK:
-            case GREEK_MEANINGS:
-            case HEBREW:
-            case HEBREW_MEANINGS:
-                break;
-            case REFERENCE:
-                break;
-            case VERSION:
-                if (allVersions.length > 0) allVersions += '|';
-                allVersions += 'version=' + activePassageData[i].item.shortInitials;
-                break;
-            default:
-                alert("unknown item type: " + itemType);
-                break;
+        if (itemType === VERSION) {
+            if (allVersions.length > 0) allVersions += '|';
+            allVersions += 'version=' + activePassageData[i].item.shortInitials;
         }
     }
     if (searchType === TEXT_SEARCH) currentSearch = '|syntax=' + searchWord;
