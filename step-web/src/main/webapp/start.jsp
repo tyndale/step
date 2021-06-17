@@ -364,7 +364,7 @@
             <div class="hidden-xs col-sm-6 column examplesColumn" dir="${ ltr ? "ltr" : "rtl" }">
             </div>
         </div>
-        <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
+        <div class="sidebar-offcanvas" id="sidebar" style="overflow-y:none" role="navigation"></div>
     </div>
 </div>
 

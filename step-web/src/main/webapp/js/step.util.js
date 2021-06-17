@@ -380,6 +380,17 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
+        var heightToSet = $('.passageContainer.active').height();
+        if (typeof heightToSet === "number") {
+            heightToSet -= 60;
+            heightToSet += "px";
+        }
+        else heightToSet = "85vh";
+        console.log("lexicon height: " + heightToSet);
+		$("#lexicon").height(heightToSet);
+		$("#analysis").height(heightToSet);
+		$("#history").height(heightToSet);
+		$("#help").height(heightToSet);
 //		for (var i = 0; i < columns.length; i++) {
 //			var passageContainer = $(columns[i]).find('.passageContainer');
 //			step.util.adjustPassageOptionHeight(passageContainer);
