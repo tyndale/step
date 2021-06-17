@@ -517,7 +517,7 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSelect").remove();
-        newColumn.find(".select-reference").text("Passage:");
+        newColumn.find(".select-reference").text("Ref:");
 		newColumn.find('.select-reference').attr("onclick", "step.util.passageSelectionModal(" + newPassageId + ")");
 		newColumn.find(".select-search").html('<i style="font-size:12px" class="find glyphicon glyphicon-search"></i>');
         newColumn.find(".resultsLabel").html("");
@@ -787,8 +787,8 @@ step.util = {
 			var charAvailable = Math.floor((Math.max(0, (widthAvailable - 220)) / 9)) + 12;
 			if (!foundSearch) {
 				if (((allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length) <= (charAvailable - 9)) &&
-					(allSelectedReferences === 'Gen 1')) allSelectedReferences = "Passage: Gen 1";
-				else if (allSelectedReferences.length == 0) allSelectedReferences = "Passage:";
+					(allSelectedReferences === 'Gen 1')) allSelectedReferences = "Ref: Gen 1";
+				else if (allSelectedReferences.length == 0) allSelectedReferences = "Ref:";
 			}
 			else if (allSelectedReferences.length == 0) charAvailable -= 10; // save space for "Passage:"
 			if (outputMode === "span") {
@@ -820,9 +820,8 @@ step.util = {
 				searchWords += " (" + allSelectedReferences + ")";
 				allSelectedReferences = "";
 			}
-			if (allSelectedReferences.length == 0) allSelectedReferences = "Passage:";
+			if (allSelectedReferences.length == 0) allSelectedReferences = "Ref:";
 			charUsed = allSelectedBibleVersions.length + allSelectedReferences.length + searchWords.length;
-			if ((charUsed > charAvailable) && (allSelectedReferences === "Passage:")) allSelectedReferences === "Psge:";
 			
 			if (outputMode === "button") {
 				if (allSelectedBibleVersions.length > 0)
