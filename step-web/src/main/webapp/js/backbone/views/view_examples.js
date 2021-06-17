@@ -232,7 +232,8 @@ var ExamplesView = Backbone.View.extend({
 	),
     events: {
         'click .closeColumn': 'onClickClose',
-        'click .accordion-heading': 'onClickHeading'
+        'click .accordion-heading': 'onClickHeading',
+		'click .plusminus': 'onClickHeading'
     },
     initialize: function () {
         this.render();
@@ -248,45 +249,58 @@ var ExamplesView = Backbone.View.extend({
     },
     initAccordions: function () {
         var count = this.$el.find(".accordion-row").length;
-        var i;
         var hasStoredState = false;
-
-        for (i = 0; i < count; i++) {
-            if (localStorage.getItem("stepBible-displayQuickTryoutAccordion" + i) === "true") {
+        var timesDisplayedKey = "accordionTimesDisplayed";
+		var timesDisplayed = localStorage.getItem(timesDisplayedKey);
+		if (timesDisplayed == null) timesDisplayed = 1;
+		else timesDisplayed ++;
+		
+        for (var i = 0; i < count; i++) {
+            if (localStorage.getItem("displayQuickTryoutAccordion" + i) === "true") {
                 hasStoredState = true;
-                this.toggleAccordion(i);
+				var index = i;
+				if (timesDisplayed > 4) {
+					index = (i + 1) % count;
+					timesDisplayed = 1;
+				}
+                this.toggleAccordion(index, count);
             }
         }
-
-        if (!hasStoredState) {
-            this.toggleAccordion(0);
-        }
+        if (!hasStoredState) this.toggleAccordion(0, count);
+		localStorage.setItem(timesDisplayedKey, timesDisplayed);
     },
-    toggleAccordion: function (index) {
+    toggleAccordion: function (index, accordionCount) {
         var query = ".accordion-row[data-row=" + index + "]";
         var $accordionRow = this.$el.find(query);
         var $accordionBody = $accordionRow.find(".accordion-body");
-        var storageKey = "stepBible-displayQuickTryoutAccordion" + index;
-
-        if ($accordionBody.is(":visible")) {
-            $accordionRow.find(".accordion-body").slideUp();
-			$accordionRow.find(".accordion-heading").removeClass('stepPressedButton');
-            $accordionRow.find(".plusminus").text("+");
-            localStorage.setItem(storageKey, "false");
-        }
-        else {
+        var storageKey = "displayQuickTryoutAccordion" + index;
+		var displayFlag = false;
+		if (typeof accordionCount === "number") {
+			displayFlag = true;
+			for (var i = 0; i < accordionCount; i++) {
+				localStorage.setItem("displayQuickTryoutAccordion" + i, "false") ;
+			}
+		}
+        if ( (!$accordionBody.is(":visible")) || (displayFlag) ) {
             $accordionRow.find(".accordion-body").slideDown();
 			$accordionRow.find(".accordion-heading").addClass('stepPressedButton');
             $accordionRow.find(".plusminus").text("-");
             localStorage.setItem(storageKey, "true");
         }
+        else {
+            $accordionRow.find(".accordion-body").slideUp();
+			$accordionRow.find(".accordion-heading").removeClass('stepPressedButton');
+            $accordionRow.find(".plusminus").text("+");
+            localStorage.setItem(storageKey, "false");
+        }
     },
     onClickHeading: function (event) {
 		event.stopImmediatePropagation();
 		event.stopPropagation(); //prevent the bubbling up
-        var $target = $(event.target);
-        var $accordionRow = $target.parent();
-        var index = $accordionRow.attr("data-row");
+        var target = $(event.target);
+        var accordionRow = target.parent();
+		if ($(accordionRow).find('.accordion-heading').length == 0) accordionRow = $(accordionRow).parent();
+        var index = accordionRow.attr("data-row");
         this.toggleAccordion(index);
     },
     onClickClose: function () {

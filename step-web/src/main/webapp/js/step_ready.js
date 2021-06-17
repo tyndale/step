@@ -163,15 +163,16 @@
             step.passages.add(new PassageModel({passageId: 0}));
         }
 
-        new ExamplesView({ el: $(".examplesColumn") });
+        // new ExamplesView({ el: $(".examplesColumn") });
 		
 	    var stepUsageCountStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
 		if (isNaN(stepUsageCount)) stepUsageCount = 0;
-		if ((stepUsageCount > 10) && (window.innerWidth > 768)) {
-			step.util.showOrHideTutorial(true);
+		if ((stepUsageCount > 12) && (window.innerWidth > 767)) {
+			// step.util.showOrHideTutorial(true);
 			step.util.ui.showTutorial();
 		}
+		else new ExamplesView({ el: $(".examplesColumn") });
 		stepUsageCount ++;
 		if (window.localStorage) window.localStorage.setItem("step.usageCount", stepUsageCount);
 		else $.cookie('step.usageCount', stepUsageCount);

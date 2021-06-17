@@ -440,10 +440,9 @@ step.util = {
         var allRealColumns = $(".column").not(".examplesColumn");
         var exampleContainer = $(".examplesContainer");
         if (exampleContainer.parent().hasClass("column")) {
-            if (allRealColumns.length > 1 || hide) {
-                exampleContainer.parent().remove();
-            }
+            if (allRealColumns.length > 1) exampleContainer.parent().remove();
         }
+		else if (hide) $(".examplescolumn").remove();
         this.refreshColumnSize();
     },
     /**
@@ -1583,7 +1582,7 @@ step.util = {
 		}
 	},
 	showIntro: function (showAnyway) {
-	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.introJs") : $.cookie('step.introJs');
+	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);
 		if (isNaN(introCount)) introCount = 0;
 		if ((introCount < 3) || (showAnyway)) {
@@ -1612,9 +1611,6 @@ step.util = {
 				steps: introJsSteps
 			}).start();
 		}
-		introCount ++;
-		if (window.localStorage) window.localStorage.setItem("step.introJs", introCount);
-		else $.cookie('step.introJs', introCount);
 	},
 	closeModal: function (modalID) {
         var element = document.getElementById(modalID);
