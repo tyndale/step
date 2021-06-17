@@ -164,6 +164,17 @@
         }
 
         new ExamplesView({ el: $(".examplesColumn") });
+		
+	    var stepUsageCountStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
+		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
+		if (isNaN(stepUsageCount)) stepUsageCount = 0;
+		if (stepUsageCount > 10) {
+			step.util.showOrHideTutorial(true);
+			step.util.ui.showTutorial();
+		}
+		stepUsageCount ++;
+		if (window.localStorage) window.localStorage.setItem("step.usageCount", stepUsageCount);
+		else $.cookie('step.usageCount', stepUsageCount);
 
         $("#stepDisclaimer").popover();
     }
