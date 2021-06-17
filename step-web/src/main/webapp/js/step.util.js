@@ -439,9 +439,8 @@ step.util = {
     showOrHideTutorial: function (hide) {
         var allRealColumns = $(".column").not(".examplesColumn");
         var exampleContainer = $(".examplesContainer");
-        if (exampleContainer.parent().hasClass("column")) {
-            if (allRealColumns.length > 1) exampleContainer.parent().remove();
-        }
+        if ((exampleContainer.parent().hasClass("column")) &&
+			(allRealColumns.length > 0)) exampleContainer.parent().remove();
 		else if (hide) $(".examplescolumn").remove();
         this.refreshColumnSize();
     },
@@ -1543,16 +1542,18 @@ step.util = {
     },
 	setClassicalUI: function (classicalUI) {
 		if (classicalUI) {
-			$('#s2id_masterSearch').show();
-			$('.findButton').show();
+			$('#top_input_area').show();
+			// $('#s2id_masterSearch').show();
+			// $('.findButton').show();
 			$('span.tmp-rm-hidden-xs.title').removeClass('tmp-rm-hidden-xs').addClass('hidden-xs');
 			$('.navbarIconDesc').hide();
 			$('.quick_tutorial').show();
 			$('#classicalUICheck').show();
 		}
 		else {
-			$('#s2id_masterSearch').hide();
-			$('.findButton').hide();
+			$('#top_input_area').hide();
+			// $('#s2id_masterSearch').hide();
+			// $('.findButton').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
 			// if the screen is small (probably mobile devices) increase the font size 1 time.
 			if ((window.matchMedia("only screen and (max-width: 760px)").matches) &&
