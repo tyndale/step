@@ -168,7 +168,7 @@
 	    var stepUsageCountStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
 		if (isNaN(stepUsageCount)) stepUsageCount = 0;
-		if (stepUsageCount > 10) {
+		if ((stepUsageCount > 10) && (window.innerWidth > 768)) {
 			step.util.showOrHideTutorial(true);
 			step.util.ui.showTutorial();
 		}
