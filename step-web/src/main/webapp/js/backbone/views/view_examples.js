@@ -75,16 +75,16 @@ var ExamplesView = Backbone.View.extend({
   					'<a href="javascript:step.util.showVideoModal(\'1Joh_passage_analysis.gif\', 12)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 
 					'<br><br><a href="javascript:step.util.showIntro(true)">' +
-					'<span id="quickTour"><span style="font-size:14px;font-weight:bold;color:black">Quick tour</span>' +
-					'<br><span class="explanationText">Take a quick tour of the new user interface.</span>' +
+					'<span id="quickTour"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.quick_tour %></span>' +
+					'<br><span class="explanationText"><%= __s.quick_tour_explain %></span>' +
 					'</span>' +
 					'</a>' +
                     '<span class="explanationText">  Or see a quick introduction in the </span>' +
                     '<a href="https://drive.google.com/drive/folders/19OgRWS8Rbk92V5zAETpJ14QFSNjf76um">' +
                     'user guide.</a>' +
 
-					'<br><br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black">Old user interface</span>' +
-					'<br><span class="explanationText">STEP Bible has improved the user interface. We do not recommend the old user interface, but it is available in case you prefer the old input line, the following video shows how to re-enable the old input line.</span>' +
+					'<br><br><div id="classicalUIVideo"><span style="font-size:14px;font-weight:bold;color:black"><%= __s.display_classical_ui %></span>' +
+					'<br><span class="explanationText"><%= __s.advanced_interface_explain %></span>' +
 					'<a href="javascript:step.util.showVideoModal(\'ClassicalUI.gif\', 16)">&nbsp;<span class="glyphicon glyphicon-film" style="font-size:16px"></span></a>' +
 					'</div>' +
 					
@@ -131,7 +131,7 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="argSelect stepButton">LXX, AB, ABGk, ABEn</span><span class="argSelect stepButton">Exo 31</span>' +
 					'</a>' +
 					'</span>' +
-					'<span class="explanationText"><b>The Septuagint (OT in Greek)</b> older versions (“LXX” is Rhalfs) and later ecclesiastical versions (ABGr).</span>' +
+					'<span class="explanationText"><%= __s.lxx_ab %></span>' +
 
 					'<span class="input-group" style="overflow:hidden">' +
                     '<a href="?q=version=ESV|version=THOT|version=ABGk|version=ABEn|reference=Isa.53.1 John.12.38&options=VVNH&display=COLUMN&pos=1" title="<%= __s.click_to_try_this %>">' +
@@ -139,7 +139,7 @@ var ExamplesView = Backbone.View.extend({
 					'<span class="argSelect stepButton">ESV, THOT, ABGk, ABEn</span><span class="argSelect stepButton">Isa 53:1, Joh 12:38</span>' +
 					'</a>' +
 					'</span>' +
-					'<span class="explanationText"><b>Compare and search Greek in OT & NT.</b> Most English tagged versions are linked with Hebrew OT and Greek NT. A few are linked with Greek OT & NT.</span>' +
+					'<span class="explanationText"><%= __s.cmp_greek_hebrew %></span>' +
 
 				'</div>' +
 			'</div>' +

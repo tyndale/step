@@ -141,7 +141,7 @@
                         <div class="input-group" id="top_input_area" style="display:none">
                             <input id="masterSearch" type="text" class="form-control input-lg">
                             <span class="input-group-btn findButton">
-                                    <span>Search</span><i class="find glyphicon glyphicon-search"></i>
+                                <span>Search</span><i class="find glyphicon glyphicon-search"></i>
                             </span>
                         </div>
                     </form>
@@ -364,7 +364,7 @@
             <div class="hidden-xs col-sm-6 column examplesColumn" dir="${ ltr ? "ltr" : "rtl" }">
             </div>
         </div>
-        <div class="sidebar-offcanvas" id="sidebar" style="overflow-y:none" role="navigation"></div>
+        <div class="sidebar-offcanvas" id="sidebar" style="overflow-y:hidden" role="navigation"></div>
     </div>
 </div>
 

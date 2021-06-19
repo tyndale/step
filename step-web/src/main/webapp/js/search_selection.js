@@ -226,12 +226,12 @@ function initSearchSelection() {
         if (listOfPreviousSearch.length > 0) {
             var previousSearchHTML =
             '<div id="modalonoffswitch">' +
-                '<span  class="pull-left" style="font-size:18px" id="search_with_previous"><b>Verses from previous searches ...</b>&nbsp;&nbsp;</span>' +
+                '<span class="pull-left" style="font-size:18px" id="search_with_previous">' + __s.search_with_previous + '&nbsp;&nbsp;</span>' +
                 '<span class="pull-left">' +
                     '<select id="searchAndOrNot" style="display:none;font-size:16px" class="stepButton" type="text" onchange="javascript:handlePreviousSearchAndOrNot()">' +
-                        '<option id="and_search" value="AND">that also include the above [AND]</option>' +
-                        '<option id="or_search" value="OR">plus those including the above [OR]</option>' +
-                        '<option id="not_search" value="NOT">that don\'t include the above [NOT]</option>' +
+                        '<option id="and_search" value="AND">' + __s.search_previous_and + '</option>' +
+                        '<option id="or_search" value="OR">' + __s.search_previous_or + '</option>' +
+                        '<option id="not_search" value="NOT">' + __s.search_previous_not + '</option>' +
                     '</select>' +
                 '</span>' +
                 '<span class="onoffswitch2 pull-left">' +
@@ -276,15 +276,16 @@ function createPreviousSearchList(itemType, actPsgeDataElm, listOfPreviousSearch
         var notSelected = (previousSearchRelationship === "NOT") ? " selected" : "";
         previousSearchRelationship = 
             ' <select id="searchAndOrNot' + numOfPreviousSearchTokens + '" class="stepButton" style="font-size:16px" type="text" onchange="javascript:handleAndOrNot()">' +
-                '<option id="and_search" value="AND"' + andSelected + '>AND</option>' +
-                '<option id="or_search" value="OR"' + orSelected + '>OR</option>' +
-                '<option id="not_search" value="NOT"' + notSelected + '>NOT</option>' +
+                '<option id="and_search" value="AND"' + andSelected + '>' + __s.and + '</option>' +
+                '<option id="or_search" value="OR"' + orSelected + '>' + __s.or + '</option>' +
+                '<option id="not_search" value="NOT"' + notSelected + '>' + __s.not + '</option>' +
             '</select> ';
     }
+	var type = itemType.toLowerCase();
     if (searchTypeCode.indexOf(itemType) > 2) {
-        var type = itemType;
-        if (type.toLowerCase().startsWith("greek")) type = "Greek";
-        else if (type.toLowerCase().startsWith("hebrew")) type = "Hebrew";
+        if (type.startsWith("greek")) type = "greek";
+        else if (type.startsWith("hebrew")) type = "hebrew";
+		if (typeof __s[type] !== "undefined") type = __s[type];
         var htmlOfTerm = actPsgeDataElm.item.gloss;
         if (actPsgeDataElm.item.stepTransliteration !== "")
             htmlOfTerm += ' (<i>' + actPsgeDataElm.item.stepTransliteration + '</i> - ' + actPsgeDataElm.item.matchingForm + ')';
@@ -296,8 +297,7 @@ function createPreviousSearchList(itemType, actPsgeDataElm, listOfPreviousSearch
         if (actPsgeDataElm.item.stepTransliteration !== "") step.util.putStrongDetails(strongNum, htmlOfTerm);
     }
     else {
-        var type = itemType;
-        if (type.toLowerCase() === "text") type = "Word or phrase";
+        if (typeof __s[type] !== "undefined") type = __s[type];
         listOfPreviousSearch.push("<span style='font-size:16px'>" + previousSearchRelationship + type + "</span> = " + actPsgeDataElm.token);
         previousSearchTokens.push(itemType + "=" + actPsgeDataElm.token);
     }
@@ -366,7 +366,7 @@ function _buildSearchHeaderAndTable() {
     for (var i = 0; i < searchTypeCode.length; i ++) {
         var srchCode = searchTypeCode[i];
         var warnMsgForOrNotSearch = ((srchCode === MEANINGS) || (srchCode === SUBJECT_SEARCH)) ?
-            '<span id="searchResults' + srchCode + 'Warn" style="display:none">Not available with "OR" or "NOT" search.</span>' :
+            '<span id="searchResults' + srchCode + 'Warn" style="display:none">' + __s.incompatible_search + '</span>' :
             "";
         html += '<tr style="height:40px;" class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '">' +
             '<td class="select2-results-dept-0 select2-result select2-result-selectable select-' + srchCode + '" title="' + 
@@ -735,30 +735,28 @@ function _userClickedTestament(clicked_id) {
         $("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
             $(el).removeClass('stepPressedButton');
         });
-        $('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
+        $('#updateFeedback').text(__s.removed + " \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
     }
     else {
         $(clicked_id2).addClass('stepPressedButton');
         $("button[id^='" + clicked_id.substring(0, 2) + "_tableg']").each(function (i, el) {
             $(el).addClass('stepPressedButton');
         });
-        $('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
+        $('#updateFeedback').text(__s.added + " \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
     }
 }
 
 function _userClickedCategory(clicked_id) {
     var clicked_id2 = '#' + clicked_id;
-    var categoryName = $(clicked_id2).text();
     $('#searchSelectError').text(__s.click_update_when_finish);
     $('#updateRangeButton').show();
-    categoryName = categoryName.replace(/:$/, "");
     if ($(clicked_id2).hasClass('stepPressedButton')) {
         $(clicked_id2).removeClass('stepPressedButton');
         $("button[id^='" + clicked_id + "b']").each(function (i, el) {
             $(el).removeClass('stepPressedButton');
         });
         $(clicked_id2.substring(0, 3) + '_hdr').removeClass('stepPressedButton');
-        $('#updateFeedback').text("Removed \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
+        $('#updateFeedback').text(__s.removed + " \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
     }
     else {
         $(clicked_id2).addClass('stepPressedButton');
@@ -766,7 +764,7 @@ function _userClickedCategory(clicked_id) {
             $(el).addClass('stepPressedButton');
         });
         _checkHeaderButton(clicked_id);
-        $('#updateFeedback').text("Added \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
+        $('#updateFeedback').text(__s.added + " \"" + $(clicked_id2).text().replace(/:$/, '') + "\".");
     }
 }
 
