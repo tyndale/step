@@ -347,9 +347,34 @@ function goBackToPreviousPage() {
 }
 
 function _buildSearchHeaderAndTable() {
+	var copyOfRange = searchRange;
+	var displayRange = searchRange;
+	// Show the book names in the local language
+	if (((userLang.toLowerCase().startsWith("zh")) || (userLang.toLowerCase().startsWith("es"))) &&
+		(_getTranslationType() !== "")) {
+		displayRange = "";
+        var arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
+		while (copyOfRange != "") {
+			var separatorChar = "";
+			var pos = copyOfRange.search(/[-,]/);
+			if (pos > -1) separatorChar = copyOfRange.substr(pos, 1);
+			else pos = copyOfRange.length;
+			var currentOsisID = copyOfRange.substr(0, pos);
+			var posOfBook = idx2osisChapterJsword[currentOsisID];
+			if ((posOfBook > -1) &&
+				(typeof arrayOfTyplicalBooksChapters !== "undefined") &&
+				(arrayOfTyplicalBooksChapters[posOfBook].length === 2)) {
+					displayRange += arrayOfTyplicalBooksChapters[posOfBook][1];
+			}
+			else displayRange += currentOsisID;
+			displayRange += separatorChar;
+			copyOfRange = copyOfRange.substr(pos + 1);
+		}
+	}
+
     var html = '<div class="header">' +
         '<h4>' + __s.enter_search_word + '</h4>' +
-        '<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + searchRange + '</button>' +
+        '<button id="searchRangeButton" type="button" class="stepButtonTriangle" style="float:right;" onclick=_buildRangeHeaderAndTable()><b>' + __s.search_range + ':</b> ' + displayRange + '</button>' +
         '</div><br>' +
         '<span id="warningMessage" style="color: red;"></span>' +
         '<textarea id="userTextInput" rows="1" style="font-size:16px; width: 80%;"></textarea><br><br>' + // size 16px so the mobile devices will not expand
@@ -583,9 +608,9 @@ function _buildBookHTMLTable(data) {
     var counter = 0;
     var notSeenNT = true;
     var typlicalBooksChapters = false;
-    var arrayOfTyplicalBooksChapters;
     var start = 0;
     var end = 0;
+	var arrayOfTyplicalBooksChapters;
     if (typeof data === "string") {
         if (data == "OTNT") end = 66;
         else if (data == "OT") end = 39;

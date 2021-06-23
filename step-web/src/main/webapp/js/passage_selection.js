@@ -212,7 +212,12 @@ function _buildBookHTMLTable(data) {
             $('#ot_table').append(tableHTML);
             tableHTML = __buildBookTableHeader(columns);
         }
-        if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < 6)) shortNameToDisplay = longNameToDisplay;
+        if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < 6)) {
+			if ((longNameToDisplay.length == 5) &&
+				(userLang.toLowerCase().startsWith("zh"))) // If it is 5 characters it is too long. Remove the last word 書歌 (book or song) which is not necessary
+				shortNameToDisplay = longNameToDisplay.substr(0, 4);
+			else shortNameToDisplay = longNameToDisplay;
+		}
         if (!newTestament && !oldTestament) {
             shortNameToDisplay += '<span style="color:brown">*</span>';
             additionalBooks = true;
