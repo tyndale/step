@@ -243,7 +243,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                     wordLink.append(lexiconWords[key].gloss);
                     wordLink.append(' - ');
                     wordLink.append(value[0]);
-                    wordLink.append('x');
+                    wordLink.append(__s.analyse_times);
                 }
                 else {
                         wordLink.append(lexiconWords[key].gloss);

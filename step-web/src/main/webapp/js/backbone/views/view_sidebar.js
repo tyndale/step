@@ -294,7 +294,7 @@ var SidebarView = Backbone.View.extend({
         $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
             foundChineseJSON = true;
             // appendLexiconSearchFunction(panel, mainWord);
-            panel.append($("<h2>").append(__s.lexicon_chinese_name + ':'));
+            panel.append($("<h2>").append(__s.zh_lexicon_chinese_name + ':'));
             panel.append($("<h2>").append(__s.lexicon_part_of_speech_for_zh + ':&nbsp;<span style="font-weight:normal;font-size:14px">' + chineseVars.partOfSpeech + '</span>'));
             panel.append($("<h2>").append(__s.lexicon_definition_for_zh + ":"));
 
@@ -368,7 +368,7 @@ var SidebarView = Backbone.View.extend({
             if ((currentUserLang == "zh_tw") && (mainWord._zh_tw_Definition != undefined)) chineseDef = mainWord._zh_tw_Definition;
             else if (mainWord._zh_Definition != undefined) chineseDef =  mainWord._zh_Definition;
             if (chineseDef) {
-                panel.append($("<h2>").append(__s.lexicon_meaning_fhl));
+                panel.append($("<h2>").append(__s.zh_lexicon_meaning_fhl));
                 this._addLinkAndAppend(panel, chineseDef, currentWordLanguageCode, bibleVersion);
             }
             var useSecondZhLexicon = step.passages.findWhere({ passageId: step.util.activePassageId()}).get("isSecondZhLexicon");
@@ -426,7 +426,7 @@ var SidebarView = Backbone.View.extend({
         if ((foundChineseJSON) && (!step.state.isLocal())) 
             panel.append("<br><a href=\"lexicon/additionalinfo/" + mainWord.strongNumber + ".html" +
                 "\" target=\"_blank\">" +
-                __s.additional_chinese_lexicon_info + "</a>");
+                __s.zh_additional_zh_lexicon_info + "</a>");
         this._doSideNotes(panel, bibleVersion);
     },
     // for one-line morphology
