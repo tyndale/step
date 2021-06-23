@@ -160,9 +160,13 @@ function _buildBookHTMLTable(data) {
     var notSeenNT = true;
     var browserWidth = $(window).width();
     var columns = 7;
+	var maxLength = 6;
     if (browserWidth < 1100) {
         columns = 6;
-        if (browserWidth < 800) columns = 5;
+        if (browserWidth < 800) {
+			columns = 5;
+			maxLength = 5;
+		}
     }
     var tableHTML = __buildBookTableHeader(columns);
     var typlicalBooksChapters = false;
@@ -212,7 +216,7 @@ function _buildBookHTMLTable(data) {
             $('#ot_table').append(tableHTML);
             tableHTML = __buildBookTableHeader(columns);
         }
-        if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < 6)) {
+        if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < maxLength)) {
 			if ((longNameToDisplay.length == 5) &&
 				(userLang.toLowerCase().startsWith("zh"))) // If it is 5 characters it is too long. Remove the last word 書歌 (book or song) which is not necessary
 				shortNameToDisplay = longNameToDisplay.substr(0, 4);
