@@ -163,9 +163,10 @@ function _buildBookHTMLTable(data) {
 	var maxLength = 6;
     if (browserWidth < 1100) {
         columns = 6;
+		maxLength = 5;
         if (browserWidth < 800) {
 			columns = 5;
-			maxLength = 5;
+			maxLength = 4;
 		}
     }
     var tableHTML = __buildBookTableHeader(columns);
