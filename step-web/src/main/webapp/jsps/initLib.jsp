@@ -53,7 +53,7 @@
 
     //Set up the variables for accessing the server
     STEP_SERVER_BASE_URL = "<%= restAPIURL %>";
-
+    STEP_TEST_PATH = <%= getServletContext().getRealPath("/") %>
     //Set up timeline:
     Timeline_ajax_url="libs/timeline_ajax/simile-ajax-api.js?bundle=true";
     Timeline_urlPrefix="libs/timeline_js/";
