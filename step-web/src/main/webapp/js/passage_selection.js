@@ -160,13 +160,15 @@ function _buildBookHTMLTable(data) {
     var notSeenNT = true;
     var browserWidth = $(window).width();
     var columns = 7;
-	var maxLength = 6;
+	var maxLength = 5;
     if (browserWidth < 1100) {
         columns = 6;
-		maxLength = 5;
-        if (browserWidth < 800) {
+		maxLength = 4;
+        if (browserWidth < 735) {
 			columns = 5;
-			maxLength = 4;
+			maxLength = 3;
+			if ((browserWidth < 370) && (userLang.toLowerCase().startsWith("zh")))
+				maxLength = 2;
 		}
     }
     var tableHTML = __buildBookTableHeader(columns);
@@ -181,7 +183,6 @@ function _buildBookHTMLTable(data) {
             start = 39;
             end = 66;
         }
-        //data = osisChapterJsword;
         typlicalBooksChapters = true;
         arrayOfTyplicalBooksChapters = JSON.parse(__s.list_of_bibles_books);
     }
@@ -189,6 +190,8 @@ function _buildBookHTMLTable(data) {
         end = data.length;
     }
     var additionalBooks = false;
+	var chineseSuffix1ForBooks = "書記歌錄书记歌录"; // suffix for book, record, song, ...
+	var chineseSuffix2ForBooks = "福音"; // suffix for gospel (e.g.: John gospel)
     for (var i = start; i < end; i++) {
         var currentOsisID;
         var shortNameToDisplay;
@@ -217,12 +220,18 @@ function _buildBookHTMLTable(data) {
             $('#ot_table').append(tableHTML);
             tableHTML = __buildBookTableHeader(columns);
         }
-        if ((longNameToDisplay.length > 0) && (longNameToDisplay.length < maxLength)) {
-			if ((longNameToDisplay.length == 5) &&
-				(userLang.toLowerCase().startsWith("zh"))) // If it is 5 characters it is too long. Remove the last word 書歌 (book or song) which is not necessary
-				shortNameToDisplay = longNameToDisplay.substr(0, 4);
-			else shortNameToDisplay = longNameToDisplay;
+		var bookDisplayName = longNameToDisplay;
+		if (userLang.toLowerCase().startsWith("zh")) {
+			if ((bookDisplayName.length == maxLength + 1) && // If it is one character too long. Remove the last word 書記歌书记歌 (book, record or song)
+				(chineseSuffix1ForBooks.indexOf(bookDisplayName.substr(-1)) > -1)) 
+				bookDisplayName = bookDisplayName.substr(0, maxLength);
+			else if ( 	(	(bookDisplayName.length == maxLength + 1) || // If it is one or two characters too long. Remove the last two words 福音 (gospel)
+							(bookDisplayName.length == maxLength + 2)) &&
+						(chineseSuffix2ForBooks.indexOf(bookDisplayName.substr(-2)) > -1)) 
+				bookDisplayName = bookDisplayName.substr(0, bookDisplayName.length - 2);
 		}
+        if ((bookDisplayName.length > 0) && (bookDisplayName.length <= maxLength))
+			shortNameToDisplay = bookDisplayName;
         if (!newTestament && !oldTestament) {
             shortNameToDisplay += '<span style="color:brown">*</span>';
             additionalBooks = true;
