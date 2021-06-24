@@ -16,7 +16,7 @@
 <%	if (restAPIURL == null) {
         restAPIURL = "/rest/";
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("rest_api_url.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("/var/www/rest_api_url.txt"));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.indexOf("REST_API_URL=") == 0) restAPIURL = line.substring(13) + "/rest/";
