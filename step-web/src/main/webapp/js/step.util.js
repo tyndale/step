@@ -1556,9 +1556,9 @@ step.util = {
 			// $('.findButton').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
 			// if the screen is small (probably mobile devices) increase the font size 1 time.
-			if ((window.matchMedia("only screen and (max-width: 760px)").matches) &&
-				(typeof step.settings.get('defaultfont') === "undefined"))
-				step.util.changeFontSize($('.passageOptionsGroup'), 2);
+			// if ((window.matchMedia("only screen and (max-width: 760px)").matches) &&
+				// (typeof step.settings.get('defaultfont') === "undefined"))
+				// step.util.changeFontSize($('.passageOptionsGroup'), 2);
 			$('.navbarIconDesc').show();
 			$('.quick_tutorial').hide();
 			$('#classicalUICheck').hide();
