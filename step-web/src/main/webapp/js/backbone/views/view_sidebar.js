@@ -453,7 +453,8 @@ var SidebarView = Backbone.View.extend({
         if(morphInfo && param && morphInfo[param]) {
             var morphValue = this.replaceEmphasis(morphInfo[param]);
 			var local_var_name = morphValue.toLowerCase().replace(/ /g, "_");
-			morphValue += (__s[local_var_name]) ? " (" + __s[local_var_name] + ")" : "";
+			if (morphValue.toLowerCase() !== __s[local_var_name].toLowerCase())
+				morphValue += " (" + __s[local_var_name] + ")";
             var htmlValue = $("<span>" + morphValue + "</span>");
             panel.append(htmlValue);
             panel.append(" ");
