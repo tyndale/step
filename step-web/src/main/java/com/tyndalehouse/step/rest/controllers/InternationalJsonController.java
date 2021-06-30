@@ -89,7 +89,7 @@ public class InternationalJsonController extends HttpServlet {
         }
         String qualifiedResponse = BUNDLES.get(locale);
         if (qualifiedResponse == null) {
-            qualifiedResponse = readBundle(locale, "HtmlBundle", "InteractiveBundle", "MorphologyBundle", "LangSpecificBundle");
+            qualifiedResponse = readBundle(locale, "HtmlBundle", "InteractiveBundle");
             BUNDLES.put(locale, qualifiedResponse);
         }
 
