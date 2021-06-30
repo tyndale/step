@@ -206,8 +206,10 @@ var QuickLexicon = Backbone.View.extend({
         if(morphInfo && param && morphInfo[param]) {
 			var morphValue = morphInfo[param];
 			var local_var_name = morphValue.toLowerCase().replace(/ /g, "_");
-			if (morphValue.toLowerCase() === __s[local_var_name].toLowerCase()) morphValue += " ";
-			else morphValue += " (" + __s[local_var_name] + ") ";
+			if ((typeof __s[local_var_name] !== "undefined") &&
+				(morphValue.toLowerCase() !== __s[local_var_name].toLowerCase()))
+					morphValue += " (" + __s[local_var_name] + ") ";
+			else morphValue += " ";
 			return morphValue;
         }
 		return '';

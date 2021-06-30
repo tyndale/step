@@ -222,9 +222,9 @@ function _buildBookHTMLTable(data) {
         }
 		var bookDisplayName = longNameToDisplay;
 		if (userLang.toLowerCase().startsWith("zh")) {
-			if ((bookDisplayName.length == maxLength + 1) && // If it is one character too long. Remove the last word 書記歌书记歌 (book, record or song)
-				(chineseSuffix1ForBooks.indexOf(bookDisplayName.substr(-1)) > -1)) 
-				bookDisplayName = bookDisplayName.substr(0, maxLength);
+			if (((bookDisplayName.length == maxLength) || (bookDisplayName.length == maxLength + 1)) &&
+				(chineseSuffix1ForBooks.indexOf(bookDisplayName.substr(-1)) > -1)) // If it is one character too long. Remove the last word 書記歌书记歌 (book, record or song)
+				bookDisplayName = bookDisplayName.substr(0, bookDisplayName.length - 1);
 			else if ( 	(	(bookDisplayName.length == maxLength + 1) || // If it is one or two characters too long. Remove the last two words 福音 (gospel)
 							(bookDisplayName.length == maxLength + 2)) &&
 						(chineseSuffix2ForBooks.indexOf(bookDisplayName.substr(-2)) > -1)) 
