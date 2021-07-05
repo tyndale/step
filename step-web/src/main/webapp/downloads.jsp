@@ -255,8 +255,8 @@
 			else if (os === "linux_rpm") fileExtension = "rpm";
 			else console.log("Unknown os selected: " + os);
 			var fileName = "";
-			if (lexicon === "lexicon_english") fileName = "STEPBible";
-			else if (lexicon === "lexicon_english_chinese") fileName = "STEPBible_zh";
+			if (lexicon === "lexicon_english") fileName = "stepbible_2_1_0";
+			else if (lexicon === "lexicon_english_chinese") fileName = "stepbible_zh__2_1_0";
 			else console.log("Unknown lexicon selected: " + lexicon);
 			var path = "";
 			if (region === "region_usa") path = "https://downloads.stepbible.com/file/Stepbible/";
