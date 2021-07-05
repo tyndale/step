@@ -13,28 +13,6 @@
   margin: 0 auto;
 }
 
-.notesPane {
-  font-size: 85%;
-  float: left;
-  width: 0;
-  height: 0;
-
-  a {
-    color: #333;
-    font-weight: bold;
-  }
-
-  .margin {
-    display: none;
-    position: absolute;
-    background-color: white;
-    padding: 8px;
-    border: 1px solid #ccc;
-    max-width: 150px;
-    z-index: 1;
-  }
-}
-
 #columnHolder {
   overflow-y: hidden;
   padding: 0;
@@ -84,17 +62,6 @@
 
       &.active {
         border-color: $activeColor;
-      }
-
-      .activeMarker {
-        position: absolute;
-        top: $border-width;
-        left: 50%;
-        z-index: 10;
-        border: 7px solid $activeColor;
-        border-right-color: transparent;
-        border-bottom: 0 dotted;
-        border-left-color: transparent;
       }
 
       .linkPanel {

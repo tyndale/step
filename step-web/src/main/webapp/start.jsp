@@ -79,7 +79,8 @@
     <%
         }
     %>
-
+	<!-- Add IntroJs styles -->
+	<link href="/css/introjs.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -134,19 +135,14 @@
                                     </g>
                                 </svg>
                             </a>
-                            <span class="subtitle">
-                                <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>
-                            </span>
                         </span>
                     <span class="help"><jsp:include page="/jsps/menu.jsp"/></span>
                     <form role="form">
-                        <div class="input-group">
-                            <input id="masterSearch" type="text" class="form-control input-lg"
-                                   placeholder="<fmt:message key="search_placeholder" />">
+                        <div class="input-group" id="top_input_area" style="display:none">
+                            <input id="masterSearch" type="text" class="form-control input-lg">
                             <span class="input-group-btn findButton">
-                                    <span>Search</span>
-                                    <i class="find glyphicon glyphicon-search"></i>
-                                </span>
+                                <span>Search</span><i class="find glyphicon glyphicon-search"></i>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -158,7 +154,6 @@
         <div class="" id='columnHolder'>
             <div class="col-sm-6 col-xs-12 column">
                 <div class="passageContainer active" passage-id=0>
-                    <span class="activeMarker"></span>
                     <div class="passageText ui-widget">
                         <div class="passageOptionsGroup">
                             <div class="pull-right">
@@ -175,12 +170,12 @@
                                 <%
                                     if (!appManager.isLocal()) {
                                 %>
-                                <span class="dropdown">
+                                <span id="thumbsup" class="dropdown hidden-xs">
                                         <a class="dropdown-share" data-toggle="dropdown"
                                            title="<fmt:message key="share" />">
                                             <i class="glyphicon glyphicon-thumbs-up"></i>
                                         </a>
-                                    </span>
+                                </span>
                                 <%
                                     }
                                 %>
@@ -192,10 +187,10 @@
                                     </span>
 
                                 <%--  this button starts hidden as there is only 1 column showing --%>
-                                <a class="openNewPanel" title="<fmt:message key="open_in_new_panel" />">
+                                <a class="openNewPanel hidden-xs" title="<fmt:message key="new_panel" />">
                                     <i class="glyphicon glyphicon-plus"></i>
                                 </a>
-                                <a class="closeColumn disabled" title="<fmt:message key="close" />">
+                                <a class="closeColumn disabled hidden-xs" title="<fmt:message key="close" />">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </div>
@@ -259,7 +254,7 @@
                                                                             <a href="javascript:void(0)"
                                                                                strong="${ definition.strongNumber}">
                                                                                 <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
-                                                                                
+
                                                                                 <%  if (locale.getLanguage().equalsIgnoreCase("zh")) {
                                                                                         if (locale.getCountry().equalsIgnoreCase("tw")) %>
                                                                                             ${ definition._zh_tw_Gloss}
@@ -268,8 +263,8 @@
                                                                                 <%  }
                                                                                     else { %>
                                                                                         ${ definition.gloss}
-                                                                                <%  } %>                                                                                
-                                                                                
+                                                                                <%  } %>
+
                                                                                 (<span
                                                                                     class="transliteration">${ definition.stepTransliteration }</span>
                                                                                 - <span
@@ -369,7 +364,7 @@
             <div class="hidden-xs col-sm-6 column examplesColumn" dir="${ ltr ? "ltr" : "rtl" }">
             </div>
         </div>
-        <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
+        <div class="sidebar-offcanvas" id="sidebar" style="overflow-y:hidden" role="navigation"></div>
     </div>
 </div>
 
@@ -395,6 +390,7 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 </script>
 <script src="/libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 <script src="/libs/bootstrap.min.js" type="text/javascript"></script>
+<script src="/libs/introjs.min.js" type="text/javascript"></script>
 <%
     if (request.getParameter("debug") != null) {
 %>
@@ -444,7 +440,6 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <script src="/js/defaults/step.defaults.js" type="text/javascript"></script>
 <script src="/js/step_ready.js" type="text/javascript"></script>
 <script src="/js/color_code_grammar.js" type="text/javascript"></script>
-
 <%
 } else {
 %>
@@ -473,7 +468,17 @@ userCountry = (userCountry == null) ? "UNKNOWN" : userCountry.toUpperCase();
 <%
     }
 %>
-
+<script>
+	jQuery.event.special.touchstart = {
+		setup: function( _, ns, handle ){
+			if ( ns.includes("noPreventDefault") ) {
+				this.addEventListener("touchstart", handle, { passive: false });
+			} else {
+				this.addEventListener("touchstart", handle, { passive: true });
+			}
+		}
+	};
+</script>
 <% if (!appManager.isLocal()) { %>
 <script>
     (function (w, d, s) {

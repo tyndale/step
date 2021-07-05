@@ -112,15 +112,18 @@
 
   // TODO: Can notesPane be hidden behind an icon or positioned absolute
   .notesPane {
+    font-size: 85%;
     line-height: 1.4;
-
-    & > a:hover {
-      cursor: text;
-      text-decoration: none;
-    }
     text-align: left;
     min-height: 100%;
-    &:empty {
+
+    float: left;
+    width: 0;
+    height: 0;
+
+    // Hide elements inside notesPane to show on hover cross ref
+    &:empty,
+    & > * {
       display: none;
     }
   }

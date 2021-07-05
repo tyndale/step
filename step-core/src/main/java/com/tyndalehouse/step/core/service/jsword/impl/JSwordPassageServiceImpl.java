@@ -552,6 +552,22 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         passageText.setOptions(this.optionsValidationService.optionsToString(
                 this.optionsValidationService.getAvailableFeaturesForVersion(masterVersion, extraVersions, interlinearMode, realModeOfDisplay).getOptions()));
+        String tmp = passageText.getValue(); // The following 15 lines are a patch for the lack of the Book name, chapter and verse for the deutrocanon books
+        int pos1 = tmp.indexOf("<span class='verseNumber'></span>");
+        if (pos1 > -1) {
+            String curOsisId = passageText.getOsisId();
+            int pos2 = curOsisId.indexOf(".");
+            if (pos2 > 0) {
+                String OsisBookName = " " + curOsisId.substring(0, pos2).toLowerCase() + " ";
+                String otherBooks = " 1esd 2esd tob jdt addesth wis sir bar prazar sus bel prman 1macc 2macc esthgr addps 3macc 4macc ";
+                if (otherBooks.indexOf(OsisBookName) > -1) {
+                    pos1 += 26;
+                    passageText.setValue(tmp.substring(0, pos1) +
+                                         curOsisId +
+                                         tmp.substring(pos1));
+                }
+            }
+        }
         passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions));
         return passageText;
     }
@@ -569,7 +585,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Copies all but first into a new array
-     *
      * @param versionsInput the versions input
      * @return the list of all versions
      */
@@ -1186,6 +1201,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     if (userLanguage.equalsIgnoreCase("zh")) changeVersion = "CUns";
                     else if (userLanguage.equalsIgnoreCase("zh_tw")) changeVersion = "CUn";
                     else if (userLanguage.toLowerCase().startsWith("es")) changeVersion = "SpaRV1909";
+					else if (userLanguage.toLowerCase().startsWith("bg")) changeVersion = "BulProtRev";
                     if (changeVersion.length() > 0) {
                         tsep.setParameter("defaultVersion", changeVersion);
                     }

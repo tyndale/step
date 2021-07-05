@@ -30,7 +30,7 @@ var PassageDisplayView = DisplayView.extend({
             var C_colorCodeGrammarAvailableAndSelected = 0; // TBRBMR
             var C_otMorph = 1; // TBRBMR
             cv[C_colorCodeGrammarAvailableAndSelected] = (options.indexOf("C") > -1) && (availableOptions.indexOf("C") > -1);
-            if ((cv[C_colorCodeGrammarAvailableAndSelected]) && ((c4 == undefined) || (c4 == null))) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
+            if ((cv[C_colorCodeGrammarAvailableAndSelected]) && (typeof c4 === "undefined")) cf.initCanvasAndCssForClrCodeGrammar(); //c4 is currentClrCodeConfig.  It is called to c4 to save space
             var passageHtml, ntCSSOnThisPage = '', otCSSOnThisPage = '', pch, hasTOS = false, hasNTMorph = false;
             var bibleVersions = this.model.attributes.masterVersion.toUpperCase() + "," + this.model.attributes.extraVersions.toUpperCase();
             if ((bibleVersions.indexOf('THOT') > -1)) {
@@ -500,76 +500,24 @@ var PassageDisplayView = DisplayView.extend({
          * @private
          */
         _doHighlightNoteInPane: function (passageContent, link) {
-            var self = this;
             var $note = $(".notesPane strong", passageContent).filter(function () {
                 return $(this).text() == link.text();
             }).closest(".margin");
 
             var $link = $(link);
-            var $scollWindow = $link.closest(".passageContentHolder");
 
-            var onLink = false;
-            var onNote = false;
-            var delay = 200;
-
-            function hideNote() {
-                self._hideNote($note);
-
-                onLink = false;
-                onNote = false;
-            }
-
-            $link.hover(function () {
-                    setTimeout(function () {
-                        onLink = true;
-                        self._showNote($note, $link);
-
-                        $scollWindow.on("scroll", function () {
-                            hideNote($note);
-                            $scollWindow.off("scroll");
-                        })
-                    }, 50);
-                },
-                function () {
-                    setTimeout(function () {
-                        if (!onNote) {
-                            hideNote($note);
-                        }
-
-                        onLink = false;
-                    }, delay);
-                });
-
-            $note.hover(function () {
-                setTimeout(function () {
-                    onNote = true;
-                }, 50);
-            }, function () {
-                setTimeout(function () {
-                    if (!onLink) {
-                        hideNote($note);
+            require(["qtip"], function () {
+                $link.qtip({
+                    show: {event: 'mouseenter'},
+                    hide: {event: 'unfocus mouseleave', fixed: true, delay: 200},
+                    position: {my: "top center", at: "top center", of: $link, viewport: $(window), effect: false},
+                    style: {classes: "xrefHover"},
+                    overwrite: true,
+                    content: {
+                        text: $note
                     }
-
-                    onNote = false;
-                }, delay);
+                });
             });
-        },
-        _showNote: function ($note, $this) {
-            var linkPosition = $this.offset();
-            var containerPosition = $this.closest(".passageContainer").offset();
-            var linkHeight = $this.outerHeight();
-            var noteWidth = $note.outerWidth();
-            var top = linkPosition.top - containerPosition.top + linkHeight - 4;
-            var left = Math.max(linkPosition.left - containerPosition.left - (noteWidth / 2), 10);
-
-            $note.css({
-                display: "block",
-                top: top,
-                left: left
-            })
-        },
-        _hideNote: function ($note) {
-            $note.hide();
         },
 
         /**

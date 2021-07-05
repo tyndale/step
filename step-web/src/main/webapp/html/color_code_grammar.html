@@ -18,16 +18,17 @@
 <div class="tab-pane fade" id="verbClrs"></div>
 <div class="tab-pane fade" id="hVerbClrs"></div>
 <div class="footer">
-	<button id="openButton" class="btn btn-default btn-xs" onclick=openClrConfig()><label>Open</label></button>
-	<button id="saveButton" class="btn btn-default btn-xs" onclick=saveClrConfig()><label>Save</label></button>
-	<button id="cancelButton" class="btn btn-default btn-xs" onclick=cancelClrChanges()><label>Cancel</label></button>
-	<button id="resetButton" class="btn btn-default btn-xs" onclick=resetClrConfig()><label>Reset</label></button>
-	<button class="btn btn-default btn-xs" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>
+	<br>
+	<button id="openButton" class="stepButton" onclick=openClrConfig()><label>Open</label></button>
+	<button id="saveButton" class="stepButton" onclick=saveClrConfig()><label>Save</label></button>
+	<button id="cancelButton" class="stepButton" onclick=cancelClrChanges()><label>Cancel</label></button>
+	<button id="resetButton" class="stepButton" onclick=resetClrConfig()><label>Reset</label></button>
+	<button class="stepButton" data-dismiss="modal" onclick=closeClrConfig()><label>Exit</label></button>
 </div>
 </div>
 </div>
 </div>
-<script>	
+<script>
 	$( document ).ready(function() {
 		initializeClrCodeHtmlModalPage();
 	});

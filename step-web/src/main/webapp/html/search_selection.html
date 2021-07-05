@@ -1,0 +1,34 @@
+﻿<!-- For unknown reason, the maven replace will only work if the the following line is not line one. -->
+<script src='js/search_selection.js'></script>
+<div class="modal-header">
+	<button id="srchModalBackButton" type="button" style="border:none;float:left;font-size:16px" onclick=goBackToPreviousPage()><i class="glyphicon glyphicon-arrow-left"></i></button>
+	<span class="pull-right">
+        <button type="button" class="close" data-dismiss="modal" onclick=step.util.closeModal("searchSelectionModal")>X</button>
+        <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
+        <span id="displayLocForm" class="form-group pull-right hidden-xs" style="font-size:16px">
+            <label id="display_result_in" for="displayLocation">Display result in:</label>
+            <select type="text" id="displayLocation">
+                <option id="current_panel" value="replace">Current panel</option>
+                <option id="new_panel" class="hidden-xs" value="new">New panel</option>
+            </select>
+        </span>
+    </span>
+</div>
+<div id="searchmodalbody" class="modal-body">
+  <div id="searchHdrTable"></div>
+  <br>
+  <div id="previousSearch"></div>
+</div>
+<div class="footer">
+    <br>
+	<span id="searchSelectError"></span>
+	<button id="updateRangeButton" style="display:none;float:right" type="button" class="stepButton"
+	onclick=_updateRange()></button>
+    <button id="updateButton" style="display:none;float:right" type="button" class="stepButton"
+    onclick=goSearch()></button><br><br><br>
+</div>
+<script>
+    $(document).ready(function () {
+        initSearchSelection();
+    });
+</script>

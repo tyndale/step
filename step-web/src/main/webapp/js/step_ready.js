@@ -136,6 +136,7 @@
             //reset some attributes that weren't on the model to start with (because of space reasons)
             window.tempModel.createSilently = true;
             var likelyPreviousPassage = identifyLikelyPreviousPassage(window.tempModel);
+
             modelZero.save(window.tempModel, {silent: true});
             modelZero.save({
                 isQuickLexicon: likelyPreviousPassage ? likelyPreviousPassage.get("isQuickLexicon") : true,
@@ -162,7 +163,19 @@
             step.passages.add(new PassageModel({passageId: 0}));
         }
 
-        new ExamplesView({ el: $(".examplesColumn") });
+        // new ExamplesView({ el: $(".examplesColumn") });
+		
+	    var stepUsageCountStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
+		var stepUsageCount = parseInt(stepUsageCountStorageOrCookie, 10);
+		if (isNaN(stepUsageCount)) stepUsageCount = 0;
+		if ((stepUsageCount > 12) && (window.innerWidth > 767)) {
+			// step.util.showOrHideTutorial(true);
+			step.util.ui.showTutorial();
+		}
+		else new ExamplesView({ el: $(".examplesColumn") });
+		stepUsageCount ++;
+		if (window.localStorage) window.localStorage.setItem("step.usageCount", stepUsageCount);
+		else $.cookie('step.usageCount', stepUsageCount);
 
         $("#stepDisclaimer").popover();
     }
@@ -246,5 +259,9 @@
                 window.open(window.location);
             });
         }
+		step.util.showIntro();
     });
+	$( window ).resize(function() {
+		step.util.refreshColumnSize();
+	});
 })();
