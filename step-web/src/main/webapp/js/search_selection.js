@@ -481,10 +481,6 @@ function _buildRangeHeaderAndTable() {
 
 function _buildRangeHeaderAndSkeleton() {
     var fontSize = 16;
-    //var userAgentString = navigator.userAgent;
-    //if (((userAgentString.indexOf("iPad") > -1) || (userAgentString.indexOf("iPhone") > -1)) && (userAgentString.indexOf("Safari/600.1.4") > -1)) {
-    //	fontSize = 12;
-    //}
     var html = '<div class="header">' +
         '<h4>' + __s.click_to_select_search_range + ':</h4>' +
         '<span style="float:right">' + __s.search_range_button_color_desc + '</span>' +
