@@ -32,6 +32,7 @@ DS_VERSIONS = "allVersions";
 if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "/rest/";
 else {
     var supportForTLS = false;
+	var userAgentVersion = 0;
 	var userAgent = window.navigator.userAgent.toLowerCase();
     // Internet Explorer 11 and lower (MSIE test)
     if (userAgent.indexOf('msie ') > -1) {
@@ -43,29 +44,23 @@ else {
         if (tridentVersion > 6) supportForTLS = true;
     // Safari
     } else if ( ((userAgent.indexOf('iphone') > -1) || (userAgent.indexOf('ipad') > -1)) &&
-				(userAgent.indexOf('safari/') > -1) ) {
-        userAgentVersion = Number(userAgent.split('safari/')[1].split('.')[0]);
-        if (userAgentVersion > 600) {
-            supportForTLS = true;
-        }
+				(userAgent.indexOf('safari') > -1) ) {
+		var number1 = /os\s(\d+)/.test(userAgent) ? RegExp.$1 : '0';
+		var number2 = /^_(\d+)/.test(RegExp.rightContext) ? RegExp.$1 : '0';
+		userAgentVersion = number1 + '.' + number2;
+        if (userAgentVersion > 8.1) supportForTLS = true;
     // Chrome, Edge
-    } else if (userAgent.indexOf('applewebkit/') > -1) { 
+    } else if (userAgent.indexOf('applewebkit/') > -1) {
         userAgentVersion = Number(userAgent.split('applewebkit/')[1].split('.')[0]);
-        if (userAgentVersion > 536) {
-            supportForTLS = true;
-        }
+        if (userAgentVersion > 536) supportForTLS = true;
     // Firefox
-    } else if (userAgent.indexOf('firefox/') > -1) { 
+    } else if (userAgent.indexOf('firefox/') > -1) {
         userAgentVersion = Number(userAgent.split('firefox/')[1].split('.')[0]);
-        if (userAgentVersion > 26) {
-            supportForTLS = true;
-        }
+        if (userAgentVersion > 26) supportForTLS = true;
     // Opera
     } else if (userAgent.indexOf('opera/') > -1) {
         userAgentVersion = Number(userAgent.split('opera/')[1].split('.')[0]);
-        if (userAgentVersion > 13) {
-            supportForTLS = true;
-        }            
+        if (userAgentVersion > 13) supportForTLS = true;
     }
     if (!supportForTLS) STEP_SERVER_BASE_URL = "/rest/";
 }
