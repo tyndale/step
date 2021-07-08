@@ -31,38 +31,46 @@ MOUSE_PAUSE=200;
 DS_VERSIONS = "allVersions";
 if (typeof STEP_SERVER_BASE_URL === "undefined") STEP_SERVER_BASE_URL = "/rest/";
 else {
-    var supportForTLS = false;
-	var userAgentVersion = 0;
-	var userAgent = window.navigator.userAgent.toLowerCase();
+    // var supportForTLS = false;
+	// var userAgentVersion = 0;
+	// var userAgent = window.navigator.userAgent.toLowerCase();
     // Internet Explorer 11 and lower (MSIE test)
-    if (userAgent.indexOf('msie ') > -1) {
-        userAgentVersion = Number(userAgent.split('msie ')[1].split('.')[0]);
-        if (userAgentVersion > 10) supportForTLS = true;
+    // if (userAgent.indexOf('msie ') > -1) {
+        // userAgentVersion = Number(userAgent.split('msie ')[1].split('.')[0]);
+        // if (userAgentVersion > 10) supportForTLS = true;
     // Internet Explorer (some versions, but checking for 11+) (Trident test)
-    } else if (userAgent.indexOf('trident/') > -1) { //Internet Explorer (by Trident if MSIE is missing)
-        var tridentVersion = Number(userAgent.split('trident/')[1].split('.')[0]);
-        if (tridentVersion > 6) supportForTLS = true;
+    // } else if (userAgent.indexOf('trident/') > -1) { //Internet Explorer (by Trident if MSIE is missing)
+        // var tridentVersion = Number(userAgent.split('trident/')[1].split('.')[0]);
+        // if (tridentVersion > 6) supportForTLS = true;
     // Safari
-    } else if ( ((userAgent.indexOf('iphone') > -1) || (userAgent.indexOf('ipad') > -1)) &&
-				(userAgent.indexOf('safari') > -1) ) {
-		var number1 = /os\s(\d+)/.test(userAgent) ? RegExp.$1 : '0';
-		var number2 = /^_(\d+)/.test(RegExp.rightContext) ? RegExp.$1 : '0';
-		userAgentVersion = number1 + '.' + number2;
-        if (userAgentVersion > 8.1) supportForTLS = true;
+    // } else if ( ((userAgent.indexOf('iphone') > -1) || (userAgent.indexOf('ipad') > -1)) &&
+				// (userAgent.indexOf('safari') > -1) ) {
+		// var number1 = /os\s(\d+)/.test(userAgent) ? RegExp.$1 : '0';
+		// var number2 = /^_(\d+)/.test(RegExp.rightContext) ? RegExp.$1 : '0';
+		// userAgentVersion = number1 + '.' + number2;
+        // if (userAgentVersion > 8.1) supportForTLS = true;
     // Chrome, Edge
-    } else if (userAgent.indexOf('applewebkit/') > -1) {
-        userAgentVersion = Number(userAgent.split('applewebkit/')[1].split('.')[0]);
-        if (userAgentVersion > 536) supportForTLS = true;
+    // } else if (userAgent.indexOf('applewebkit/') > -1) {
+        // userAgentVersion = Number(userAgent.split('applewebkit/')[1].split('.')[0]);
+        // if (userAgentVersion > 536) supportForTLS = true;
     // Firefox
-    } else if (userAgent.indexOf('firefox/') > -1) {
-        userAgentVersion = Number(userAgent.split('firefox/')[1].split('.')[0]);
-        if (userAgentVersion > 26) supportForTLS = true;
+    // } else if (userAgent.indexOf('firefox/') > -1) {
+        // userAgentVersion = Number(userAgent.split('firefox/')[1].split('.')[0]);
+        // if (userAgentVersion > 26) supportForTLS = true;
     // Opera
-    } else if (userAgent.indexOf('opera/') > -1) {
-        userAgentVersion = Number(userAgent.split('opera/')[1].split('.')[0]);
-        if (userAgentVersion > 13) supportForTLS = true;
-    }
-    if (!supportForTLS) STEP_SERVER_BASE_URL = "/rest/";
+    // } else if (userAgent.indexOf('opera/') > -1) {
+        // userAgentVersion = Number(userAgent.split('opera/')[1].split('.')[0]);
+        // if (userAgentVersion > 13) supportForTLS = true;
+    // }
+    // if (!supportForTLS) STEP_SERVER_BASE_URL = "/rest/";
+	if (STEP_SERVER_BASE_URL.indexOf("https://api-") == 0) {
+		$.ajaxSetup({async: false});
+		$.getJSON(STEP_SERVER_BASE_URL.slice(0, -5) +"lexicon/short.json", function(whatever) {
+		}).fail(function() {
+			STEP_SERVER_BASE_URL = "/rest/";
+		});
+		$.ajaxSetup({async: true});
+	}
 }
 
 BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";

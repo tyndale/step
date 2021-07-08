@@ -94,7 +94,6 @@ var SidebarView = Backbone.View.extend({
             heightToSet += "px";
         }
         else heightToSet = "85vh";
-        console.log("lexicon height: " + heightToSet);
         this.lexicon = $("<div id='lexicon' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.analysis = $("<div id='analysis' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
         this.history = $("<div id='history' class='tab-pane' style='overflow-y:scroll;height:" + heightToSet + "'></div>");
