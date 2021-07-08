@@ -65,7 +65,7 @@ else {
     // if (!supportForTLS) STEP_SERVER_BASE_URL = "/rest/";
 	if (STEP_SERVER_BASE_URL.indexOf("https://api-") == 0) {
 		$.ajaxSetup({async: false});
-		$.getJSON(STEP_SERVER_BASE_URL.slice(0, -5) +"short.json", function(whatever) {
+		$.getJSON(STEP_SERVER_BASE_URL.slice(0, -5) + "test/short.json", function(whatever) {
 		}).fail(function() {
 			STEP_SERVER_BASE_URL = "/rest/";
 		});
