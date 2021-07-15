@@ -36,7 +36,7 @@
       <splashScreen show="true" bitmapFile="splash.png" />
       <java mainClass="com.tyndalehouse.step.server.STEPTomcatServer">
         <classPath>
-          <archive location="step-server-2.0.29-SNAPSHOT.jar" failOnError="false" />
+          <archive location="step-server-${compiler:sys.version}.jar" failOnError="false" />
         </classPath>
       </java>
       <macStaticAssociationActions mode="selected" />
@@ -613,9 +613,6 @@ return console.askYesNo(message, true);
     <macosFolder name="macOS Folder" id="507" compressDmg="true" signLaunchers="true">
       <jreBundle jreBundleSource="generated" />
     </macosFolder>
-    <unixArchive name="Unix Archive" id="408" installDir="/opt/step">
-      <jreBundle usePack200="true" jreBundleSource="generated" />
-    </unixArchive>
     <linuxRPM name="Linux RPM" id="405" installDir="/opt/step">
       <jreBundle usePack200="true" jreBundleSource="generated" />
       <postInstallScript>sh /opt/step/post-install.sh</postInstallScript>
