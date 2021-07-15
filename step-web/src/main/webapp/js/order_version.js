@@ -1,7 +1,5 @@
 function init_order_version() {
-  var s = '<p class="col-12">The selected books (bible or commentary) are in the following selected order.<br>' +
-    'Click and drag a book to can change the display order.  After you change the display order,<br>' +
-    'click on "Update order".<br>' +
+  var s = '<p class="col-12">' + __s.order_of_bible_displayed +
     '<div id="nestedVersion" class="list-group col nested-sortable">';
   var intialsOfAllVersions = window.searchView._getCurrentInitials();
   beforeSort = [];
@@ -25,6 +23,7 @@ function init_order_version() {
         afterSort = [];
         for (var j = 0; j < $('#nestedVersion')[0].children.length; j ++) {
           afterSort.push($('#nestedVersion')[0].children[j].innerText.replace(/(\r\n|\n|\r)/gm,"")); // Dec 2020.  Safari browser on iPhone has an extra 0A character at the end of the string.
+		  $('#updateVersionOrderButton').text(__s.update_display_order)
           $('#updateVersionOrderButton').show();
         }
       }
