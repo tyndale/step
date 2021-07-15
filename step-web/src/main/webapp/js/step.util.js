@@ -386,15 +386,10 @@ step.util = {
             heightToSet += "px";
         }
         else heightToSet = "85vh";
-        console.log("lexicon height: " + heightToSet);
 		$("#lexicon").height(heightToSet);
 		$("#analysis").height(heightToSet);
 		$("#history").height(heightToSet);
 		$("#help").height(heightToSet);
-//		for (var i = 0; i < columns.length; i++) {
-//			var passageContainer = $(columns[i]).find('.passageContainer');
-//			step.util.adjustPassageOptionHeight(passageContainer);
-//		}
     },
     findSearchTermsInQuotes: function(syntaxWords) {
         var indxNeedConcatenate = -1;
@@ -1552,35 +1547,26 @@ step.util = {
 		}
 		else {
 			$('#top_input_area').hide();
-			// $('#s2id_masterSearch').hide();
-			// $('.findButton').hide();
 			$('span.hidden-xs.title').removeClass('hidden-xs').addClass('tmp-rm-hidden-xs');
-			// if the screen is small (probably mobile devices) increase the font size 1 time.
-			// if ((window.matchMedia("only screen and (max-width: 760px)").matches) &&
-				// (typeof step.settings.get('defaultfont') === "undefined"))
-				// step.util.changeFontSize($('.passageOptionsGroup'), 2);
 			$('.navbarIconDesc').show();
 			$('.quick_tutorial').hide();
 			$('#classicalUICheck').hide();
 		}
 	},
-	adjustPassageOptionHeight: function (passageContainer) {
-		var passageContainerHeight = passageContainer.height();
-		var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
-		if (passageOptionHeight === null) return;
-		var passageContentHeight = passageContainer.find(".passageContent").height();
-		// var windowHeight = $(window).height();
-		// console.log("passageContainer h: " + passageContainerHeight + " passageOptionHeight: " + passageOptionHeight,
-			// " mainPanel: " + $('.mainPanel').height() + " window: " + windowHeight);
-		var totalHeight = passageOptionHeight + passageContentHeight;
-		var diff = passageContainerHeight - totalHeight;
-		if (Math.abs(diff) > 10) {
-			var heightForPassage = passageContainerHeight + diff;
-			console.log("passageContent h: " + heightForPassage + " diff " + diff);
-			var passContent = passageContainer.find(".passageContent");
-			$(passContent).css({'height':heightForPassage + 'px'});
-		}
-	},
+	// adjustPassageOptionHeight: function (passageContainer) {
+		// var passageContainerHeight = passageContainer.height();
+		// var passageOptionHeight = passageContainer.find(".passageOptionsGroup").height();
+		// if (passageOptionHeight === null) return;
+		// var passageContentHeight = passageContainer.find(".passageContent").height();
+		// var totalHeight = passageOptionHeight + passageContentHeight;
+		// var diff = passageContainerHeight - totalHeight;
+		// if (Math.abs(diff) > 10) {
+			// var heightForPassage = passageContainerHeight + diff;
+			// console.log("passageContent h: " + heightForPassage + " diff " + diff);
+			// var passContent = passageContainer.find(".passageContent");
+			// $(passContent).css({'height':heightForPassage + 'px'});
+		// }
+	// },
 	showIntro: function (showAnyway) {
 	    var introCountFromStorageOrCookie = (window.localStorage) ? window.localStorage.getItem("step.usageCount") : $.cookie('step.usageCount');
 		var introCount = parseInt(introCountFromStorageOrCookie, 10);

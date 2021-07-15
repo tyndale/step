@@ -240,7 +240,7 @@ var StepRouter = Backbone.Router.extend({
 		var container = $("<span></span>").addClass("argSummary argSumSpan");
 		step.util.ui.renderArgs(searchTokens, container, "button");
 		passageOptions.append(container);
-		step.util.adjustPassageOptionHeight(passageContainer);
+		// step.util.adjustPassageOptionHeight(passageContainer);
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;
