@@ -290,7 +290,7 @@ var SidebarView = Backbone.View.extend({
         var currentWordLangCode = mainWord.strongNumber.substr(0, 1);
         var foundChineseJSON = false;
         $.ajaxSetup({async: false});
-        $.getJSON("lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
+        $.getJSON("/lexicon/" + currentUserLang + "/" + mainWord.strongNumber + ".json", function(chineseVars) {
             foundChineseJSON = true;
             // appendLexiconSearchFunction(panel, mainWord);
             panel.append($("<h2>").append(__s.zh_lexicon_chinese_name + ':'));
